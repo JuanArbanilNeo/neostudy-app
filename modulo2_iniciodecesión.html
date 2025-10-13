@@ -34,7 +34,7 @@
             overflow-x: hidden;
         }
 
-        /* ✅ HEADER MOBILE-FIRST */
+        /* ✅ HEADER MEJORADO - RESPONSIVE */
         .header {
             background: var(--bg-gradient);
             color: var(--white);
@@ -68,7 +68,7 @@
             font-size: 1.4rem;
         }
 
-        /* Menú móvil */
+        /* Menú móvil - Solo iconos */
         .mobile-menu-btn {
             display: block;
             background: none;
@@ -80,6 +80,29 @@
 
         .nav-menu {
             display: none;
+        }
+
+        .mobile-nav-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .mobile-nav-item {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .mobile-nav-item:hover, .mobile-nav-item.active {
+            background: rgba(255,255,255,0.2);
         }
 
         .user-menu {
@@ -128,7 +151,7 @@
             color: var(--white);
         }
 
-        /* ✅ CONTENIDO PRINCIPAL MOBILE-FIRST */
+        /* ✅ CONTENIDO PRINCIPAL MEJORADO */
         .main-container {
             max-width: 100%;
             margin: 70px auto 20px;
@@ -136,6 +159,47 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+        }
+
+        /* Vista de secciones */
+        .section-view {
+            display: none;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .section-view.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         /* Sidebars como cards en móvil */
@@ -155,6 +219,12 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-title:hover {
+            color: var(--primary);
         }
 
         /* Stats Grid para móvil */
@@ -171,6 +241,11 @@
             border-radius: 8px;
             text-align: center;
             transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
         }
 
         .stat-number {
@@ -191,6 +266,7 @@
             gap: 1rem;
             padding: 1rem 0;
             border-bottom: 1px solid var(--light);
+            cursor: pointer;
         }
 
         .goal-icon {
@@ -228,12 +304,34 @@
             border-radius: 3px;
         }
 
-        /* ✅ FEED PRINCIPAL */
+        /* ✅ FEED PRINCIPAL REORGANIZADO */
         .feed {
             display: flex;
             flex-direction: column;
             gap: 1.2rem;
             order: 2;
+        }
+
+        /* Perfil móvil - Ahora está antes de la publicación */
+        .mobile-profile {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-profile-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .mobile-profile-info p {
+            font-size: 0.8rem;
+            color: var(--secondary);
         }
 
         /* Crear Publicación compacta */
@@ -521,6 +619,12 @@
             padding: 0.8rem;
             border-radius: 8px;
             text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-3px);
         }
 
         .achievement-icon {
@@ -584,7 +688,7 @@
                 font-size: 1.4rem;
             }
 
-            .mobile-menu-btn {
+            .mobile-menu-btn, .mobile-nav-menu {
                 display: none;
             }
 
@@ -626,6 +730,10 @@
                 display: none;
             }
 
+            .mobile-profile {
+                display: none;
+            }
+
             .avatar {
                 width: 40px;
                 height: 40px;
@@ -634,6 +742,10 @@
             .btn {
                 padding: 0.75rem 1.5rem;
                 font-size: 0.9rem;
+            }
+
+            .post-actions {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -656,10 +768,6 @@
             }
 
             .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .post-actions {
                 grid-template-columns: repeat(4, 1fr);
             }
         }
@@ -701,7 +809,7 @@
     </style>
 </head>
 <body>
-    <!-- ✅ HEADER OPTIMIZADO -->
+    <!-- ✅ HEADER MEJORADO - RESPONSIVE -->
     <header class="header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
@@ -709,10 +817,27 @@
                 <span>Neo Study</span>
             </div>
             
+            <!-- Menú móvil - Solo iconos -->
+            <div class="mobile-nav-menu">
+                <a href="modulo2_iniciodecesión.html" class="mobile-nav-item active" title="Inicio">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="modulo4_cursos.html" class="mobile-nav-item" title="Cursos">
+                    <i class="fas fa-book"></i>
+                </a>
+                <a href="#" class="mobile-nav-item" title="Comunidad">
+                    <i class="fas fa-users"></i>
+                </a>
+                <a href="#" class="mobile-nav-item" title="Calendario">
+                    <i class="fas fa-calendar"></i>
+                </a>
+            </div>
+
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </button>
 
+            <!-- Menú desktop - Con texto -->
             <nav class="nav-menu">
                 <a href="modulo2_iniciodecesión.html" class="nav-item active">
                     <i class="fas fa-home"></i> Inicio
@@ -731,10 +856,10 @@
             <div class="user-menu">
                 <div class="avatar" id="userAvatar" onclick="goToProfile()">JM</div>
                 <button class="btn btn-danger" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Salir
+                    <i class="fas fa-sign-out-alt"></i> <span class="btn-text">Salir</span>
                 </button>
                 <button class="btn btn-primary" onclick="toggleThemeMode()">
-                    <i class="fas fa-moon"></i> Modo
+                    <i class="fas fa-moon"></i> <span class="btn-text">Modo</span>
                 </button>
             </div>
         </div>
@@ -787,7 +912,7 @@
         </div>
     </div>
 
-    <!-- ✅ CONTENIDO PRINCIPAL -->
+    <!-- ✅ CONTENIDO PRINCIPAL MEJORADO -->
     <div class="main-container">
         <!-- Sidebar Izquierda -->
         <aside class="sidebar">
@@ -801,15 +926,15 @@
                 </div>
             </div>
 
-            <div class="sidebar-title">
+            <div class="sidebar-title" onclick="showSection('progress')">
                 <i class="fas fa-chart-line"></i> Mi Progreso
             </div>
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" onclick="showSection('progress')">
                     <div class="stat-number" id="studyHours">128</div>
                     <div class="stat-label">Horas</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="showSection('goals')">
                     <div class="stat-number" id="completedGoals">12</div>
                     <div class="stat-label">Metas</div>
                 </div>
@@ -817,17 +942,17 @@
                     <div class="stat-number" id="coursesTaken">8</div>
                     <div class="stat-label">Cursos</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="showSection('achievements')">
                     <div class="stat-number" id="achievements">15</div>
                     <div class="stat-label">Logros</div>
                 </div>
             </div>
 
-            <div class="sidebar-title">
+            <div class="sidebar-title" onclick="showSection('goals')">
                 <i class="fas fa-bullseye"></i> Mis Metas
             </div>
             <div class="goals-list">
-                <div class="goal-item">
+                <div class="goal-item" onclick="showSection('goals')">
                     <div class="goal-icon">
                         <i class="fas fa-book"></i>
                     </div>
@@ -838,7 +963,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="goal-item">
+                <div class="goal-item" onclick="showSection('goals')">
                     <div class="goal-icon">
                         <i class="fas fa-flask"></i>
                     </div>
@@ -849,7 +974,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="goal-item">
+                <div class="goal-item" onclick="showSection('goals')">
                     <div class="goal-icon">
                         <i class="fas fa-language"></i>
                     </div>
@@ -865,6 +990,15 @@
 
         <!-- Feed Principal -->
         <main class="feed">
+            <!-- Perfil móvil - Ahora está antes de la publicación -->
+            <div class="mobile-profile">
+                <div class="post-avatar" id="mobileAvatar" onclick="goToProfile()">JM</div>
+                <div class="mobile-profile-info">
+                    <h4 id="mobileUserName">Juan Manuel</h4>
+                    <p id="mobileUserTitle">Estudiante</p>
+                </div>
+            </div>
+
             <div class="create-post fade-in">
                 <div class="post-input-container">
                     <div class="post-avatar" id="postAvatar" onclick="goToProfile()">JM</div>
@@ -949,26 +1083,26 @@
 
         <!-- Sidebar Derecha -->
         <aside class="sidebar">
-            <div class="sidebar-title">
+            <div class="sidebar-title" onclick="showSection('achievements')">
                 <i class="fas fa-trophy"></i> Mis Logros
             </div>
             <div class="achievements-grid">
-                <div class="achievement-card">
+                <div class="achievement-card" onclick="showSection('achievements')">
                     <div class="achievement-icon">🏆</div>
                     <div class="achievement-title">Estrella Naciente</div>
                     <div class="achievement-desc">Primera semana de estudio</div>
                 </div>
-                <div class="achievement-card">
+                <div class="achievement-card" onclick="showSection('achievements')">
                     <div class="achievement-icon">📚</div>
                     <div class="achievement-title">Voraz Lector</div>
                     <div class="achievement-desc">50 horas de lectura</div>
                 </div>
-                <div class="achievement-card">
+                <div class="achievement-card" onclick="showSection('achievements')">
                     <div class="achievement-icon">⚡</div>
                     <div class="achievement-title">Rápido Aprendiz</div>
                     <div class="achievement-desc">5 cursos en 1 mes</div>
                 </div>
-                <div class="achievement-card">
+                <div class="achievement-card" onclick="showSection('achievements')">
                     <div class="achievement-icon">🎯</div>
                     <div class="achievement-title">Disciplinado</div>
                     <div class="achievement-desc">30 días seguidos</div>
@@ -1008,7 +1142,254 @@
         </aside>
     </div>
 
+    <!-- ✅ VISTAS DE SECCIONES -->
+    <div class="section-view" id="progressView">
+        <div class="section-header">
+            <div class="section-title">
+                <i class="fas fa-chart-line"></i> Mi Progreso Detallado
+            </div>
+            <button class="back-btn" onclick="hideSections()">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">128</div>
+                <div class="stat-label">Horas de Estudio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">42</div>
+                <div class="stat-label">Lecciones Completadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">87%</div>
+                <div class="stat-label">Promedio de Calificaciones</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Días Consecutivos</div>
+            </div>
+        </div>
+        
+        <div class="sidebar-title" style="margin-top: 1.5rem;">
+            <i class="fas fa-chart-bar"></i> Progreso por Materia
+        </div>
+        
+        <div class="goals-list">
+            <div class="goal-item">
+                <div class="goal-icon" style="background: #4CAF50;">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="goal-info">
+                    <div class="goal-title">Matemáticas</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: 85%; background: #4CAF50;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="goal-item">
+                <div class="goal-icon" style="background: #2196F3;">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <div class="goal-info">
+                    <div class="goal-title">Ciencias</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: 70%; background: #2196F3;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="goal-item">
+                <div class="goal-icon" style="background: #FF9800;">
+                    <i class="fas fa-language"></i>
+                </div>
+                <div class="goal-info">
+                    <div class="goal-title">Idiomas</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: 60%; background: #FF9800;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-view" id="goalsView">
+        <div class="section-header">
+            <div class="section-title">
+                <i class="fas fa-bullseye"></i> Mis Metas
+            </div>
+            <button class="back-btn" onclick="hideSections()">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+        </div>
+        
+        <div class="goals-list">
+            <div class="goal-item">
+                <div class="goal-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="goal-info">
+                    <div class="goal-title">Completar Matemáticas Básicas</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: 75%"></div>
+                    </div>
+                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 20 lecciones | Completadas: 15</p>
+                </div>
+            </div>
+            <div class="goal-item">
+                <div class="goal-icon">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <div class="goal-info">
+                    <div class="goal-title">Dominar Química General</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: 40%"></div>
+                    </div>
+                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 30 experimentos | Completados: 12</p>
+                </div>
+            </div>
+            <div class="goal-item">
+                <div class="goal-icon">
+                    <i class="fas fa-language"></i>
+                </div>
+                <div class="goal-info">
+                    <div class="goal-title">Alcanzar Inglés Intermedio</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: 60%"></div>
+                    </div>
+                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 50 conversaciones | Completadas: 30</p>
+                </div>
+            </div>
+            <div class="goal-item">
+                <div class="goal-icon" style="background: #9C27B0;">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="goal-info">
+                    <div class="goal-title">Aprender Programación Básica</div>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: 25%; background: #9C27B0;"></div>
+                    </div>
+                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 10 proyectos | Completados: 2.5</p>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary btn-block" style="margin-top: 1.5rem;">
+            <i class="fas fa-plus"></i> Establecer Nueva Meta
+        </button>
+    </div>
+
+    <div class="section-view" id="achievementsView">
+        <div class="section-header">
+            <div class="section-title">
+                <i class="fas fa-trophy"></i> Mis Logros
+            </div>
+            <button class="back-btn" onclick="hideSections()">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+        </div>
+        
+        <div class="achievements-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="achievement-card">
+                <div class="achievement-icon">🏆</div>
+                <div class="achievement-title">Estrella Naciente</div>
+                <div class="achievement-desc">Primera semana de estudio</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">📚</div>
+                <div class="achievement-title">Voraz Lector</div>
+                <div class="achievement-desc">50 horas de lectura</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">⚡</div>
+                <div class="achievement-title">Rápido Aprendiz</div>
+                <div class="achievement-desc">5 cursos en 1 mes</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">🎯</div>
+                <div class="achievement-title">Disciplinado</div>
+                <div class="achievement-desc">30 días seguidos</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">🌟</div>
+                <div class="achievement-title">Estrella en Ascenso</div>
+                <div class="achievement-desc">100 horas de estudio</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">💬</div>
+                <div class="achievement-title">Comunicador</div>
+                <div class="achievement-desc">50 comentarios en foros</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">🔍</div>
+                <div class="achievement-title">Investigador</div>
+                <div class="achievement-desc">20 recursos compartidos</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">👥</div>
+                <div class="achievement-title">Colaborador</div>
+                <div class="achievement-desc">10 proyectos en equipo</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">🎓</div>
+                <div class="achievement-title">Graduado</div>
+                <div class="achievement-desc">Primer curso completado</div>
+            </div>
+        </div>
+        
+        <div class="sidebar-title" style="margin-top: 1.5rem;">
+            <i class="fas fa-lock"></i> Próximos Logros
+        </div>
+        
+        <div class="achievements-grid" style="opacity: 0.6;">
+            <div class="achievement-card">
+                <div class="achievement-icon">🚀</div>
+                <div class="achievement-title">Experto</div>
+                <div class="achievement-desc">500 horas de estudio</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon">🏅</div>
+                <div class="achievement-title">Maestro</div>
+                <div class="achievement-desc">20 cursos completados</div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ===== ✅ SISTEMA DE VISTAS DE SECCIONES =====
+        function showSection(section) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Ocultar el contenido principal
+            document.querySelector('.main-container').style.display = 'none';
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(section + 'View').classList.add('active');
+            
+            // Mostrar notificación
+            const sectionNames = {
+                'progress': 'Progreso',
+                'goals': 'Metas', 
+                'achievements': 'Logros'
+            };
+            showNotification(`Vista de ${sectionNames[section]} activada`, 'info');
+        }
+
+        function hideSections() {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Mostrar el contenido principal
+            document.querySelector('.main-container').style.display = 'flex';
+            
+            showNotification('Volviendo al inicio', 'info');
+        }
+
         // ===== ✅ SISTEMA DE COMPARTIR MEJORADO =====
         function generateQRCode() {
             const appUrl = "https://juanarbanilneo.github.io/neostudy-app/";
@@ -1105,9 +1486,11 @@
             if (userData) {
                 const userName = userData.nombre || 'Usuario NeoStudy';
                 document.getElementById('userName').textContent = userName;
+                document.getElementById('mobileUserName').textContent = userName;
                 
                 const userTitle = userData.titulo || 'Estudiante';
                 document.getElementById('userTitle').textContent = userTitle;
+                document.getElementById('mobileUserTitle').textContent = userTitle;
                 
                 updateProfilePhoto(userName, profileData);
                 
@@ -1123,7 +1506,7 @@
         }
 
         function updateProfilePhoto(userName, profileData) {
-            const avatares = document.querySelectorAll('.avatar, .post-avatar, .post-user-avatar');
+            const avatares = document.querySelectorAll('.avatar, .post-avatar, .post-user-avatar, #mobileAvatar');
             const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
             
             avatares.forEach(avatar => {
@@ -1281,7 +1664,7 @@
                 'estudio': 'Modo Estudio'
             };
             
-            btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
+            btn.innerHTML = `<i class="${icons[mode]}"></i> <span class="btn-text">${texts[mode]}</span>`;
             
             showNotification(`${texts[mode]} activado`, 'info');
             localStorage.setItem('neoStudyTheme', mode);
@@ -1320,6 +1703,7 @@
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
             document.getElementById('postAvatar').onclick = goToProfile;
+            document.getElementById('mobileAvatar').onclick = goToProfile;
             
             document.getElementById('postContent').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && e.ctrlKey) {
