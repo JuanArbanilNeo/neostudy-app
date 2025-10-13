@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neo Study - Plataforma Educativa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- ✅ AGREGADO: Librería para QR -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         * {
@@ -141,78 +140,135 @@
             gap: 0.5rem;
         }
 
-        /* ✅ NUEVA SECCIÓN: Compartir App */
-        .share-section {
+        /* ✅ MEJORADO: Botón Flotante para Compartir */
+        .floating-share-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 20px 0;
-            text-align: center;
-            grid-column: 1 / -1;
-        }
-
-        .share-section h2 {
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-        }
-
-        .share-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .share-btn {
-            background: rgba(255,255,255,0.2);
             border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-share-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        /* ✅ MEJORADO: Modal para Compartir */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .share-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .share-modal h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .share-modal-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .share-modal-btn {
+            background: var(--light);
+            border: 2px solid var(--primary);
+            padding: 1rem;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 0.5rem;
             font-weight: 600;
-            backdrop-filter: blur(10px);
+            color: var(--primary);
         }
 
-        .share-btn:hover {
-            background: rgba(255,255,255,0.3);
+        .share-modal-btn:hover {
+            background: var(--primary);
+            color: white;
             transform: translateY(-2px);
         }
 
-        .qr-container {
-            background: white;
-            padding: 20px;
+        .qr-section {
+            background: var(--light);
+            padding: 1.5rem;
             border-radius: 15px;
-            margin-top: 20px;
-            display: inline-block;
+            margin: 1.5rem 0;
         }
 
         .qr-code {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 15px;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 15px;
             background: white;
         }
 
         .link-copy {
             display: flex;
             gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
+            margin-top: 1rem;
         }
 
         .link-copy input {
             flex: 1;
-            max-width: 300px;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 0.9rem;
@@ -222,7 +278,7 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.3s ease;
@@ -600,23 +656,108 @@
             justify-content: center;
         }
 
-        /* Responsive */
+        /* ✅ MEJORADO: Responsive para móvil */
         @media (max-width: 1024px) {
             .main-container {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
             
             .sidebar {
+                display: block !important;
+                margin-bottom: 1rem;
+            }
+
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .user-menu {
+                gap: 0.5rem;
+            }
+
+            .post-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-wrap: wrap;
+            }
+
+            .nav-item {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            .user-menu {
+                flex-wrap: wrap;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .post-input-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .share-modal-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .share-modal-content {
+                padding: 1.5rem;
+            }
+            
+            .qr-code {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .nav-item span {
                 display: none;
             }
 
-            .share-buttons {
-                flex-direction: column;
-                align-items: center;
+            .nav-item {
+                padding: 0.5rem;
             }
 
-            .share-btn {
-                width: 200px;
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -728,11 +869,9 @@
                 Neo Study
             </div>
             <nav class="nav-menu">
-                <!-- ✅ CORREGIDO: Enlace directo al Módulo 2 -->
                 <a href="modulo2_iniciodecesión.html" class="nav-item active">
                     <i class="fas fa-home"></i> Inicio
                 </a>
-                <!-- ✅ MODIFICADO: Enlace a módulo de cursos -->
                 <a href="modulo4_cursos.html" class="nav-item">
                     <i class="fas fa-book"></i> Cursos
                 </a>
@@ -745,7 +884,6 @@
             </nav>
             <div class="user-menu">
                 <div class="avatar" id="userAvatar" onclick="goToProfile()">JM</div>
-                <!-- ✅ AGREGADO: Botón de Cerrar Sesión -->
                 <button class="btn btn-danger" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </button>
@@ -756,48 +894,55 @@
         </div>
     </header>
 
-    <!-- Contenido Principal -->
-    <div class="main-container">
-        <!-- ✅ NUEVA SECCIÓN: Compartir NeoStudy -->
-        <section class="share-section fade-in">
+    <!-- ✅ MEJORADO: Botón Flotante para Compartir -->
+    <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos a NeoStudy">
+        <i class="fas fa-share-alt"></i>
+    </button>
+
+    <!-- ✅ MEJORADO: Modal para Compartir -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-modal-content">
+            <span class="close-modal" onclick="closeShareModal()">&times;</span>
             <h2>¡Invita a tus amigos a NeoStudy! 🚀</h2>
             <p>Comparte nuestra plataforma y ayuda a más estudiantes a alcanzar sus metas</p>
             
-            <div class="share-buttons">
-                <button class="share-btn" onclick="shareNative()">
+            <div class="share-modal-buttons">
+                <button class="share-modal-btn" onclick="shareNative()">
                     <i class="fas fa-share-alt"></i> Compartir Enlace
                 </button>
-                <button class="share-btn" onclick="shareWhatsApp()">
+                <button class="share-modal-btn" onclick="shareWhatsApp()">
                     <i class="fab fa-whatsapp"></i> WhatsApp
                 </button>
-                <button class="share-btn" onclick="shareFacebook()">
+                <button class="share-modal-btn" onclick="shareFacebook()">
                     <i class="fab fa-facebook"></i> Facebook
                 </button>
-                <button class="share-btn" onclick="shareTelegram()">
+                <button class="share-modal-btn" onclick="shareTelegram()">
                     <i class="fab fa-telegram"></i> Telegram
                 </button>
             </div>
 
-            <div class="link-copy">
-                <input type="text" id="appLink" value="https://neostudy.com/invite/student123" readonly>
-                <button class="copy-btn" onclick="copyLink()">
-                    <i class="fas fa-copy"></i> Copiar
-                </button>
-            </div>
-
-            <!-- Código QR -->
-            <div class="qr-container">
-                <h3 style="color: #333; margin-bottom: 15px;">Código QR para tus libros</h3>
+            <div class="qr-section">
+                <h3 style="margin-bottom: 1rem;">Código QR para tus libros</h3>
                 <div class="qr-code" id="qrCode"></div>
-                <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">
-                    Escanea para descargar la app
+                <p style="color: var(--secondary); margin: 1rem 0;">
+                    Escanea para acceder a NeoStudy
                 </p>
                 <button class="btn btn-primary" onclick="downloadQR()">
                     <i class="fas fa-download"></i> Descargar QR
                 </button>
             </div>
-        </section>
 
+            <div class="link-copy">
+                <input type="text" id="appLink" value="https://juanarbanilneo.github.io/neostudy-app/" readonly>
+                <button class="copy-btn" onclick="copyLink()">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="main-container">
         <!-- Sidebar Izquierda - Perfil y Metas -->
         <aside class="sidebar">
             <!-- Perfil de Usuario -->
@@ -1029,12 +1174,14 @@
     </div>
 
     <script>
-        // ===== ✅ NUEVO: SISTEMA DE COMPARTIR Y QR =====
+        // ===== ✅ MEJORADO: SISTEMA DE COMPARTIR =====
         function generateQRCode() {
-            const appUrl = "https://neostudy.com/invite/student123";
+            // ✅ CORREGIDO: Usar tu enlace real de GitHub Pages
+            const appUrl = "https://juanarbanilneo.github.io/neostudy-app/";
+            
             QRCode.toCanvas(document.getElementById('qrCode'), appUrl, {
-                width: 150,
-                height: 150,
+                width: 200,
+                height: 200,
                 margin: 1,
                 color: {
                     dark: '#000000',
@@ -1046,11 +1193,28 @@
             });
         }
 
+        function openShareModal() {
+            document.getElementById('shareModal').style.display = 'flex';
+            generateQRCode();
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        // Cerrar modal al hacer click fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('shareModal');
+            if (event.target === modal) {
+                closeShareModal();
+            }
+        }
+
         function shareNative() {
             const shareData = {
                 title: 'NeoStudy - Plataforma Educativa',
                 text: '¡Únete a NeoStudy! La mejor plataforma para estudiantes. Cursos, tutorías y comunidad educativa.',
-                url: 'https://neostudy.com/invite/student123'
+                url: 'https://juanarbanilneo.github.io/neostudy-app/'
             };
 
             if (navigator.share) {
@@ -1061,29 +1225,35 @@
                 copyLink();
                 showNotification('Enlace copiado al portapapeles 📋', 'info');
             }
+            closeShareModal();
         }
 
         function shareWhatsApp() {
-            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa. 🎓\nhttps://neostudy.com/invite/student123');
-            window.open(https://wa.me/?text=${text}, '_blank');
+            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa. 🎓\nhttps://juanarbanilneo.github.io/neostudy-app/');
+            window.open(`https://wa.me/?text=${text}`, '_blank');
             showNotification('Compartiendo en WhatsApp...', 'info');
+            closeShareModal();
         }
 
         function shareFacebook() {
-            const url = encodeURIComponent('https://neostudy.com/invite/student123');
-            window.open(https://www.facebook.com/sharer/sharer.php?u=${url}, '_blank');
+            const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
             showNotification('Compartiendo en Facebook...', 'info');
+            closeShareModal();
         }
 
         function shareTelegram() {
             const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa 🎓');
-            const url = encodeURIComponent('https://neostudy.com/invite/student123');
-            window.open(https://t.me/share/url?url=${url}&text=${text}, '_blank');
+            const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
+            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
             showNotification('Compartiendo en Telegram...', 'info');
+            closeShareModal();
         }
 
         function copyLink() {
             const linkInput = document.getElementById('appLink');
+            linkInput.value = 'https://juanarbanilneo.github.io/neostudy-app/';
+            
             linkInput.select();
             linkInput.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(linkInput.value)
@@ -1105,30 +1275,28 @@
             }
         }
 
+        // ===== ✅ CORREGIDO: NAVEGACIÓN AL PERFIL =====
+        function goToProfile() {
+            window.location.href = 'modulo3_perfil.html';
+        }
+
         // ===== SISTEMA MEJORADO DE CARGA DE USUARIO =====
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             
-            console.log('🔍 DEBUG - Datos del usuario:', userData);
-            console.log('🔍 DEBUG - Datos del perfil:', profileData);
-            
             if (userData) {
-                // Mostrar nombre real del usuario
                 const userName = userData.nombre || 'Usuario NeoStudy';
                 document.getElementById('userName').textContent = userName;
                 
-                // Mostrar categoría/título correcto
                 const userTitle = userData.titulo || 'Estudiante';
                 document.getElementById('userTitle').textContent = userTitle;
                 
-                // ✅ CORREGIDO: Buscar foto en profileData.profilePhoto
                 updateProfilePhoto(userName, profileData);
                 
-                // Personalizar placeholder del post
-                document.getElementById('postContent').placeholder = ¿Qué estás aprendiendo hoy, ${userName.split(' ')[0]}?;
+                document.getElementById('postContent').placeholder = `¿Qué estás aprendiendo hoy, ${userName.split(' ')[0]}?`;
                 
-                showNotification(¡Bienvenido de nuevo, ${userName.split(' ')[0]}! 🎓, 'success');
+                showNotification(`¡Bienvenido de nuevo, ${userName.split(' ')[0]}! 🎓`, 'success');
             } else {
                 showNotification('Por favor inicia sesión primero', 'danger');
                 setTimeout(() => {
@@ -1142,9 +1310,6 @@
             const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar');
             const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
             
-            console.log('🖼 DEBUG - Foto de perfil encontrada:', profileData.profilePhoto);
-            console.log('🖼 DEBUG - Iniciales:', initials);
-            
             avatares.forEach(avatar => {
                 if (profileData.profilePhoto && 
                     profileData.profilePhoto !== "" && 
@@ -1152,19 +1317,15 @@
                     profileData.profilePhoto !== "undefined" &&
                     profileData.profilePhoto.startsWith('data:image')) {
                     
-                    // ✅ USAR FOTO DE PERFIL
-                    avatar.style.backgroundImage = url(${profileData.profilePhoto});
+                    avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
                     avatar.textContent = '';
                     avatar.style.backgroundSize = 'cover';
                     avatar.style.backgroundPosition = 'center';
                     avatar.style.background = 'none';
-                    console.log('✅ Foto aplicada al avatar');
                 } else {
-                    // ✅ USAR INICIALES
                     avatar.textContent = initials;
                     avatar.style.backgroundImage = 'none';
                     avatar.style.background = 'var(--bg-gradient)';
-                    console.log('✅ Iniciales aplicadas al avatar');
                 }
             });
         }
@@ -1185,10 +1346,6 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        function goToProfile() {
-            window.location.href = 'modulo3_perfil.html';
-        }
-
         // ===== SISTEMA DE PUBLICACIONES =====
         function createPost() {
             const content = document.getElementById('postContent').value;
@@ -1202,15 +1359,13 @@
             const userName = userData?.nombre || 'Usuario';
             const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
             
-            // ✅ CORREGIDO: Usar foto de perfil si existe
             let userAvatarHTML;
             if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
-                userAvatarHTML = <div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>;
+                userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
             } else {
-                userAvatarHTML = <div class="post-user-avatar">${initials}</div>;
+                userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
             }
 
-            // Crear nueva publicación
             const newPost = document.createElement('div');
             newPost.className = 'post fade-in';
             newPost.innerHTML = `
@@ -1241,12 +1396,8 @@
                 </div>
             `;
 
-            // Insertar después del crear publicación
             document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
-            
-            // Limpiar textarea
             document.getElementById('postContent').value = '';
-            
             showNotification('¡Publicación creada exitosamente! 🎉', 'success');
         }
 
@@ -1254,7 +1405,7 @@
             const post = button.closest('.post');
             const stats = post.querySelector('.post-stats span:first-child');
             const currentLikes = parseInt(stats.textContent) || 0;
-            stats.textContent = ${currentLikes + 1} reacciones;
+            stats.textContent = `${currentLikes + 1} reacciones`;
             
             button.style.color = 'var(--primary)';
             button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
@@ -1270,24 +1421,23 @@
             
             const input = document.getElementById('postContent');
             if (input.value.includes(mediaTypes[type].split(' ')[1])) {
-                showNotification(Ya agregaste un ${type} a esta publicación, 'warning');
+                showNotification(`Ya agregaste un ${type} a esta publicación`, 'warning');
                 return;
             }
             
             if (input.value.trim() === '') {
                 input.value = `${mediaTypes[type]} - `;
             } else {
-                input.value += \n${mediaTypes[type]};
+                input.value += `\n${mediaTypes[type]}`;
             }
             
-            showNotification(Preparado para subir ${type}..., 'info');
+            showNotification(`Preparado para subir ${type}...`, 'info');
         }
 
         // ===== SISTEMA DE 3 MODOS DE TEMA =====
-        let currentMode = 'normal'; // 'normal', 'oscuro', 'estudio'
+        let currentMode = 'normal';
 
         function toggleThemeMode() {
-            // Rotar entre los tres modos
             if (currentMode === 'normal') {
                 setThemeMode('oscuro');
             } else if (currentMode === 'oscuro') {
@@ -1298,20 +1448,16 @@
         }
 
         function setThemeMode(mode) {
-            // Remover clases anteriores
             document.body.classList.remove('study-mode', 'dark-mode');
             
-            // Aplicar nuevo modo
             if (mode === 'estudio') {
                 document.body.classList.add('study-mode');
             } else if (mode === 'oscuro') {
                 document.body.classList.add('dark-mode');
             }
-            // 'normal' no necesita clase adicional
             
             currentMode = mode;
             
-            // Actualizar botón
             const btn = document.querySelector('.btn-primary');
             const icons = {
                 'normal': 'fas fa-sun',
@@ -1324,14 +1470,11 @@
                 'estudio': 'Modo Estudio'
             };
             
-            btn.innerHTML = <i class="${icons[mode]}"></i> ${texts[mode]};
+            btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
             
-            showNotification(${texts[mode]} activado, 'info');
-            
-            // Guardar preferencia en localStorage para que sea global
+            showNotification(`${texts[mode]} activado`, 'info');
             localStorage.setItem('neoStudyTheme', mode);
             
-            // Iniciar sesión de estudio si es necesario
             if (mode === 'estudio') {
                 startStudySession();
             }
@@ -1349,7 +1492,6 @@
                 const hours = Math.floor(seconds / 3600);
                 const minutes = Math.floor((seconds % 3600) / 60);
                 
-                // Actualizar estadísticas
                 document.getElementById('studyHours').textContent = 128 + hours;
                 document.getElementById('completedGoals').textContent = 12 + Math.floor(hours / 2);
                 
@@ -1358,7 +1500,6 @@
 
         // ===== SISTEMA DE NOTIFICACIONES =====
         function showNotification(message, type = 'info') {
-            // Remover notificación anterior si existe
             const existingNotification = document.querySelector('.notification');
             if (existingNotification) {
                 existingNotification.remove();
@@ -1394,27 +1535,20 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             
-            // ✅ NUEVO: Generar código QR al cargar la página
-            generateQRCode();
-            
-            // ✅ MODIFICADO: Cargar modo guardado globalmente
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setThemeMode(savedTheme);
             
-            // Configurar navegación
             document.querySelector('.logo').onclick = goToFeed;
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
             document.getElementById('postAvatar').onclick = goToProfile;
             
-            // Enter para publicar
             document.getElementById('postContent').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && e.ctrlKey) {
                     createPost();
                 }
             });
 
-            // ✅ NUEVO: Verificar actualizaciones cada 2 segundos
             setInterval(checkForProfileUpdates, 2000);
         });
     </script>
