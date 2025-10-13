@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Study - Plataforma Educativa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ✅ AGREGADO: Librería para QR -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #00C4FF;
+            --primary-dark: #007bff;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #00C4FF, #007bff);
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Header y Navegación */
+        .header {
+            background: var(--bg-gradient);
+            color: var(--white);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Contenido Principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 80px auto 20px;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 1.5rem;
+        }
+
+        /* Sidebars */
+        .sidebar {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ✅ NUEVA SECCIÓN: Compartir App */
+        .share-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        .share-section h2 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .share-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .qr-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: white;
+        }
+
+        .link-copy {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .link-copy input {
+            flex: 1;
+            max-width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Panel de Estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        /* Progreso de Metas */
+        .goal-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light);
+            transition: background-color 0.3s ease;
+        }
+
+        .goal-item:hover {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .goal-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .goal-info {
+            flex: 1;
+        }
+
+        .goal-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .goal-progress {
+            height: 6px;
+            background: var(--light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .goal-progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Feed Principal */
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Crear Publicación */
+        .create-post {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .post-input-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .post-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .post-input {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid var(--light);
+            border-radius: 25px;
+            background: var(--light);
+            resize: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .post-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
+        }
+
+        .post-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .post-action {
+            background: none;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .post-action:hover {
+            background: var(--light);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* Publicaciones */
+        .post {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .post-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .post-user-info h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .post-time {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .post-content {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-actions-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            border-top: 1px solid var(--light);
+            padding-top: 0.5rem;
+        }
+
+        .post-action-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .post-action-btn:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        /* Sistema de Logros */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .achievement-card {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .achievement-desc {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        /* Clases en Vivo */
+        .live-classes {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 1.5rem;
+        }
+
+        .class-card {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateX(5px);
+        }
+
+        .class-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .class-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--bg-gradient);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+
+            .share-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .share-btn {
+                width: 200px;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Modo Estudio */
+        .study-mode {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .study-mode .header {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .study-mode .sidebar,
+        .study-mode .create-post,
+        .study-mode .post,
+        .study-mode .live-classes {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .study-mode .post-input {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .study-mode .post-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Modo Oscuro */
+        .dark-mode {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .dark-mode .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+
+        .dark-mode .sidebar,
+        .dark-mode .create-post,
+        .dark-mode .post,
+        .dark-mode .live-classes {
+            background: #2d2d2d;
+            color: #ffffff;
+        }
+
+        .dark-mode .post-input,
+        .dark-mode .stat-card,
+        .dark-mode .achievement-card,
+        .dark-mode .class-card {
+            background: #3d3d3d;
+            color: #ffffff;
+            border-color: #444;
+        }
+
+        .dark-mode .post-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
+        }
+
+        .dark-mode .goal-item:hover,
+        .dark-mode .post-action:hover,
+        .dark-mode .post-action-btn:hover {
+            background: #3d3d3d;
+        }
+
+        .dark-mode .stat-label,
+        .dark-mode .post-time,
+        .dark-mode .achievement-desc,
+        .dark-mode .class-meta {
+            color: #cccccc;
+        }
+
+        /* Notificaciones */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header CORREGIDO -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo" onclick="goToFeed()">
+                <i class="fas fa-graduation-cap"></i>
+                Neo Study
+            </div>
+            <nav class="nav-menu">
+                <!-- ✅ CORREGIDO: Enlace directo al Módulo 2 -->
+                <a href="modulo2_iniciodecesión.html" class="nav-item active">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <!-- ✅ MODIFICADO: Enlace a módulo de cursos -->
+                <a href="modulo4_cursos.html" class="nav-item">
+                    <i class="fas fa-book"></i> Cursos
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i> Comunidad
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-calendar"></i> Calendario
+                </a>
+            </nav>
+            <div class="user-menu">
+                <div class="avatar" id="userAvatar" onclick="goToProfile()">JM</div>
+                <!-- ✅ AGREGADO: Botón de Cerrar Sesión -->
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+                <button class="btn btn-primary" onclick="toggleThemeMode()">
+                    <i class="fas fa-moon"></i> Modo Normal
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <div class="main-container">
+        <!-- ✅ NUEVA SECCIÓN: Compartir NeoStudy -->
+        <section class="share-section fade-in">
+            <h2>¡Invita a tus amigos a NeoStudy! 🚀</h2>
+            <p>Comparte nuestra plataforma y ayuda a más estudiantes a alcanzar sus metas</p>
+            
+            <div class="share-buttons">
+                <button class="share-btn" onclick="shareNative()">
+                    <i class="fas fa-share-alt"></i> Compartir Enlace
+                </button>
+                <button class="share-btn" onclick="shareWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="share-btn" onclick="shareFacebook()">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+                <button class="share-btn" onclick="shareTelegram()">
+                    <i class="fab fa-telegram"></i> Telegram
+                </button>
+            </div>
+
+            <div class="link-copy">
+                <input type="text" id="appLink" value="https://neostudy.com/invite/student123" readonly>
+                <button class="copy-btn" onclick="copyLink()">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+            </div>
+
+            <!-- Código QR -->
+            <div class="qr-container">
+                <h3 style="color: #333; margin-bottom: 15px;">Código QR para tus libros</h3>
+                <div class="qr-code" id="qrCode"></div>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">
+                    Escanea para descargar la app
+                </p>
+                <button class="btn btn-primary" onclick="downloadQR()">
+                    <i class="fas fa-download"></i> Descargar QR
+                </button>
+            </div>
+        </section>
+
+        <!-- Sidebar Izquierda - Perfil y Metas -->
+        <aside class="sidebar">
+            <!-- Perfil de Usuario -->
+            <div class="user-profile">
+                <div class="post-input-container">
+                    <div class="post-avatar" id="mainAvatar" onclick="goToProfile()">JM</div>
+                    <div>
+                        <h4 id="userName">Juan Manuel</h4>
+                        <p class="post-time" id="userTitle">Estudiante Universitario</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas Rápidas -->
+            <div class="sidebar-title">
+                <i class="fas fa-chart-line"></i> Mi Progreso
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="studyHours">128</div>
+                    <div class="stat-label">Horas Est.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedGoals">12</div>
+                    <div class="stat-label">Metas Cumpl.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="coursesTaken">8</div>
+                    <div class="stat-label">Cursos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="achievements">15</div>
+                    <div class="stat-label">Logros</div>
+                </div>
+            </div>
+
+            <!-- Metas Activas -->
+            <div class="sidebar-title">
+                <i class="fas fa-bullseye"></i> Mis Metas
+            </div>
+            <div class="goals-list">
+                <div class="goal-item">
+                    <div class="goal-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="goal-info">
+                        <div class="goal-title">Matemáticas Básicas</div>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <div class="goal-info">
+                        <div class="goal-title">Química General</div>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar" style="width: 40%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="goal-info">
+                        <div class="goal-title">Inglés Intermedio</div>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Feed Principal -->
+        <main class="feed">
+            <!-- Crear Publicación -->
+            <div class="create-post fade-in">
+                <div class="post-input-container">
+                    <div class="post-avatar" id="postAvatar" onclick="goToProfile()">JM</div>
+                    <textarea class="post-input" placeholder="¿Qué estás aprendiendo hoy?" id="postContent"></textarea>
+                </div>
+                <div class="post-actions">
+                    <button class="post-action" onclick="addPostMedia('foto')">
+                        <i class="fas fa-image"></i> Foto
+                    </button>
+                    <button class="post-action" onclick="addPostMedia('video')">
+                        <i class="fas fa-video"></i> Video
+                    </button>
+                    <button class="post-action" onclick="addPostMedia('documento')">
+                        <i class="fas fa-file-alt"></i> Documento
+                    </button>
+                    <button class="post-action" onclick="createPost()" style="color: var(--primary);">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Publicaciones -->
+            <div class="post fade-in">
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-user-avatar">AM</div>
+                        <div class="post-user-info">
+                            <h4>Ana Martínez</h4>
+                            <p class="post-time">Hace 2 horas · <i class="fas fa-graduation-cap"></i></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    ¡Acabo de completar el curso de Álgebra Lineal! 🎉 Los eigenvalores ya no son un misterio para mí. #Matemáticas #Progreso
+                </div>
+                <div class="post-stats">
+                    <span>125 reacciones</span>
+                    <span>28 comentarios</span>
+                </div>
+                <div class="post-actions-bar">
+                    <button class="post-action-btn">
+                        <i class="fas fa-thumbs-up"></i> Me gusta
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-comment"></i> Comentar
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-share"></i> Compartir
+                    </button>
+                </div>
+            </div>
+
+            <div class="post fade-in">
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-user-avatar">CP</div>
+                        <div class="post-user-info">
+                            <h4>Carlos Pérez - Tutor</h4>
+                            <p class="post-time">Ayer · <i class="fas fa-chalkboard-teacher"></i></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    📚 Clase en vivo este sábado: "Resolución de problemas de Física - Movimiento Parabólico". 
+                    ¡No se lo pierdan! Traigan sus dudas y ejercicios.
+                </div>
+                <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    CLASE EN VIVO - SÁBADO 3 PM
+                </div>
+                <div class="post-stats">
+                    <span>89 interesados</span>
+                    <span>15 comentarios</span>
+                </div>
+                <div class="post-actions-bar">
+                    <button class="post-action-btn">
+                        <i class="fas fa-thumbs-up"></i> Me interesa
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-calendar-plus"></i> Recordar
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-share"></i> Compartir
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar Derecha - Logros y Clases -->
+        <aside class="sidebar">
+            <!-- Logros Recientes -->
+            <div class="sidebar-title">
+                <i class="fas fa-trophy"></i> Mis Logros
+            </div>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-title">Estrella Naciente</div>
+                    <div class="achievement-desc">Primera semana de estudio</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">📚</div>
+                    <div class="achievement-title">Voraz Lector</div>
+                    <div class="achievement-desc">50 horas de lectura</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">⚡</div>
+                    <div class="achievement-title">Rápido Aprendiz</div>
+                    <div class="achievement-desc">5 cursos en 1 mes</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🎯</div>
+                    <div class="achievement-title">Disciplinado</div>
+                    <div class="achievement-desc">30 días seguidos</div>
+                </div>
+            </div>
+
+            <!-- Clases en Vivo Programadas -->
+            <div class="sidebar-title" style="margin-top: 2rem;">
+                <i class="fas fa-video"></i> Próximas Clases
+            </div>
+            <div class="live-classes">
+                <div class="class-card">
+                    <div class="class-title">Matemáticas: Cálculo Diferencial</div>
+                    <div class="class-meta">
+                        <span>Sábado 3:00 PM</span>
+                        <span>Prof. Carlos</span>
+                    </div>
+                </div>
+                <div class="class-card">
+                    <div class="class-title">Química: Estequiometría</div>
+                    <div class="class-meta">
+                        <span>Domingo 10:00 AM</span>
+                        <span>Prof. Ana</span>
+                    </div>
+                </div>
+                <div class="class-card">
+                    <div class="class-title">Razonamiento Verbal</div>
+                    <div class="class-meta">
+                        <span>Lunes 6:00 PM</span>
+                        <span>Prof. Luis</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" style="margin-top: 1rem;">
+                <i class="fas fa-calendar-alt"></i> Ver Calendario Completo
+            </button>
+        </aside>
+    </div>
+
+    <script>
+        // ===== ✅ NUEVO: SISTEMA DE COMPARTIR Y QR =====
+        function generateQRCode() {
+            const appUrl = "https://neostudy.com/invite/student123";
+            QRCode.toCanvas(document.getElementById('qrCode'), appUrl, {
+                width: 150,
+                height: 150,
+                margin: 1,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function(error) {
+                if (error) console.error(error);
+                console.log('QR code generado exitosamente!');
+            });
+        }
+
+        function shareNative() {
+            const shareData = {
+                title: 'NeoStudy - Plataforma Educativa',
+                text: '¡Únete a NeoStudy! La mejor plataforma para estudiantes. Cursos, tutorías y comunidad educativa.',
+                url: 'https://neostudy.com/invite/student123'
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .then(() => showNotification('¡Compartido exitosamente! 🎉', 'success'))
+                    .catch(error => showNotification('Compartir cancelado', 'info'));
+            } else {
+                copyLink();
+                showNotification('Enlace copiado al portapapeles 📋', 'info');
+            }
+        }
+
+        function shareWhatsApp() {
+            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa. 🎓\nhttps://neostudy.com/invite/student123');
+            window.open(https://wa.me/?text=${text}, '_blank');
+            showNotification('Compartiendo en WhatsApp...', 'info');
+        }
+
+        function shareFacebook() {
+            const url = encodeURIComponent('https://neostudy.com/invite/student123');
+            window.open(https://www.facebook.com/sharer/sharer.php?u=${url}, '_blank');
+            showNotification('Compartiendo en Facebook...', 'info');
+        }
+
+        function shareTelegram() {
+            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa 🎓');
+            const url = encodeURIComponent('https://neostudy.com/invite/student123');
+            window.open(https://t.me/share/url?url=${url}&text=${text}, '_blank');
+            showNotification('Compartiendo en Telegram...', 'info');
+        }
+
+        function copyLink() {
+            const linkInput = document.getElementById('appLink');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(linkInput.value)
+                .then(() => showNotification('Enlace copiado al portapapeles 📋', 'success'))
+                .catch(err => {
+                    document.execCommand('copy');
+                    showNotification('Enlace copiado al portapapeles 📋', 'success');
+                });
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrCode canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'neostudy-qr-code.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showNotification('QR descargado exitosamente 📱', 'success');
+            }
+        }
+
+        // ===== SISTEMA MEJORADO DE CARGA DE USUARIO =====
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            console.log('🔍 DEBUG - Datos del usuario:', userData);
+            console.log('🔍 DEBUG - Datos del perfil:', profileData);
+            
+            if (userData) {
+                // Mostrar nombre real del usuario
+                const userName = userData.nombre || 'Usuario NeoStudy';
+                document.getElementById('userName').textContent = userName;
+                
+                // Mostrar categoría/título correcto
+                const userTitle = userData.titulo || 'Estudiante';
+                document.getElementById('userTitle').textContent = userTitle;
+                
+                // ✅ CORREGIDO: Buscar foto en profileData.profilePhoto
+                updateProfilePhoto(userName, profileData);
+                
+                // Personalizar placeholder del post
+                document.getElementById('postContent').placeholder = ¿Qué estás aprendiendo hoy, ${userName.split(' ')[0]}?;
+                
+                showNotification(¡Bienvenido de nuevo, ${userName.split(' ')[0]}! 🎓, 'success');
+            } else {
+                showNotification('Por favor inicia sesión primero', 'danger');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 2000);
+            }
+        }
+
+        // ===== FUNCIÓN ESPECÍFICA PARA ACTUALIZAR FOTO =====
+        function updateProfilePhoto(userName, profileData) {
+            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar');
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            console.log('🖼 DEBUG - Foto de perfil encontrada:', profileData.profilePhoto);
+            console.log('🖼 DEBUG - Iniciales:', initials);
+            
+            avatares.forEach(avatar => {
+                if (profileData.profilePhoto && 
+                    profileData.profilePhoto !== "" && 
+                    profileData.profilePhoto !== "null" && 
+                    profileData.profilePhoto !== "undefined" &&
+                    profileData.profilePhoto.startsWith('data:image')) {
+                    
+                    // ✅ USAR FOTO DE PERFIL
+                    avatar.style.backgroundImage = url(${profileData.profilePhoto});
+                    avatar.textContent = '';
+                    avatar.style.backgroundSize = 'cover';
+                    avatar.style.backgroundPosition = 'center';
+                    avatar.style.background = 'none';
+                    console.log('✅ Foto aplicada al avatar');
+                } else {
+                    // ✅ USAR INICIALES
+                    avatar.textContent = initials;
+                    avatar.style.backgroundImage = 'none';
+                    avatar.style.background = 'var(--bg-gradient)';
+                    console.log('✅ Iniciales aplicadas al avatar');
+                }
+            });
+        }
+
+        // ===== SISTEMA DE CERRAR SESIÓN =====
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                showNotification('Sesión cerrada correctamente', 'info');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 1500);
+            }
+        }
+
+        // ===== NAVEGACIÓN MEJORADA =====
+        function goToFeed(e) {
+            if (e) e.preventDefault();
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        function goToProfile() {
+            window.location.href = 'modulo3_perfil.html';
+        }
+
+        // ===== SISTEMA DE PUBLICACIONES =====
+        function createPost() {
+            const content = document.getElementById('postContent').value;
+            if (content.trim() === '') {
+                showNotification('Por favor escribe algo para publicar', 'warning');
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const userName = userData?.nombre || 'Usuario';
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            // ✅ CORREGIDO: Usar foto de perfil si existe
+            let userAvatarHTML;
+            if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
+                userAvatarHTML = <div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>;
+            } else {
+                userAvatarHTML = <div class="post-user-avatar">${initials}</div>;
+            }
+
+            // Crear nueva publicación
+            const newPost = document.createElement('div');
+            newPost.className = 'post fade-in';
+            newPost.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        ${userAvatarHTML}
+                        <div class="post-user-info">
+                            <h4>${userName}</h4>
+                            <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">${content}</div>
+                <div class="post-stats">
+                    <span>0 reacciones</span>
+                    <span>0 comentarios</span>
+                </div>
+                <div class="post-actions-bar">
+                    <button class="post-action-btn" onclick="likePost(this)">
+                        <i class="fas fa-thumbs-up"></i> Me gusta
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-comment"></i> Comentar
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-share"></i> Compartir
+                    </button>
+                </div>
+            `;
+
+            // Insertar después del crear publicación
+            document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
+            
+            // Limpiar textarea
+            document.getElementById('postContent').value = '';
+            
+            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
+        }
+
+        function likePost(button) {
+            const post = button.closest('.post');
+            const stats = post.querySelector('.post-stats span:first-child');
+            const currentLikes = parseInt(stats.textContent) || 0;
+            stats.textContent = ${currentLikes + 1} reacciones;
+            
+            button.style.color = 'var(--primary)';
+            button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
+        }
+
+        // ===== SISTEMA DE MEDIOS =====
+        function addPostMedia(type) {
+            const mediaTypes = {
+                'foto': '📷 Foto agregada',
+                'video': '🎥 Video agregado', 
+                'documento': '📄 Documento agregado'
+            };
+            
+            const input = document.getElementById('postContent');
+            if (input.value.includes(mediaTypes[type].split(' ')[1])) {
+                showNotification(Ya agregaste un ${type} a esta publicación, 'warning');
+                return;
+            }
+            
+            if (input.value.trim() === '') {
+                input.value = `${mediaTypes[type]} - `;
+            } else {
+                input.value += \n${mediaTypes[type]};
+            }
+            
+            showNotification(Preparado para subir ${type}..., 'info');
+        }
+
+        // ===== SISTEMA DE 3 MODOS DE TEMA =====
+        let currentMode = 'normal'; // 'normal', 'oscuro', 'estudio'
+
+        function toggleThemeMode() {
+            // Rotar entre los tres modos
+            if (currentMode === 'normal') {
+                setThemeMode('oscuro');
+            } else if (currentMode === 'oscuro') {
+                setThemeMode('estudio');
+            } else {
+                setThemeMode('normal');
+            }
+        }
+
+        function setThemeMode(mode) {
+            // Remover clases anteriores
+            document.body.classList.remove('study-mode', 'dark-mode');
+            
+            // Aplicar nuevo modo
+            if (mode === 'estudio') {
+                document.body.classList.add('study-mode');
+            } else if (mode === 'oscuro') {
+                document.body.classList.add('dark-mode');
+            }
+            // 'normal' no necesita clase adicional
+            
+            currentMode = mode;
+            
+            // Actualizar botón
+            const btn = document.querySelector('.btn-primary');
+            const icons = {
+                'normal': 'fas fa-sun',
+                'oscuro': 'fas fa-moon', 
+                'estudio': 'fas fa-graduation-cap'
+            };
+            const texts = {
+                'normal': 'Modo Normal',
+                'oscuro': 'Modo Oscuro',
+                'estudio': 'Modo Estudio'
+            };
+            
+            btn.innerHTML = <i class="${icons[mode]}"></i> ${texts[mode]};
+            
+            showNotification(${texts[mode]} activado, 'info');
+            
+            // Guardar preferencia en localStorage para que sea global
+            localStorage.setItem('neoStudyTheme', mode);
+            
+            // Iniciar sesión de estudio si es necesario
+            if (mode === 'estudio') {
+                startStudySession();
+            }
+        }
+
+        function startStudySession() {
+            let seconds = 0;
+            const timer = setInterval(() => {
+                if (currentMode !== 'estudio') {
+                    clearInterval(timer);
+                    return;
+                }
+                
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                
+                // Actualizar estadísticas
+                document.getElementById('studyHours').textContent = 128 + hours;
+                document.getElementById('completedGoals').textContent = 12 + Math.floor(hours / 2);
+                
+            }, 1000);
+        }
+
+        // ===== SISTEMA DE NOTIFICACIONES =====
+        function showNotification(message, type = 'info') {
+            // Remover notificación anterior si existe
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = 
+                type === 'success' ? 'var(--success)' :
+                type === 'warning' ? 'var(--warning)' :
+                type === 'danger' ? 'var(--danger)' : 'var(--info)';
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
+        function checkForProfileUpdates() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            
+            if (userData) {
+                const userName = userData.nombre || 'Usuario NeoStudy';
+                updateProfilePhoto(userName, profileData);
+            }
+        }
+
+        // ===== INICIALIZACIÓN MEJORADA =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            
+            // ✅ NUEVO: Generar código QR al cargar la página
+            generateQRCode();
+            
+            // ✅ MODIFICADO: Cargar modo guardado globalmente
+            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            setThemeMode(savedTheme);
+            
+            // Configurar navegación
+            document.querySelector('.logo').onclick = goToFeed;
+            document.getElementById('userAvatar').onclick = goToProfile;
+            document.getElementById('mainAvatar').onclick = goToProfile;
+            document.getElementById('postAvatar').onclick = goToProfile;
+            
+            // Enter para publicar
+            document.getElementById('postContent').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    createPost();
+                }
+            });
+
+            // ✅ NUEVO: Verificar actualizaciones cada 2 segundos
+            setInterval(checkForProfileUpdates, 2000);
+        });
+    </script>
+</body>
+</html>

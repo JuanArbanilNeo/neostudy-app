@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - NeoStudy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #00C4FF;
+            --primary-dark: #007bff;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #00C4FF, #007bff);
+            --bg-color: #f8f9fa;
+            --text-color: #343a40;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+        }
+
+        /* Modo Oscuro */
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #f8f9fa;
+            --card-bg: #2d2d2d;
+            --border-color: #404040;
+            --light: #2d2d2d;
+            --secondary: #adb5bd;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--bg-gradient);
+            color: var(--white);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Menú desplegable del avatar */
+        .avatar-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 200px;
+            z-index: 1001;
+            display: none;
+            margin-top: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--light);
+        }
+
+        .dropdown-item.delete {
+            color: var(--danger);
+        }
+
+        .dropdown-item.delete:hover {
+            background: #ffe6e6;
+        }
+
+        /* Perfil Container */
+        .profile-container {
+            max-width: 1000px;
+            margin: 100px auto 40px;
+            padding: 0 1rem;
+        }
+
+        /* Cover Section */
+        .cover-section {
+            position: relative;
+            height: 250px;
+            background: linear-gradient(135deg, #00C4FF, #007bff);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 100px;
+        }
+
+        .cover-photo {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-gradient);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            overflow: hidden;
+        }
+
+        .cover-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .change-cover-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 10;
+            color: var(--dark);
+        }
+
+        /* Menú desplegable para portada */
+        .cover-options {
+            position: absolute;
+            bottom: 60px;
+            right: 15px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 200px;
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .cover-options.show {
+            display: block;
+        }
+
+        .profile-main {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.5rem;
+            margin-top: -80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Profile Sidebar */
+        .profile-sidebar {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            height: fit-content;
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: bold;
+            border: 4px solid var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .change-avatar-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-size: 0.8rem;
+        }
+
+        /* Menú desplegable para avatar */
+        .avatar-options {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 180px;
+            z-index: 100;
+            display: none;
+            margin-top: 5px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar-options.show {
+            display: block;
+        }
+
+        /* Barra de Frase Motivacional */
+        .motivational-bar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .motivational-bar::before {
+            content: '"';
+            font-size: 2rem;
+            position: absolute;
+            left: 8px;
+            top: -5px;
+            opacity: 0.3;
+        }
+
+        .motivational-text {
+            font-style: italic;
+            font-size: 0.85rem;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .edit-motivational {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 4px;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+        }
+
+        .profile-title {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .profile-bio {
+            color: var(--secondary);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--bg-gradient);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Profile Content */
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 1.2rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            color: var(--secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* Galería de Fotos */
+        .gallery-section {
+            margin-top: 1rem;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .gallery-tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .gallery-tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 0.8rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--light);
+            position: relative;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+
+        /* Logros */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .achievement-card {
+            background: var(--light);
+            padding: 1.2rem 0.8rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .achievement-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+
+        .achievement-desc {
+            font-size: 0.75rem;
+            color: var(--secondary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--secondary);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border 0.3s ease;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Editor de Portada */
+        .cover-editor {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .cover-editor.show {
+            display: flex;
+        }
+
+        .editor-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border: 1px solid var(--border-color);
+        }
+
+        .editor-preview-container {
+            width: 100%;
+            height: 300px;
+            background: var(--light);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .editor-preview {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .editor-preview img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--light);
+        }
+
+        .editor-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .range-control {
+            width: 100%;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Mapa de Google */
+        #map {
+            height: 200px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+        }
+
+        .map-placeholder {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Modal de galería */
+        .gallery-modal .modal-content {
+            max-width: 800px;
+        }
+
+        .gallery-viewer {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.5rem;
+        }
+
+        .gallery-main-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .gallery-main-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .gallery-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .thumbnail {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .thumbnail.active {
+            opacity: 1;
+            border: 2px solid var(--primary);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delete-thumbnail {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .thumbnail:hover .delete-thumbnail {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .profile-main {
+                grid-template-columns: 1fr;
+                margin-top: -60px;
+            }
+            
+            .profile-sidebar {
+                margin-top: 0;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cover-section {
+                height: 200px;
+                margin-bottom: 80px;
+            }
+
+            .gallery-viewer {
+                grid-template-columns: 1fr;
+            }
+
+            .editor-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .cover-options {
+                width: 180px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                margin: 80px auto 20px;
+            }
+            
+            .cover-section {
+                height: 180px;
+                margin-bottom: 70px;
+            }
+            
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 1.5rem;
+            }
+
+            .cover-options {
+                width: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo" onclick="goToFeed()">
+                <i class="fas fa-graduation-cap"></i>
+                Neo Study
+            </div>
+            <nav class="nav-menu">
+                <a href="modulo2_iniciodecesión.html" class="nav-item">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <!-- ✅ MODIFICADO: Enlace a módulo de cursos -->
+                <a href="modulo4_cursos.html" class="nav-item">
+                    <i class="fas fa-book"></i> Cursos
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i> Comunidad
+                </a>
+            </nav>
+            <div class="user-menu">
+                <button class="theme-toggle" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="avatar" id="headerAvatar" onclick="toggleAvatarDropdown()">JM</div>
+                <div class="avatar-dropdown" id="avatarDropdown">
+                    <a href="#" class="dropdown-item" onclick="changeProfilePhoto()">
+                        <i class="fas fa-camera"></i> Cambiar foto de perfil
+                    </a>
+                    <a href="#" class="dropdown-item" onclick="viewProfilePhotos()">
+                        <i class="fas fa-images"></i> Ver mis fotos de perfil
+                    </a>
+                    <a href="#" class="dropdown-item delete" onclick="deleteProfilePhoto()">
+                        <i class="fas fa-trash"></i> Eliminar foto de perfil
+                    </a>
+                    <a href="#" class="dropdown-item" onclick="goToFeed()">
+                        <i class="fas fa-user"></i> Mi perfil
+                    </a>
+                    <a href="#" class="dropdown-item delete" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Perfil -->
+    <div class="profile-container">
+        <!-- Cover Section -->
+        <div class="cover-section">
+            <div class="cover-photo" id="coverPhoto">
+                <!-- Imagen de portada se cargará aquí -->
+            </div>
+            <button class="change-cover-btn" onclick="toggleCoverOptions()">
+                <i class="fas fa-camera"></i> Cambiar Portada
+            </button>
+            <div class="cover-options" id="coverOptions">
+                <div class="dropdown-item" onclick="changeCoverPhoto()">
+                    <i class="fas fa-upload"></i> Subir foto
+                </div>
+                <div class="dropdown-item" onclick="viewCoverPhotos()">
+                    <i class="fas fa-images"></i> Ver mis fotos
+                </div>
+                <div class="dropdown-item" onclick="editCurrentCover()">
+                    <i class="fas fa-edit"></i> Editar portada
+                </div>
+                <div class="dropdown-item delete" onclick="deleteCoverPhoto()">
+                    <i class="fas fa-trash"></i> Eliminar portada
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Main -->
+        <div class="profile-main">
+            <!-- Sidebar -->
+            <aside class="profile-sidebar">
+                <div class="profile-avatar-container">
+                    <div class="profile-avatar" id="profileAvatar" onclick="toggleAvatarOptions()">JM</div>
+                    <button class="change-avatar-btn" onclick="toggleAvatarOptions()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <div class="avatar-options" id="avatarOptions">
+                        <div class="dropdown-item" onclick="changeProfilePhoto()">
+                            <i class="fas fa-upload"></i> Subir foto
+                        </div>
+                        <div class="dropdown-item" onclick="viewProfilePhotos()">
+                            <i class="fas fa-images"></i> Ver mis fotos
+                        </div>
+                        <div class="dropdown-item delete" onclick="deleteProfilePhoto()">
+                            <i class="fas fa-trash"></i> Eliminar foto
+                        </div>
+                    </div>
+                </div>
+                
+                <h1 class="profile-name" id="profileName">Juan Manuel</h1>
+                <div class="profile-title" id="profileTitle">Estudiante Universitario</div>
+                
+                <!-- Barra de Frase Motivacional -->
+                <div class="motivational-bar">
+                    <button class="edit-motivational" onclick="editMotivational()">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <p class="motivational-text" id="motivationalText">
+                        "El éxito es la suma de pequeños esfuerzos repetidos día tras día"
+                    </p>
+                </div>
+
+                <p class="profile-bio" id="profileBio">
+                    Apasionado por el aprendizaje y el crecimiento académico. 
+                    Siempre buscando nuevos desafíos educativos.
+                </p>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-number" id="statCourses">8</div>
+                        <div class="stat-label">Cursos</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="statHours">128</div>
+                        <div class="stat-label">Horas</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="statGoals">12</div>
+                        <div class="stat-label">Metas</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="statAchievements">15</div>
+                        <div class="stat-label">Logros</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" onclick="openEditModal()">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </button>
+            </aside>
+
+            <!-- Content -->
+            <main class="profile-content">
+                <!-- Información Académica -->
+                <div class="info-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-graduation-cap"></i> Información Académica
+                    </h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Categoría</div>
+                                <div class="info-value" id="infoCategoria">Estudiante Universitario</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Institución</div>
+                                <div class="info-value" id="infoInstitucion">Universidad Nacional</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Carrera/Área</div>
+                                <div class="info-value" id="infoCarrera">Ingeniería de Sistemas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información Personal -->
+                <div class="info-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-user"></i> Información Personal
+                    </h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-birthday-cake"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Fecha de Nacimiento</div>
+                                <div class="info-value" id="infoNacimiento">15 de Marzo, 1998</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Contacto</div>
+                                <div class="info-value" id="infoContacto">juan@email.com</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Ubicación</div>
+                                <div class="info-value" id="infoUbicacion">Lima, Perú</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Galería de Fotos -->
+                <div class="info-card">
+                    <div class="card-title">
+                        <i class="fas fa-images"></i> Mi Galería
+                        <span style="margin-left: auto; font-size: 0.8rem; color: var(--secondary);">
+                            <span id="photoCount">0</span> fotos
+                        </span>
+                    </div>
+                    <div class="gallery-tabs">
+                        <div class="gallery-tab active" onclick="changeGalleryTab('all')">Todas</div>
+                        <div class="gallery-tab" onclick="changeGalleryTab('profile')">Perfil</div>
+                        <div class="gallery-tab" onclick="changeGalleryTab('cover')">Portada</div>
+                    </div>
+                    <div class="gallery-section">
+                        <div class="gallery-grid" id="galleryGrid">
+                            <!-- Las fotos se cargarán aquí dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logros Destacados -->
+                <div class="info-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-trophy"></i> Logros Destacados
+                    </h2>
+                    <div class="achievements-grid">
+                        <div class="achievement-card">
+                            <div class="achievement-icon">🏆</div>
+                            <div class="achievement-title">Estrella Naciente</div>
+                            <div class="achievement-desc">Primera semana completa</div>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">📚</div>
+                            <div class="achievement-title">Voraz Lector</div>
+                            <div class="achievement-desc">50 horas de estudio</div>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">⚡</div>
+                            <div class="achievement-title">Aprendiz Rápido</div>
+                            <div class="achievement-desc">5 cursos en 1 mes</div>
+                        </div>
+                        <div class="achievement-card">
+                            <div class="achievement-icon">🎯</div>
+                            <div class="achievement-title">Disciplinado</div>
+                            <div class="achievement-desc">30 días seguidos</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Editar Perfil -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Editar Perfil</div>
+                <button class="close-modal" onclick="closeEditModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Frase Motivacional</label>
+                    <textarea class="form-control" id="editMotivationalText" placeholder="Escribe tu frase motivacional..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Biografía</label>
+                    <textarea class="form-control" id="editBio" placeholder="Cuéntanos sobre ti..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Institución</label>
+                    <input type="text" class="form-control" id="editInstitucion" placeholder="Tu institución educativa">
+                </div>
+                <div class="form-group">
+                    <label>Carrera/Área</label>
+                    <input type="text" class="form-control" id="editCarrera" placeholder="Tu carrera o área de estudio">
+                </div>
+                <div class="form-group">
+                    <label>Ubicación</label>
+                    <input type="text" class="form-control" id="editUbicacion" placeholder="Tu ciudad y país">
+                    <div id="map">
+                        <div class="map-placeholder">
+                            <i class="fas fa-map-marked-alt" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Para usar Google Maps, necesitas una API key</p>
+                            <p style="font-size: 0.8rem; margin-top: 0.5rem;">Pega tu API key en el código para activar el mapa</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="saveProfile()">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Editor de Portada -->
+    <div id="coverEditor" class="cover-editor">
+        <div class="editor-container">
+            <div class="modal-header">
+                <div class="modal-title">Editor de Portada</div>
+                <button class="close-modal" onclick="closeCoverEditor()">×</button>
+            </div>
+            <div class="editor-preview-container">
+                <div class="editor-preview">
+                    <img id="editorPreview" src="" alt="Vista previa">
+                </div>
+            </div>
+            <div class="editor-controls">
+                <div class="control-group">
+                    <label class="control-label">Posición Horizontal</label>
+                    <input type="range" class="range-control" id="posX" min="-50" max="50" value="0">
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Posición Vertical</label>
+                    <input type="range" class="range-control" id="posY" min="-50" max="50" value="0">
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Zoom</label>
+                    <input type="range" class="range-control" id="zoomLevel" min="100" max="200" value="100">
+                </div>
+            </div>
+            <div class="editor-actions">
+                <button class="btn" onclick="resetEditor()">
+                    <i class="fas fa-sync"></i> Reiniciar
+                </button>
+                <button class="btn btn-primary" onclick="saveCoverImage()">
+                    <i class="fas fa-save"></i> Guardar Portada
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Galería de Fotos -->
+    <div id="galleryModal" class="modal gallery-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="galleryModalTitle">Mis Fotos</div>
+                <button class="close-modal" onclick="closeGalleryModal()">×</button>
+            </div>
+            <div class="gallery-viewer">
+                <div class="gallery-main-image">
+                    <img id="galleryMainImage" src="" alt="Foto seleccionada">
+                </div>
+                <div class="gallery-thumbnails" id="galleryThumbnails">
+                    <!-- Miniaturas se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inputs ocultos para fotos -->
+    <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
+    <input type="file" id="coverPhotoInput" accept="image/*" style="display: none;">
+
+    <script>
+        // ===== VARIABLES GLOBALES =====
+        let profilePhotosHistory = [];
+        let coverPhotosHistory = [];
+        let currentGalleryTab = 'all';
+        let currentGalleryType = 'profile';
+        let currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
+        let currentEditorImage = null;
+        let isDarkMode = false;
+
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfileData();
+            checkDarkModePreference();
+        });
+
+        // ===== MODO OSCURO =====
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            // Cambiar icono
+            const themeIcon = document.querySelector('.theme-toggle i');
+            themeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function checkDarkModePreference() {
+            const savedMode = localStorage.getItem('darkMode');
+            if (savedMode === 'true') {
+                isDarkMode = true;
+                document.body.classList.add('dark-mode');
+                const themeIcon = document.querySelector('.theme-toggle i');
+                themeIcon.className = 'fas fa-sun';
+            }
+        }
+
+        // ===== SISTEMA MEJORADO DE FOTOS =====
+        function loadProfileData() {
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const photosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
+                profile: [],
+                cover: []
+            };
+            
+            profilePhotosHistory = photosHistory.profile || [];
+            coverPhotosHistory = photosHistory.cover || [];
+
+            if (userData) {
+                // Información básica
+                const userName = userData.nombre || 'Usuario NeoStudy';
+                const userTitle = userData.titulo || 'Estudiante';
+                
+                document.getElementById('profileName').textContent = userName;
+                document.getElementById('profileTitle').textContent = userTitle;
+                
+                // Avatar con iniciales o foto
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+                const avatarElement = document.getElementById('profileAvatar');
+                
+                if (profileData.profilePhoto) {
+                    avatarElement.innerHTML = `<img src="${profileData.profilePhoto}" alt="Foto de perfil">`;
+                } else {
+                    avatarElement.textContent = initials;
+                }
+                
+                document.getElementById('headerAvatar').textContent = initials;
+
+                // Frase motivacional
+                document.getElementById('motivationalText').textContent = profileData.motivationalText || 
+                    '"El éxito es la suma de pequeños esfuerzos repetidos día tras día"';
+
+                // Biografía
+                document.getElementById('profileBio').textContent = profileData.bio || 
+                    "Apasionado por el aprendizaje y el crecimiento académico. Siempre buscando nuevos desafíos educativos.";
+
+                // Información académica
+                document.getElementById('infoCategoria').textContent = userTitle;
+                document.getElementById('infoInstitucion').textContent = profileData.institucion || userData.institucion || 'No especificado';
+                document.getElementById('infoCarrera').textContent = profileData.carrera || userData.prof_carrera || userData.uni_carrera || 'No especificado';
+                
+                // Información personal
+                if (userData.prof_nacimiento || userData.uni_nacimiento || userData.sec_nacimiento || userData.gen_nacimiento) {
+                    const nacimiento = new Date(userData.prof_nacimiento || userData.uni_nacimiento || userData.sec_nacimiento || userData.gen_nacimiento);
+                    document.getElementById('infoNacimiento').textContent = nacimiento.toLocaleDateString('es-ES', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                }
+                
+                document.getElementById('infoContacto').textContent = userData.contacto || 'No especificado';
+                document.getElementById('infoUbicacion').textContent = profileData.ubicacion || 'Lima, Perú';
+
+                // Cargar foto de portada con ajustes
+                if (profileData.coverPhoto) {
+                    applyCoverPhoto(profileData.coverPhoto, profileData.coverAdjustments);
+                }
+
+                // Cargar galería
+                loadGallery();
+
+            } else {
+                alert('No hay datos de usuario. Por favor regístrate primero.');
+                window.location.href = 'modulo1_inicio.html';
+            }
+        }
+
+        // ===== SISTEMA MEJORADO DE PORTADA =====
+        function applyCoverPhoto(photoSrc, adjustments = null) {
+            const coverPhoto = document.getElementById('coverPhoto');
+            if (adjustments) {
+                currentCoverAdjustments = adjustments;
+            }
+            
+            coverPhoto.innerHTML = `<img src="${photoSrc}" alt="Foto de portada" style="
+                transform: translate(${currentCoverAdjustments.x}%, ${currentCoverAdjustments.y}%) 
+                           scale(${currentCoverAdjustments.zoom});
+                transition: transform 0.3s ease;
+            ">`;
+        }
+
+        function toggleCoverOptions() {
+            const options = document.getElementById('coverOptions');
+            options.classList.toggle('show');
+        }
+
+        function editCurrentCover() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            if (profileData.coverPhoto) {
+                // Usar la foto actual
+                currentEditorImage = profileData.coverPhoto;
+                document.getElementById('editorPreview').src = currentEditorImage;
+                
+                // Cargar ajustes actuales
+                if (profileData.coverAdjustments) {
+                    currentCoverAdjustments = profileData.coverAdjustments;
+                    document.getElementById('posX').value = currentCoverAdjustments.x;
+                    document.getElementById('posY').value = currentCoverAdjustments.y;
+                    document.getElementById('zoomLevel').value = currentCoverAdjustments.zoom * 100;
+                } else {
+                    resetEditor();
+                }
+                
+                document.getElementById('coverEditor').classList.add('show');
+                document.getElementById('coverOptions').classList.remove('show');
+            } else {
+                alert('No tienes una foto de portada para editar. Primero sube una foto.');
+            }
+        }
+
+        function closeCoverEditor() {
+            document.getElementById('coverEditor').classList.remove('show');
+        }
+
+        function resetEditor() {
+            document.getElementById('posX').value = 0;
+            document.getElementById('posY').value = 0;
+            document.getElementById('zoomLevel').value = 100;
+            updateEditorPreview();
+        }
+
+        function updateEditorPreview() {
+            const x = parseInt(document.getElementById('posX').value);
+            const y = parseInt(document.getElementById('posY').value);
+            const zoom = parseInt(document.getElementById('zoomLevel').value) / 100;
+            
+            const preview = document.getElementById('editorPreview');
+            preview.style.transform = `translate(${x}%, ${y}%) scale(${zoom})`;
+            
+            // Guardar ajustes temporalmente
+            currentCoverAdjustments = { x, y, zoom };
+        }
+
+        // Event listeners para los controles del editor
+        document.getElementById('posX').addEventListener('input', updateEditorPreview);
+        document.getElementById('posY').addEventListener('input', updateEditorPreview);
+        document.getElementById('zoomLevel').addEventListener('input', updateEditorPreview);
+
+        function saveCoverImage() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            profileData.coverPhoto = currentEditorImage;
+            profileData.coverAdjustments = currentCoverAdjustments;
+            
+            localStorage.setItem('profileData', JSON.stringify(profileData));
+            
+            // Aplicar a la vista
+            applyCoverPhoto(currentEditorImage, currentCoverAdjustments);
+            
+            // Agregar a la historia si es nueva
+            if (!coverPhotosHistory.includes(currentEditorImage)) {
+                coverPhotosHistory.unshift(currentEditorImage);
+                if (coverPhotosHistory.length > 20) {
+                    coverPhotosHistory = coverPhotosHistory.slice(0, 20);
+                }
+                const photosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
+                    profile: [],
+                    cover: []
+                };
+                photosHistory.cover = coverPhotosHistory;
+                localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
+            }
+            
+            closeCoverEditor();
+            loadGallery();
+            alert('¡Portada guardada correctamente! ✅');
+        }
+
+        // ===== ELIMINAR FOTOS =====
+        function deleteProfilePhoto() {
+            if (confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+                
+                delete profileData.profilePhoto;
+                localStorage.setItem('profileData', JSON.stringify(profileData));
+                
+                // ✅ NUEVO: También eliminar de usuarioNeoStudy para que módulo2 lo detecte
+                delete userData.fotoPerfil;
+                localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
+                
+                // Restaurar iniciales
+                const userName = userData.nombre || 'Usuario NeoStudy';
+                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                document.getElementById('profileAvatar').innerHTML = initials;
+                document.getElementById('headerAvatar').textContent = initials;
+                
+                // Cerrar menús
+                document.getElementById('avatarOptions').classList.remove('show');
+                document.getElementById('avatarDropdown').classList.remove('show');
+                
+                alert('Foto de perfil eliminada ✅');
+            }
+        }
+
+        function deleteCoverPhoto() {
+            if (confirm('¿Estás seguro de que quieres eliminar tu foto de portada?')) {
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                
+                delete profileData.coverPhoto;
+                delete profileData.coverAdjustments;
+                localStorage.setItem('profileData', JSON.stringify(profileData));
+                
+                // Restaurar gradiente
+                document.getElementById('coverPhoto').innerHTML = '';
+                currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
+                
+                // Cerrar menú
+                document.getElementById('coverOptions').classList.remove('show');
+                
+                alert('Foto de portada eliminada ✅');
+            }
+        }
+
+        // ===== SISTEMA MEJORADO DE GALERÍA =====
+        function loadGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = '';
+
+            let photosToShow = [];
+
+            // Filtrar según la pestaña activa
+            if (currentGalleryTab === 'all') {
+                photosToShow = [
+                    ...profilePhotosHistory.map(photo => ({ photo, type: 'Perfil' })),
+                    ...coverPhotosHistory.map(photo => ({ photo, type: 'Portada' }))
+                ];
+            } else if (currentGalleryTab === 'profile') {
+                photosToShow = profilePhotosHistory.map(photo => ({ photo, type: 'Perfil' }));
+            } else if (currentGalleryTab === 'cover') {
+                photosToShow = coverPhotosHistory.map(photo => ({ photo, type: 'Portada' }));
+            }
+
+            // Mostrar fotos
+            photosToShow.forEach((item, index) => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'gallery-item';
+                photoItem.innerHTML = `
+                    <img src="${item.photo}" alt="${item.type} ${index + 1}">
+                    <div class="photo-label">${item.type}</div>
+                `;
+                photoItem.addEventListener('click', () => openGalleryModal(item.type, index));
+                galleryGrid.appendChild(photoItem);
+            });
+
+            // Actualizar contador
+            document.getElementById('photoCount').textContent = photosToShow.length;
+
+            // Mensaje si no hay fotos
+            if (photosToShow.length === 0) {
+                galleryGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--secondary);">
+                        <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>No hay fotos en tu galería</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Cambia tu foto de perfil o portada para agregar fotos</p>
+                    </div>
+                `;
+            }
+        }
+
+        function changeGalleryTab(tab) {
+            currentGalleryTab = tab;
+            
+            // Actualizar pestañas activas
+            document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Recargar galería
+            loadGallery();
+        }
+
+        // ===== MENÚS DESPLEGABLES =====
+        function toggleAvatarDropdown() {
+            const dropdown = document.getElementById('avatarDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function toggleAvatarOptions() {
+            const options = document.getElementById('avatarOptions');
+            options.classList.toggle('show');
+        }
+
+        // Cerrar menús al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.user-menu')) {
+                document.getElementById('avatarDropdown').classList.remove('show');
+            }
+            if (!event.target.closest('.profile-avatar-container')) {
+                document.getElementById('avatarOptions').classList.remove('show');
+            }
+            if (!event.target.closest('.cover-section')) {
+                document.getElementById('coverOptions').classList.remove('show');
+            }
+        });
+
+        // ===== SISTEMA DE SUBIDA DE FOTOS =====
+        function changeProfilePhoto() {
+            document.getElementById('profilePhotoInput').click();
+            document.getElementById('avatarOptions').classList.remove('show');
+            document.getElementById('avatarDropdown').classList.remove('show');
+        }
+
+        function changeCoverPhoto() {
+            document.getElementById('coverPhotoInput').click();
+            document.getElementById('coverOptions').classList.remove('show');
+        }
+
+        document.getElementById('profilePhotoInput').addEventListener('change', function(e) {
+            handlePhotoUpload(e.target.files[0], 'profilePhoto');
+        });
+
+        document.getElementById('coverPhotoInput').addEventListener('change', function(e) {
+            handlePhotoUpload(e.target.files[0], 'coverPhoto');
+        });
+
+        function handlePhotoUpload(file, type) {
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (type === 'profilePhoto') {
+                        // Para foto de perfil, guardar directamente
+                        const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                        profileData.profilePhoto = e.target.result;
+                        localStorage.setItem('profileData', JSON.stringify(profileData));
+
+                        // ✅ NUEVO: También guardar en usuarioNeoStudy para que módulo2 lo encuentre
+                        const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+                        userData.fotoPerfil = e.target.result; // Guardar aquí también
+                        localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
+
+                        // Agregar a la historia
+                        const photosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
+                            profile: [],
+                            cover: []
+                        };
+                        
+                        profilePhotosHistory.unshift(e.target.result);
+                        if (profilePhotosHistory.length > 20) {
+                            profilePhotosHistory = profilePhotosHistory.slice(0, 20);
+                        }
+                        photosHistory.profile = profilePhotosHistory;
+                        localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
+                        
+                        // Actualizar la vista
+                        document.getElementById('profileAvatar').innerHTML = `<img src="${e.target.result}" alt="Foto de perfil">`;
+                        
+                        alert('¡Foto de perfil actualizada correctamente! ✅');
+                    } else {
+                        // Para foto de portada, abrir el editor
+                        currentEditorImage = e.target.result;
+                        document.getElementById('editorPreview').src = currentEditorImage;
+                        resetEditor();
+                        document.getElementById('coverEditor').classList.add('show');
+                    }
+                    
+                    // Actualizar galería
+                    loadGallery();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // ===== VISUALIZADOR DE GALERÍA =====
+        function viewProfilePhotos() {
+            currentGalleryType = 'profile';
+            openGalleryModal('profile', 0);
+            document.getElementById('avatarDropdown').classList.remove('show');
+        }
+
+        function viewCoverPhotos() {
+            currentGalleryType = 'cover';
+            openGalleryModal('cover', 0);
+            document.getElementById('coverOptions').classList.remove('show');
+        }
+
+        function openGalleryModal(type, index) {
+            currentGalleryType = type;
+            const photos = type === 'profile' ? profilePhotosHistory : coverPhotosHistory;
+            
+            if (photos.length === 0) {
+                alert(`No tienes fotos de ${type === 'profile' ? 'perfil' : 'portada'} aún.`);
+                return;
+            }
+            
+            document.getElementById('galleryModalTitle').textContent = 
+                type === 'profile' ? 'Mis Fotos de Perfil' : 'Mis Portadas';
+            
+            // Configurar imagen principal
+            document.getElementById('galleryMainImage').src = photos[index];
+            
+            // Configurar miniaturas
+            const thumbnailsContainer = document.getElementById('galleryThumbnails');
+            thumbnailsContainer.innerHTML = '';
+            
+            photos.forEach((photo, i) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = `thumbnail ${i === index ? 'active' : ''}`;
+                thumbnail.innerHTML = `
+                    <img src="${photo}" alt="Foto ${i+1}">
+                    <button class="delete-thumbnail" onclick="deleteGalleryPhoto('${type}', ${i})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                thumbnail.addEventListener('click', () => {
+                    // Actualizar imagen principal
+                    document.getElementById('galleryMainImage').src = photo;
+                    
+                    // Actualizar miniatura activa
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    thumbnail.classList.add('active');
+                });
+                thumbnailsContainer.appendChild(thumbnail);
+            });
+            
+            document.getElementById('galleryModal').style.display = 'flex';
+        }
+
+        function deleteGalleryPhoto(type, index) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta foto?')) {
+                if (type === 'profile') {
+                    profilePhotosHistory.splice(index, 1);
+                    // Si era la foto actual de perfil, eliminarla también
+                    const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                    if (profileData.profilePhoto && index === 0) {
+                        delete profileData.profilePhoto;
+                        const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+                        delete userData.fotoPerfil;
+                        localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
+                        const initials = userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase();
+                        document.getElementById('profileAvatar').innerHTML = initials;
+                    }
+                } else {
+                    coverPhotosHistory.splice(index, 1);
+                    // Si era la foto actual de portada, eliminarla también
+                    const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                    if (profileData.coverPhoto && index === 0) {
+                        delete profileData.coverPhoto;
+                        delete profileData.coverAdjustments;
+                        document.getElementById('coverPhoto').innerHTML = '';
+                    }
+                }
+                
+                // Guardar cambios
+                const photosHistory = {
+                    profile: profilePhotosHistory,
+                    cover: coverPhotosHistory
+                };
+                localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
+                
+                // Recargar galería
+                closeGalleryModal();
+                loadGallery();
+                alert('Foto eliminada ✅');
+            }
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('galleryModal').style.display = 'none';
+        }
+
+        // ===== SISTEMA DE EDICIÓN =====
+        function openEditModal() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            document.getElementById('editMotivationalText').value = profileData.motivationalText || 
+                '"El éxito es la suma de pequeños esfuerzos repetidos día tras día"';
+            document.getElementById('editBio').value = profileData.bio || 
+                "Apasionado por el aprendizaje y el crecimiento académico. Siempre buscando nuevos desafíos educativos.";
+            document.getElementById('editInstitucion').value = profileData.institucion || '';
+            document.getElementById('editCarrera').value = profileData.carrera || '';
+            document.getElementById('editUbicacion').value = profileData.ubicacion || '';
+            
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function editMotivational() {
+            openEditModal();
+            document.getElementById('editMotivationalText').focus();
+        }
+
+        function saveProfile() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            profileData.motivationalText = document.getElementById('editMotivationalText').value;
+            profileData.bio = document.getElementById('editBio').value;
+            profileData.institucion = document.getElementById('editInstitucion').value;
+            profileData.carrera = document.getElementById('editCarrera').value;
+            profileData.ubicacion = document.getElementById('editUbicacion').value;
+            
+            localStorage.setItem('profileData', JSON.stringify(profileData));
+            
+            // Actualizar la vista
+            document.getElementById('motivationalText').textContent = profileData.motivationalText;
+            document.getElementById('profileBio').textContent = profileData.bio;
+            document.getElementById('infoInstitucion').textContent = profileData.institucion || 'No especificado';
+            document.getElementById('infoCarrera').textContent = profileData.carrera || 'No especificado';
+            document.getElementById('infoUbicacion').textContent = profileData.ubicacion || 'Lima, Perú';
+            
+            closeEditModal();
+            alert('¡Perfil actualizado correctamente! ✅');
+        }
+
+        // ===== NAVEGACIÓN =====
+        function goToFeed() {
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                window.location.href = 'modulo1_inicio.html';
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const galleryModal = document.getElementById('galleryModal');
+            const coverEditor = document.getElementById('coverEditor');
+            
+            if (event.target === editModal) {
+                closeEditModal();
+            }
+            
+            if (event.target === galleryModal) {
+                closeGalleryModal();
+            }
+            
+            if (event.target === coverEditor) {
+                closeCoverEditor();
+            }
+        }
+    </script>
+</body>
+</html>

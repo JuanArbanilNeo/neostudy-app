@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenida - NeoStudy</title>
+  <style>
+    /* ======= FUENTE Y FONDO ======= */
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #000 url("imagen-neostudy.png") no-repeat center center;
+      background-size: contain; /* Muestra la imagen completa */
+      background-color: #000; /* Rellena los bordes en pantallas alargadas */
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      animation: fadeBackground 2.5s ease-in forwards;
+      background-attachment: fixed;
+    }
+
+    @keyframes fadeBackground {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* ======= OSCURECIDO ======= */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.45);
+      z-index: 0;
+    }
+
+    /* ======= CONTENEDOR ======= */
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 600px;
+      opacity: 0;
+      transform: translateY(60px);
+      animation: fadeUp 2s ease-out forwards;
+      animation-delay: 1s;
+      padding: 0 20px;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ======= TITULO LATIENTE ======= */
+    h1 {
+      font-size: 3em;
+      margin-bottom: 15px;
+      color: #00C4FF;
+      text-shadow: 0 0 20px #00C4FF;
+      opacity: 0;
+      animation: glowText 2s ease-out forwards, heartbeat 2.5s ease-in-out infinite;
+      animation-delay: 1s, 3.5s;
+    }
+
+    @keyframes glowText {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); text-shadow: 0 0 20px #00C4FF; }
+      25% { transform: scale(1.05); text-shadow: 0 0 30px #00E0FF; }
+      50% { transform: scale(1); text-shadow: 0 0 18px #00C4FF; }
+      75% { transform: scale(1.07); text-shadow: 0 0 35px #00FFFF; }
+    }
+
+    /* ======= FRASE ANIMADA ======= */
+    .subtitle {
+      font-size: 1.2em;
+      margin-bottom: 40px;
+      color: #ffffff;
+      border-right: 2px solid #00C4FF;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      opacity: 0;
+      animation: typing 3.5s steps(30) forwards;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes typing {
+      from { width: 0; opacity: 1; }
+      to { width: 100%; opacity: 1; }
+    }
+
+    /* ======= BOTÓN ======= */
+    button {
+      background: linear-gradient(90deg, #007bff, #00C4FF);
+      border: none;
+      color: white;
+      padding: 14px 30px;
+      border-radius: 30px;
+      font-size: 1.1em;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeInButton 1.5s ease-out forwards;
+      animation-delay: 5.5s;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    @keyframes fadeInButton {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    button::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.3);
+      transition: 0.5s;
+    }
+
+    button:hover::after {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #00C4FF;
+    }
+
+    /* ======= RESPONSIVE ======= */
+    @media (max-width: 500px) {
+      h1 { font-size: 2.3em; }
+      .subtitle { font-size: 1em; }
+      button { font-size: 1em; padding: 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>NeoStudy</h1>
+    <p class="subtitle">Una nueva forma de aprender</p>
+    <button onclick="window.location.href='modulo1_inicio.html'">Comenzar</button>
+  </div>
+</body>
+</html>
