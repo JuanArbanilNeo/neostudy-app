@@ -34,11 +34,11 @@
             overflow-x: hidden;
         }
 
-        /* ✅ HEADER MEJORADO - RESPONSIVE */
+        /* Header y Navegación */
         .header {
             background: var(--bg-gradient);
             color: var(--white);
-            padding: 0.8rem 0;
+            padding: 1rem 0;
             position: fixed;
             top: 0;
             width: 100%;
@@ -47,7 +47,7 @@
         }
 
         .nav-container {
-            max-width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -56,7 +56,7 @@
         }
 
         .logo {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -64,56 +64,36 @@
             cursor: pointer;
         }
 
-        .logo i {
-            font-size: 1.4rem;
-        }
-
-        /* Menú móvil - Solo iconos */
-        .mobile-menu-btn {
-            display: block;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
         .nav-menu {
-            display: none;
-        }
-
-        .mobile-nav-menu {
             display: flex;
-            gap: 1rem;
+            gap: 2rem;
             align-items: center;
         }
 
-        .mobile-nav-item {
+        .nav-item {
             color: var(--white);
             text-decoration: none;
-            padding: 0.5rem;
-            border-radius: 50%;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
+            gap: 0.5rem;
         }
 
-        .mobile-nav-item:hover, .mobile-nav-item.active {
+        .nav-item:hover, .nav-item.active {
             background: rgba(255,255,255,0.2);
         }
 
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 1rem;
         }
 
         .avatar {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--white);
             display: flex;
@@ -125,137 +105,217 @@
             transition: transform 0.3s ease;
             background-size: cover;
             background-position: center;
-            font-size: 0.9rem;
         }
 
-        .btn {
-            padding: 0.6rem 1rem;
-            border: none;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
+        .avatar:hover {
+            transform: scale(1.1);
         }
 
-        .btn-primary {
-            background: var(--bg-gradient);
-            color: var(--white);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: var(--white);
-        }
-
-        /* ✅ CONTENIDO PRINCIPAL MEJORADO */
+        /* Contenido Principal */
         .main-container {
-            max-width: 100%;
-            margin: 70px auto 20px;
+            max-width: 1200px;
+            margin: 80px auto 20px;
             padding: 0 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 1.5rem;
         }
 
-        /* Vista de secciones */
-        .section-view {
-            display: none;
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
-        }
-
-        .section-view.active {
-            display: block;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Sidebars como cards en móvil */
+        /* Sidebars */
         .sidebar {
             background: var(--white);
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
         }
 
         .sidebar-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 1rem;
             color: var(--dark);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        /* ✅ MEJORADO: Botón Flotante para Compartir */
+        .floating-share-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
             cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-share-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        /* ✅ MEJORADO: Modal para Compartir */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .share-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
             transition: color 0.3s ease;
         }
 
-        .sidebar-title:hover {
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .share-modal h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .share-modal-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .share-modal-btn {
+            background: var(--light);
+            border: 2px solid var(--primary);
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 600;
             color: var(--primary);
         }
 
-        /* Stats Grid para móvil */
+        .share-modal-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .qr-section {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background: white;
+        }
+
+        .link-copy {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .link-copy input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Panel de Estadísticas */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
-            margin-bottom: 1.2rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
             background: var(--light);
-            padding: 0.8rem;
-            border-radius: 8px;
+            padding: 1rem;
+            border-radius: 10px;
             text-align: center;
             transition: transform 0.3s ease;
-            cursor: pointer;
         }
 
         .stat-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
         .stat-number {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
         }
 
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--secondary);
         }
 
@@ -266,19 +326,24 @@
             gap: 1rem;
             padding: 1rem 0;
             border-bottom: 1px solid var(--light);
-            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .goal-item:hover {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
         }
 
         .goal-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             background: var(--bg-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
-            font-size: 0.9rem;
         }
 
         .goal-info {
@@ -288,11 +353,10 @@
         .goal-title {
             font-weight: 600;
             margin-bottom: 0.25rem;
-            font-size: 0.9rem;
         }
 
         .goal-progress {
-            height: 5px;
+            height: 6px;
             background: var(--light);
             border-radius: 3px;
             overflow: hidden;
@@ -302,55 +366,33 @@
             height: 100%;
             background: var(--primary);
             border-radius: 3px;
+            transition: width 0.5s ease;
         }
 
-        /* ✅ FEED PRINCIPAL REORGANIZADO */
+        /* Feed Principal */
         .feed {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
-            order: 2;
+            gap: 1.5rem;
         }
 
-        /* Perfil móvil - Ahora está antes de la publicación */
-        .mobile-profile {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .mobile-profile-info h4 {
-            font-size: 1rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .mobile-profile-info p {
-            font-size: 0.8rem;
-            color: var(--secondary);
-        }
-
-        /* Crear Publicación compacta */
+        /* Crear Publicación */
         .create-post {
             background: var(--white);
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .post-input-container {
             display: flex;
-            gap: 0.8rem;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
         .post-avatar {
-            width: 42px;
-            height: 42px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: var(--bg-gradient);
             display: flex;
@@ -362,59 +404,86 @@
             transition: transform 0.3s ease;
             background-size: cover;
             background-position: center;
-            font-size: 0.9rem;
+        }
+
+        .post-avatar:hover {
+            transform: scale(1.05);
         }
 
         .post-input {
             flex: 1;
-            padding: 0.8rem;
+            padding: 1rem;
             border: 1px solid var(--light);
-            border-radius: 20px;
+            border-radius: 25px;
             background: var(--light);
             resize: none;
-            font-size: 0.9rem;
-            min-height: 60px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .post-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
         }
 
         .post-actions {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 0.5rem;
         }
 
         .post-action {
             background: none;
             border: none;
-            padding: 0.6rem;
-            border-radius: 8px;
+            padding: 0.75rem;
+            border-radius: 10px;
             color: var(--secondary);
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            font-size: 0.8rem;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .post-action:hover {
+            background: var(--light);
+            color: var(--primary);
+            transform: translateY(-1px);
         }
 
         /* Publicaciones */
         .post {
             background: var(--white);
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
         .post-user {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 0.8rem;
+            gap: 1rem;
         }
 
         .post-user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--bg-gradient);
             display: flex;
@@ -424,37 +493,40 @@
             font-weight: bold;
             background-size: cover;
             background-position: center;
-            font-size: 0.8rem;
         }
 
         .post-user-info h4 {
-            font-size: 0.95rem;
-            margin-bottom: 0.1rem;
+            margin-bottom: 0.25rem;
         }
 
         .post-time {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--secondary);
         }
 
         .post-content {
-            margin-bottom: 0.8rem;
-            line-height: 1.4;
-            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
         }
 
         .post-stats {
             display: flex;
             justify-content: space-between;
             color: var(--secondary);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
 
         .post-actions-bar {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.3rem;
+            gap: 0.5rem;
             border-top: 1px solid var(--light);
             padding-top: 0.5rem;
         }
@@ -462,7 +534,7 @@
         .post-action-btn {
             background: none;
             border: none;
-            padding: 0.4rem;
+            padding: 0.5rem;
             border-radius: 5px;
             color: var(--secondary);
             cursor: pointer;
@@ -470,207 +542,113 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.3rem;
-            font-size: 0.8rem;
-        }
-
-        /* ✅ BOTÓN FLOTANTE */
-        .floating-share-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .floating-share-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* ✅ MODAL PARA MÓVIL */
-        .share-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .share-modal-content {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            position: relative;
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 1.3rem;
-            cursor: pointer;
-            color: var(--secondary);
-        }
-
-        .share-modal-buttons {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.8rem;
-            margin: 1.2rem 0;
-        }
-
-        .share-modal-btn {
-            background: var(--light);
-            border: 2px solid var(--primary);
-            padding: 0.8rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             gap: 0.5rem;
-            font-weight: 600;
+        }
+
+        .post-action-btn:hover {
+            background: var(--light);
             color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        .share-modal-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .qr-section {
-            background: var(--light);
-            padding: 1.2rem;
-            border-radius: 12px;
-            margin: 1.2rem 0;
-        }
-
-        .qr-code {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            background: white;
-        }
-
-        .link-copy {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .link-copy input {
-            flex: 1;
-            padding: 0.8rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 0.8rem;
-        }
-
-        .copy-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.8rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
         }
 
         /* Sistema de Logros */
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
+            gap: 1rem;
         }
 
         .achievement-card {
             background: var(--light);
-            padding: 0.8rem;
-            border-radius: 8px;
+            padding: 1rem;
+            border-radius: 10px;
             text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .achievement-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .achievement-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.3rem;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
         }
 
         .achievement-title {
             font-weight: 600;
-            margin-bottom: 0.2rem;
-            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
         }
 
         .achievement-desc {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: var(--secondary);
         }
 
         /* Clases en Vivo */
         .live-classes {
             background: var(--white);
-            border-radius: 12px;
-            padding: 1.2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-top: 1rem;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 1.5rem;
         }
 
         .class-card {
             background: var(--light);
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
             border-left: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateX(5px);
         }
 
         .class-title {
             font-weight: 600;
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
         }
 
         .class-meta {
             display: flex;
             justify-content: space-between;
             color: var(--secondary);
-            font-size: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--bg-gradient);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
         }
 
         .btn-block {
@@ -678,117 +656,114 @@
             justify-content: center;
         }
 
-        /* ✅ RESPONSIVE PARA TABLETS */
-        @media (min-width: 768px) {
-            .header {
-                padding: 1rem 0;
+        /* ✅ MEJORADO: Responsive para móvil */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .sidebar {
+                display: block !important;
+                margin-bottom: 1rem;
             }
 
-            .logo {
-                font-size: 1.4rem;
-            }
-
-            .mobile-menu-btn, .mobile-nav-menu {
-                display: none;
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
             }
 
             .nav-menu {
-                display: flex;
-                gap: 1.5rem;
-                align-items: center;
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 1rem;
             }
 
-            .nav-item {
-                color: var(--white);
-                text-decoration: none;
-                padding: 0.5rem 1rem;
-                border-radius: 20px;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
+            .user-menu {
                 gap: 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .nav-item:hover, .nav-item.active {
-                background: rgba(255,255,255,0.2);
-            }
-
-            .main-container {
-                margin: 80px auto 20px;
-                display: grid;
-                grid-template-columns: 280px 1fr;
-                gap: 1.5rem;
-                max-width: 1200px;
-            }
-
-            .feed {
-                order: 1;
-            }
-
-            .sidebar:last-child {
-                display: none;
-            }
-
-            .mobile-profile {
-                display: none;
-            }
-
-            .avatar {
-                width: 40px;
-                height: 40px;
-            }
-
-            .btn {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.9rem;
             }
 
             .post-actions {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        /* ✅ RESPONSIVE PARA DESKTOP */
-        @media (min-width: 1024px) {
-            .main-container {
-                grid-template-columns: 280px 1fr 280px;
-            }
-
-            .sidebar:last-child {
-                display: block;
-            }
-
-            .nav-menu {
-                gap: 2rem;
-            }
-
-            .nav-item {
-                font-size: 1rem;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .stats-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
+
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        /* Notificaciones */
-        .notification {
-            position: fixed;
-            top: 80px;
-            right: 1rem;
-            background: var(--success);
-            color: white;
-            padding: 0.8rem 1.2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
-            font-size: 0.9rem;
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-wrap: wrap;
+            }
+
+            .nav-item {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            .user-menu {
+                flex-wrap: wrap;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .post-input-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .share-modal-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .share-modal-content {
+                padding: 1.5rem;
+            }
+            
+            .qr-code {
+                width: 150px;
+                height: 150px;
+            }
         }
 
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .nav-item {
+                padding: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -796,48 +771,103 @@
             animation: fadeIn 0.5s ease;
         }
 
-        /* Modos de tema (opcional) */
+        /* Modo Estudio */
         .study-mode {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
+        .study-mode .header {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .study-mode .sidebar,
+        .study-mode .create-post,
+        .study-mode .post,
+        .study-mode .live-classes {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .study-mode .post-input {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .study-mode .post-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Modo Oscuro */
         .dark-mode {
             background: #1a1a1a;
             color: #ffffff;
         }
+
+        .dark-mode .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+
+        .dark-mode .sidebar,
+        .dark-mode .create-post,
+        .dark-mode .post,
+        .dark-mode .live-classes {
+            background: #2d2d2d;
+            color: #ffffff;
+        }
+
+        .dark-mode .post-input,
+        .dark-mode .stat-card,
+        .dark-mode .achievement-card,
+        .dark-mode .class-card {
+            background: #3d3d3d;
+            color: #ffffff;
+            border-color: #444;
+        }
+
+        .dark-mode .post-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
+        }
+
+        .dark-mode .goal-item:hover,
+        .dark-mode .post-action:hover,
+        .dark-mode .post-action-btn:hover {
+            background: #3d3d3d;
+        }
+
+        .dark-mode .stat-label,
+        .dark-mode .post-time,
+        .dark-mode .achievement-desc,
+        .dark-mode .class-meta {
+            color: #cccccc;
+        }
+
+        /* Notificaciones */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
     </style>
 </head>
 <body>
-    <!-- ✅ HEADER MEJORADO - RESPONSIVE -->
+    <!-- Header CORREGIDO -->
     <header class="header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
                 <i class="fas fa-graduation-cap"></i>
-                <span>Neo Study</span>
+                Neo Study
             </div>
-            
-            <!-- Menú móvil - Solo iconos -->
-            <div class="mobile-nav-menu">
-                <a href="modulo2_iniciodecesión.html" class="mobile-nav-item active" title="Inicio">
-                    <i class="fas fa-home"></i>
-                </a>
-                <a href="modulo4_cursos.html" class="mobile-nav-item" title="Cursos">
-                    <i class="fas fa-book"></i>
-                </a>
-                <a href="#" class="mobile-nav-item" title="Comunidad">
-                    <i class="fas fa-users"></i>
-                </a>
-                <a href="#" class="mobile-nav-item" title="Calendario">
-                    <i class="fas fa-calendar"></i>
-                </a>
-            </div>
-
-            <button class="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <!-- Menú desktop - Con texto -->
             <nav class="nav-menu">
                 <a href="modulo2_iniciodecesión.html" class="nav-item active">
                     <i class="fas fa-home"></i> Inicio
@@ -852,50 +882,49 @@
                     <i class="fas fa-calendar"></i> Calendario
                 </a>
             </nav>
-
             <div class="user-menu">
                 <div class="avatar" id="userAvatar" onclick="goToProfile()">JM</div>
                 <button class="btn btn-danger" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> <span class="btn-text">Salir</span>
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </button>
                 <button class="btn btn-primary" onclick="toggleThemeMode()">
-                    <i class="fas fa-moon"></i> <span class="btn-text">Modo</span>
+                    <i class="fas fa-moon"></i> Modo Normal
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- ✅ BOTÓN FLOTANTE -->
-    <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos">
+    <!-- ✅ MEJORADO: Botón Flotante para Compartir -->
+    <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos a NeoStudy">
         <i class="fas fa-share-alt"></i>
     </button>
 
-    <!-- ✅ MODAL PARA COMPARTIR -->
+    <!-- ✅ MEJORADO: Modal para Compartir -->
     <div class="share-modal" id="shareModal">
         <div class="share-modal-content">
             <span class="close-modal" onclick="closeShareModal()">&times;</span>
-            <h2>¡Invita a tus amigos! 🚀</h2>
-            <p>Comparte NeoStudy con otros estudiantes</p>
+            <h2>¡Invita a tus amigos a NeoStudy! 🚀</h2>
+            <p>Comparte nuestra plataforma y ayuda a más estudiantes a alcanzar sus metas</p>
             
             <div class="share-modal-buttons">
+                <button class="share-modal-btn" onclick="shareNative()">
+                    <i class="fas fa-share-alt"></i> Compartir Enlace
+                </button>
                 <button class="share-modal-btn" onclick="shareWhatsApp()">
                     <i class="fab fa-whatsapp"></i> WhatsApp
                 </button>
-                <button class="share-modal-btn" onclick="shareNative()">
-                    <i class="fas fa-share-alt"></i> Compartir
+                <button class="share-modal-btn" onclick="shareFacebook()">
+                    <i class="fab fa-facebook"></i> Facebook
                 </button>
                 <button class="share-modal-btn" onclick="shareTelegram()">
                     <i class="fab fa-telegram"></i> Telegram
                 </button>
-                <button class="share-modal-btn" onclick="copyLink()">
-                    <i class="fas fa-copy"></i> Copiar Enlace
-                </button>
             </div>
 
             <div class="qr-section">
-                <h3 style="margin-bottom: 1rem; font-size: 1rem;">Código QR</h3>
+                <h3 style="margin-bottom: 1rem;">Código QR para tus libros</h3>
                 <div class="qr-code" id="qrCode"></div>
-                <p style="color: var(--secondary); margin: 0.8rem 0; font-size: 0.8rem;">
+                <p style="color: var(--secondary); margin: 1rem 0;">
                     Escanea para acceder a NeoStudy
                 </p>
                 <button class="btn btn-primary" onclick="downloadQR()">
@@ -912,47 +941,50 @@
         </div>
     </div>
 
-    <!-- ✅ CONTENIDO PRINCIPAL MEJORADO -->
+    <!-- Contenido Principal -->
     <div class="main-container">
-        <!-- Sidebar Izquierda -->
+        <!-- Sidebar Izquierda - Perfil y Metas -->
         <aside class="sidebar">
+            <!-- Perfil de Usuario -->
             <div class="user-profile">
                 <div class="post-input-container">
                     <div class="post-avatar" id="mainAvatar" onclick="goToProfile()">JM</div>
                     <div>
                         <h4 id="userName">Juan Manuel</h4>
-                        <p class="post-time" id="userTitle">Estudiante</p>
+                        <p class="post-time" id="userTitle">Estudiante Universitario</p>
                     </div>
                 </div>
             </div>
 
-            <div class="sidebar-title" onclick="showSection('progress')">
+            <!-- Estadísticas Rápidas -->
+            <div class="sidebar-title">
                 <i class="fas fa-chart-line"></i> Mi Progreso
             </div>
             <div class="stats-grid">
-                <div class="stat-card" onclick="showSection('progress')">
+                <div class="stat-card">
                     <div class="stat-number" id="studyHours">128</div>
-                    <div class="stat-label">Horas</div>
+                    <div class="stat-label">Horas Est.</div>
                 </div>
-                <div class="stat-card" onclick="showSection('goals')">
+                <div class="stat-card">
                     <div class="stat-number" id="completedGoals">12</div>
-                    <div class="stat-label">Metas</div>
+                    <div class="stat-label">Metas Cumpl.</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="coursesTaken">8</div>
                     <div class="stat-label">Cursos</div>
                 </div>
-                <div class="stat-card" onclick="showSection('achievements')">
+                <div class="stat-card">
                     <div class="stat-number" id="achievements">15</div>
                     <div class="stat-label">Logros</div>
                 </div>
             </div>
 
-            <div class="sidebar-title" onclick="showSection('goals')">
+            <!-- Metas Activas -->
+            <div class="sidebar-title">
                 <i class="fas fa-bullseye"></i> Mis Metas
             </div>
             <div class="goals-list">
-                <div class="goal-item" onclick="showSection('goals')">
+                <div class="goal-item">
                     <div class="goal-icon">
                         <i class="fas fa-book"></i>
                     </div>
@@ -963,7 +995,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="goal-item" onclick="showSection('goals')">
+                <div class="goal-item">
                     <div class="goal-icon">
                         <i class="fas fa-flask"></i>
                     </div>
@@ -974,7 +1006,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="goal-item" onclick="showSection('goals')">
+                <div class="goal-item">
                     <div class="goal-icon">
                         <i class="fas fa-language"></i>
                     </div>
@@ -990,15 +1022,7 @@
 
         <!-- Feed Principal -->
         <main class="feed">
-            <!-- Perfil móvil - Ahora está antes de la publicación -->
-            <div class="mobile-profile">
-                <div class="post-avatar" id="mobileAvatar" onclick="goToProfile()">JM</div>
-                <div class="mobile-profile-info">
-                    <h4 id="mobileUserName">Juan Manuel</h4>
-                    <p id="mobileUserTitle">Estudiante</p>
-                </div>
-            </div>
-
+            <!-- Crear Publicación -->
             <div class="create-post fade-in">
                 <div class="post-input-container">
                     <div class="post-avatar" id="postAvatar" onclick="goToProfile()">JM</div>
@@ -1020,12 +1044,15 @@
                 </div>
             </div>
 
+            <!-- Publicaciones -->
             <div class="post fade-in">
-                <div class="post-user">
-                    <div class="post-user-avatar">AM</div>
-                    <div class="post-user-info">
-                        <h4>Ana Martínez</h4>
-                        <p class="post-time">Hace 2 horas · <i class="fas fa-graduation-cap"></i></p>
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-user-avatar">AM</div>
+                        <div class="post-user-info">
+                            <h4>Ana Martínez</h4>
+                            <p class="post-time">Hace 2 horas · <i class="fas fa-graduation-cap"></i></p>
+                        </div>
                     </div>
                 </div>
                 <div class="post-content">
@@ -1049,18 +1076,20 @@
             </div>
 
             <div class="post fade-in">
-                <div class="post-user">
-                    <div class="post-user-avatar">CP</div>
-                    <div class="post-user-info">
-                        <h4>Carlos Pérez - Tutor</h4>
-                        <p class="post-time">Ayer · <i class="fas fa-chalkboard-teacher"></i></p>
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-user-avatar">CP</div>
+                        <div class="post-user-info">
+                            <h4>Carlos Pérez - Tutor</h4>
+                            <p class="post-time">Ayer · <i class="fas fa-chalkboard-teacher"></i></p>
+                        </div>
                     </div>
                 </div>
                 <div class="post-content">
                     📚 Clase en vivo este sábado: "Resolución de problemas de Física - Movimiento Parabólico". 
                     ¡No se lo pierdan! Traigan sus dudas y ejercicios.
                 </div>
-                <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 150px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border-radius: 8px; font-size: 0.9rem;">
+                <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
                     CLASE EN VIVO - SÁBADO 3 PM
                 </div>
                 <div class="post-stats">
@@ -1081,322 +1110,78 @@
             </div>
         </main>
 
-        <!-- Sidebar Derecha -->
+        <!-- Sidebar Derecha - Logros y Clases -->
         <aside class="sidebar">
-            <div class="sidebar-title" onclick="showSection('achievements')">
+            <!-- Logros Recientes -->
+            <div class="sidebar-title">
                 <i class="fas fa-trophy"></i> Mis Logros
             </div>
             <div class="achievements-grid">
-                <div class="achievement-card" onclick="showSection('achievements')">
+                <div class="achievement-card">
                     <div class="achievement-icon">🏆</div>
                     <div class="achievement-title">Estrella Naciente</div>
                     <div class="achievement-desc">Primera semana de estudio</div>
                 </div>
-                <div class="achievement-card" onclick="showSection('achievements')">
+                <div class="achievement-card">
                     <div class="achievement-icon">📚</div>
                     <div class="achievement-title">Voraz Lector</div>
                     <div class="achievement-desc">50 horas de lectura</div>
                 </div>
-                <div class="achievement-card" onclick="showSection('achievements')">
+                <div class="achievement-card">
                     <div class="achievement-icon">⚡</div>
                     <div class="achievement-title">Rápido Aprendiz</div>
                     <div class="achievement-desc">5 cursos en 1 mes</div>
                 </div>
-                <div class="achievement-card" onclick="showSection('achievements')">
+                <div class="achievement-card">
                     <div class="achievement-icon">🎯</div>
                     <div class="achievement-title">Disciplinado</div>
                     <div class="achievement-desc">30 días seguidos</div>
                 </div>
             </div>
 
-            <div class="sidebar-title" style="margin-top: 1.5rem;">
+            <!-- Clases en Vivo Programadas -->
+            <div class="sidebar-title" style="margin-top: 2rem;">
                 <i class="fas fa-video"></i> Próximas Clases
             </div>
             <div class="live-classes">
                 <div class="class-card">
-                    <div class="class-title">Matemáticas: Cálculo</div>
+                    <div class="class-title">Matemáticas: Cálculo Diferencial</div>
                     <div class="class-meta">
-                        <span>Sáb 3:00 PM</span>
+                        <span>Sábado 3:00 PM</span>
                         <span>Prof. Carlos</span>
                     </div>
                 </div>
                 <div class="class-card">
-                    <div class="class-title">Química General</div>
+                    <div class="class-title">Química: Estequiometría</div>
                     <div class="class-meta">
-                        <span>Dom 10:00 AM</span>
+                        <span>Domingo 10:00 AM</span>
                         <span>Prof. Ana</span>
                     </div>
                 </div>
                 <div class="class-card">
                     <div class="class-title">Razonamiento Verbal</div>
                     <div class="class-meta">
-                        <span>Lun 6:00 PM</span>
+                        <span>Lunes 6:00 PM</span>
                         <span>Prof. Luis</span>
                     </div>
                 </div>
             </div>
 
             <button class="btn btn-primary btn-block" style="margin-top: 1rem;">
-                <i class="fas fa-calendar-alt"></i> Ver Calendario
+                <i class="fas fa-calendar-alt"></i> Ver Calendario Completo
             </button>
         </aside>
     </div>
 
-    <!-- ✅ VISTAS DE SECCIONES -->
-    <div class="section-view" id="progressView">
-        <div class="section-header">
-            <div class="section-title">
-                <i class="fas fa-chart-line"></i> Mi Progreso Detallado
-            </div>
-            <button class="back-btn" onclick="hideSections()">
-                <i class="fas fa-arrow-left"></i> Volver
-            </button>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">128</div>
-                <div class="stat-label">Horas de Estudio</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">42</div>
-                <div class="stat-label">Lecciones Completadas</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">87%</div>
-                <div class="stat-label">Promedio de Calificaciones</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">15</div>
-                <div class="stat-label">Días Consecutivos</div>
-            </div>
-        </div>
-        
-        <div class="sidebar-title" style="margin-top: 1.5rem;">
-            <i class="fas fa-chart-bar"></i> Progreso por Materia
-        </div>
-        
-        <div class="goals-list">
-            <div class="goal-item">
-                <div class="goal-icon" style="background: #4CAF50;">
-                    <i class="fas fa-calculator"></i>
-                </div>
-                <div class="goal-info">
-                    <div class="goal-title">Matemáticas</div>
-                    <div class="goal-progress">
-                        <div class="goal-progress-bar" style="width: 85%; background: #4CAF50;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="goal-item">
-                <div class="goal-icon" style="background: #2196F3;">
-                    <i class="fas fa-flask"></i>
-                </div>
-                <div class="goal-info">
-                    <div class="goal-title">Ciencias</div>
-                    <div class="goal-progress">
-                        <div class="goal-progress-bar" style="width: 70%; background: #2196F3;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="goal-item">
-                <div class="goal-icon" style="background: #FF9800;">
-                    <i class="fas fa-language"></i>
-                </div>
-                <div class="goal-info">
-                    <div class="goal-title">Idiomas</div>
-                    <div class="goal-progress">
-                        <div class="goal-progress-bar" style="width: 60%; background: #FF9800;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section-view" id="goalsView">
-        <div class="section-header">
-            <div class="section-title">
-                <i class="fas fa-bullseye"></i> Mis Metas
-            </div>
-            <button class="back-btn" onclick="hideSections()">
-                <i class="fas fa-arrow-left"></i> Volver
-            </button>
-        </div>
-        
-        <div class="goals-list">
-            <div class="goal-item">
-                <div class="goal-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <div class="goal-info">
-                    <div class="goal-title">Completar Matemáticas Básicas</div>
-                    <div class="goal-progress">
-                        <div class="goal-progress-bar" style="width: 75%"></div>
-                    </div>
-                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 20 lecciones | Completadas: 15</p>
-                </div>
-            </div>
-            <div class="goal-item">
-                <div class="goal-icon">
-                    <i class="fas fa-flask"></i>
-                </div>
-                <div class="goal-info">
-                    <div class="goal-title">Dominar Química General</div>
-                    <div class="goal-progress">
-                        <div class="goal-progress-bar" style="width: 40%"></div>
-                    </div>
-                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 30 experimentos | Completados: 12</p>
-                </div>
-            </div>
-            <div class="goal-item">
-                <div class="goal-icon">
-                    <i class="fas fa-language"></i>
-                </div>
-                <div class="goal-info">
-                    <div class="goal-title">Alcanzar Inglés Intermedio</div>
-                    <div class="goal-progress">
-                        <div class="goal-progress-bar" style="width: 60%"></div>
-                    </div>
-                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 50 conversaciones | Completadas: 30</p>
-                </div>
-            </div>
-            <div class="goal-item">
-                <div class="goal-icon" style="background: #9C27B0;">
-                    <i class="fas fa-code"></i>
-                </div>
-                <div class="goal-info">
-                    <div class="goal-title">Aprender Programación Básica</div>
-                    <div class="goal-progress">
-                        <div class="goal-progress-bar" style="width: 25%; background: #9C27B0;"></div>
-                    </div>
-                    <p class="post-time" style="margin-top: 0.3rem;">Meta: 10 proyectos | Completados: 2.5</p>
-                </div>
-            </div>
-        </div>
-        
-        <button class="btn btn-primary btn-block" style="margin-top: 1.5rem;">
-            <i class="fas fa-plus"></i> Establecer Nueva Meta
-        </button>
-    </div>
-
-    <div class="section-view" id="achievementsView">
-        <div class="section-header">
-            <div class="section-title">
-                <i class="fas fa-trophy"></i> Mis Logros
-            </div>
-            <button class="back-btn" onclick="hideSections()">
-                <i class="fas fa-arrow-left"></i> Volver
-            </button>
-        </div>
-        
-        <div class="achievements-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="achievement-card">
-                <div class="achievement-icon">🏆</div>
-                <div class="achievement-title">Estrella Naciente</div>
-                <div class="achievement-desc">Primera semana de estudio</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">📚</div>
-                <div class="achievement-title">Voraz Lector</div>
-                <div class="achievement-desc">50 horas de lectura</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">⚡</div>
-                <div class="achievement-title">Rápido Aprendiz</div>
-                <div class="achievement-desc">5 cursos en 1 mes</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">🎯</div>
-                <div class="achievement-title">Disciplinado</div>
-                <div class="achievement-desc">30 días seguidos</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">🌟</div>
-                <div class="achievement-title">Estrella en Ascenso</div>
-                <div class="achievement-desc">100 horas de estudio</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">💬</div>
-                <div class="achievement-title">Comunicador</div>
-                <div class="achievement-desc">50 comentarios en foros</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">🔍</div>
-                <div class="achievement-title">Investigador</div>
-                <div class="achievement-desc">20 recursos compartidos</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">👥</div>
-                <div class="achievement-title">Colaborador</div>
-                <div class="achievement-desc">10 proyectos en equipo</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">🎓</div>
-                <div class="achievement-title">Graduado</div>
-                <div class="achievement-desc">Primer curso completado</div>
-            </div>
-        </div>
-        
-        <div class="sidebar-title" style="margin-top: 1.5rem;">
-            <i class="fas fa-lock"></i> Próximos Logros
-        </div>
-        
-        <div class="achievements-grid" style="opacity: 0.6;">
-            <div class="achievement-card">
-                <div class="achievement-icon">🚀</div>
-                <div class="achievement-title">Experto</div>
-                <div class="achievement-desc">500 horas de estudio</div>
-            </div>
-            <div class="achievement-card">
-                <div class="achievement-icon">🏅</div>
-                <div class="achievement-title">Maestro</div>
-                <div class="achievement-desc">20 cursos completados</div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // ===== ✅ SISTEMA DE VISTAS DE SECCIONES =====
-        function showSection(section) {
-            // Ocultar todas las secciones
-            document.querySelectorAll('.section-view').forEach(view => {
-                view.classList.remove('active');
-            });
-            
-            // Ocultar el contenido principal
-            document.querySelector('.main-container').style.display = 'none';
-            
-            // Mostrar la sección seleccionada
-            document.getElementById(section + 'View').classList.add('active');
-            
-            // Mostrar notificación
-            const sectionNames = {
-                'progress': 'Progreso',
-                'goals': 'Metas', 
-                'achievements': 'Logros'
-            };
-            showNotification(`Vista de ${sectionNames[section]} activada`, 'info');
-        }
-
-        function hideSections() {
-            // Ocultar todas las secciones
-            document.querySelectorAll('.section-view').forEach(view => {
-                view.classList.remove('active');
-            });
-            
-            // Mostrar el contenido principal
-            document.querySelector('.main-container').style.display = 'flex';
-            
-            showNotification('Volviendo al inicio', 'info');
-        }
-
-        // ===== ✅ SISTEMA DE COMPARTIR MEJORADO =====
+        // ===== ✅ MEJORADO: SISTEMA DE COMPARTIR =====
         function generateQRCode() {
+            // ✅ CORREGIDO: Usar tu enlace real de GitHub Pages
             const appUrl = "https://juanarbanilneo.github.io/neostudy-app/";
             
             QRCode.toCanvas(document.getElementById('qrCode'), appUrl, {
-                width: 160,
-                height: 160,
+                width: 200,
+                height: 200,
                 margin: 1,
                 color: {
                     dark: '#000000',
@@ -1404,6 +1189,7 @@
                 }
             }, function(error) {
                 if (error) console.error(error);
+                console.log('QR code generado exitosamente!');
             });
         }
 
@@ -1416,27 +1202,43 @@
             document.getElementById('shareModal').style.display = 'none';
         }
 
+        // Cerrar modal al hacer click fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('shareModal');
+            if (event.target === modal) {
+                closeShareModal();
+            }
+        }
+
         function shareNative() {
             const shareData = {
                 title: 'NeoStudy - Plataforma Educativa',
-                text: '¡Únete a NeoStudy! La mejor plataforma para estudiantes.',
+                text: '¡Únete a NeoStudy! La mejor plataforma para estudiantes. Cursos, tutorías y comunidad educativa.',
                 url: 'https://juanarbanilneo.github.io/neostudy-app/'
             };
 
             if (navigator.share) {
                 navigator.share(shareData)
-                    .then(() => showNotification('¡Compartido! 🎉', 'success'))
+                    .then(() => showNotification('¡Compartido exitosamente! 🎉', 'success'))
                     .catch(error => showNotification('Compartir cancelado', 'info'));
             } else {
                 copyLink();
+                showNotification('Enlace copiado al portapapeles 📋', 'info');
             }
             closeShareModal();
         }
 
         function shareWhatsApp() {
-            const text = encodeURIComponent('¡Únete a NeoStudy! 🎓\nLa mejor plataforma educativa\n\nhttps://juanarbanilneo.github.io/neostudy-app/');
+            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa. 🎓\nhttps://juanarbanilneo.github.io/neostudy-app/');
             window.open(`https://wa.me/?text=${text}`, '_blank');
             showNotification('Compartiendo en WhatsApp...', 'info');
+            closeShareModal();
+        }
+
+        function shareFacebook() {
+            const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            showNotification('Compartiendo en Facebook...', 'info');
             closeShareModal();
         }
 
@@ -1450,12 +1252,15 @@
 
         function copyLink() {
             const linkInput = document.getElementById('appLink');
+            linkInput.value = 'https://juanarbanilneo.github.io/neostudy-app/';
+            
             linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(linkInput.value)
-                .then(() => showNotification('Enlace copiado 📋', 'success'))
+                .then(() => showNotification('Enlace copiado al portapapeles 📋', 'success'))
                 .catch(err => {
                     document.execCommand('copy');
-                    showNotification('Enlace copiado 📋', 'success');
+                    showNotification('Enlace copiado al portapapeles 📋', 'success');
                 });
         }
 
@@ -1466,19 +1271,16 @@
                 link.download = 'neostudy-qr-code.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                showNotification('QR descargado 📱', 'success');
+                showNotification('QR descargado exitosamente 📱', 'success');
             }
         }
 
-        // Cerrar modal al hacer click fuera
-        window.onclick = function(event) {
-            const modal = document.getElementById('shareModal');
-            if (event.target === modal) {
-                closeShareModal();
-            }
+        // ===== ✅ CORREGIDO: NAVEGACIÓN AL PERFIL =====
+        function goToProfile() {
+            window.location.href = 'modulo3_perfil.html';
         }
 
-        // ===== ✅ SISTEMA DE USUARIO =====
+        // ===== SISTEMA MEJORADO DE CARGA DE USUARIO =====
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
@@ -1486,11 +1288,9 @@
             if (userData) {
                 const userName = userData.nombre || 'Usuario NeoStudy';
                 document.getElementById('userName').textContent = userName;
-                document.getElementById('mobileUserName').textContent = userName;
                 
                 const userTitle = userData.titulo || 'Estudiante';
                 document.getElementById('userTitle').textContent = userTitle;
-                document.getElementById('mobileUserTitle').textContent = userTitle;
                 
                 updateProfilePhoto(userName, profileData);
                 
@@ -1505,17 +1305,23 @@
             }
         }
 
+        // ===== FUNCIÓN ESPECÍFICA PARA ACTUALIZAR FOTO =====
         function updateProfilePhoto(userName, profileData) {
-            const avatares = document.querySelectorAll('.avatar, .post-avatar, .post-user-avatar, #mobileAvatar');
+            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar');
             const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
             
             avatares.forEach(avatar => {
                 if (profileData.profilePhoto && 
+                    profileData.profilePhoto !== "" && 
+                    profileData.profilePhoto !== "null" && 
+                    profileData.profilePhoto !== "undefined" &&
                     profileData.profilePhoto.startsWith('data:image')) {
+                    
                     avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
                     avatar.textContent = '';
                     avatar.style.backgroundSize = 'cover';
                     avatar.style.backgroundPosition = 'center';
+                    avatar.style.background = 'none';
                 } else {
                     avatar.textContent = initials;
                     avatar.style.backgroundImage = 'none';
@@ -1524,16 +1330,7 @@
             });
         }
 
-        // ===== ✅ NAVEGACIÓN =====
-        function goToProfile() {
-            window.location.href = 'modulo3_perfil.html';
-        }
-
-        function goToFeed(e) {
-            if (e) e.preventDefault();
-            window.location.href = 'modulo2_iniciodecesión.html';
-        }
-
+        // ===== SISTEMA DE CERRAR SESIÓN =====
         function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
                 showNotification('Sesión cerrada correctamente', 'info');
@@ -1543,7 +1340,13 @@
             }
         }
 
-        // ===== ✅ SISTEMA DE PUBLICACIONES =====
+        // ===== NAVEGACIÓN MEJORADA =====
+        function goToFeed(e) {
+            if (e) e.preventDefault();
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        // ===== SISTEMA DE PUBLICACIONES =====
         function createPost() {
             const content = document.getElementById('postContent').value;
             if (content.trim() === '') {
@@ -1566,11 +1369,13 @@
             const newPost = document.createElement('div');
             newPost.className = 'post fade-in';
             newPost.innerHTML = `
-                <div class="post-user">
-                    ${userAvatarHTML}
-                    <div class="post-user-info">
-                        <h4>${userName}</h4>
-                        <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                <div class="post-header">
+                    <div class="post-user">
+                        ${userAvatarHTML}
+                        <div class="post-user-info">
+                            <h4>${userName}</h4>
+                            <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                        </div>
                     </div>
                 </div>
                 <div class="post-content">${content}</div>
@@ -1593,7 +1398,7 @@
 
             document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
             document.getElementById('postContent').value = '';
-            showNotification('¡Publicación creada! 🎉', 'success');
+            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
         }
 
         function likePost(button) {
@@ -1606,6 +1411,7 @@
             button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
         }
 
+        // ===== SISTEMA DE MEDIOS =====
         function addPostMedia(type) {
             const mediaTypes = {
                 'foto': '📷 Foto agregada',
@@ -1615,7 +1421,7 @@
             
             const input = document.getElementById('postContent');
             if (input.value.includes(mediaTypes[type].split(' ')[1])) {
-                showNotification(`Ya agregaste un ${type}`, 'warning');
+                showNotification(`Ya agregaste un ${type} a esta publicación`, 'warning');
                 return;
             }
             
@@ -1625,10 +1431,10 @@
                 input.value += `\n${mediaTypes[type]}`;
             }
             
-            showNotification(`Listo para subir ${type}`, 'info');
+            showNotification(`Preparado para subir ${type}...`, 'info');
         }
 
-        // ===== ✅ SISTEMA DE TEMAS =====
+        // ===== SISTEMA DE 3 MODOS DE TEMA =====
         let currentMode = 'normal';
 
         function toggleThemeMode() {
@@ -1664,13 +1470,35 @@
                 'estudio': 'Modo Estudio'
             };
             
-            btn.innerHTML = `<i class="${icons[mode]}"></i> <span class="btn-text">${texts[mode]}</span>`;
+            btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
             
             showNotification(`${texts[mode]} activado`, 'info');
             localStorage.setItem('neoStudyTheme', mode);
+            
+            if (mode === 'estudio') {
+                startStudySession();
+            }
         }
 
-        // ===== ✅ NOTIFICACIONES =====
+        function startStudySession() {
+            let seconds = 0;
+            const timer = setInterval(() => {
+                if (currentMode !== 'estudio') {
+                    clearInterval(timer);
+                    return;
+                }
+                
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                
+                document.getElementById('studyHours').textContent = 128 + hours;
+                document.getElementById('completedGoals').textContent = 12 + Math.floor(hours / 2);
+                
+            }, 1000);
+        }
+
+        // ===== SISTEMA DE NOTIFICACIONES =====
         function showNotification(message, type = 'info') {
             const existingNotification = document.querySelector('.notification');
             if (existingNotification) {
@@ -1692,7 +1520,18 @@
             }, 3000);
         }
 
-        // ===== ✅ INICIALIZACIÓN =====
+        // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
+        function checkForProfileUpdates() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            
+            if (userData) {
+                const userName = userData.nombre || 'Usuario NeoStudy';
+                updateProfilePhoto(userName, profileData);
+            }
+        }
+
+        // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             
@@ -1703,7 +1542,6 @@
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
             document.getElementById('postAvatar').onclick = goToProfile;
-            document.getElementById('mobileAvatar').onclick = goToProfile;
             
             document.getElementById('postContent').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && e.ctrlKey) {
@@ -1711,15 +1549,7 @@
                 }
             });
 
-            // Verificar actualizaciones del perfil
-            setInterval(() => {
-                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-                if (userData) {
-                    const userName = userData.nombre || 'Usuario NeoStudy';
-                    updateProfilePhoto(userName, profileData);
-                }
-            }, 2000);
+            setInterval(checkForProfileUpdates, 2000);
         });
     </script>
 </body>
