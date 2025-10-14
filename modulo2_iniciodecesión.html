@@ -185,14 +185,17 @@
             font-size: 1.2rem;
         }
 
-        /* ===== PERFIL MÓVIL MEJORADO - MÁS COMPACTO ===== */
+        /* ===== PERFIL MÓVIL MEJORADO - HORIZONTAL ===== */
         .mobile-profile {
             background: var(--white);
             border-radius: var(--card-radius);
-            padding: 1.5rem;
+            padding: 1.2rem;
             box-shadow: var(--card-shadow);
-            text-align: center;
             margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-align: left;
         }
 
         .mobile-profile-avatar {
@@ -206,16 +209,24 @@
             color: var(--white);
             font-weight: bold;
             font-size: 1.5rem;
-            margin: 0 auto 0.8rem;
             background-size: cover;
             background-position: center;
+            flex-shrink: 0;
+        }
+
+        .mobile-profile-info {
+            flex: 1;
+            overflow: hidden;
         }
 
         .mobile-profile-name {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: var(--dark);
             margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .mobile-profile-title {
@@ -226,6 +237,10 @@
             padding: 0.4rem 0.8rem;
             border-radius: 20px;
             display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         /* ===== CONTENIDO PRINCIPAL ===== */
@@ -356,13 +371,14 @@
             gap: 1.2rem;
         }
 
-        /* ===== CREAR PUBLICACIÓN MEJORADA - MÁS ORDENADA ===== */
+        /* ===== CREAR PUBLICACIÓN MEJORADA - MÁS ORDENADA Y CENTRADA ===== */
         .create-post {
             background: var(--white);
             border-radius: var(--card-radius);
-            padding: 1.2rem;
+            padding: 1.5rem;
             box-shadow: var(--card-shadow);
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .create-post:hover {
@@ -373,7 +389,8 @@
             display: flex;
             align-items: flex-start;
             gap: 1rem;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
+            text-align: left;
         }
 
         .post-avatar {
@@ -441,6 +458,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 0.5rem;
+            justify-items: center;
         }
 
         .post-action {
@@ -452,17 +470,24 @@
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
+            gap: 0.3rem;
+            font-size: 0.8rem;
             font-weight: 500;
+            width: 100%;
+            max-width: 90px;
         }
 
         .post-action:hover {
             background: var(--light);
             color: var(--primary);
             transform: translateY(-1px);
+        }
+
+        .post-action i {
+            font-size: 1.2rem;
         }
 
         /* ===== PUBLICACIONES MEJORADAS - MÁS ORDENADAS Y VISUALES ===== */
@@ -1092,7 +1117,7 @@
             }
 
             .post-actions {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
 
             .stats-grid {
@@ -1141,6 +1166,17 @@
             .post-input-container {
                 flex-direction: column;
                 text-align: center;
+            }
+
+            .post-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .post-action {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+                max-width: 100%;
             }
 
             .share-modal-buttons {
@@ -1204,6 +1240,29 @@
 
             .mobile-nav-item span {
                 font-size: 0.7rem;
+            }
+
+            .mobile-profile {
+                padding: 1rem;
+            }
+
+            .mobile-profile-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.2rem;
+            }
+
+            .mobile-profile-name {
+                font-size: 1rem;
+            }
+
+            .mobile-profile-title {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .post-actions {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1557,14 +1616,16 @@
 
         <!-- Feed Principal -->
         <main class="feed" id="mainFeed">
-            <!-- Perfil Móvil (SOLO MÓVIL) -->
+            <!-- Perfil Móvil (SOLO MÓVIL) - MEJORADO -->
             <div class="mobile-profile fade-in">
                 <div class="mobile-profile-avatar" id="mobileProfileAvatar">JM</div>
-                <div class="mobile-profile-name" id="mobileProfileName">Usuario NeoStudy</div>
-                <div class="mobile-profile-title" id="mobileProfileTitle">Estudiante</div>
+                <div class="mobile-profile-info">
+                    <div class="mobile-profile-name" id="mobileProfileName">Usuario NeoStudy</div>
+                    <div class="mobile-profile-title" id="mobileProfileTitle">Estudiante</div>
+                </div>
             </div>
 
-            <!-- Crear Publicación MEJORADA -->
+            <!-- Crear Publicación MEJORADA Y CENTRADA -->
             <div class="create-post fade-in">
                 <div class="post-input-container">
                     <div class="post-avatar" id="postAvatar">JM</div>
