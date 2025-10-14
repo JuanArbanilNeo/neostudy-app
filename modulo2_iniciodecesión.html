@@ -311,6 +311,49 @@
             gap: 1.5rem;
         }
 
+        /* ===== PERFIL MÓVIL MEJORADO ===== */
+        .mobile-profile {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .mobile-profile-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-profile-title {
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            background: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
         /* ===== SIDEBARS ===== */
         .sidebar {
             background: var(--white);
@@ -572,7 +615,7 @@
             gap: 1.5rem;
         }
 
-        /* ===== CREAR PUBLICACIÓN ===== */
+        /* ===== CREAR PUBLICACIÓN MEJORADA ===== */
         .create-post {
             background: var(--white);
             border-radius: 15px;
@@ -582,6 +625,7 @@
 
         .post-input-container {
             display: flex;
+            align-items: flex-start;
             gap: 1rem;
             margin-bottom: 1rem;
         }
@@ -600,21 +644,42 @@
             transition: transform 0.3s ease;
             background-size: cover;
             background-position: center;
+            flex-shrink: 0;
         }
 
         .post-avatar:hover {
             transform: scale(1.05);
         }
 
-        .post-input {
+        .post-input-wrapper {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .post-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-user-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .post-input {
+            width: 100%;
             padding: 1rem;
             border: 1px solid var(--light);
-            border-radius: 25px;
+            border-radius: 15px;
             background: var(--light);
             resize: none;
             font-size: 1rem;
             transition: all 0.3s ease;
+            min-height: 80px;
         }
 
         .post-input:focus {
@@ -1421,21 +1486,22 @@
         <!-- Feed Principal -->
         <main class="feed" id="mainFeed">
             <!-- Perfil Móvil (SOLO MÓVIL) -->
-            <div class="create-post fade-in mobile-profile">
-                <div class="post-input-container">
-                    <div class="post-avatar" id="mobileProfileAvatar" onclick="goToProfile()">JM</div>
-                    <div>
-                        <h4 id="mobileProfileName">Usuario NeoStudy</h4>
-                        <p class="post-time" id="mobileProfileTitle">Estudiante</p>
-                    </div>
-                </div>
+            <div class="mobile-profile fade-in">
+                <div class="mobile-profile-avatar" id="mobileProfileAvatar">JM</div>
+                <div class="mobile-profile-name" id="mobileProfileName">Usuario NeoStudy</div>
+                <div class="mobile-profile-title" id="mobileProfileTitle">Estudiante</div>
             </div>
 
-            <!-- Crear Publicación -->
+            <!-- Crear Publicación MEJORADA -->
             <div class="create-post fade-in">
                 <div class="post-input-container">
-                    <div class="post-avatar" id="postAvatar" onclick="goToProfile()">JM</div>
-                    <textarea class="post-input" placeholder="¿Qué estás aprendiendo hoy?" id="postContent"></textarea>
+                    <div class="post-avatar" id="postAvatar">JM</div>
+                    <div class="post-input-wrapper">
+                        <div class="post-user-info">
+                            <span class="post-user-name" id="postUserName">Usuario</span>
+                        </div>
+                        <textarea class="post-input" placeholder="¿Qué estás aprendiendo hoy?" id="postContent"></textarea>
+                    </div>
                 </div>
                 <div class="post-actions">
                     <button class="post-action" onclick="addPostMedia('foto')">
@@ -1583,6 +1649,9 @@
     </div>
 
     <script>
+        // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
+        let welcomeNotificationShown = false;
+
         // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
         function checkSession() {
             const userData = localStorage.getItem('usuarioNeoStudy');
@@ -1683,6 +1752,10 @@
             if (mobileProfileNameElement) mobileProfileNameElement.textContent = nombreCompleto;
             if (mobileProfileTitleElement) mobileProfileTitleElement.textContent = titulo;
             
+            // Actualizar publicación - nombre del usuario
+            const postUserNameElement = document.getElementById('postUserName');
+            if (postUserNameElement) postUserNameElement.textContent = primerNombre;
+            
             // Actualizar avatar y foto de perfil
             updateProfilePhoto(primerNombre, profileData);
             
@@ -1693,7 +1766,11 @@
                 postContentElement.placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
             }
             
-            showNotification(`¡Bienvenido de nuevo, ${nombreParaSaludo}! 🎓`, 'success');
+            // MOSTRAR NOTIFICACIÓN SOLO UNA VEZ
+            if (!welcomeNotificationShown) {
+                showNotification(`¡Bienvenido de nuevo, ${nombreParaSaludo}! 🎓`, 'success');
+                welcomeNotificationShown = true;
+            }
         }
 
         // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
@@ -2133,7 +2210,7 @@
             });
 
             // Verificar actualizaciones periódicamente
-            setInterval(checkForProfileUpdates, 2000);
+            setInterval(checkForProfileUpdates, 5000); // Reducido a 5 segundos
         });
     </script>
 </body>
