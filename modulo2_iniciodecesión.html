@@ -1583,86 +1583,76 @@
     </div>
 
     <script>
-        // ===== VERIFICACIÓN DE SESIÓN MEJORADA =====
+        // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
         function checkSession() {
             const userData = localStorage.getItem('usuarioNeoStudy');
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
             
-            console.log('Verificando sesión:', { userData: !!userData, isLoggedIn });
-            
-            if (!userData || isLoggedIn !== 'true') {
-                console.log('No hay sesión activa, redirigiendo...');
-                window.location.href = 'modulo1_inicio.html';
+            if (!userData) {
+                console.log('No hay usuario registrado, redirigiendo al login...');
+                showNotification('Por favor inicia sesión primero', 'danger');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 2000);
                 return false;
             }
             
+            console.log('Usuario encontrado en localStorage:', JSON.parse(userData));
             return true;
         }
 
-        // ===== SISTEMA DE NAVEGACIÓN MÓVIL =====
-        const hamburgerMenu = document.getElementById('hamburgerMenu');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const mobileSidebar = document.getElementById('mobileSidebar');
-        const overlay = document.getElementById('overlay');
-
-        hamburgerMenu.addEventListener('click', () => {
-            mobileSidebar.classList.add('active');
-            overlay.classList.add('active');
-            // Ocultar todas las secciones al abrir el menú
-            hideAllMobileSections();
-        });
-
-        closeSidebar.addEventListener('click', () => {
-            mobileSidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        overlay.addEventListener('click', () => {
-            mobileSidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        // ===== SISTEMA DE SECCIONES MÓVILES =====
-        function hideAllMobileSections() {
-            document.querySelectorAll('.mobile-section').forEach(section => {
-                section.classList.remove('active');
-            });
-        }
-
-        function showMobileSection(section) {
-            // Ocultar todas las secciones primero
-            hideAllMobileSections();
-            
-            // Mostrar la sección seleccionada
-            const sectionElement = document.getElementById('mobile' + section.charAt(0).toUpperCase() + section.slice(1));
-            if (sectionElement) {
-                sectionElement.classList.add('active');
-            }
-        }
-
-        // ===== SISTEMA DE CARGA DE USUARIO MEJORADO =====
+        // ===== SISTEMA DE CARGA DE USUARIO COMPATIBLE CON MODULO1 =====
         function loadUserData() {
             if (!checkSession()) return;
             
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            
-            if (userData) {
-                // Obtener datos completos del usuario
-                const nombre = userData.nombre || '';
-                const apellido = userData.apellido || '';
-                const email = userData.email || '';
-                const titulo = userData.titulo || 'Estudiante';
+            try {
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 
-                // Mostrar nombre completo
-                const nombreCompleto = nombre && apellido ? `${nombre} ${apellido}` : nombre || 'Usuario NeoStudy';
+                console.log('Datos completos del usuario:', userData);
                 
-                // Actualizar todos los lugares donde aparece el nombre
-                updateUserProfile(nombreCompleto, titulo, nombre, profileData);
-                
-                console.log('Datos de usuario cargados:', userData);
-            } else {
-                showNotification('Error al cargar datos de usuario', 'danger');
+                if (userData && typeof userData === 'object') {
+                    // DETECTAR TIPO DE USUARIO Y EXTRAER DATOS CORRECTAMENTE
+                    let nombreCompleto = '';
+                    let titulo = '';
+                    let categoria = userData.categoria || '';
+                    
+                    // Extraer nombre según la categoría del modulo1
+                    if (categoria === 'profesional') {
+                        nombreCompleto = userData.prof_nombre || 'Profesional';
+                        titulo = userData.prof_profesion || 'Profesional';
+                    } 
+                    else if (categoria === 'universitario') {
+                        nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+                        titulo = userData.uni_carrera || 'Estudiante';
+                    }
+                    else if (categoria === 'secundaria') {
+                        nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+                        titulo = userData.sec_grado || 'Estudiante';
+                    }
+                    else if (categoria === 'general') {
+                        nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Usuario General';
+                    }
+                    else {
+                        // Fallback por si no se detecta la categoría
+                        nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
+                                       userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Estudiante';
+                    }
+                    
+                    console.log('Nombre detectado:', nombreCompleto);
+                    console.log('Título detectado:', titulo);
+                    console.log('Categoría:', categoria);
+                    
+                    // Actualizar todos los lugares donde aparece el nombre
+                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], profileData);
+                    
+                } else {
+                    throw new Error('Formato de datos inválido');
+                }
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                showNotification('Error al cargar los datos del usuario', 'danger');
                 setTimeout(() => {
                     window.location.href = 'modulo1_inicio.html';
                 }, 2000);
@@ -1671,24 +1661,37 @@
 
         function updateUserProfile(nombreCompleto, titulo, primerNombre, profileData) {
             // Actualizar escritorio
-            document.getElementById('userName').textContent = nombreCompleto;
-            document.getElementById('userTitle').textContent = titulo;
+            const userNameElement = document.getElementById('userName');
+            const userTitleElement = document.getElementById('userTitle');
+            
+            if (userNameElement) userNameElement.textContent = nombreCompleto;
+            if (userTitleElement) userTitleElement.textContent = titulo;
             
             // Actualizar móvil - menú lateral
-            document.getElementById('mobileUserName').textContent = nombreCompleto;
-            document.getElementById('mobileFullName').textContent = nombreCompleto;
-            document.getElementById('mobileUserTitle').textContent = titulo;
+            const mobileUserNameElement = document.getElementById('mobileUserName');
+            const mobileFullNameElement = document.getElementById('mobileFullName');
+            const mobileUserTitleElement = document.getElementById('mobileUserTitle');
+            
+            if (mobileUserNameElement) mobileUserNameElement.textContent = nombreCompleto;
+            if (mobileFullNameElement) mobileFullNameElement.textContent = nombreCompleto;
+            if (mobileUserTitleElement) mobileUserTitleElement.textContent = titulo;
             
             // Actualizar móvil - perfil en el feed
-            document.getElementById('mobileProfileName').textContent = nombreCompleto;
-            document.getElementById('mobileProfileTitle').textContent = titulo;
+            const mobileProfileNameElement = document.getElementById('mobileProfileName');
+            const mobileProfileTitleElement = document.getElementById('mobileProfileTitle');
+            
+            if (mobileProfileNameElement) mobileProfileNameElement.textContent = nombreCompleto;
+            if (mobileProfileTitleElement) mobileProfileTitleElement.textContent = titulo;
             
             // Actualizar avatar y foto de perfil
             updateProfilePhoto(primerNombre, profileData);
             
             // Actualizar placeholder del post
             const nombreParaSaludo = primerNombre.split(' ')[0] || 'Usuario';
-            document.getElementById('postContent').placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
+            const postContentElement = document.getElementById('postContent');
+            if (postContentElement) {
+                postContentElement.placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
+            }
             
             showNotification(`¡Bienvenido de nuevo, ${nombreParaSaludo}! 🎓`, 'success');
         }
@@ -1699,7 +1702,7 @@
             const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
             
             avatares.forEach(avatar => {
-                if (profileData.profilePhoto && 
+                if (profileData && profileData.profilePhoto && 
                     profileData.profilePhoto !== "" && 
                     profileData.profilePhoto !== "null" && 
                     profileData.profilePhoto !== "undefined" &&
@@ -1717,12 +1720,55 @@
             });
         }
 
-        // ===== SISTEMA DE COMPARTIR MEJORADO =====
+        // ===== SISTEMA DE NAVEGACIÓN MÓVIL =====
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const overlay = document.getElementById('overlay');
+
+        if (hamburgerMenu) {
+            hamburgerMenu.addEventListener('click', () => {
+                mobileSidebar.classList.add('active');
+                overlay.classList.add('active');
+                hideAllMobileSections();
+            });
+        }
+
+        if (closeSidebar) {
+            closeSidebar.addEventListener('click', () => {
+                mobileSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                mobileSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        // ===== SISTEMA DE SECCIONES MÓVILES =====
+        function hideAllMobileSections() {
+            document.querySelectorAll('.mobile-section').forEach(section => {
+                section.classList.remove('active');
+            });
+        }
+
+        function showMobileSection(section) {
+            hideAllMobileSections();
+            const sectionElement = document.getElementById('mobile' + section.charAt(0).toUpperCase() + section.slice(1));
+            if (sectionElement) {
+                sectionElement.classList.add('active');
+            }
+        }
+
+        // ===== SISTEMA DE COMPARTIR =====
         function generateQRCode() {
             const appUrl = "https://juanarbanilneo.github.io/neostudy-app/";
-            
-            // Limpiar el contenedor QR primero
             const qrContainer = document.getElementById('qrCode');
+            if (!qrContainer) return;
+            
             qrContainer.innerHTML = '';
             
             QRCode.toCanvas(appUrl, {
@@ -1736,7 +1782,6 @@
             }, function(error, canvas) {
                 if (error) {
                     console.error(error);
-                    // Crear un QR de respaldo si falla
                     const backupText = document.createElement('div');
                     backupText.textContent = 'Código QR no disponible';
                     backupText.style.textAlign = 'center';
@@ -1749,23 +1794,28 @@
         }
 
         function openShareModal() {
-            document.getElementById('shareModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            generateQRCode();
+            const modal = document.getElementById('shareModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                generateQRCode();
+            }
         }
 
         function closeShareModal() {
-            document.getElementById('shareModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
+            const modal = document.getElementById('shareModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         }
 
-        // Cerrar modal al hacer click fuera o presionar ESC
         window.onclick = function(event) {
             const modal = document.getElementById('shareModal');
             if (event.target === modal) {
                 closeShareModal();
             }
-        }
+        };
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
@@ -1819,7 +1869,6 @@
             navigator.clipboard.writeText(linkInput.value)
                 .then(() => showNotification('Enlace copiado al portapapeles 📋', 'success'))
                 .catch(err => {
-                    // Fallback para navegadores más antiguos
                     document.execCommand('copy');
                     showNotification('Enlace copiado al portapapeles 📋', 'success');
                 });
@@ -1846,7 +1895,6 @@
         // ===== SISTEMA DE CERRAR SESIÓN =====
         function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                localStorage.removeItem('isLoggedIn');
                 showNotification('Sesión cerrada correctamente', 'info');
                 setTimeout(() => {
                     window.location.href = 'modulo1_inicio.html';
@@ -1870,10 +1918,26 @@
 
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            const nombre = userData?.nombre || 'Usuario';
-            const apellido = userData?.apellido || '';
-            const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
-            const initials = nombre.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            // Extraer nombre según categoría (igual que en loadUserData)
+            let nombreCompleto = 'Usuario';
+            const categoria = userData?.categoria || '';
+            
+            if (categoria === 'profesional') {
+                nombreCompleto = userData.prof_nombre || 'Profesional';
+            } 
+            else if (categoria === 'universitario') {
+                nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+            }
+            else if (categoria === 'secundaria') {
+                nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+            }
+            else if (categoria === 'general') {
+                nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
+            }
+            
+            const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+            const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
             
             let userAvatarHTML;
             if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
@@ -2042,25 +2106,20 @@
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             
             if (userData) {
-                const nombre = userData.nombre || '';
-                const apellido = userData.apellido || '';
-                const titulo = userData.titulo || 'Estudiante';
-                const nombreCompleto = nombre && apellido ? `${nombre} ${apellido}` : nombre || 'Usuario NeoStudy';
-                
-                updateUserProfile(nombreCompleto, titulo, nombre, profileData);
+                loadUserData(); // Recargar datos completos
             }
         }
 
         // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Verificar sesión antes de cargar cualquier cosa
-            if (!checkSession()) return;
-            
+            // Cargar datos del usuario primero
             loadUserData();
             
+            // Configurar tema
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setThemeMode(savedTheme);
             
+            // Configurar eventos
             document.querySelector('.logo').onclick = goToFeed;
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
@@ -2073,6 +2132,7 @@
                 }
             });
 
+            // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 2000);
         });
     </script>
