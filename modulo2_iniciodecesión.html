@@ -953,6 +953,16 @@
             .mobile-sidebar {
                 width: 100%;
             }
+
+            /* Ocultar las sidebars en móviles */
+            .sidebar {
+                display: none !important;
+            }
+
+            /* Mostrar solo el feed en móviles */
+            .main-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1331,8 +1341,8 @@
 
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <div class="main-container">
-        <!-- Sidebar Izquierda - Perfil y Metas -->
-        <aside class="sidebar">
+        <!-- Sidebar Izquierda - Perfil y Metas (SOLO ESCRITORIO) -->
+        <aside class="sidebar desktop-only">
             <!-- Perfil de Usuario -->
             <div class="user-profile">
                 <div class="post-input-container">
@@ -1410,6 +1420,17 @@
 
         <!-- Feed Principal -->
         <main class="feed" id="mainFeed">
+            <!-- Perfil Móvil (SOLO MÓVIL) -->
+            <div class="create-post fade-in mobile-profile">
+                <div class="post-input-container">
+                    <div class="post-avatar" id="mobileProfileAvatar" onclick="goToProfile()">JM</div>
+                    <div>
+                        <h4 id="mobileProfileName">Usuario NeoStudy</h4>
+                        <p class="post-time" id="mobileProfileTitle">Estudiante</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Crear Publicación -->
             <div class="create-post fade-in">
                 <div class="post-input-container">
@@ -1498,8 +1519,8 @@
             </div>
         </main>
 
-        <!-- Sidebar Derecha - Logros y Clases -->
-        <aside class="sidebar">
+        <!-- Sidebar Derecha - Logros y Clases (SOLO ESCRITORIO) -->
+        <aside class="sidebar desktop-only">
             <!-- Logros Recientes -->
             <div class="sidebar-title">
                 <i class="fas fa-trophy"></i> Mis Logros
@@ -1562,6 +1583,22 @@
     </div>
 
     <script>
+        // ===== VERIFICACIÓN DE SESIÓN MEJORADA =====
+        function checkSession() {
+            const userData = localStorage.getItem('usuarioNeoStudy');
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            console.log('Verificando sesión:', { userData: !!userData, isLoggedIn });
+            
+            if (!userData || isLoggedIn !== 'true') {
+                console.log('No hay sesión activa, redirigiendo...');
+                window.location.href = 'modulo1_inicio.html';
+                return false;
+            }
+            
+            return true;
+        }
+
         // ===== SISTEMA DE NAVEGACIÓN MÓVIL =====
         const hamburgerMenu = document.getElementById('hamburgerMenu');
         const closeSidebar = document.getElementById('closeSidebar');
@@ -1605,6 +1642,8 @@
 
         // ===== SISTEMA DE CARGA DE USUARIO MEJORADO =====
         function loadUserData() {
+            if (!checkSession()) return;
+            
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             
@@ -1619,33 +1658,44 @@
                 const nombreCompleto = nombre && apellido ? `${nombre} ${apellido}` : nombre || 'Usuario NeoStudy';
                 
                 // Actualizar todos los lugares donde aparece el nombre
-                document.getElementById('userName').textContent = nombreCompleto;
-                document.getElementById('mobileUserName').textContent = nombreCompleto;
-                document.getElementById('mobileFullName').textContent = nombreCompleto;
-                document.getElementById('mobileUserTitle').textContent = titulo;
-                document.getElementById('userTitle').textContent = titulo;
-                
-                // Actualizar avatar y foto de perfil
-                updateProfilePhoto(nombre, profileData);
-                
-                // Actualizar placeholder del post
-                const primerNombre = nombre.split(' ')[0] || 'Usuario';
-                document.getElementById('postContent').placeholder = `¿Qué estás aprendiendo hoy, ${primerNombre}?`;
-                
-                showNotification(`¡Bienvenido de nuevo, ${primerNombre}! 🎓`, 'success');
+                updateUserProfile(nombreCompleto, titulo, nombre, profileData);
                 
                 console.log('Datos de usuario cargados:', userData);
             } else {
-                showNotification('Por favor inicia sesión primero', 'danger');
+                showNotification('Error al cargar datos de usuario', 'danger');
                 setTimeout(() => {
                     window.location.href = 'modulo1_inicio.html';
                 }, 2000);
             }
         }
 
+        function updateUserProfile(nombreCompleto, titulo, primerNombre, profileData) {
+            // Actualizar escritorio
+            document.getElementById('userName').textContent = nombreCompleto;
+            document.getElementById('userTitle').textContent = titulo;
+            
+            // Actualizar móvil - menú lateral
+            document.getElementById('mobileUserName').textContent = nombreCompleto;
+            document.getElementById('mobileFullName').textContent = nombreCompleto;
+            document.getElementById('mobileUserTitle').textContent = titulo;
+            
+            // Actualizar móvil - perfil en el feed
+            document.getElementById('mobileProfileName').textContent = nombreCompleto;
+            document.getElementById('mobileProfileTitle').textContent = titulo;
+            
+            // Actualizar avatar y foto de perfil
+            updateProfilePhoto(primerNombre, profileData);
+            
+            // Actualizar placeholder del post
+            const nombreParaSaludo = primerNombre.split(' ')[0] || 'Usuario';
+            document.getElementById('postContent').placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
+            
+            showNotification(`¡Bienvenido de nuevo, ${nombreParaSaludo}! 🎓`, 'success');
+        }
+
         // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
         function updateProfilePhoto(userName, profileData) {
-            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, #mobileUserAvatar');
+            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, #mobileUserAvatar, #mobileProfileAvatar');
             const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
             
             avatares.forEach(avatar => {
@@ -1700,13 +1750,13 @@
 
         function openShareModal() {
             document.getElementById('shareModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+            document.body.style.overflow = 'hidden';
             generateQRCode();
         }
 
         function closeShareModal() {
             document.getElementById('shareModal').style.display = 'none';
-            document.body.style.overflow = 'auto'; // Restaurar scroll del body
+            document.body.style.overflow = 'auto';
         }
 
         // Cerrar modal al hacer click fuera o presionar ESC
@@ -1796,6 +1846,7 @@
         // ===== SISTEMA DE CERRAR SESIÓN =====
         function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                localStorage.removeItem('isLoggedIn');
                 showNotification('Sesión cerrada correctamente', 'info');
                 setTimeout(() => {
                     window.location.href = 'modulo1_inicio.html';
@@ -1996,18 +2047,15 @@
                 const titulo = userData.titulo || 'Estudiante';
                 const nombreCompleto = nombre && apellido ? `${nombre} ${apellido}` : nombre || 'Usuario NeoStudy';
                 
-                document.getElementById('userName').textContent = nombreCompleto;
-                document.getElementById('mobileUserName').textContent = nombreCompleto;
-                document.getElementById('mobileFullName').textContent = nombreCompleto;
-                document.getElementById('mobileUserTitle').textContent = titulo;
-                document.getElementById('userTitle').textContent = titulo;
-                
-                updateProfilePhoto(nombre, profileData);
+                updateUserProfile(nombreCompleto, titulo, nombre, profileData);
             }
         }
 
-        // ===== INICIALIZACIÓN =====
+        // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', function() {
+            // Verificar sesión antes de cargar cualquier cosa
+            if (!checkSession()) return;
+            
             loadUserData();
             
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
@@ -2017,6 +2065,7 @@
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
             document.getElementById('postAvatar').onclick = goToProfile;
+            document.getElementById('mobileProfileAvatar').onclick = goToProfile;
             
             document.getElementById('postContent').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && e.ctrlKey) {
