@@ -216,7 +216,8 @@
 
         .mobile-profile-info {
             flex: 1;
-            overflow: hidden;
+            overflow: visible; /* Cambiado de hidden a visible */
+            min-width: 0; /* Permite que el texto se ajuste */
         }
 
         .mobile-profile-name {
@@ -224,9 +225,11 @@
             font-weight: bold;
             color: var(--dark);
             margin-bottom: 0.3rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal; /* Cambiado de nowrap a normal */
+            overflow: visible; /* Cambiado de hidden a visible */
+            text-overflow: unset; /* Eliminado ellipsis */
+            word-wrap: break-word; /* Permite que las palabras largas se dividan */
+            line-height: 1.3;
         }
 
         .mobile-profile-title {
@@ -237,10 +240,11 @@
             padding: 0.4rem 0.8rem;
             border-radius: 20px;
             display: inline-block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal; /* Cambiado de nowrap a normal */
+            overflow: visible; /* Cambiado de hidden a visible */
+            text-overflow: unset; /* Eliminado ellipsis */
             max-width: 100%;
+            word-wrap: break-word; /* Permite que las palabras largas se dividan */
         }
 
         /* ===== CONTENIDO PRINCIPAL ===== */
@@ -445,6 +449,9 @@
             transition: all 0.3s ease;
             min-height: 70px;
             font-family: inherit;
+            /* Asegurar que el placeholder esté en una línea */
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         .post-input:focus {
@@ -452,6 +459,13 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
             background: var(--white);
+        }
+
+        /* Estilo específico para el placeholder en una línea */
+        .post-input::placeholder {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .post-actions {
@@ -1892,7 +1906,7 @@
             // Actualizar avatar y foto de perfil
             updateProfilePhoto(primerNombre, profileData);
             
-            // Actualizar placeholder del post
+            // Actualizar placeholder del post - EN UNA SOLA LÍNEA
             const nombreParaSaludo = primerNombre.split(' ')[0] || 'Usuario';
             const postContentElement = document.getElementById('postContent');
             if (postContentElement) {
