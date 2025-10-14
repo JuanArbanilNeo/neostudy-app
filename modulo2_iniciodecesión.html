@@ -34,8 +34,8 @@
             overflow-x: hidden;
         }
 
-        /* Header y Navegación */
-        .header {
+        /* ===== HEADER PARA ESCRITORIO ===== */
+        .desktop-header {
             background: var(--bg-gradient);
             color: var(--white);
             padding: 1rem 0;
@@ -111,7 +111,142 @@
             transform: scale(1.1);
         }
 
-        /* Contenido Principal */
+        /* ===== HEADER PARA MÓVIL ===== */
+        .mobile-header {
+            display: none;
+            background: var(--bg-gradient);
+            color: var(--white);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .mobile-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hamburger-menu {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav-bottom {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .mobile-nav-item {
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* ===== MENÚ LATERAL PARA MÓVIL ===== */
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            height: 100%;
+            background: var(--white);
+            z-index: 1100;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            background: var(--bg-gradient);
+            color: var(--white);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .sidebar-links {
+            padding: 1.5rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            text-decoration: none;
+            color: var(--dark);
+            border-bottom: 1px solid var(--light);
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-link:hover {
+            color: var(--primary);
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1050;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* ===== CONTENIDO PRINCIPAL ===== */
         .main-container {
             max-width: 1200px;
             margin: 80px auto 20px;
@@ -121,7 +256,7 @@
             gap: 1.5rem;
         }
 
-        /* Sidebars */
+        /* ===== SIDEBARS ===== */
         .sidebar {
             background: var(--white);
             border-radius: 15px;
@@ -140,7 +275,7 @@
             gap: 0.5rem;
         }
 
-        /* ✅ MEJORADO: Botón Flotante para Compartir */
+        /* ===== BOTÓN FLOTANTE PARA COMPARTIR ===== */
         .floating-share-btn {
             position: fixed;
             bottom: 30px;
@@ -166,7 +301,7 @@
             box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
         }
 
-        /* ✅ MEJORADO: Modal para Compartir */
+        /* ===== MODAL PARA COMPARTIR ===== */
         .share-modal {
             display: none;
             position: fixed;
@@ -288,7 +423,7 @@
             background: var(--primary-dark);
         }
 
-        /* Panel de Estadísticas */
+        /* ===== PANEL DE ESTADÍSTICAS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -319,7 +454,7 @@
             color: var(--secondary);
         }
 
-        /* Progreso de Metas */
+        /* ===== PROGRESO DE METAS ===== */
         .goal-item {
             display: flex;
             align-items: center;
@@ -369,14 +504,14 @@
             transition: width 0.5s ease;
         }
 
-        /* Feed Principal */
+        /* ===== FEED PRINCIPAL ===== */
         .feed {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
 
-        /* Crear Publicación */
+        /* ===== CREAR PUBLICACIÓN ===== */
         .create-post {
             background: var(--white);
             border-radius: 15px;
@@ -454,7 +589,7 @@
             transform: translateY(-1px);
         }
 
-        /* Publicaciones */
+        /* ===== PUBLICACIONES ===== */
         .post {
             background: var(--white);
             border-radius: 15px;
@@ -550,7 +685,7 @@
             color: var(--primary);
         }
 
-        /* Sistema de Logros */
+        /* ===== SISTEMA DE LOGROS ===== */
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -585,7 +720,7 @@
             color: var(--secondary);
         }
 
-        /* Clases en Vivo */
+        /* ===== CLASES EN VIVO ===== */
         .live-classes {
             background: var(--white);
             border-radius: 15px;
@@ -656,7 +791,7 @@
             justify-content: center;
         }
 
-        /* ✅ MEJORADO: Responsive para móvil */
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 1024px) {
             .main-container {
                 grid-template-columns: 1fr;
@@ -698,6 +833,22 @@
         }
 
         @media (max-width: 768px) {
+            /* Ocultar header de escritorio en móviles */
+            .desktop-header {
+                display: none;
+            }
+
+            /* Mostrar header móvil */
+            .mobile-header {
+                display: block;
+            }
+
+            /* Ajustar margen superior del contenido principal */
+            .main-container {
+                margin: 120px auto 80px; /* Más margen arriba por el header móvil y abajo por la barra inferior */
+            }
+
+            /* Ajustes para el contenido en móviles */
             .nav-menu {
                 flex-wrap: wrap;
             }
@@ -759,9 +910,13 @@
             .achievements-grid {
                 grid-template-columns: 1fr;
             }
+
+            .mobile-nav-item span {
+                font-size: 0.7rem;
+            }
         }
 
-        /* Animaciones */
+        /* ===== ANIMACIONES ===== */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -771,7 +926,7 @@
             animation: fadeIn 0.5s ease;
         }
 
-        /* Modo Estudio */
+        /* ===== MODO ESTUDIO ===== */
         .study-mode {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -800,7 +955,7 @@
             color: rgba(255,255,255,0.7);
         }
 
-        /* Modo Oscuro */
+        /* ===== MODO OSCURO ===== */
         .dark-mode {
             background: #1a1a1a;
             color: #ffffff;
@@ -845,7 +1000,7 @@
             color: #cccccc;
         }
 
-        /* Notificaciones */
+        /* ===== NOTIFICACIONES ===== */
         .notification {
             position: fixed;
             top: 100px;
@@ -861,8 +1016,8 @@
     </style>
 </head>
 <body>
-    <!-- Header CORREGIDO -->
-    <header class="header">
+    <!-- ===== HEADER PARA ESCRITORIO ===== -->
+    <header class="desktop-header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
                 <i class="fas fa-graduation-cap"></i>
@@ -894,12 +1049,76 @@
         </div>
     </header>
 
-    <!-- ✅ MEJORADO: Botón Flotante para Compartir -->
+    <!-- ===== HEADER PARA MÓVIL ===== -->
+    <header class="mobile-header">
+        <div class="mobile-nav-top">
+            <div class="mobile-logo">
+                <i class="fas fa-graduation-cap"></i>
+                Neo Study
+            </div>
+            <div class="mobile-controls">
+                <button class="btn btn-primary" onclick="toggleThemeMode()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+                <button class="hamburger-menu" id="hamburgerMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <div class="mobile-nav-bottom">
+            <a href="modulo2_iniciodecesión.html" class="mobile-nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="modulo4_cursos.html" class="mobile-nav-item">
+                <i class="fas fa-book"></i>
+                <span>Curso</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Comunidad</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Calendario</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== MENÚ LATERAL PARA MÓVIL ===== -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <h3>Mi Perfil</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-links">
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-chart-line"></i>
+                Mi Progreso
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-bullseye"></i>
+                Mis Metas
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-trophy"></i>
+                Mis Logros
+            </a>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- ===== BOTÓN FLOTANTE PARA COMPARTIR ===== -->
     <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos a NeoStudy">
         <i class="fas fa-share-alt"></i>
     </button>
 
-    <!-- ✅ MEJORADO: Modal para Compartir -->
+    <!-- ===== MODAL PARA COMPARTIR ===== -->
     <div class="share-modal" id="shareModal">
         <div class="share-modal-content">
             <span class="close-modal" onclick="closeShareModal()">&times;</span>
@@ -941,7 +1160,7 @@
         </div>
     </div>
 
-    <!-- Contenido Principal -->
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <div class="main-container">
         <!-- Sidebar Izquierda - Perfil y Metas -->
         <aside class="sidebar">
@@ -1174,9 +1393,29 @@
     </div>
 
     <script>
-        // ===== ✅ MEJORADO: SISTEMA DE COMPARTIR =====
+        // ===== SISTEMA DE NAVEGACIÓN MÓVIL =====
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const overlay = document.getElementById('overlay');
+
+        hamburgerMenu.addEventListener('click', () => {
+            mobileSidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            mobileSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            mobileSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // ===== SISTEMA DE COMPARTIR =====
         function generateQRCode() {
-            // ✅ CORREGIDO: Usar tu enlace real de GitHub Pages
             const appUrl = "https://juanarbanilneo.github.io/neostudy-app/";
             
             QRCode.toCanvas(document.getElementById('qrCode'), appUrl, {
@@ -1275,12 +1514,12 @@
             }
         }
 
-        // ===== ✅ CORREGIDO: NAVEGACIÓN AL PERFIL =====
+        // ===== NAVEGACIÓN AL PERFIL =====
         function goToProfile() {
             window.location.href = 'modulo3_perfil.html';
         }
 
-        // ===== SISTEMA MEJORADO DE CARGA DE USUARIO =====
+        // ===== SISTEMA DE CARGA DE USUARIO =====
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
@@ -1305,7 +1544,7 @@
             }
         }
 
-        // ===== FUNCIÓN ESPECÍFICA PARA ACTUALIZAR FOTO =====
+        // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
         function updateProfilePhoto(userName, profileData) {
             const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar');
             const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -1340,7 +1579,7 @@
             }
         }
 
-        // ===== NAVEGACIÓN MEJORADA =====
+        // ===== NAVEGACIÓN =====
         function goToFeed(e) {
             if (e) e.preventDefault();
             window.location.href = 'modulo2_iniciodecesión.html';
@@ -1531,7 +1770,7 @@
             }
         }
 
-        // ===== INICIALIZACIÓN MEJORADA =====
+        // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             
