@@ -157,6 +157,7 @@
             justify-content: space-around;
             padding: 0.5rem 0;
             border-top: 1px solid rgba(255,255,255,0.2);
+            background: var(--bg-gradient);
         }
 
         .mobile-nav-item {
@@ -178,12 +179,12 @@
             position: fixed;
             top: 0;
             left: -100%;
-            width: 80%;
+            width: 100%;
             height: 100%;
             background: var(--white);
             z-index: 1100;
             transition: left 0.3s ease;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
         }
 
         .mobile-sidebar.active {
@@ -197,6 +198,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
 
         .close-sidebar {
@@ -247,24 +251,11 @@
             display: block;
         }
 
-        /* ===== CONTENIDO PRINCIPAL ===== */
-        .main-container {
-            max-width: 1200px;
-            margin: 80px auto 20px;
-            padding: 0 1rem;
-            display: grid;
-            grid-template-columns: 300px 1fr 300px;
-            gap: 1.5rem;
-        }
-
-        /* ===== SECCIONES MÓVILES (OCULTAS EN ESCRITORIO) ===== */
+        /* ===== SECCIONES DEL MENÚ LATERAL ===== */
         .mobile-section {
             display: none;
-            background: var(--white);
-            border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
+            background: var(--white);
         }
 
         .mobile-section.active {
@@ -308,6 +299,16 @@
             font-size: 2rem;
             width: 60px;
             text-align: center;
+        }
+
+        /* ===== CONTENIDO PRINCIPAL ===== */
+        .main-container {
+            max-width: 1200px;
+            margin: 80px auto 20px;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 1.5rem;
         }
 
         /* ===== SIDEBARS ===== */
@@ -355,7 +356,7 @@
             box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
         }
 
-        /* ===== MODAL PARA COMPARTIR ===== */
+        /* ===== MODAL PARA COMPARTIR - CORREGIDO ===== */
         .share-modal {
             display: none;
             position: fixed;
@@ -368,6 +369,8 @@
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 0;
         }
 
         .share-modal-content {
@@ -379,6 +382,9 @@
             text-align: center;
             position: relative;
             animation: modalFadeIn 0.3s ease;
+            margin: auto;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes modalFadeIn {
@@ -394,6 +400,7 @@
             cursor: pointer;
             color: var(--secondary);
             transition: color 0.3s ease;
+            z-index: 1;
         }
 
         .close-modal:hover {
@@ -899,12 +906,7 @@
 
             /* Ajustar margen superior del contenido principal */
             .main-container {
-                margin: 120px auto 80px; /* Más margen arriba por el header móvil y abajo por la barra inferior */
-            }
-
-            /* Mostrar secciones móviles */
-            .mobile-section {
-                display: none;
+                margin: 120px auto 80px;
             }
 
             /* Ajustes para el contenido en móviles */
@@ -945,6 +947,11 @@
 
             .mobile-progress-grid {
                 grid-template-columns: 1fr;
+            }
+
+            /* Asegurar que el menú lateral ocupe toda la pantalla */
+            .mobile-sidebar {
+                width: 100%;
             }
         }
 
@@ -1159,7 +1166,17 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
+        
+        <!-- Perfil del Usuario en el Menú Lateral -->
         <div class="sidebar-links">
+            <div class="post-input-container" style="margin-bottom: 1.5rem;">
+                <div class="post-avatar" id="mobileUserAvatar">JM</div>
+                <div>
+                    <h4 id="mobileFullName">Usuario NeoStudy</h4>
+                    <p class="post-time" id="mobileUserTitle">Estudiante</p>
+                </div>
+            </div>
+            
             <a class="sidebar-link" onclick="showMobileSection('progress')">
                 <i class="fas fa-chart-line"></i>
                 Mi Progreso
@@ -1173,102 +1190,104 @@
                 Mis Logros
             </a>
         </div>
+
+        <!-- Sección Mi Progreso -->
+        <div class="mobile-section" id="mobileProgress">
+            <h2><i class="fas fa-chart-line"></i> Mi Progreso</h2>
+            <div class="mobile-progress-grid">
+                <div class="mobile-progress-card">
+                    <div class="stat-number">128</div>
+                    <div class="stat-label">Horas de Estudio</div>
+                </div>
+                <div class="mobile-progress-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Metas Completadas</div>
+                </div>
+                <div class="mobile-progress-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Cursos Tomados</div>
+                </div>
+                <div class="mobile-progress-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Logros Obtenidos</div>
+                </div>
+            </div>
+            <div class="sidebar-title">
+                <i class="fas fa-trending-up"></i> Progreso Semanal
+            </div>
+            <p>Tu progreso esta semana ha sido excelente. Has completado 5 horas más que la semana anterior.</p>
+        </div>
+
+        <!-- Sección Mis Metas -->
+        <div class="mobile-section" id="mobileGoals">
+            <h2><i class="fas fa-bullseye"></i> Mis Metas</h2>
+            <div class="mobile-goal-item">
+                <h4>Matemáticas Básicas</h4>
+                <p>Completar curso de álgebra</p>
+                <div class="goal-progress">
+                    <div class="goal-progress-bar" style="width: 75%"></div>
+                </div>
+                <small>75% completado</small>
+            </div>
+            <div class="mobile-goal-item">
+                <h4>Química General</h4>
+                <p>Terminar módulo de estequiometría</p>
+                <div class="goal-progress">
+                    <div class="goal-progress-bar" style="width: 40%"></div>
+                </div>
+                <small>40% completado</small>
+            </div>
+            <div class="mobile-goal-item">
+                <h4>Inglés Intermedio</h4>
+                <p>Completar nivel B1</p>
+                <div class="goal-progress">
+                    <div class="goal-progress-bar" style="width: 60%"></div>
+                </div>
+                <small>60% completado</small>
+            </div>
+        </div>
+
+        <!-- Sección Mis Logros -->
+        <div class="mobile-section" id="mobileAchievements">
+            <h2><i class="fas fa-trophy"></i> Mis Logros</h2>
+            <div class="mobile-achievement-item">
+                <div class="mobile-achievement-icon">🏆</div>
+                <div>
+                    <h4>Estrella Naciente</h4>
+                    <p>Primera semana de estudio completada</p>
+                </div>
+            </div>
+            <div class="mobile-achievement-item">
+                <div class="mobile-achievement-icon">📚</div>
+                <div>
+                    <h4>Voraz Lector</h4>
+                    <p>50 horas de lectura completadas</p>
+                </div>
+            </div>
+            <div class="mobile-achievement-item">
+                <div class="mobile-achievement-icon">⚡</div>
+                <div>
+                    <h4>Rápido Aprendiz</h4>
+                    <p>5 cursos completados en 1 mes</p>
+                </div>
+            </div>
+            <div class="mobile-achievement-item">
+                <div class="mobile-achievement-icon">🎯</div>
+                <div>
+                    <h4>Disciplinado</h4>
+                    <p>30 días seguidos de estudio</p>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="overlay" id="overlay"></div>
-
-    <!-- ===== SECCIONES PARA MÓVILES ===== -->
-    <div class="mobile-section" id="mobileProgress">
-        <h2><i class="fas fa-chart-line"></i> Mi Progreso</h2>
-        <div class="mobile-progress-grid">
-            <div class="mobile-progress-card">
-                <div class="stat-number">128</div>
-                <div class="stat-label">Horas de Estudio</div>
-            </div>
-            <div class="mobile-progress-card">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Metas Completadas</div>
-            </div>
-            <div class="mobile-progress-card">
-                <div class="stat-number">8</div>
-                <div class="stat-label">Cursos Tomados</div>
-            </div>
-            <div class="mobile-progress-card">
-                <div class="stat-number">15</div>
-                <div class="stat-label">Logros Obtenidos</div>
-            </div>
-        </div>
-        <div class="sidebar-title">
-            <i class="fas fa-trending-up"></i> Progreso Semanal
-        </div>
-        <p>Tu progreso esta semana ha sido excelente. Has completado 5 horas más que la semana anterior.</p>
-    </div>
-
-    <div class="mobile-section" id="mobileGoals">
-        <h2><i class="fas fa-bullseye"></i> Mis Metas</h2>
-        <div class="mobile-goal-item">
-            <h4>Matemáticas Básicas</h4>
-            <p>Completar curso de álgebra</p>
-            <div class="goal-progress">
-                <div class="goal-progress-bar" style="width: 75%"></div>
-            </div>
-            <small>75% completado</small>
-        </div>
-        <div class="mobile-goal-item">
-            <h4>Química General</h4>
-            <p>Terminar módulo de estequiometría</p>
-            <div class="goal-progress">
-                <div class="goal-progress-bar" style="width: 40%"></div>
-            </div>
-            <small>40% completado</small>
-        </div>
-        <div class="mobile-goal-item">
-            <h4>Inglés Intermedio</h4>
-            <p>Completar nivel B1</p>
-            <div class="goal-progress">
-                <div class="goal-progress-bar" style="width: 60%"></div>
-            </div>
-            <small>60% completado</small>
-        </div>
-    </div>
-
-    <div class="mobile-section" id="mobileAchievements">
-        <h2><i class="fas fa-trophy"></i> Mis Logros</h2>
-        <div class="mobile-achievement-item">
-            <div class="mobile-achievement-icon">🏆</div>
-            <div>
-                <h4>Estrella Naciente</h4>
-                <p>Primera semana de estudio completada</p>
-            </div>
-        </div>
-        <div class="mobile-achievement-item">
-            <div class="mobile-achievement-icon">📚</div>
-            <div>
-                <h4>Voraz Lector</h4>
-                <p>50 horas de lectura completadas</p>
-            </div>
-        </div>
-        <div class="mobile-achievement-item">
-            <div class="mobile-achievement-icon">⚡</div>
-            <div>
-                <h4>Rápido Aprendiz</h4>
-                <p>5 cursos completados en 1 mes</p>
-            </div>
-        </div>
-        <div class="mobile-achievement-item">
-            <div class="mobile-achievement-icon">🎯</div>
-            <div>
-                <h4>Disciplinado</h4>
-                <p>30 días seguidos de estudio</p>
-            </div>
-        </div>
-    </div>
 
     <!-- ===== BOTÓN FLOTANTE PARA COMPARTIR ===== -->
     <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos a NeoStudy">
         <i class="fas fa-share-alt"></i>
     </button>
 
-    <!-- ===== MODAL PARA COMPARTIR ===== -->
+    <!-- ===== MODAL PARA COMPARTIR - CORREGIDO ===== -->
     <div class="share-modal" id="shareModal">
         <div class="share-modal-content">
             <span class="close-modal" onclick="closeShareModal()">&times;</span>
@@ -1291,7 +1310,7 @@
             </div>
 
             <div class="qr-section">
-                <h3 style="margin-bottom: 1rem;">Código QR para tus libros</h3>
+                <h3 style="margin-bottom: 1rem;">Código QR para compartir</h3>
                 <div class="qr-code" id="qrCode"></div>
                 <p style="color: var(--secondary); margin: 1rem 0;">
                     Escanea para acceder a NeoStudy
@@ -1304,7 +1323,7 @@
             <div class="link-copy">
                 <input type="text" id="appLink" value="https://juanarbanilneo.github.io/neostudy-app/" readonly>
                 <button class="copy-btn" onclick="copyLink()">
-                    <i class="fas fa-copy"></i> Copiar
+                    <i class="fas fa-copy"></i> Copiar Enlace
                 </button>
             </div>
         </div>
@@ -1552,6 +1571,8 @@
         hamburgerMenu.addEventListener('click', () => {
             mobileSidebar.classList.add('active');
             overlay.classList.add('active');
+            // Ocultar todas las secciones al abrir el menú
+            hideAllMobileSections();
         });
 
         closeSidebar.addEventListener('click', () => {
@@ -1565,33 +1586,22 @@
         });
 
         // ===== SISTEMA DE SECCIONES MÓVILES =====
-        function showMobileSection(section) {
-            // Ocultar todas las secciones móviles
-            document.querySelectorAll('.mobile-section').forEach(sec => {
-                sec.classList.remove('active');
+        function hideAllMobileSections() {
+            document.querySelectorAll('.mobile-section').forEach(section => {
+                section.classList.remove('active');
             });
-            
-            // Ocultar el feed principal en móviles
-            document.getElementById('mainFeed').style.display = 'none';
+        }
+
+        function showMobileSection(section) {
+            // Ocultar todas las secciones primero
+            hideAllMobileSections();
             
             // Mostrar la sección seleccionada
-            document.getElementById('mobile' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
-            
-            // Cerrar el menú lateral
-            mobileSidebar.classList.remove('active');
-            overlay.classList.remove('active');
+            const sectionElement = document.getElementById('mobile' + section.charAt(0).toUpperCase() + section.slice(1));
+            if (sectionElement) {
+                sectionElement.classList.add('active');
+            }
         }
-
-        // Función para volver al feed principal
-        function showMainFeed() {
-            document.querySelectorAll('.mobile-section').forEach(sec => {
-                sec.classList.remove('active');
-            });
-            document.getElementById('mainFeed').style.display = 'flex';
-        }
-
-        // En móviles, hacer que el logo lleve al feed principal
-        document.querySelector('.mobile-logo').addEventListener('click', showMainFeed);
 
         // ===== SISTEMA DE CARGA DE USUARIO MEJORADO =====
         function loadUserData() {
@@ -1599,24 +1609,30 @@
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             
             if (userData) {
-                // Obtener nombre completo desde localStorage
-                const nombreCompleto = userData.nombre || 'Usuario NeoStudy';
-                const apellidoCompleto = userData.apellido || '';
+                // Obtener datos completos del usuario
+                const nombre = userData.nombre || '';
+                const apellido = userData.apellido || '';
+                const email = userData.email || '';
+                const titulo = userData.titulo || 'Estudiante';
                 
-                // Mostrar nombre completo en todos los lugares
-                const nombreMostrar = apellidoCompleto ? `${nombreCompleto} ${apellidoCompleto}` : nombreCompleto;
+                // Mostrar nombre completo
+                const nombreCompleto = nombre && apellido ? `${nombre} ${apellido}` : nombre || 'Usuario NeoStudy';
                 
-                document.getElementById('userName').textContent = nombreMostrar;
-                document.getElementById('mobileUserName').textContent = nombreMostrar;
+                // Actualizar todos los lugares donde aparece el nombre
+                document.getElementById('userName').textContent = nombreCompleto;
+                document.getElementById('mobileUserName').textContent = nombreCompleto;
+                document.getElementById('mobileFullName').textContent = nombreCompleto;
+                document.getElementById('mobileUserTitle').textContent = titulo;
+                document.getElementById('userTitle').textContent = titulo;
                 
-                const userTitle = userData.titulo || 'Estudiante';
-                document.getElementById('userTitle').textContent = userTitle;
+                // Actualizar avatar y foto de perfil
+                updateProfilePhoto(nombre, profileData);
                 
-                updateProfilePhoto(nombreCompleto, profileData);
+                // Actualizar placeholder del post
+                const primerNombre = nombre.split(' ')[0] || 'Usuario';
+                document.getElementById('postContent').placeholder = `¿Qué estás aprendiendo hoy, ${primerNombre}?`;
                 
-                document.getElementById('postContent').placeholder = `¿Qué estás aprendiendo hoy, ${nombreCompleto.split(' ')[0]}?`;
-                
-                showNotification(`¡Bienvenido de nuevo, ${nombreCompleto.split(' ')[0]}! 🎓`, 'success');
+                showNotification(`¡Bienvenido de nuevo, ${primerNombre}! 🎓`, 'success');
                 
                 console.log('Datos de usuario cargados:', userData);
             } else {
@@ -1627,11 +1643,39 @@
             }
         }
 
-        // ===== SISTEMA DE COMPARTIR =====
+        // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
+        function updateProfilePhoto(userName, profileData) {
+            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, #mobileUserAvatar');
+            const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+            
+            avatares.forEach(avatar => {
+                if (profileData.profilePhoto && 
+                    profileData.profilePhoto !== "" && 
+                    profileData.profilePhoto !== "null" && 
+                    profileData.profilePhoto !== "undefined" &&
+                    profileData.profilePhoto.startsWith('data:image')) {
+                    
+                    avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
+                    avatar.textContent = '';
+                    avatar.style.backgroundSize = 'cover';
+                    avatar.style.backgroundPosition = 'center';
+                } else {
+                    avatar.textContent = initials;
+                    avatar.style.backgroundImage = 'none';
+                    avatar.style.background = 'var(--bg-gradient)';
+                }
+            });
+        }
+
+        // ===== SISTEMA DE COMPARTIR MEJORADO =====
         function generateQRCode() {
             const appUrl = "https://juanarbanilneo.github.io/neostudy-app/";
             
-            QRCode.toCanvas(document.getElementById('qrCode'), appUrl, {
+            // Limpiar el contenedor QR primero
+            const qrContainer = document.getElementById('qrCode');
+            qrContainer.innerHTML = '';
+            
+            QRCode.toCanvas(appUrl, {
                 width: 200,
                 height: 200,
                 margin: 1,
@@ -1639,28 +1683,45 @@
                     dark: '#000000',
                     light: '#FFFFFF'
                 }
-            }, function(error) {
-                if (error) console.error(error);
-                console.log('QR code generado exitosamente!');
+            }, function(error, canvas) {
+                if (error) {
+                    console.error(error);
+                    // Crear un QR de respaldo si falla
+                    const backupText = document.createElement('div');
+                    backupText.textContent = 'Código QR no disponible';
+                    backupText.style.textAlign = 'center';
+                    backupText.style.padding = '20px';
+                    qrContainer.appendChild(backupText);
+                } else {
+                    qrContainer.appendChild(canvas);
+                }
             });
         }
 
         function openShareModal() {
             document.getElementById('shareModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevenir scroll del body
             generateQRCode();
         }
 
         function closeShareModal() {
             document.getElementById('shareModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restaurar scroll del body
         }
 
-        // Cerrar modal al hacer click fuera
+        // Cerrar modal al hacer click fuera o presionar ESC
         window.onclick = function(event) {
             const modal = document.getElementById('shareModal');
             if (event.target === modal) {
                 closeShareModal();
             }
         }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeShareModal();
+            }
+        });
 
         function shareNative() {
             const shareData = {
@@ -1675,7 +1736,6 @@
                     .catch(error => showNotification('Compartir cancelado', 'info'));
             } else {
                 copyLink();
-                showNotification('Enlace copiado al portapapeles 📋', 'info');
             }
             closeShareModal();
         }
@@ -1684,14 +1744,12 @@
             const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa. 🎓\nhttps://juanarbanilneo.github.io/neostudy-app/');
             window.open(`https://wa.me/?text=${text}`, '_blank');
             showNotification('Compartiendo en WhatsApp...', 'info');
-            closeShareModal();
         }
 
         function shareFacebook() {
             const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
             window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
             showNotification('Compartiendo en Facebook...', 'info');
-            closeShareModal();
         }
 
         function shareTelegram() {
@@ -1699,7 +1757,6 @@
             const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
             window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
             showNotification('Compartiendo en Telegram...', 'info');
-            closeShareModal();
         }
 
         function copyLink() {
@@ -1708,9 +1765,11 @@
             
             linkInput.select();
             linkInput.setSelectionRange(0, 99999);
+            
             navigator.clipboard.writeText(linkInput.value)
                 .then(() => showNotification('Enlace copiado al portapapeles 📋', 'success'))
                 .catch(err => {
+                    // Fallback para navegadores más antiguos
                     document.execCommand('copy');
                     showNotification('Enlace copiado al portapapeles 📋', 'success');
                 });
@@ -1724,37 +1783,14 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 showNotification('QR descargado exitosamente 📱', 'success');
+            } else {
+                showNotification('Error al descargar el QR', 'danger');
             }
         }
 
         // ===== NAVEGACIÓN AL PERFIL =====
         function goToProfile() {
             window.location.href = 'modulo3_perfil.html';
-        }
-
-        // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
-        function updateProfilePhoto(userName, profileData) {
-            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar');
-            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
-            
-            avatares.forEach(avatar => {
-                if (profileData.profilePhoto && 
-                    profileData.profilePhoto !== "" && 
-                    profileData.profilePhoto !== "null" && 
-                    profileData.profilePhoto !== "undefined" &&
-                    profileData.profilePhoto.startsWith('data:image')) {
-                    
-                    avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
-                    avatar.textContent = '';
-                    avatar.style.backgroundSize = 'cover';
-                    avatar.style.backgroundPosition = 'center';
-                    avatar.style.background = 'none';
-                } else {
-                    avatar.textContent = initials;
-                    avatar.style.backgroundImage = 'none';
-                    avatar.style.background = 'var(--bg-gradient)';
-                }
-            });
         }
 
         // ===== SISTEMA DE CERRAR SESIÓN =====
@@ -1783,10 +1819,10 @@
 
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            const userName = userData?.nombre || 'Usuario';
+            const nombre = userData?.nombre || 'Usuario';
             const apellido = userData?.apellido || '';
-            const nombreCompleto = apellido ? `${userName} ${apellido}` : userName;
-            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
+            const initials = nombre.split(' ').map(n => n[0]).join('').toUpperCase();
             
             let userAvatarHTML;
             if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
@@ -1955,13 +1991,18 @@
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             
             if (userData) {
-                const nombreCompleto = userData.nombre || 'Usuario NeoStudy';
-                const apellidoCompleto = userData.apellido || '';
-                const nombreMostrar = apellidoCompleto ? `${nombreCompleto} ${apellidoCompleto}` : nombreCompleto;
+                const nombre = userData.nombre || '';
+                const apellido = userData.apellido || '';
+                const titulo = userData.titulo || 'Estudiante';
+                const nombreCompleto = nombre && apellido ? `${nombre} ${apellido}` : nombre || 'Usuario NeoStudy';
                 
-                document.getElementById('userName').textContent = nombreMostrar;
-                document.getElementById('mobileUserName').textContent = nombreMostrar;
-                updateProfilePhoto(nombreCompleto, profileData);
+                document.getElementById('userName').textContent = nombreCompleto;
+                document.getElementById('mobileUserName').textContent = nombreCompleto;
+                document.getElementById('mobileFullName').textContent = nombreCompleto;
+                document.getElementById('mobileUserTitle').textContent = titulo;
+                document.getElementById('userTitle').textContent = titulo;
+                
+                updateProfilePhoto(nombre, profileData);
             }
         }
 
