@@ -850,6 +850,9 @@
             border: 1px solid #ddd;
             padding: 15px;
             background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .link-copy {
@@ -2054,34 +2057,61 @@
             }
         }
 
-        // ===== SISTEMA DE COMPARTIR =====
+        // ===== SISTEMA DE COMPARTIR - CORREGIDO =====
         function generateQRCode() {
             const appUrl = "https://juanarbanilneo.github.io/neostudy-app/";
             const qrContainer = document.getElementById('qrCode');
-            if (!qrContainer) return;
             
+            if (!qrContainer) {
+                console.error('No se encontró el contenedor del QR');
+                return;
+            }
+            
+            // Limpiar contenedor
             qrContainer.innerHTML = '';
             
-            QRCode.toCanvas(appUrl, {
-                width: 200,
-                height: 200,
-                margin: 1,
-                color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
-                }
-            }, function(error, canvas) {
-                if (error) {
-                    console.error(error);
-                    const backupText = document.createElement('div');
-                    backupText.textContent = 'Código QR no disponible';
-                    backupText.style.textAlign = 'center';
-                    backupText.style.padding = '20px';
-                    qrContainer.appendChild(backupText);
-                } else {
-                    qrContainer.appendChild(canvas);
-                }
-            });
+            try {
+                // Crear un canvas directamente
+                const canvas = document.createElement('canvas');
+                canvas.width = 180;
+                canvas.height = 180;
+                canvas.style.border = '1px solid #ddd';
+                canvas.style.borderRadius = '8px';
+                
+                qrContainer.appendChild(canvas);
+                
+                // Usar la librería QRCode correctamente
+                QRCode.toCanvas(canvas, appUrl, {
+                    width: 180,
+                    margin: 1,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    },
+                    errorCorrectionLevel: 'M'
+                }, function(error) {
+                    if (error) {
+                        console.error('Error generando QR:', error);
+                        showFallbackQR(qrContainer);
+                    } else {
+                        console.log('QR generado exitosamente');
+                    }
+                });
+            } catch (error) {
+                console.error('Error en generación QR:', error);
+                showFallbackQR(qrContainer);
+            }
+        }
+
+        // Función de respaldo si falla el QR
+        function showFallbackQR(container) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 30px; color: var(--secondary);">
+                    <i class="fas fa-qrcode" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>Escanea para acceder a NeoStudy</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">https://juanarbanilneo.github.io/neostudy-app/</p>
+                </div>
+            `;
         }
 
         function openShareModal() {
@@ -2168,13 +2198,20 @@
         function downloadQR() {
             const canvas = document.querySelector('#qrCode canvas');
             if (canvas) {
-                const link = document.createElement('a');
-                link.download = 'neostudy-qr-code.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                showNotification('QR descargado exitosamente 📱', 'success');
+                try {
+                    const link = document.createElement('a');
+                    link.download = 'neostudy-qr-code.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showNotification('QR descargado exitosamente 📱', 'success');
+                } catch (error) {
+                    console.error('Error descargando QR:', error);
+                    showNotification('Error al descargar el QR', 'danger');
+                }
             } else {
-                showNotification('Error al descargar el QR', 'danger');
+                showNotification('Genera el QR primero', 'warning');
+                // Regenerar el QR automáticamente
+                generateQRCode();
             }
         }
 
