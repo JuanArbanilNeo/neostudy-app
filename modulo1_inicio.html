@@ -95,7 +95,7 @@
     <input type="text" id="prof_profesion" placeholder="Profesión" required>
     <input type="text" id="prof_carrera" placeholder="Carrera" required>
     <input type="date" id="prof_nacimiento" required>
-    <input type="text" id="prof_contacto" placeholder="Correo Electrónico" required>
+    <input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="prof_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
@@ -106,7 +106,7 @@
     <input type="text" id="uni_carrera" placeholder="Carrera" required>
     <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
     <input type="date" id="uni_nacimiento" required>
-    <input type="text" id="uni_contacto" placeholder="Correo Electrónico" required>
+    <input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="uni_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
@@ -116,7 +116,7 @@
     <input type="text" id="sec_colegio" placeholder="Colegio" required>
     <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
     <input type="date" id="sec_nacimiento" required>
-    <input type="text" id="sec_contacto" placeholder="Correo Electrónico" required>
+    <input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="sec_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
@@ -124,13 +124,13 @@
   <form id="formGeneral" class="hidden">
     <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
     <input type="date" id="gen_nacimiento" required>
-    <input type="text" id="gen_contacto" placeholder="Correo Electrónico" required>
+    <input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="gen_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
 
   <h3>O Inicia Sesión</h3>
-  <input type="text" id="login_contacto" placeholder="Correo Electrónico">
+  <input type="text" id="login_contacto" placeholder="Teléfono o Correo Electrónico">
   <input type="password" id="login_password" placeholder="Contraseña">
   <button id="btnLogin">Iniciar Sesión</button>
 
@@ -139,81 +139,93 @@
   </div>
 </div>
 
-<!-- 🔥 SCRIPT FIREBASE -->
-<script type="module">
-  // Importar Firebase
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+<script>
+const categoriaSelect = document.getElementById("categoria");
+const forms = {
+  profesional: document.getElementById("formProfesional"),
+  universitario: document.getElementById("formUniversitario"),
+  secundaria: document.getElementById("formSecundaria"),
+  general: document.getElementById("formGeneral")
+};
 
-  // 🔧 Configuración Firebase (reemplaza por tus datos)
-  const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "tuapp.firebaseapp.com",
-    projectId: "tuapp"
-  };
+// SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
+document.getElementById("btnCrearCuenta").addEventListener("click", function() {
+  // Enfocar y mostrar la selección de categoría
+  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
+  categoriaSelect.focus();
+  alert("Por favor selecciona tu categoría para crear tu cuenta");
+});
 
-  // Inicializar Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+// Mostrar formulario según categoría
+categoriaSelect.addEventListener("change", () => {
+  const value = categoriaSelect.value;
+  Object.values(forms).forEach(f => f.classList.add("hidden"));
+  if(value && forms[value]) forms[value].classList.remove("hidden");
+});
 
-  // Mostrar formulario según categoría
-  const categoriaSelect = document.getElementById("categoria");
-  const forms = {
-    profesional: document.getElementById("formProfesional"),
-    universitario: document.getElementById("formUniversitario"),
-    secundaria: document.getElementById("formSecundaria"),
-    general: document.getElementById("formGeneral")
-  };
-
-  categoriaSelect.addEventListener("change", () => {
-    const value = categoriaSelect.value;
-    Object.values(forms).forEach(f => f.classList.add("hidden"));
-    if (value && forms[value]) forms[value].classList.remove("hidden");
+// Crear cuenta
+function saveUser(form, category) {
+  const data = { categoria: category };
+  Array.from(form.elements).forEach(input => {
+    if(input.type !== "submit") data[input.id] = input.value;
   });
+  
+  // Guardar también un campo único para login
+  data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
+  data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+  
+  localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
+  alert("Cuenta creada con éxito ✅");
+  
+  // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
+  window.location.href = "modulo2_iniciodecesión.html";
+}
 
-  // Crear cuenta en Firebase
-  function registrarUsuario(correo, password) {
-    createUserWithEmailAndPassword(auth, correo, password)
-      .then(userCredential => {
-        alert("Cuenta creada con éxito ✅");
-        window.location.href = "modulo2_iniciodecesión.html";
-      })
-      .catch(error => {
-        alert("Error: " + error.message);
-      });
+Object.keys(forms).forEach(cat => {
+  forms[cat].addEventListener("submit", e => {
+    e.preventDefault();
+    saveUser(forms[cat], cat);
+  });
+});
+
+// SOLUCIÓN PROBLEMA 2: Login simplificado y funcional
+document.getElementById("btnLogin").addEventListener("click", () => {
+  const emailOrPhone = document.getElementById("login_contacto").value;
+  const password = document.getElementById("login_password").value;
+  
+  if (!emailOrPhone || !password) {
+    alert("Por favor completa todos los campos");
+    return;
   }
 
-  // Capturar formulario según categoría
-  Object.keys(forms).forEach(cat => {
-    forms[cat].addEventListener("submit", e => {
-      e.preventDefault();
-      const correo = forms[cat].querySelector("input[type='text'][placeholder*='Correo']").value;
-      const password = forms[cat].querySelector("input[type='password']").value;
-      registrarUsuario(correo, password);
-    });
-  });
+  const storedUser = JSON.parse(localStorage.getItem("usuarioNeoStudy"));
 
-  // Iniciar sesión en Firebase
-  document.getElementById("btnLogin").addEventListener("click", () => {
-    const correo = document.getElementById("login_contacto").value;
-    const password = document.getElementById("login_password").value;
+  if (storedUser) {
+    // Verificación SIMPLIFICADA y CORRECTA
+    const contactoGuardado = storedUser.contacto || 
+                            storedUser.prof_contacto || 
+                            storedUser.uni_contacto || 
+                            storedUser.sec_contacto || 
+                            storedUser.gen_contacto;
+    
+    const passwordGuardado = storedUser.password || 
+                            storedUser.prof_password || 
+                            storedUser.uni_password || 
+                            storedUser.sec_password || 
+                            storedUser.gen_password;
 
-    if (!correo || !password) {
-      alert("Por favor completa todos los campos");
-      return;
+    if (contactoGuardado === emailOrPhone && passwordGuardado === password) {
+      alert("Inicio de sesión exitoso ✅");
+      
+      // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
+      window.location.href = "modulo2_iniciodecesión.html";
+    } else {
+      alert("Usuario o contraseña incorrectos ❌");
     }
-
-    signInWithEmailAndPassword(auth, correo, password)
-      .then(userCredential => {
-        alert("Inicio de sesión exitoso ✅");
-        window.location.href = "modulo2_iniciodecesión.html";
-      })
-      .catch(error => {
-        alert("Usuario o contraseña incorrectos ❌");
-      });
-  });
+  } else {
+    alert("No hay cuenta registrada. Por favor crea una cuenta primero.");
+  }
+});
 </script>
-
 </body>
 </html>
