@@ -1,165 +1,379 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
-<style>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>NeoStudy - Crear Cuenta / Iniciar Sesión</title><style>
+  
   body {
+  
     margin: 0;
+  
     font-family: "Poppins", sans-serif;
+  
     height: 100vh;
+  
     display: flex;
+  
     align-items: center;
+  
     justify-content: center;
+  
     color: #fff;
+  
     overflow: hidden;
+  
     background: linear-gradient(120deg, #001F3F, #003366, #00C4FF);
+  
     background-size: 400% 400%;
+  
     animation: gradientBG 15s ease infinite;
+  
   }
+  
 
+  
   @keyframes gradientBG {
+  
     0% { background-position: 0% 50%; }
+  
     50% { background-position: 100% 50%; }
+  
     100% { background-position: 0% 50%; }
+  
   }
+  
 
+  
   .container {
+  
     background: rgba(255, 255, 255, 0.1);
+  
     backdrop-filter: blur(15px);
+  
     border-radius: 20px;
+  
     padding: 40px;
+  
     width: 90%;
+  
     max-width: 450px;
+  
     text-align: center;
+  
     box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  
   }
+  
 
+  
   h1 { color: #00C4FF; font-size: 2em; margin-bottom: 15px; }
+  
   p { font-size: 1em; color: #dfe9ff; margin-bottom: 25px; }
+  
 
-  input, button {
+  
+  select, input, button {
+  
     width: 100%;
+  
     padding: 12px;
+  
     margin: 8px 0;
+  
     border-radius: 10px;
+  
     border: none;
+  
     font-size: 1em;
+  
   }
+  
 
+  
   input { background: rgba(255,255,255,0.9); color: #333; }
+  
   input:focus { outline: none; box-shadow: 0 0 12px #00C4FF; transform: scale(1.03); }
+  
 
+  
   button {
+  
     background: linear-gradient(90deg,#00C4FF,#007bff);
+  
     color: white;
+  
     cursor: pointer;
+  
     margin-top: 10px;
+  
     box-shadow: 0 0 15px #00C4FF;
+  
     transition: 0.3s;
+  
   }
+  
 
+  
   button:hover { transform: scale(1.05); box-shadow: 0 0 25px #00FFFF; }
+  
 
+  
   .footer { margin-top: 15px; font-size: 0.9em; color: #cbd7ff; }
-  .footer a { color: #00C4FF; text-decoration: none; font-weight: bold; cursor: pointer; }
+  
+  .footer a { 
+  
+    color: #00C4FF; 
+  
+    text-decoration: none; 
+  
+    cursor: pointer;
+  
+    font-weight: bold;
+  
+  }
+  
   .footer a:hover { text-decoration: underline; }
+  
 
+  
   .hidden { display: none; }
-</style>
-</head>
-<body>
+  
+</style></head><body><div class="container">  <h1>NeoStudy 🚀</h1>  <p>Tu educación digital comienza aquí</p>  <!-- Selección de categoría -->  <select id="categoria"><option value="">Selecciona tu categoría</option>
 
-<div class="container">
-  <h1>NeoStudy 🚀</h1>
-  <p>Tu educación digital comienza aquí</p>
+<option value="profesional">Profesional</option>
 
-  <!-- Registro -->
-  <form id="registroForm">
-    <input type="text" id="nombre" placeholder="Nombre y Apellido" required>
-    <input type="text" id="contacto" placeholder="Correo electrónico" required>
-    <input type="password" id="password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
-  </form>
+<option value="universitario">Estudiante Universitario</option>
 
-  <!-- Login -->
-  <form id="loginForm" class="hidden">
-    <input type="text" id="login_contacto" placeholder="Correo electrónico" required>
-    <input type="password" id="login_password" placeholder="Contraseña" required>
-    <button type="submit">Iniciar Sesión</button>
-  </form>
+<option value="secundaria">Alumno de Secundaria</option>
 
-  <div class="footer">
-    <a id="toggleForm">¿Ya tienes cuenta? Inicia sesión</a>
-  </div>
-</div>
+<option value="general">Público en general</option>
 
-<!-- SDKs de Firebase -->
-<script type="module">
-  // ✅ Importar Firebase SDKs
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-  from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  </select>  <!-- Formularios dinámicos -->  <form id="formProfesional" class="hidden"><input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
 
-  // ⚙️ CONFIGURA TU FIREBASE AQUÍ 👇 (reemplaza con tus datos del panel)
-  const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_DOMINIO.firebaseapp.com",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_BUCKET.appspot.com",
-    messagingSenderId: "TU_SENDER_ID",
-    appId: "TU_APP_ID"
-  };
+<input type="text" id="prof_profesion" placeholder="Profesión" required>
 
-  // Inicializar Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+<input type="text" id="prof_carrera" placeholder="Carrera" required>
 
-  // Elementos HTML
-  const registroForm = document.getElementById("registroForm");
-  const loginForm = document.getElementById("loginForm");
-  const toggleForm = document.getElementById("toggleForm");
+<input type="date" id="prof_nacimiento" required>
 
-  // 🔄 Alternar entre registro y login
-  toggleForm.addEventListener("click", () => {
-    registroForm.classList.toggle("hidden");
-    loginForm.classList.toggle("hidden");
-    toggleForm.textContent = registroForm.classList.contains("hidden")
-      ? "¿No tienes cuenta? Crea una"
-      : "¿Ya tienes cuenta? Inicia sesión";
+<input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
+
+<input type="password" id="prof_password" placeholder="Contraseña" required>
+
+<button type="submit">Crear Cuenta</button>
+
+  </form>  <form id="formUniversitario" class="hidden"><input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
+
+<input type="text" id="uni_universidad" placeholder="Universidad" required>
+
+<input type="text" id="uni_carrera" placeholder="Carrera" required>
+
+<input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
+
+<input type="date" id="uni_nacimiento" required>
+
+<input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
+
+<input type="password" id="uni_password" placeholder="Contraseña" required>
+
+<button type="submit">Crear Cuenta</button>
+
+  </form>  <form id="formSecundaria" class="hidden"><input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
+
+<input type="text" id="sec_colegio" placeholder="Colegio" required>
+
+<input type="text" id="sec_grado" placeholder="Grado/Sección" required>
+
+<input type="date" id="sec_nacimiento" required>
+
+<input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
+
+<input type="password" id="sec_password" placeholder="Contraseña" required>
+
+<button type="submit">Crear Cuenta</button>
+
+  </form>  <form id="formGeneral" class="hidden"><input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
+
+<input type="date" id="gen_nacimiento" required>
+
+<input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
+
+<input type="password" id="gen_password" placeholder="Contraseña" required>
+
+<button type="submit">Crear Cuenta</button>
+
+  </form>  <h3>O Inicia Sesión</h3>  <input type="text" id="login_contacto" placeholder="Teléfono o Correo Electrónico">  <input type="password" id="login_password" placeholder="Contraseña"><button id="btnLogin">Iniciar Sesión</button>
+
+  <div class="footer">¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
+
+  </div></div><script>
+  
+const categoriaSelect = document.getElementById("categoria");
+  
+const forms = {
+  
+  profesional: document.getElementById("formProfesional"),
+  
+  universitario: document.getElementById("formUniversitario"),
+  
+  secundaria: document.getElementById("formSecundaria"),
+  
+  general: document.getElementById("formGeneral")
+  
+};
+  
+
+  
+// SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
+  
+document.getElementById("btnCrearCuenta").addEventListener("click", function() {
+  
+  // Enfocar y mostrar la selección de categoría
+  
+  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
+  
+  categoriaSelect.focus();
+  
+  alert("Por favor selecciona tu categoría para crear tu cuenta");
+  
+});
+  
+
+  
+// Mostrar formulario según categoría
+  
+categoriaSelect.addEventListener("change", () => {
+  
+  const value = categoriaSelect.value;
+  
+  Object.values(forms).forEach(f => f.classList.add("hidden"));
+  
+  if(value && forms[value]) forms[value].classList.remove("hidden");
+  
+});
+  
+
+  
+// Crear cuenta
+  
+function saveUser(form, category) {
+  
+  const data = { categoria: category };
+  
+  Array.from(form.elements).forEach(input => {
+  
+    if(input.type !== "submit") data[input.id] = input.value;
+  
   });
+  
+  
+  
+  // Guardar también un campo único para login
+  
+  data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
+  
+  data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+  
+  
+  
+  localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
+  
+  alert("Cuenta creada con éxito ✅");
+  
+  
+  
+  // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
+  
+  window.location.href = "modulo2_iniciodecesión.html";
+  
+}
+  
 
-  // 🧾 Registro de usuario
-  registroForm.addEventListener("submit", async (e) => {
+  
+Object.keys(forms).forEach(cat => {
+  
+  forms[cat].addEventListener("submit", e => {
+  
     e.preventDefault();
-    const email = document.getElementById("contacto").value;
-    const password = document.getElementById("password").value;
-
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Cuenta creada con éxito ✅");
-      window.location.href = "modulo2_iniciodecesión.html";
-    } catch (error) {
-      alert("Error al crear cuenta: " + error.message);
-    }
+  
+    saveUser(forms[cat], cat);
+  
   });
+  
+});
+  
 
-  // 🔑 Inicio de sesión
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login_contacto").value;
-    const password = document.getElementById("login_password").value;
+  
+// SOLUCIÓN PROBLEMA 2: Login simplificado y funcional
+  
+document.getElementById("btnLogin").addEventListener("click", () => {
+  
+  const emailOrPhone = document.getElementById("login_contacto").value;
+  
+  const password = document.getElementById("login_password").value;
+  
+  
+  
+  if (!emailOrPhone || !password) {
+  
+    alert("Por favor completa todos los campos");
+  
+    return;
+  
+  }
+  
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
+  
+  const storedUser = JSON.parse(localStorage.getItem("usuarioNeoStudy"));
+  
+
+  
+  if (storedUser) {
+  
+    // Verificación SIMPLIFICADA y CORRECTA
+  
+    const contactoGuardado = storedUser.contacto || 
+  
+                            storedUser.prof_contacto || 
+  
+                            storedUser.uni_contacto || 
+  
+                            storedUser.sec_contacto || 
+  
+                            storedUser.gen_contacto;
+  
+    
+  
+    const passwordGuardado = storedUser.password || 
+  
+                            storedUser.prof_password || 
+  
+                            storedUser.uni_password || 
+  
+                            storedUser.sec_password || 
+  
+                            storedUser.gen_password;
+  
+
+  
+    if (contactoGuardado === emailOrPhone && passwordGuardado === password) {
+  
       alert("Inicio de sesión exitoso ✅");
+  
+      
+  
+      // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
+  
       window.location.href = "modulo2_iniciodecesión.html";
-    } catch (error) {
-      alert("Error al iniciar sesión: " + error.message);
+  
+    } else {
+  
+      alert("Usuario o contraseña incorrectos ❌");
+  
     }
-  });
-</script>
-
-</body>
-</html>
+  
+  } else {
+  
+    alert("No hay cuenta registrada. Por favor crea una cuenta primero.");
+  
+  }
+  
+});
+  
+</script></body></html>
