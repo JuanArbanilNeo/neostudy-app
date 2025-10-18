@@ -39,7 +39,7 @@
   h1 { color: #00C4FF; font-size: 2em; margin-bottom: 15px; }
   p { font-size: 1em; color: #dfe9ff; margin-bottom: 25px; }
 
-  select, input, button {
+  input, button {
     width: 100%;
     padding: 12px;
     margin: 8px 0;
@@ -63,12 +63,7 @@
   button:hover { transform: scale(1.05); box-shadow: 0 0 25px #00FFFF; }
 
   .footer { margin-top: 15px; font-size: 0.9em; color: #cbd7ff; }
-  .footer a { 
-    color: #00C4FF; 
-    text-decoration: none; 
-    cursor: pointer;
-    font-weight: bold;
-  }
+  .footer a { color: #00C4FF; text-decoration: none; font-weight: bold; cursor: pointer; }
   .footer a:hover { text-decoration: underline; }
 
   .hidden { display: none; }
@@ -80,152 +75,91 @@
   <h1>NeoStudy 🚀</h1>
   <p>Tu educación digital comienza aquí</p>
 
-  <!-- Selección de categoría -->
-  <select id="categoria">
-    <option value="">Selecciona tu categoría</option>
-    <option value="profesional">Profesional</option>
-    <option value="universitario">Estudiante Universitario</option>
-    <option value="secundaria">Alumno de Secundaria</option>
-    <option value="general">Público en general</option>
-  </select>
-
-  <!-- Formularios dinámicos -->
-  <form id="formProfesional" class="hidden">
-    <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
-    <input type="text" id="prof_profesion" placeholder="Profesión" required>
-    <input type="text" id="prof_carrera" placeholder="Carrera" required>
-    <input type="date" id="prof_nacimiento" required>
-    <input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="prof_password" placeholder="Contraseña" required>
+  <!-- Registro -->
+  <form id="registroForm">
+    <input type="text" id="nombre" placeholder="Nombre y Apellido" required>
+    <input type="text" id="contacto" placeholder="Correo electrónico" required>
+    <input type="password" id="password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
 
-  <form id="formUniversitario" class="hidden">
-    <input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
-    <input type="text" id="uni_universidad" placeholder="Universidad" required>
-    <input type="text" id="uni_carrera" placeholder="Carrera" required>
-    <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
-    <input type="date" id="uni_nacimiento" required>
-    <input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="uni_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
+  <!-- Login -->
+  <form id="loginForm" class="hidden">
+    <input type="text" id="login_contacto" placeholder="Correo electrónico" required>
+    <input type="password" id="login_password" placeholder="Contraseña" required>
+    <button type="submit">Iniciar Sesión</button>
   </form>
-
-  <form id="formSecundaria" class="hidden">
-    <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
-    <input type="text" id="sec_colegio" placeholder="Colegio" required>
-    <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
-    <input type="date" id="sec_nacimiento" required>
-    <input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="sec_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
-  </form>
-
-  <form id="formGeneral" class="hidden">
-    <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
-    <input type="date" id="gen_nacimiento" required>
-    <input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="gen_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
-  </form>
-
-  <h3>O Inicia Sesión</h3>
-  <input type="text" id="login_contacto" placeholder="Teléfono o Correo Electrónico">
-  <input type="password" id="login_password" placeholder="Contraseña">
-  <button id="btnLogin">Iniciar Sesión</button>
 
   <div class="footer">
-    ¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
+    <a id="toggleForm">¿Ya tienes cuenta? Inicia sesión</a>
   </div>
 </div>
 
-<script>
-const categoriaSelect = document.getElementById("categoria");
-const forms = {
-  profesional: document.getElementById("formProfesional"),
-  universitario: document.getElementById("formUniversitario"),
-  secundaria: document.getElementById("formSecundaria"),
-  general: document.getElementById("formGeneral")
-};
+<!-- SDKs de Firebase -->
+<script type="module">
+  // ✅ Importar Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+  from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-// SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
-document.getElementById("btnCrearCuenta").addEventListener("click", function() {
-  // Enfocar y mostrar la selección de categoría
-  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
-  categoriaSelect.focus();
-  alert("Por favor selecciona tu categoría para crear tu cuenta");
-});
+  // ⚙️ CONFIGURA TU FIREBASE AQUÍ 👇 (reemplaza con tus datos del panel)
+  const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_DOMINIO.firebaseapp.com",
+    projectId: "TU_PROJECT_ID",
+    storageBucket: "TU_BUCKET.appspot.com",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
+  };
 
-// Mostrar formulario según categoría
-categoriaSelect.addEventListener("change", () => {
-  const value = categoriaSelect.value;
-  Object.values(forms).forEach(f => f.classList.add("hidden"));
-  if(value && forms[value]) forms[value].classList.remove("hidden");
-});
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-// Crear cuenta
-function saveUser(form, category) {
-  const data = { categoria: category };
-  Array.from(form.elements).forEach(input => {
-    if(input.type !== "submit") data[input.id] = input.value;
+  // Elementos HTML
+  const registroForm = document.getElementById("registroForm");
+  const loginForm = document.getElementById("loginForm");
+  const toggleForm = document.getElementById("toggleForm");
+
+  // 🔄 Alternar entre registro y login
+  toggleForm.addEventListener("click", () => {
+    registroForm.classList.toggle("hidden");
+    loginForm.classList.toggle("hidden");
+    toggleForm.textContent = registroForm.classList.contains("hidden")
+      ? "¿No tienes cuenta? Crea una"
+      : "¿Ya tienes cuenta? Inicia sesión";
   });
-  
-  // Guardar también un campo único para login
-  data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
-  data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
-  
-  localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
-  alert("Cuenta creada con éxito ✅");
-  
-  // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
-  window.location.href = "modulo2_iniciodecesión.html";
-}
 
-Object.keys(forms).forEach(cat => {
-  forms[cat].addEventListener("submit", e => {
+  // 🧾 Registro de usuario
+  registroForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    saveUser(forms[cat], cat);
-  });
-});
+    const email = document.getElementById("contacto").value;
+    const password = document.getElementById("password").value;
 
-// SOLUCIÓN PROBLEMA 2: Login simplificado y funcional
-document.getElementById("btnLogin").addEventListener("click", () => {
-  const emailOrPhone = document.getElementById("login_contacto").value;
-  const password = document.getElementById("login_password").value;
-  
-  if (!emailOrPhone || !password) {
-    alert("Por favor completa todos los campos");
-    return;
-  }
-
-  const storedUser = JSON.parse(localStorage.getItem("usuarioNeoStudy"));
-
-  if (storedUser) {
-    // Verificación SIMPLIFICADA y CORRECTA
-    const contactoGuardado = storedUser.contacto || 
-                            storedUser.prof_contacto || 
-                            storedUser.uni_contacto || 
-                            storedUser.sec_contacto || 
-                            storedUser.gen_contacto;
-    
-    const passwordGuardado = storedUser.password || 
-                            storedUser.prof_password || 
-                            storedUser.uni_password || 
-                            storedUser.sec_password || 
-                            storedUser.gen_password;
-
-    if (contactoGuardado === emailOrPhone && passwordGuardado === password) {
-      alert("Inicio de sesión exitoso ✅");
-      
-      // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Cuenta creada con éxito ✅");
       window.location.href = "modulo2_iniciodecesión.html";
-    } else {
-      alert("Usuario o contraseña incorrectos ❌");
+    } catch (error) {
+      alert("Error al crear cuenta: " + error.message);
     }
-  } else {
-    alert("No hay cuenta registrada. Por favor crea una cuenta primero.");
-  }
-});
+  });
+
+  // 🔑 Inicio de sesión
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("login_contacto").value;
+    const password = document.getElementById("login_password").value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Inicio de sesión exitoso ✅");
+      window.location.href = "modulo2_iniciodecesión.html";
+    } catch (error) {
+      alert("Error al iniciar sesión: " + error.message);
+    }
+  });
 </script>
+
 </body>
 </html>
