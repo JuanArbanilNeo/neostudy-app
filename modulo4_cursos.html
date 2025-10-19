@@ -272,6 +272,7 @@
         .page-title {
             text-align: center;
             margin-bottom: 2rem;
+            padding: 0 0.5rem;
         }
 
         .page-title h1 {
@@ -280,6 +281,15 @@
             background: var(--bg-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .page-title p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            line-height: 1.4;
         }
 
         /* Grid de Áreas */
@@ -458,6 +468,8 @@
             font-size: 1.8rem;
             color: var(--dark);
             margin: 0;
+            line-height: 1.2;
+            word-wrap: break-word;
         }
 
         body.dark-mode .section-title {
@@ -537,6 +549,7 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--dark);
+            line-height: 1.3;
         }
 
         body.dark-mode .course-title {
@@ -599,6 +612,7 @@
         .course-details h3 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
+            line-height: 1.2;
         }
 
         .course-stats {
@@ -661,6 +675,7 @@
             margin-bottom: 0.5rem;
             color: var(--dark);
             margin-right: 80px;
+            line-height: 1.3;
         }
 
         body.dark-mode .topic-title {
@@ -1056,6 +1071,23 @@
                 margin: 120px auto 20px;
             }
 
+            /* Ajustes para el título en móviles */
+            .page-title h1 {
+                font-size: 2rem;
+                line-height: 1.1;
+                padding: 0 0.5rem;
+            }
+
+            .page-title p {
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                line-height: 1.2;
+            }
+
             .areas-grid, .courses-grid, .topics-grid {
                 grid-template-columns: 1fr;
             }
@@ -1084,6 +1116,19 @@
         }
 
         @media (max-width: 480px) {
+            .page-title h1 {
+                font-size: 1.8rem;
+                line-height: 1.1;
+            }
+
+            .page-title p {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
             .qr-code {
                 width: 250px;
                 height: 250px;
@@ -1095,6 +1140,42 @@
             
             .nav-item span {
                 display: none;
+            }
+
+            .course-details h3 {
+                font-size: 1.3rem;
+            }
+
+            .course-stats {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .course-stats span {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .page-title h1 {
+                font-size: 1.6rem;
+            }
+
+            .page-title p {
+                font-size: 0.85rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .mobile-nav-item {
+                font-size: 0.7rem;
+                padding: 0.4rem;
+            }
+
+            .mobile-nav-item i {
+                font-size: 1rem;
             }
         }
     </style>
@@ -1742,4 +1823,4 @@
         });
     </script>
 </body>
-                    </html>
+    </html>
