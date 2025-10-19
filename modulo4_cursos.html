@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -281,8 +282,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.2;
+            white-space: normal;
             word-wrap: break-word;
-            overflow-wrap: break-word;
+            overflow: visible;
+            height: auto;
         }
 
         .page-title p {
@@ -468,6 +471,7 @@
             color: var(--dark);
             margin: 0;
             line-height: 1.2;
+            white-space: normal;
             word-wrap: break-word;
         }
 
@@ -1068,18 +1072,30 @@
             /* Ajustar margen superior del contenido principal */
             .main-container {
                 margin: 120px auto 20px;
+                padding: 0 1rem;
             }
 
-            /* Ajustes para el título en móviles */
+            /* CORRECCIÓN PARA EL TÍTULO EN MÓVILES */
+            .page-title {
+                margin-bottom: 1.5rem;
+                padding: 0;
+            }
+
             .page-title h1 {
                 font-size: 2rem;
                 line-height: 1.1;
-                padding: 0 0.5rem;
+                padding: 0;
+                margin: 0 0 0.5rem 0;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
             }
 
             .page-title p {
                 font-size: 1rem;
-                padding: 0 0.5rem;
+                padding: 0;
+                margin: 0;
             }
 
             .section-title {
@@ -1118,6 +1134,10 @@
             .page-title h1 {
                 font-size: 1.8rem;
                 line-height: 1.1;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
             }
 
             .page-title p {
@@ -1158,6 +1178,13 @@
         @media (max-width: 360px) {
             .page-title h1 {
                 font-size: 1.6rem;
+                line-height: 1.2;
+                padding: 0;
+                margin: 0 0 0.5rem 0;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
             }
 
             .page-title p {
@@ -1247,7 +1274,6 @@
         </div>
     </header>
 
-    <!-- El resto del contenido se mantiene igual -->
     <div class="main-container">
         <div class="page-title">
             <h1>Áreas de Estudio</h1>
@@ -1356,7 +1382,6 @@
         </div>
     </div>
 
-    <!-- Footer y modales se mantienen igual -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -1379,20 +1404,197 @@
         </div>
     </footer>
 
-    <!-- Los modales se mantienen igual que antes -->
     <!-- Modal de Vista Previa -->
     <div class="modal" id="previewModal">
-        <!-- Contenido del modal igual que antes -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Vista Previa - Libro Planteo de Ecuaciones</h3>
+                <button class="close-modal" onclick="closePreviewModal()">&times;</button>
+            </div>
+            
+            <div class="preview-container">
+                <!-- Libro Digital -->
+                <div class="book-preview">
+                    <!-- Página 1 - Normal -->
+                    <div class="book-page active">
+                        <h4>📚 Página 1 - Introducción</h4>
+                        <p><strong>Problema:</strong> Si Juan tiene el doble de la edad de Pedro, y dentro de 5 años la suma de sus edades será 35, ¿qué edad tiene cada uno?</p>
+                        <div class="solution">
+                            <p><strong>Solución:</strong> <br>
+                            • Edad de Pedro = x <br>
+                            • Edad de Juan = 2x <br>
+                            • Dentro de 5 años: (x+5) + (2x+5) = 35 <br>
+                            • 3x + 10 = 35 → 3x = 25 → x = 8.33 <br>
+                            • <strong>Respuesta:</strong> Pedro = 8 años, Juan = 17 años</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Página 2 - Normal -->
+                    <div class="book-page">
+                        <h4>📚 Página 2 - Ejercicios Básicos</h4>
+                        <p><strong>Problema 1:</strong> Resuelve: 2x + 5 = 15</p>
+                        <div class="solution">
+                            <p><strong>Solución:</strong> 2x = 10 → x = 5</p>
+                        </div>
+                        
+                        <p><strong>Problema 2:</strong> Si un número se multiplica por 3 y se le suma 7, el resultado es 22. ¿Cuál es el número?</p>
+                        <div class="solution">
+                            <p><strong>Solución:</strong> 3x + 7 = 22 → 3x = 15 → x = 5</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Página 3 - Bloqueada con Blur -->
+                    <div class="book-page locked-page">
+                        <div class="blur-overlay"></div>
+                        <h4>🔒 Página 3 - Problemas Intermedios</h4>
+                        <p>Contenido premium: 15 problemas resueltos paso a paso sobre ecuaciones con fracciones y decimales.</p>
+                    </div>
+                    
+                    <!-- Página 4 - Bloqueada con Blur -->
+                    <div class="book-page locked-page">
+                        <div class="blur-overlay"></div>
+                        <h4>🔒 Página 4 - Problemas Avanzados</h4>
+                        <p>Contenido premium: 20 problemas complejos con sistemas de ecuaciones y aplicaciones prácticas.</p>
+                    </div>
+                    
+                    <!-- Página 5 - Bloqueada con Blur -->
+                    <div class="book-page locked-page">
+                        <div class="blur-overlay"></div>
+                        <h4>🔒 Página 5 - Exámenes Prácticos</h4>
+                        <p>Contenido premium: 3 exámenes completos con soluciones detalladas y tips para resolver rápido.</p>
+                    </div>
+                </div>
+                
+                <div class="preview-controls">
+                    <button class="btn btn-outline" onclick="prevPage()">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <span class="page-indicator">Página 1 de 5</span>
+                    <button class="btn btn-outline" onclick="nextPage()">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="preview-actions">
+                    <button class="btn btn-primary btn-block" onclick="showPaymentModal()">
+                        <i class="fas fa-lock-open"></i> Desbloquear Curso Completo - S/ 6.00
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Modal de Pago -->
+    <!-- Modal de Pago MEJORADO -->
     <div class="modal" id="paymentModal">
-        <!-- Contenido del modal igual que antes -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Desbloquear Curso Completo</h3>
+                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            </div>
+            
+            <div class="payment-container">
+                <div class="payment-info">
+                    <h4>💰 Pago por Yape</h4>
+                    
+                    <div class="qr-container">
+                        <h5>📱 Escanea este código QR con Yape:</h5>
+                        <div class="qr-code">
+                            <!-- AQUÍ VA TU QR REAL - MÁS GRANDE Y CLARO -->
+                            <img src="imagen-qr-yape.jpg" alt="QR Code Yape - Escanear con la app Yape">
+                        </div>
+                        <p class="qr-instructions">
+                            <strong>💡 Cómo escanear:</strong><br>
+                            1. Abre la app <strong>Yape</strong><br>
+                            2. Toca <strong>"Escanear QR"</strong><br>
+                            3. Apunta la cámara al código<br>
+                            4. Confirma el pago de <strong>S/ 6.00</strong>
+                        </p>
+                    </div>
+                    
+                    <div class="payment-details">
+                        <h5>📞 Opción alternativa:</h5>
+                        <p><strong>Número de Yape:</strong> 51 973441252</p>
+                        <p><strong>Monto a pagar:</strong> S/ 6.00</p>
+                        <p><strong>Concepto:</strong> Planteo de Ecuaciones</p>
+                    </div>
+                </div>
+                
+                <div class="payment-steps">
+                    <h4>📝 Pasos a seguir después del pago:</h4>
+                    <ol>
+                        <li><strong>Realiza el pago</strong> por Yape (QR o número)</li>
+                        <li><strong>Toma captura</strong> del comprobante de pago</li>
+                        <li><strong>Envía la captura</strong> por WhatsApp al: <strong>51 973441252</strong></li>
+                        <li><strong>Recibirás</strong> tu código de acceso único por WhatsApp en 5-15 minutos</li>
+                    </ol>
+                    
+                    <div class="contact-info">
+                        <p><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> 51 973441252</p>
+                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> neostudy@gmail.com</p>
+                        <p><i class="fas fa-clock"></i> <strong>Horario de atención:</strong> 8:00 AM - 8:00 PM</p>
+                    </div>
+                </div>
+                
+                <div class="unlock-form">
+                    <h4>🔑 ¿Ya tienes tu código?</h4>
+                    <div class="form-group">
+                        <input type="text" id="accessCode" placeholder="Ingresa tu código de acceso (ej: MATH7X9)">
+                        <button class="btn btn-primary" onclick="validateAccessCode()">
+                            <i class="fas fa-key"></i> Desbloquear
+                        </button>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--secondary); margin-top: 0.5rem;">
+                        El código tiene 6-7 caracteres (ej: MATH7X9, STUDY4K2)
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal de Curso Desbloqueado -->
     <div class="modal" id="unlockedModal">
-        <!-- Contenido del modal igual que antes -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎉 ¡Curso Desbloqueado!</h3>
+                <button class="close-modal" onclick="closeUnlockedModal()">&times;</button>
+            </div>
+            
+            <div class="unlocked-content">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                
+                <h4>Ahora tienes acceso completo a:</h4>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <i class="fas fa-book"></i>
+                        <h5>Libro Completo</h5>
+                        <p>50+ problemas resueltos paso a paso</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-video"></i>
+                        <h5>Clases en Vivo</h5>
+                        <p>Viernes, Sábados y Domingos</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-play-circle"></i>
+                        <h5>Clases Grabadas</h5>
+                        <p>Acceso ilimitado 24/7</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-headset"></i>
+                        <h5>Soporte</h5>
+                        <p>Ayuda personalizada</p>
+                    </div>
+                </div>
+                
+                <div class="unlocked-actions">
+                    <button class="btn btn-primary btn-block" onclick="accessFullCourse()">
+                        <i class="fas fa-play"></i> Comenzar a Estudiar
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
