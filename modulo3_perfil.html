@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -130,15 +131,6 @@
             font-weight: bold;
             color: var(--primary);
             cursor: pointer;
-            position: relative;
-        }
-
-        .user-name-display {
-            color: var(--white);
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-right: 0.5rem;
-            display: none;
         }
 
         /* Menú desplegable del avatar */
@@ -902,132 +894,7 @@
             opacity: 1;
         }
 
-        /* ===== HEADER MEJORADO PARA MÓVIL ===== */
-        .desktop-menu {
-            display: flex;
-        }
-
-        .mobile-nav {
-            display: none;
-        }
-
-        .calendar-icon {
-            display: flex;
-        }
-
-        .logo-text {
-            display: inline-block;
-        }
-
-        /* ===== LOGO CON NOMBRE DEBAJO EN MÓVIL ===== */
         @media (max-width: 768px) {
-            .logo {
-                position: relative;
-                flex-direction: column;
-                align-items: center;
-                gap: 0.2rem;
-            }
-            
-            .logo::after {
-                content: "Neo Study";
-                font-size: 0.7rem;
-                font-weight: 600;
-                color: var(--white);
-                white-space: nowrap;
-            }
-            
-            .logo i {
-                font-size: 1.3rem;
-            }
-            
-            .logo-text {
-                display: none;
-            }
-        }
-
-        /* ===== MEDIA QUERIES MEJORADAS ===== */
-        @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 0.5rem;
-                flex-wrap: wrap;
-            }
-
-            .logo {
-                font-size: 1.2rem;
-                order: 1;
-                flex: 1;
-            }
-
-            .desktop-menu {
-                display: none;
-            }
-            
-            .mobile-nav {
-                display: flex;
-                justify-content: space-around;
-                width: 100%;
-                order: 3;
-                background: rgba(255,255,255,0.1);
-                border-radius: 10px;
-                padding: 0.5rem;
-                margin-top: 0.5rem;
-                position: relative;
-                z-index: 5; /* Para que no tape la foto de portada */
-            }
-
-            .mobile-nav-item {
-                color: var(--white);
-                text-decoration: none;
-                padding: 0.3rem;
-                border-radius: 8px;
-                transition: all 0.3s ease;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 2px;
-                width: 55px;
-                height: 45px;
-            }
-
-            .mobile-nav-item:hover {
-                background: rgba(255,255,255,0.2);
-            }
-
-            .mobile-nav-item i {
-                font-size: 1.1rem;
-            }
-
-            .mobile-nav-label {
-                font-size: 0.6rem;
-                font-weight: 500;
-                text-align: center;
-                line-height: 1;
-            }
-
-            .user-menu {
-                order: 2;
-                gap: 0.5rem;
-            }
-
-            .calendar-icon {
-                display: none;
-            }
-
-            .user-name-display {
-                display: block;
-            }
-
-            .theme-toggle {
-                font-size: 1rem;
-                padding: 0.4rem;
-            }
-
-            .avatar {
-                width: 35px;
-                height: 35px;
-                font-size: 0.9rem;
-            }
-
             .profile-main {
                 grid-template-columns: 1fr;
                 margin-top: -60px;
@@ -1058,69 +925,9 @@
                 width: 180px;
                 right: 10px;
             }
-
-            /* MODIFICACIÓN: Cambiar título del perfil por "Neo Study" en móvil */
-            .profile-title {
-                font-size: 0.85rem;
-                font-weight: 600;
-                background: linear-gradient(135deg, #00C4FF, #007bff);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                padding: 4px 12px;
-                border-radius: 15px;
-                border: 1px solid var(--primary);
-                display: inline-block;
-                margin-top: 5px;
-            }
         }
 
         @media (max-width: 480px) {
-            .nav-container {
-                padding: 0 0.3rem;
-            }
-
-            .logo {
-                font-size: 1.1rem;
-            }
-
-            .logo::after {
-                font-size: 0.65rem;
-            }
-
-            .user-menu {
-                gap: 0.3rem;
-            }
-
-            .user-name-display {
-                font-size: 0.8rem;
-                margin-right: 0.3rem;
-            }
-
-            .theme-toggle {
-                font-size: 0.9rem;
-                padding: 0.3rem;
-            }
-
-            .avatar {
-                width: 32px;
-                height: 32px;
-                font-size: 0.8rem;
-            }
-
-            .mobile-nav-item {
-                width: 50px;
-                height: 42px;
-            }
-            
-            .mobile-nav-item i {
-                font-size: 1rem;
-            }
-
-            .mobile-nav-label {
-                font-size: 0.55rem;
-            }
-
             .profile-container {
                 margin: 80px auto 20px;
             }
@@ -1139,99 +946,34 @@
             .cover-options {
                 width: 160px;
             }
-
-            .profile-title {
-                font-size: 0.8rem;
-                padding: 3px 10px;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .logo {
-                font-size: 1rem;
-            }
-            
-            .logo i {
-                font-size: 1.1rem;
-            }
-
-            .logo::after {
-                font-size: 0.6rem;
-            }
-
-            .user-name-display {
-                display: none;
-            }
-
-            .mobile-nav {
-                gap: 0.2rem;
-            }
-
-            .mobile-nav-item {
-                width: 45px;
-                height: 40px;
-            }
-            
-            .mobile-nav-item i {
-                font-size: 0.9rem;
-            }
-
-            .mobile-nav-label {
-                font-size: 0.5rem;
-            }
-
-            .profile-title {
-                font-size: 0.75rem;
-                padding: 2px 8px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Header Mejorado -->
+    <!-- Header -->
     <header class="header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
                 <i class="fas fa-graduation-cap"></i>
-                <span class="logo-text">Neo Study</span>
+                Neo Study
             </div>
-            
-            <!-- Menú principal (visible en desktop) -->
-            <nav class="nav-menu desktop-menu">
+            <nav class="nav-menu">
                 <a href="modulo2_iniciodecesión.html" class="nav-item">
-                    <i class="fas fa-home"></i>
-                    <span>Inicio</span>
+                    <i class="fas fa-home"></i> Inicio
                 </a>
+                <!-- ✅ MODIFICADO: Enlace a módulo de cursos -->
                 <a href="modulo4_cursos.html" class="nav-item">
-                    <i class="fas fa-book"></i>
-                    <span>Cursos</span>
+                    <i class="fas fa-book"></i> Cursos
                 </a>
                 <a href="#" class="nav-item">
-                    <i class="fas fa-users"></i>
-                    <span>Comunidad</span>
-                </a>
-                <a href="#" class="nav-item calendar-icon">
-                    <i class="fas fa-calendar"></i>
-                    <span>Calendario</span>
+                    <i class="fas fa-users"></i> Comunidad
                 </a>
             </nav>
-
             <div class="user-menu">
-                <!-- Nombre del usuario -->
-                <span class="user-name-display" id="userNameDisplay"></span>
-                
-                <!-- Icono de calendario para desktop -->
-                <a href="#" class="nav-item calendar-icon">
-                    <i class="fas fa-calendar"></i>
-                    <span>Calendario</span>
-                </a>
-                
                 <button class="theme-toggle" onclick="toggleDarkMode()">
                     <i class="fas fa-moon"></i>
                 </button>
-                
-                <div class="avatar" id="headerAvatar" onclick="toggleAvatarDropdown()">U</div>
-                
+                <div class="avatar" id="headerAvatar" onclick="toggleAvatarDropdown()">JM</div>
                 <div class="avatar-dropdown" id="avatarDropdown">
                     <a href="#" class="dropdown-item" onclick="changeProfilePhoto()">
                         <i class="fas fa-camera"></i> Cambiar foto de perfil
@@ -1250,27 +992,6 @@
                     </a>
                 </div>
             </div>
-
-            <!-- Menú móvil (solo iconos) -->
-            <nav class="mobile-nav">
-                <a href="modulo2_iniciodecesión.html" class="mobile-nav-item" title="Inicio">
-                    <i class="fas fa-home"></i>
-                    <span class="mobile-nav-label">Inicio</span>
-                </a>
-                <a href="modulo4_cursos.html" class="mobile-nav-item" title="Cursos">
-                    <i class="fas fa-book"></i>
-                    <span class="mobile-nav-label">Cursos</span>
-                </a>
-                <a href="#" class="mobile-nav-item" title="Comunidad">
-                    <i class="fas fa-users"></i>
-                    <span class="mobile-nav-label">Comunidad</span>
-                </a>
-                <a href="#" class="mobile-nav-item" title="Calendario">
-                    <i class="fas fa-calendar"></i>
-                    <span class="mobile-nav-label">Calendario</span>
-                </a>
-                <!-- NOTA: Se eliminó el icono de notificaciones -->
-            </nav>
         </div>
     </header>
 
@@ -1605,61 +1326,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadProfileData();
             checkDarkModePreference();
-            displayUserName();
-            updateMobileTitle(); // Nueva función para cambiar el título en móvil
         });
-
-        // ===== MOSTRAR NOMBRE DE USUARIO =====
-        function displayUserName() {
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            if (userData && userData.nombre) {
-                // Mostrar nombre en el header
-                const userNameDisplay = document.getElementById('userNameDisplay');
-                const userName = userData.nombre.split(' ')[0]; // Solo el primer nombre
-                userNameDisplay.textContent = `Hola, ${userName}`;
-                
-                // Actualizar avatar con inicial
-                const avatar = document.getElementById('headerAvatar');
-                const initials = userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase();
-                avatar.textContent = initials.charAt(0);
-                
-                // Agregar tooltip con el nombre completo
-                avatar.title = userData.nombre;
-            }
-        }
-
-        // ===== MODIFICACIÓN: Cambiar "Universitario" por "Neo Study" en móvil =====
-        function updateMobileTitle() {
-            const profileTitle = document.getElementById('profileTitle');
-            
-            if (window.innerWidth <= 768 && profileTitle) {
-                // En móvil, cambiar por "Neo Study"
-                profileTitle.textContent = "Neo Study";
-                profileTitle.style.fontWeight = "600";
-                profileTitle.style.background = "linear-gradient(135deg, #00C4FF, #007bff)";
-                profileTitle.style.webkitBackgroundClip = "text";
-                profileTitle.style.webkitTextFillColor = "transparent";
-                profileTitle.style.backgroundClip = "text";
-                profileTitle.style.padding = "4px 12px";
-                profileTitle.style.borderRadius = "15px";
-                profileTitle.style.border = "1px solid var(--primary)";
-                profileTitle.style.display = "inline-block";
-                profileTitle.style.marginTop = "5px";
-            } else if (profileTitle) {
-                // En desktop, mantener el título original
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-                profileTitle.textContent = userData?.titulo || 'Estudiante Universitario';
-                profileTitle.style.background = "";
-                profileTitle.style.webkitBackgroundClip = "";
-                profileTitle.style.webkitTextFillColor = "";
-                profileTitle.style.backgroundClip = "";
-                profileTitle.style.padding = "";
-                profileTitle.style.borderRadius = "";
-                profileTitle.style.border = "";
-                profileTitle.style.display = "";
-                profileTitle.style.marginTop = "";
-            }
-        }
 
         // ===== MODO OSCURO =====
         function toggleDarkMode() {
@@ -1697,35 +1364,10 @@
             if (userData) {
                 // Información básica
                 const userName = userData.nombre || 'Usuario NeoStudy';
-                const userTitle = userData.titulo || 'Estudiante Universitario';
+                const userTitle = userData.titulo || 'Estudiante';
                 
                 document.getElementById('profileName').textContent = userName;
-                
-                // MODIFICACIÓN: En móvil mostrar "Neo Study", en desktop el título normal
-                if (window.innerWidth <= 768) {
-                    document.getElementById('profileTitle').textContent = "Neo Study";
-                    document.getElementById('profileTitle').style.fontWeight = "600";
-                    document.getElementById('profileTitle').style.background = "linear-gradient(135deg, #00C4FF, #007bff)";
-                    document.getElementById('profileTitle').style.webkitBackgroundClip = "text";
-                    document.getElementById('profileTitle').style.webkitTextFillColor = "transparent";
-                    document.getElementById('profileTitle').style.backgroundClip = "text";
-                    document.getElementById('profileTitle').style.padding = "4px 12px";
-                    document.getElementById('profileTitle').style.borderRadius = "15px";
-                    document.getElementById('profileTitle').style.border = "1px solid var(--primary)";
-                    document.getElementById('profileTitle').style.display = "inline-block";
-                    document.getElementById('profileTitle').style.marginTop = "5px";
-                } else {
-                    document.getElementById('profileTitle').textContent = userTitle;
-                    document.getElementById('profileTitle').style.background = "";
-                    document.getElementById('profileTitle').style.webkitBackgroundClip = "";
-                    document.getElementById('profileTitle').style.webkitTextFillColor = "";
-                    document.getElementById('profileTitle').style.backgroundClip = "";
-                    document.getElementById('profileTitle').style.padding = "";
-                    document.getElementById('profileTitle').style.borderRadius = "";
-                    document.getElementById('profileTitle').style.border = "";
-                    document.getElementById('profileTitle').style.display = "";
-                    document.getElementById('profileTitle').style.marginTop = "";
-                }
+                document.getElementById('profileTitle').textContent = userTitle;
                 
                 // Avatar con iniciales o foto
                 const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -1737,7 +1379,7 @@
                     avatarElement.textContent = initials;
                 }
                 
-                document.getElementById('headerAvatar').textContent = initials.charAt(0);
+                document.getElementById('headerAvatar').textContent = initials;
 
                 // Frase motivacional
                 document.getElementById('motivationalText').textContent = profileData.motivationalText || 
@@ -1898,7 +1540,7 @@
                 const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
                 
                 document.getElementById('profileAvatar').innerHTML = initials;
-                document.getElementById('headerAvatar').textContent = initials.charAt(0);
+                document.getElementById('headerAvatar').textContent = initials;
                 
                 // Cerrar menús
                 document.getElementById('avatarOptions').classList.remove('show');
@@ -2229,11 +1871,6 @@
                 window.location.href = 'modulo1_inicio.html';
             }
         }
-
-        // ===== ACTUALIZAR AL REDIMENSIONAR =====
-        window.addEventListener('resize', function() {
-            updateMobileTitle();
-        });
 
         // Cerrar modal al hacer clic fuera
         window.onclick = function(event) {
