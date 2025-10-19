@@ -131,6 +131,15 @@
             font-weight: bold;
             color: var(--primary);
             cursor: pointer;
+            position: relative;
+        }
+
+        .user-name-display {
+            color: var(--white);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            display: none;
         }
 
         /* Menú desplegable del avatar */
@@ -894,7 +903,96 @@
             opacity: 1;
         }
 
+        /* ===== HEADER MEJORADO PARA MÓVIL ===== */
+        .desktop-menu {
+            display: flex;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        .calendar-icon {
+            display: flex;
+        }
+
+        .logo-text {
+            display: inline-block;
+        }
+
+        /* ===== MEDIA QUERIES MEJORADAS ===== */
         @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 0.5rem;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+                order: 1;
+                flex: 1;
+            }
+
+            .desktop-menu {
+                display: none;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+                order: 3;
+                background: rgba(255,255,255,0.1);
+                border-radius: 10px;
+                padding: 0.5rem;
+                margin-top: 0.5rem;
+            }
+
+            .mobile-nav-item {
+                color: var(--white);
+                text-decoration: none;
+                padding: 0.5rem;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+            }
+
+            .mobile-nav-item:hover {
+                background: rgba(255,255,255,0.2);
+            }
+
+            .mobile-nav-item i {
+                font-size: 1.2rem;
+            }
+
+            .user-menu {
+                order: 2;
+                gap: 0.5rem;
+            }
+
+            .calendar-icon {
+                display: none;
+            }
+
+            .user-name-display {
+                display: block;
+            }
+
+            .theme-toggle {
+                font-size: 1rem;
+                padding: 0.4rem;
+            }
+
+            .avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
             .profile-main {
                 grid-template-columns: 1fr;
                 margin-top: -60px;
@@ -928,6 +1026,47 @@
         }
 
         @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 0.3rem;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .logo-text {
+                display: none;
+            }
+
+            .user-menu {
+                gap: 0.3rem;
+            }
+
+            .user-name-display {
+                font-size: 0.8rem;
+                margin-right: 0.3rem;
+            }
+
+            .theme-toggle {
+                font-size: 0.9rem;
+                padding: 0.3rem;
+            }
+
+            .avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+
+            .mobile-nav-item {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .mobile-nav-item i {
+                font-size: 1rem;
+            }
+
             .profile-container {
                 margin: 80px auto 20px;
             }
@@ -947,33 +1086,80 @@
                 width: 160px;
             }
         }
+
+        @media (max-width: 360px) {
+            .logo {
+                font-size: 1rem;
+            }
+            
+            .logo i {
+                display: none;
+            }
+
+            .user-name-display {
+                display: none;
+            }
+
+            .mobile-nav {
+                gap: 0.2rem;
+            }
+
+            .mobile-nav-item {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .mobile-nav-item i {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header Mejorado -->
     <header class="header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
                 <i class="fas fa-graduation-cap"></i>
-                Neo Study
+                <span class="logo-text">Neo Study</span>
             </div>
-            <nav class="nav-menu">
+            
+            <!-- Menú principal (visible en desktop) -->
+            <nav class="nav-menu desktop-menu">
                 <a href="modulo2_iniciodecesión.html" class="nav-item">
-                    <i class="fas fa-home"></i> Inicio
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
                 </a>
-                <!-- ✅ MODIFICADO: Enlace a módulo de cursos -->
                 <a href="modulo4_cursos.html" class="nav-item">
-                    <i class="fas fa-book"></i> Cursos
+                    <i class="fas fa-book"></i>
+                    <span>Cursos</span>
                 </a>
                 <a href="#" class="nav-item">
-                    <i class="fas fa-users"></i> Comunidad
+                    <i class="fas fa-users"></i>
+                    <span>Comunidad</span>
+                </a>
+                <a href="#" class="nav-item calendar-icon">
+                    <i class="fas fa-calendar"></i>
+                    <span>Calendario</span>
                 </a>
             </nav>
+
             <div class="user-menu">
+                <!-- Nombre del usuario -->
+                <span class="user-name-display" id="userNameDisplay"></span>
+                
+                <!-- Icono de calendario para desktop -->
+                <a href="#" class="nav-item calendar-icon">
+                    <i class="fas fa-calendar"></i>
+                    <span>Calendario</span>
+                </a>
+                
                 <button class="theme-toggle" onclick="toggleDarkMode()">
                     <i class="fas fa-moon"></i>
                 </button>
-                <div class="avatar" id="headerAvatar" onclick="toggleAvatarDropdown()">JM</div>
+                
+                <div class="avatar" id="headerAvatar" onclick="toggleAvatarDropdown()">U</div>
+                
                 <div class="avatar-dropdown" id="avatarDropdown">
                     <a href="#" class="dropdown-item" onclick="changeProfilePhoto()">
                         <i class="fas fa-camera"></i> Cambiar foto de perfil
@@ -992,6 +1178,25 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Menú móvil (solo iconos) -->
+            <nav class="mobile-nav">
+                <a href="modulo2_iniciodecesión.html" class="mobile-nav-item" title="Inicio">
+                    <i class="fas fa-home"></i>
+                </a>
+                <a href="modulo4_cursos.html" class="mobile-nav-item" title="Cursos">
+                    <i class="fas fa-book"></i>
+                </a>
+                <a href="#" class="mobile-nav-item" title="Comunidad">
+                    <i class="fas fa-users"></i>
+                </a>
+                <a href="#" class="mobile-nav-item" title="Calendario">
+                    <i class="fas fa-calendar"></i>
+                </a>
+                <a href="#" class="mobile-nav-item" title="Notificaciones">
+                    <i class="fas fa-bell"></i>
+                </a>
+            </nav>
         </div>
     </header>
 
@@ -1326,7 +1531,27 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadProfileData();
             checkDarkModePreference();
+            displayUserName();
         });
+
+        // ===== MOSTRAR NOMBRE DE USUARIO =====
+        function displayUserName() {
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            if (userData && userData.nombre) {
+                // Mostrar nombre en el header
+                const userNameDisplay = document.getElementById('userNameDisplay');
+                const userName = userData.nombre.split(' ')[0]; // Solo el primer nombre
+                userNameDisplay.textContent = `Hola, ${userName}`;
+                
+                // Actualizar avatar con inicial
+                const avatar = document.getElementById('headerAvatar');
+                const initials = userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase();
+                avatar.textContent = initials.charAt(0);
+                
+                // Agregar tooltip con el nombre completo
+                avatar.title = userData.nombre;
+            }
+        }
 
         // ===== MODO OSCURO =====
         function toggleDarkMode() {
@@ -1379,7 +1604,7 @@
                     avatarElement.textContent = initials;
                 }
                 
-                document.getElementById('headerAvatar').textContent = initials;
+                document.getElementById('headerAvatar').textContent = initials.charAt(0);
 
                 // Frase motivacional
                 document.getElementById('motivationalText').textContent = profileData.motivationalText || 
@@ -1540,7 +1765,7 @@
                 const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
                 
                 document.getElementById('profileAvatar').innerHTML = initials;
-                document.getElementById('headerAvatar').textContent = initials;
+                document.getElementById('headerAvatar').textContent = initials.charAt(0);
                 
                 // Cerrar menús
                 document.getElementById('avatarOptions').classList.remove('show');
