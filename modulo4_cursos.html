@@ -800,133 +800,76 @@
             color: var(--secondary);
         }
 
-        /* NUEVOS ESTILOS PARA EL VISOR DE PDF MEJORADO */
-        .pdf-container {
+        /* NUEVOS ESTILOS PARA EL VISOR DE PDF CON GOOGLE DRIVE */
+        .pdf-preview-container {
             width: 100%;
             height: 500px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #00C4FF;
+            border-radius: 10px;
             overflow: hidden;
             position: relative;
             margin-bottom: 1rem;
             background: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
-        .pdf-page {
+        .pdf-iframe {
             width: 100%;
             height: 100%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
+            border: none;
+            transition: filter 0.3s ease;
         }
         
-        .pdf-page.active {
-            display: flex;
+        .pdf-preview-container.locked .pdf-iframe {
+            filter: blur(8px);
         }
         
-        .pdf-page.locked {
-            position: relative;
-        }
-        
-        .pdf-page.locked .page-content {
-            filter: blur(5px);
-            pointer-events: none;
-        }
-        
-        .page-content {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .page-image {
-            max-width: 100%;
-            max-height: 70%;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .page-text {
-            margin-top: 1.5rem;
-            max-width: 600px;
-        }
-        
-        .page-text h4 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-        
-        .page-text p {
-            color: var(--secondary);
-            line-height: 1.6;
-            margin-bottom: 0.5rem;
-        }
-        
-        .locked-overlay {
+        .locked-message {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-        
-        .lock-icon {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: var(--primary);
             color: white;
-            padding: 1rem 1.5rem;
+            padding: 1rem 2rem;
             border-radius: 25px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
-        .pdf-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+        .preview-info {
+            background: #e8f4f8;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary);
         }
         
-        .page-indicator {
-            font-weight: 600;
-            color: var(--primary);
+        .drive-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
         }
-
-        .download-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--success);
+        
+        .drive-button {
+            background: #4285F4;
             color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 25px;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             font-weight: 600;
             transition: all 0.3s ease;
-            margin-top: 1rem;
         }
-
-        .download-link:hover {
+        
+        .drive-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
         }
 
         /* Estilos para el pago */
@@ -1188,16 +1131,13 @@
             }
             
             /* Ajustes para el visor de PDF en móviles */
-            .pdf-container {
+            .pdf-preview-container {
                 height: 400px;
             }
             
-            .page-text {
-                padding: 0 1rem;
-            }
-            
-            .page-text h4 {
-                font-size: 1.1rem;
+            .drive-buttons {
+                flex-direction: column;
+                align-items: center;
             }
         }
 
@@ -1255,12 +1195,8 @@
             }
             
             /* Ajustes para el visor de PDF en móviles pequeños */
-            .pdf-container {
+            .pdf-preview-container {
                 height: 300px;
-            }
-            
-            .pdf-page {
-                padding: 1rem;
             }
         }
 
@@ -1502,7 +1438,7 @@
         </div>
     </footer>
 
-    <!-- Modal de Vista Previa MEJORADO -->
+    <!-- Modal de Vista Previa ACTUALIZADO CON TU PDF -->
     <div class="modal" id="previewModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1511,114 +1447,37 @@
             </div>
             
             <div class="preview-container">
-                <!-- Visor de PDF Mejorado -->
-                <div class="pdf-container">
-                    <!-- Página 1 - Visible -->
-                    <div class="pdf-page active">
-                        <div class="page-content">
-                            <div class="page-text">
-                                <h4>📚 Página 1 - Introducción al Planteo de Ecuaciones</h4>
-                                <p><strong>Problema de ejemplo:</strong> Si Juan tiene el doble de la edad de Pedro, y dentro de 5 años la suma de sus edades será 35, ¿qué edad tiene cada uno?</p>
-                                <div class="solution">
-                                    <p><strong>Solución paso a paso:</strong></p>
-                                    <p>• Edad de Pedro = x</p>
-                                    <p>• Edad de Juan = 2x</p>
-                                    <p>• Dentro de 5 años: (x+5) + (2x+5) = 35</p>
-                                    <p>• 3x + 10 = 35 → 3x = 25 → x = 8.33</p>
-                                    <p><strong>Respuesta:</strong> Pedro = 8 años, Juan = 17 años</p>
-                                </div>
-                                <a href="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf" class="download-link" target="_blank">
-                                    <i class="fas fa-download"></i> Descargar Libro Completo
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Página 2 - Bloqueada con Blur -->
-                    <div class="pdf-page locked">
-                        <div class="page-content">
-                            <div class="page-text">
-                                <h4>🔒 Página 2 - Ejercicios Básicos</h4>
-                                <p>Contenido premium: 15 ejercicios básicos resueltos paso a paso sobre ecuaciones lineales.</p>
-                                <p><strong>Temas incluidos:</strong></p>
-                                <p>• Resolución de ecuaciones simples</p>
-                                <p>• Problemas de aplicación práctica</p>
-                                <p>• Métodos de verificación</p>
-                            </div>
-                        </div>
-                        <div class="locked-overlay">
-                            <div class="lock-icon">
-                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Página 3 - Bloqueada con Blur -->
-                    <div class="pdf-page locked">
-                        <div class="page-content">
-                            <div class="page-text">
-                                <h4>🔒 Página 3 - Problemas Intermedios</h4>
-                                <p>Contenido premium: 20 problemas intermedios con ecuaciones fraccionarias y decimales.</p>
-                                <p><strong>Temas incluidos:</strong></p>
-                                <p>• Ecuaciones con fracciones</p>
-                                <p>• Problemas con decimales</p>
-                                <p>• Aplicaciones comerciales</p>
-                            </div>
-                        </div>
-                        <div class="locked-overlay">
-                            <div class="lock-icon">
-                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Página 4 - Bloqueada con Blur -->
-                    <div class="pdf-page locked">
-                        <div class="page-content">
-                            <div class="page-text">
-                                <h4>🔒 Página 4 - Problemas Avanzados</h4>
-                                <p>Contenido premium: 15 problemas complejos con sistemas de ecuaciones.</p>
-                                <p><strong>Temas incluidos:</strong></p>
-                                <p>• Sistemas de ecuaciones 2x2</p>
-                                <p>• Problemas de mezclas</p>
-                                <p>• Aplicaciones geométricas</p>
-                            </div>
-                        </div>
-                        <div class="locked-overlay">
-                            <div class="lock-icon">
-                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Página 5 - Bloqueada con Blur -->
-                    <div class="pdf-page locked">
-                        <div class="page-content">
-                            <div class="page-text">
-                                <h4>🔒 Página 5 - Exámenes Prácticos</h4>
-                                <p>Contenido premium: 3 exámenes completos con soluciones detalladas.</p>
-                                <p><strong>Incluye:</strong></p>
-                                <p>• Exámenes cronometrados</p>
-                                <p>• Soluciones paso a paso</p>
-                                <p>• Tips para resolver rápido</p>
-                            </div>
-                        </div>
-                        <div class="locked-overlay">
-                            <div class="lock-icon">
-                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
-                            </div>
-                        </div>
+                <!-- Visor de PDF con Google Drive -->
+                <div class="pdf-preview-container locked" id="pdfPreview">
+                    <iframe 
+                        src="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/preview" 
+                        class="pdf-iframe"
+                        allow="autoplay">
+                    </iframe>
+                    <div class="locked-message">
+                        <i class="fas fa-lock"></i><br>
+                        VISTA PREVIA<br>
+                        <small>Desbloquea el curso para acceso completo</small>
                     </div>
                 </div>
                 
-                <div class="pdf-controls">
-                    <button class="btn btn-outline" onclick="prevPdfPage()">
-                        <i class="fas fa-chevron-left"></i> Anterior
-                    </button>
-                    <span class="page-indicator">Página 1 de 5</span>
-                    <button class="btn btn-outline" onclick="nextPdfPage()">
-                        Siguiente <i class="fas fa-chevron-right"></i>
-                    </button>
+                <div class="preview-info">
+                    <p><strong>📚 Contenido del libro:</strong></p>
+                    <p>• 50+ problemas resueltos paso a paso</p>
+                    <p>• Ejercicios básicos, intermedios y avanzados</p>
+                    <p>• 3 exámenes prácticos con soluciones</p>
+                    <p>• Tips y estrategias de resolución rápida</p>
+                </div>
+                
+                <div class="drive-buttons">
+                    <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view" 
+                       class="drive-button" target="_blank">
+                        <i class="fab fa-google-drive"></i> Ver en Google Drive
+                    </a>
+                    <a href="https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl" 
+                       class="btn btn-outline">
+                        <i class="fas fa-download"></i> Descargar PDF
+                    </a>
                 </div>
                 
                 <div class="preview-actions">
@@ -1697,7 +1556,7 @@
         </div>
     </div>
 
-    <!-- Modal de Curso Desbloqueado -->
+    <!-- Modal de Curso Desbloqueado ACTUALIZADO -->
     <div class="modal" id="unlockedModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1710,12 +1569,13 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 
-                <h4>Ahora tienes acceso completo a:</h4>
+                <h4>¡Felicidades! Ahora tienes acceso completo</h4>
+                
                 <div class="benefits-grid">
                     <div class="benefit-card">
                         <i class="fas fa-book"></i>
                         <h5>Libro Completo</h5>
-                        <p>50+ problemas resueltos paso a paso</p>
+                        <p>PDF sin restricciones</p>
                     </div>
                     <div class="benefit-card">
                         <i class="fas fa-video"></i>
@@ -1725,7 +1585,7 @@
                     <div class="benefit-card">
                         <i class="fas fa-play-circle"></i>
                         <h5>Clases Grabadas</h5>
-                        <p>Acceso ilimitado 24/7</p>
+                        <p>Acceso 24/7</p>
                     </div>
                     <div class="benefit-card">
                         <i class="fas fa-headset"></i>
@@ -1734,8 +1594,22 @@
                     </div>
                 </div>
                 
+                <div style="margin: 2rem 0;">
+                    <h5>📚 Acceso inmediato al libro:</h5>
+                    <div class="drive-buttons">
+                        <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view" 
+                           class="drive-button" target="_blank">
+                            <i class="fab fa-google-drive"></i> Ver Libro Online
+                        </a>
+                        <a href="https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl" 
+                           class="btn btn-primary">
+                            <i class="fas fa-download"></i> Descargar PDF
+                        </a>
+                    </div>
+                </div>
+                
                 <div class="unlocked-actions">
-                    <button class="btn btn-primary btn-block" onclick="accessFullCourse()">
+                    <button class="btn btn-primary btn-block" onclick="closeUnlockedModal()">
                         <i class="fas fa-play"></i> Comenzar a Estudiar
                     </button>
                 </div>
@@ -1803,46 +1677,14 @@
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        // Variables para control del PDF
-        let currentPdfPage = 1;
-        const totalPdfPages = 5;
-
         // Función para abrir el modal de vista previa
         function openPreviewModal() {
             document.getElementById('previewModal').style.display = 'flex';
-            currentPdfPage = 1;
-            updatePdfPageIndicator();
         }
 
         // Función para cerrar el modal de vista previa
         function closePreviewModal() {
             document.getElementById('previewModal').style.display = 'none';
-        }
-
-        // Función para navegar a la página siguiente del PDF
-        function nextPdfPage() {
-            if (currentPdfPage < totalPdfPages) {
-                currentPdfPage++;
-                updatePdfPageIndicator();
-            }
-        }
-
-        // Función para navegar a la página anterior del PDF
-        function prevPdfPage() {
-            if (currentPdfPage > 1) {
-                currentPdfPage--;
-                updatePdfPageIndicator();
-            }
-        }
-
-        // Función para actualizar el indicador de página del PDF
-        function updatePdfPageIndicator() {
-            document.querySelector('.page-indicator').textContent = `Página ${currentPdfPage} de ${totalPdfPages}`;
-            
-            // Mostrar/ocultar páginas del PDF
-            document.querySelectorAll('.pdf-page').forEach((page, index) => {
-                page.classList.toggle('active', index + 1 === currentPdfPage);
-            });
         }
 
         // Datos de cursos de Matemática
@@ -2122,19 +1964,14 @@
             document.getElementById('unlockedModal').style.display = 'flex';
         }
 
-        function accessFullCourse() {
-            closeUnlockedModal();
-            // Redirigir al PDF completo
-            window.open('https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf', '_blank');
-        }
-
         // Abrir tema disponible (solo Planteo de Ecuaciones)
         function openTopic(topicId) {
             if (topicId === 1) { // Planteo de Ecuaciones
                 const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
                 
                 if (tieneAcceso) {
-                    accessFullCourse();
+                    // Si está desbloqueado, abrir el PDF completo
+                    window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view', '_blank');
                 } else {
                     openPreviewModal();
                 }
