@@ -800,7 +800,7 @@
             color: var(--secondary);
         }
 
-        /* NUEVOS ESTILOS PARA EL VISOR DE PDF */
+        /* NUEVOS ESTILOS PARA EL VISOR DE PDF MEJORADO */
         .pdf-container {
             width: 100%;
             height: 500px;
@@ -809,31 +809,68 @@
             overflow: hidden;
             position: relative;
             margin-bottom: 1rem;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .pdf-page {
             width: 100%;
             height: 100%;
             display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
         }
         
         .pdf-page.active {
-            display: block;
-        }
-        
-        .pdf-page iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+            display: flex;
         }
         
         .pdf-page.locked {
             position: relative;
         }
         
-        .pdf-page.locked iframe {
+        .pdf-page.locked .page-content {
             filter: blur(5px);
             pointer-events: none;
+        }
+        
+        .page-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-image {
+            max-width: 100%;
+            max-height: 70%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .page-text {
+            margin-top: 1.5rem;
+            max-width: 600px;
+        }
+        
+        .page-text h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .page-text p {
+            color: var(--secondary);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
         }
         
         .locked-overlay {
@@ -871,6 +908,25 @@
         .page-indicator {
             font-weight: 600;
             color: var(--primary);
+        }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .download-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
         /* Estilos para el pago */
@@ -1135,6 +1191,14 @@
             .pdf-container {
                 height: 400px;
             }
+            
+            .page-text {
+                padding: 0 1rem;
+            }
+            
+            .page-text h4 {
+                font-size: 1.1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1193,6 +1257,10 @@
             /* Ajustes para el visor de PDF en móviles pequeños */
             .pdf-container {
                 height: 300px;
+            }
+            
+            .pdf-page {
+                padding: 1rem;
             }
         }
 
@@ -1443,22 +1511,41 @@
             </div>
             
             <div class="preview-container">
-                <!-- Visor de PDF -->
+                <!-- Visor de PDF Mejorado -->
                 <div class="pdf-container">
                     <!-- Página 1 - Visible -->
                     <div class="pdf-page active">
-                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=1" 
-                                type="application/pdf">
-                            <p>Tu navegador no soporta la visualización de PDF. 
-                               <a href="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf">Descarga el libro aquí</a>.</p>
-                        </iframe>
+                        <div class="page-content">
+                            <div class="page-text">
+                                <h4>📚 Página 1 - Introducción al Planteo de Ecuaciones</h4>
+                                <p><strong>Problema de ejemplo:</strong> Si Juan tiene el doble de la edad de Pedro, y dentro de 5 años la suma de sus edades será 35, ¿qué edad tiene cada uno?</p>
+                                <div class="solution">
+                                    <p><strong>Solución paso a paso:</strong></p>
+                                    <p>• Edad de Pedro = x</p>
+                                    <p>• Edad de Juan = 2x</p>
+                                    <p>• Dentro de 5 años: (x+5) + (2x+5) = 35</p>
+                                    <p>• 3x + 10 = 35 → 3x = 25 → x = 8.33</p>
+                                    <p><strong>Respuesta:</strong> Pedro = 8 años, Juan = 17 años</p>
+                                </div>
+                                <a href="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf" class="download-link" target="_blank">
+                                    <i class="fas fa-download"></i> Descargar Libro Completo
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Página 2 - Bloqueada con Blur -->
                     <div class="pdf-page locked">
-                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=2" 
-                                type="application/pdf">
-                        </iframe>
+                        <div class="page-content">
+                            <div class="page-text">
+                                <h4>🔒 Página 2 - Ejercicios Básicos</h4>
+                                <p>Contenido premium: 15 ejercicios básicos resueltos paso a paso sobre ecuaciones lineales.</p>
+                                <p><strong>Temas incluidos:</strong></p>
+                                <p>• Resolución de ecuaciones simples</p>
+                                <p>• Problemas de aplicación práctica</p>
+                                <p>• Métodos de verificación</p>
+                            </div>
+                        </div>
                         <div class="locked-overlay">
                             <div class="lock-icon">
                                 <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
@@ -1468,9 +1555,16 @@
                     
                     <!-- Página 3 - Bloqueada con Blur -->
                     <div class="pdf-page locked">
-                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=3" 
-                                type="application/pdf">
-                        </iframe>
+                        <div class="page-content">
+                            <div class="page-text">
+                                <h4>🔒 Página 3 - Problemas Intermedios</h4>
+                                <p>Contenido premium: 20 problemas intermedios con ecuaciones fraccionarias y decimales.</p>
+                                <p><strong>Temas incluidos:</strong></p>
+                                <p>• Ecuaciones con fracciones</p>
+                                <p>• Problemas con decimales</p>
+                                <p>• Aplicaciones comerciales</p>
+                            </div>
+                        </div>
                         <div class="locked-overlay">
                             <div class="lock-icon">
                                 <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
@@ -1480,9 +1574,16 @@
                     
                     <!-- Página 4 - Bloqueada con Blur -->
                     <div class="pdf-page locked">
-                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=4" 
-                                type="application/pdf">
-                        </iframe>
+                        <div class="page-content">
+                            <div class="page-text">
+                                <h4>🔒 Página 4 - Problemas Avanzados</h4>
+                                <p>Contenido premium: 15 problemas complejos con sistemas de ecuaciones.</p>
+                                <p><strong>Temas incluidos:</strong></p>
+                                <p>• Sistemas de ecuaciones 2x2</p>
+                                <p>• Problemas de mezclas</p>
+                                <p>• Aplicaciones geométricas</p>
+                            </div>
+                        </div>
                         <div class="locked-overlay">
                             <div class="lock-icon">
                                 <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
@@ -1492,9 +1593,16 @@
                     
                     <!-- Página 5 - Bloqueada con Blur -->
                     <div class="pdf-page locked">
-                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=5" 
-                                type="application/pdf">
-                        </iframe>
+                        <div class="page-content">
+                            <div class="page-text">
+                                <h4>🔒 Página 5 - Exámenes Prácticos</h4>
+                                <p>Contenido premium: 3 exámenes completos con soluciones detalladas.</p>
+                                <p><strong>Incluye:</strong></p>
+                                <p>• Exámenes cronometrados</p>
+                                <p>• Soluciones paso a paso</p>
+                                <p>• Tips para resolver rápido</p>
+                            </div>
+                        </div>
                         <div class="locked-overlay">
                             <div class="lock-icon">
                                 <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
@@ -2016,9 +2124,8 @@
 
         function accessFullCourse() {
             closeUnlockedModal();
-            // Aquí puedes redirigir al PDF completo o a la página del curso
-            alert('🎓 ¡Redirigiendo al curso completo! Próximamente tendrás acceso al libro PDF completo, clases en vivo los viernes, sábados y domingos, y clases grabadas.');
-            // window.location.href = 'curso_completo_planteo_ecuaciones.html';
+            // Redirigir al PDF completo
+            window.open('https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf', '_blank');
         }
 
         // Abrir tema disponible (solo Planteo de Ecuaciones)
