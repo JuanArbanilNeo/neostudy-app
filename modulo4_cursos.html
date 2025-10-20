@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -799,137 +800,77 @@
             color: var(--secondary);
         }
 
-        /* Estilos para la vista previa del libro */
-        .book-preview {
-            background: var(--light);
-            border-radius: 10px;
-            padding: 2rem;
-            min-height: 400px;
-            margin-bottom: 1.5rem;
+        /* NUEVOS ESTILOS PARA EL VISOR DE PDF */
+        .pdf-container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
             position: relative;
+            margin-bottom: 1rem;
         }
-
-        body.dark-mode .book-preview {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .book-preview {
-            background: #d1ecf1;
-        }
-
-        .book-page {
+        
+        .pdf-page {
+            width: 100%;
+            height: 100%;
             display: none;
         }
-
-        .book-page.active {
+        
+        .pdf-page.active {
             display: block;
         }
-
-        .preview-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+        
+        .pdf-page iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
-
-        .page-indicator {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        /* Estilos para páginas bloqueadas con blur */
-        .locked-page {
+        
+        .pdf-page.locked {
             position: relative;
-            filter: blur(3px);
+        }
+        
+        .pdf-page.locked iframe {
+            filter: blur(5px);
             pointer-events: none;
         }
-
-        .blur-overlay {
+        
+        .locked-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10;
         }
-
-        .locked-page::before {
-            content: "🔒 CONTENIDO BLOQUEADO";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        
+        .lock-icon {
             background: var(--primary);
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
             font-weight: bold;
-            z-index: 2;
-            font-size: 0.9rem;
-        }
-
-        /* Estilos mejorados para el QR */
-        .qr-container {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 3px solid var(--primary);
-        }
-
-        .qr-code {
-            width: 300px;
-            height: 300px;
-            background: var(--white);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            padding: 0.5rem;
+            gap: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-
-        .qr-code img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 10px;
+        
+        .pdf-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
-
-        .qr-instructions {
-            text-align: center;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--light);
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
-        }
-
-        body.dark-mode .qr-instructions {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .qr-instructions {
-            background: #d1ecf1;
-        }
-
-        .payment-details {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        body.dark-mode .payment-details {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .payment-details {
-            background: #d1ecf1;
+        
+        .page-indicator {
+            font-weight: 600;
+            color: var(--primary);
         }
 
         /* Estilos para el pago */
@@ -1056,6 +997,67 @@
             color: var(--secondary);
         }
 
+        /* Estilos mejorados para el QR */
+        .qr-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 3px solid var(--primary);
+        }
+
+        .qr-code {
+            width: 300px;
+            height: 300px;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            padding: 0.5rem;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .qr-instructions {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        body.dark-mode .qr-instructions {
+            background: #3d3d3d;
+        }
+
+        body.study-mode .qr-instructions {
+            background: #d1ecf1;
+        }
+
+        .payment-details {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        body.dark-mode .payment-details {
+            background: #3d3d3d;
+        }
+
+        body.study-mode .payment-details {
+            background: #d1ecf1;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             /* Ocultar header de escritorio en móviles */
@@ -1128,6 +1130,11 @@
             .form-group {
                 flex-direction: column;
             }
+            
+            /* Ajustes para el visor de PDF en móviles */
+            .pdf-container {
+                height: 400px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1181,6 +1188,11 @@
 
             .course-stats span {
                 font-size: 0.8rem;
+            }
+            
+            /* Ajustes para el visor de PDF en móviles pequeños */
+            .pdf-container {
+                height: 300px;
             }
         }
 
@@ -1422,7 +1434,7 @@
         </div>
     </footer>
 
-    <!-- Modal de Vista Previa -->
+    <!-- Modal de Vista Previa MEJORADO -->
     <div class="modal" id="previewModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1431,64 +1443,72 @@
             </div>
             
             <div class="preview-container">
-                <!-- Libro Digital -->
-                <div class="book-preview">
-                    <!-- Página 1 - Normal -->
-                    <div class="book-page active">
-                        <h4>📚 Página 1 - Introducción</h4>
-                        <p><strong>Problema:</strong> Si Juan tiene el doble de la edad de Pedro, y dentro de 5 años la suma de sus edades será 35, ¿qué edad tiene cada uno?</p>
-                        <div class="solution">
-                            <p><strong>Solución:</strong> <br>
-                            • Edad de Pedro = x <br>
-                            • Edad de Juan = 2x <br>
-                            • Dentro de 5 años: (x+5) + (2x+5) = 35 <br>
-                            • 3x + 10 = 35 → 3x = 25 → x = 8.33 <br>
-                            • <strong>Respuesta:</strong> Pedro = 8 años, Juan = 17 años</p>
-                        </div>
+                <!-- Visor de PDF -->
+                <div class="pdf-container">
+                    <!-- Página 1 - Visible -->
+                    <div class="pdf-page active">
+                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=1" 
+                                type="application/pdf">
+                            <p>Tu navegador no soporta la visualización de PDF. 
+                               <a href="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf">Descarga el libro aquí</a>.</p>
+                        </iframe>
                     </div>
                     
-                    <!-- Página 2 - Normal -->
-                    <div class="book-page">
-                        <h4>📚 Página 2 - Ejercicios Básicos</h4>
-                        <p><strong>Problema 1:</strong> Resuelve: 2x + 5 = 15</p>
-                        <div class="solution">
-                            <p><strong>Solución:</strong> 2x = 10 → x = 5</p>
-                        </div>
-                        
-                        <p><strong>Problema 2:</strong> Si un número se multiplica por 3 y se le suma 7, el resultado es 22. ¿Cuál es el número?</p>
-                        <div class="solution">
-                            <p><strong>Solución:</strong> 3x + 7 = 22 → 3x = 15 → x = 5</p>
+                    <!-- Página 2 - Bloqueada con Blur -->
+                    <div class="pdf-page locked">
+                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=2" 
+                                type="application/pdf">
+                        </iframe>
+                        <div class="locked-overlay">
+                            <div class="lock-icon">
+                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Página 3 - Bloqueada con Blur -->
-                    <div class="book-page locked-page">
-                        <div class="blur-overlay"></div>
-                        <h4>🔒 Página 3 - Problemas Intermedios</h4>
-                        <p>Contenido premium: 15 problemas resueltos paso a paso sobre ecuaciones con fracciones y decimales.</p>
+                    <div class="pdf-page locked">
+                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=3" 
+                                type="application/pdf">
+                        </iframe>
+                        <div class="locked-overlay">
+                            <div class="lock-icon">
+                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Página 4 - Bloqueada con Blur -->
-                    <div class="book-page locked-page">
-                        <div class="blur-overlay"></div>
-                        <h4>🔒 Página 4 - Problemas Avanzados</h4>
-                        <p>Contenido premium: 20 problemas complejos con sistemas de ecuaciones y aplicaciones prácticas.</p>
+                    <div class="pdf-page locked">
+                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=4" 
+                                type="application/pdf">
+                        </iframe>
+                        <div class="locked-overlay">
+                            <div class="lock-icon">
+                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Página 5 - Bloqueada con Blur -->
-                    <div class="book-page locked-page">
-                        <div class="blur-overlay"></div>
-                        <h4>🔒 Página 5 - Exámenes Prácticos</h4>
-                        <p>Contenido premium: 3 exámenes completos con soluciones detalladas y tips para resolver rápido.</p>
+                    <div class="pdf-page locked">
+                        <iframe src="https://github.com/JhonatanNovoa/Curso-de-Planteo-de-Ecuaciones/raw/main/Libro%20Planteo%20de%20Ecuaciones.pdf#page=5" 
+                                type="application/pdf">
+                        </iframe>
+                        <div class="locked-overlay">
+                            <div class="lock-icon">
+                                <i class="fas fa-lock"></i> CONTENIDO BLOQUEADO
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="preview-controls">
-                    <button class="btn btn-outline" onclick="prevPage()">
+                <div class="pdf-controls">
+                    <button class="btn btn-outline" onclick="prevPdfPage()">
                         <i class="fas fa-chevron-left"></i> Anterior
                     </button>
                     <span class="page-indicator">Página 1 de 5</span>
-                    <button class="btn btn-outline" onclick="nextPage()">
+                    <button class="btn btn-outline" onclick="nextPdfPage()">
                         Siguiente <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -1673,6 +1693,48 @@
             
             // Guardar preferencia
             localStorage.setItem('neoStudyTheme', theme);
+        }
+
+        // Variables para control del PDF
+        let currentPdfPage = 1;
+        const totalPdfPages = 5;
+
+        // Función para abrir el modal de vista previa
+        function openPreviewModal() {
+            document.getElementById('previewModal').style.display = 'flex';
+            currentPdfPage = 1;
+            updatePdfPageIndicator();
+        }
+
+        // Función para cerrar el modal de vista previa
+        function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+
+        // Función para navegar a la página siguiente del PDF
+        function nextPdfPage() {
+            if (currentPdfPage < totalPdfPages) {
+                currentPdfPage++;
+                updatePdfPageIndicator();
+            }
+        }
+
+        // Función para navegar a la página anterior del PDF
+        function prevPdfPage() {
+            if (currentPdfPage > 1) {
+                currentPdfPage--;
+                updatePdfPageIndicator();
+            }
+        }
+
+        // Función para actualizar el indicador de página del PDF
+        function updatePdfPageIndicator() {
+            document.querySelector('.page-indicator').textContent = `Página ${currentPdfPage} de ${totalPdfPages}`;
+            
+            // Mostrar/ocultar páginas del PDF
+            document.querySelectorAll('.pdf-page').forEach((page, index) => {
+                page.classList.toggle('active', index + 1 === currentPdfPage);
+            });
         }
 
         // Datos de cursos de Matemática
@@ -1900,19 +1962,6 @@
         }
 
         // Funciones para el sistema de modales
-        let currentPage = 1;
-        const totalPages = 5;
-
-        function openPreviewModal() {
-            document.getElementById('previewModal').style.display = 'flex';
-            currentPage = 1;
-            updatePageIndicator();
-        }
-
-        function closePreviewModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-
         function showPaymentModal() {
             closePreviewModal();
             document.getElementById('paymentModal').style.display = 'flex';
@@ -1925,29 +1974,6 @@
 
         function closeUnlockedModal() {
             document.getElementById('unlockedModal').style.display = 'none';
-        }
-
-        function nextPage() {
-            if (currentPage < totalPages) {
-                currentPage++;
-                updatePageIndicator();
-            }
-        }
-
-        function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                updatePageIndicator();
-            }
-        }
-
-        function updatePageIndicator() {
-            document.querySelector('.page-indicator').textContent = `Página ${currentPage} de ${totalPages}`;
-            
-            // Mostrar/ocultar páginas
-            document.querySelectorAll('.book-page').forEach((page, index) => {
-                page.classList.toggle('active', index + 1 === currentPage);
-            });
         }
 
         // Función mejorada para validar códigos
