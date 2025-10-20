@@ -1069,16 +1069,17 @@
                 display: block;
             }
 
-            /* Ajustar margen superior del contenido principal */
+            /* CORRECCIÓN APLICADA: Aumentar margen superior del contenido principal */
             .main-container {
-                margin: 120px auto 20px;
+                margin: 140px auto 20px; /* Aumentado de 120px a 140px */
                 padding: 0 1rem;
             }
 
-            /* CORRECCIÓN PARA EL TÍTULO EN MÓVILES */
+            /* CORRECCIÓN APLICADA: Agregar margen superior al título */
             .page-title {
                 margin-bottom: 1.5rem;
                 padding: 0;
+                margin-top: 20px; /* Margen superior adicional */
             }
 
             .page-title h1 {
@@ -1131,6 +1132,15 @@
         }
 
         @media (max-width: 480px) {
+            /* CORRECCIÓN APLICADA: Ajuste para móviles pequeños */
+            .main-container {
+                margin: 130px auto 15px;
+            }
+            
+            .page-title {
+                margin-top: 15px;
+            }
+            
             .page-title h1 {
                 font-size: 1.8rem;
                 line-height: 1.1;
@@ -1176,6 +1186,15 @@
         }
 
         @media (max-width: 360px) {
+            /* CORRECCIÓN APLICADA: Ajuste final para móviles muy pequeños */
+            .main-container {
+                margin: 125px auto 10px;
+            }
+            
+            .page-title {
+                margin-top: 10px;
+            }
+            
             .page-title h1 {
                 font-size: 1.6rem;
                 line-height: 1.2;
@@ -2024,4 +2043,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
