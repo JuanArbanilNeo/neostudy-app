@@ -425,284 +425,6 @@
             justify-content: center;
         }
 
-        /* Vista de Cursos de Matemática */
-        .courses-section {
-            display: none;
-            margin-bottom: 3rem;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--light);
-        }
-
-        body.dark-mode .section-header {
-            border-bottom-color: #555;
-        }
-
-        body.study-mode .section-header {
-            border-bottom-color: #d1ecf1;
-        }
-
-        .back-button {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            transform: scale(1.1);
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            color: var(--dark);
-            margin: 0;
-            line-height: 1.2;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        body.dark-mode .section-title {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .section-title {
-            color: var(--text-study);
-        }
-
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .course-card {
-            background: var(--white);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-        }
-
-        body.dark-mode .course-card {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .course-card {
-            background: var(--card-study);
-        }
-
-        .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-        }
-
-        .course-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            z-index: 2;
-        }
-
-        .course-badge.available {
-            background: var(--success);
-            color: var(--white);
-        }
-
-        .course-badge.proceso {
-            background: var(--warning);
-            color: var(--dark);
-        }
-
-        .course-image {
-            height: 160px;
-            background: var(--bg-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 2.5rem;
-            position: relative;
-        }
-
-        .course-content {
-            padding: 1.5rem;
-        }
-
-        .course-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-            line-height: 1.3;
-        }
-
-        body.dark-mode .course-title {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .course-title {
-            color: var(--text-study);
-        }
-
-        .course-description {
-            color: var(--secondary);
-            margin-bottom: 1rem;
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-
-        .course-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-
-        /* Vista de Temas de Razonamiento Matemático */
-        .topics-section {
-            display: none;
-            margin-bottom: 3rem;
-        }
-
-        .course-info {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        body.dark-mode .course-info {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .course-info {
-            background: var(--card-study);
-        }
-
-        .course-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .course-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-        }
-
-        .course-details h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-
-        .course-stats {
-            display: flex;
-            gap: 2rem;
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-
-        .topics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .topic-card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border-left: 4px solid var(--primary);
-            position: relative;
-        }
-
-        body.dark-mode .topic-card {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .topic-card {
-            background: var(--card-study);
-        }
-
-        .topic-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-        }
-
-        .topic-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: var(--success);
-            color: var(--white);
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .topic-badge.proceso {
-            background: var(--warning);
-            color: var(--dark);
-        }
-
-        .topic-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-            margin-right: 80px;
-            line-height: 1.3;
-        }
-
-        body.dark-mode .topic-title {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .topic-title {
-            color: var(--text-study);
-        }
-
-        .topic-description {
-            color: var(--secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .topic-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--secondary);
-        }
-
         .footer {
             background: var(--dark);
             color: var(--white);
@@ -749,337 +471,25 @@
             color: #adb5bd;
         }
 
-        /* Estilos para los modales */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 2rem;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        body.dark-mode .modal-content {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .modal-content {
-            background: var(--card-study);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--light);
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--secondary);
-        }
-
-        /* NUEVOS ESTILOS PARA EL VISOR DE PDF CON GOOGLE DRIVE */
-        .pdf-preview-container {
-            width: 100%;
-            height: 500px;
-            border: 2px solid #00C4FF;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 1rem;
-            background: #f8f9fa;
-        }
-        
-        .pdf-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            transition: filter 0.3s ease;
-        }
-        
-        .pdf-preview-container.locked .pdf-iframe {
-            filter: blur(8px);
-        }
-        
-        .locked-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        
-        .preview-info {
-            background: #e8f4f8;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .drive-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 1.5rem 0;
-            flex-wrap: wrap;
-        }
-        
-        .drive-button {
-            background: #4285F4;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .drive-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
-        }
-
-        /* Estilos para el pago */
-        .payment-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .payment-steps ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .payment-steps li {
-            margin-bottom: 0.5rem;
-            line-height: 1.5;
-        }
-
-        .contact-info {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        body.dark-mode .contact-info {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .contact-info {
-            background: #d1ecf1;
-        }
-
-        .unlock-form {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--light);
-        }
-
-        .form-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .form-group input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        body.dark-mode .form-group input {
-            background: #3d3d3d;
-            border-color: #555;
-            color: var(--text-dark);
-        }
-
-        body.study-mode .form-group input {
-            background: var(--card-study);
-            border-color: #b8daff;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
-        }
-
-        /* Estilos para curso desbloqueado */
-        .unlocked-content {
-            text-align: center;
-        }
-
-        .success-icon {
-            font-size: 4rem;
-            color: var(--success);
-            margin-bottom: 1.5rem;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .benefit-card {
-            background: var(--light);
-            padding: 1.5rem 1rem;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        body.dark-mode .benefit-card {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .benefit-card {
-            background: #d1ecf1;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .benefit-card i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .benefit-card h5 {
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .benefit-card p {
-            font-size: 0.8rem;
-            color: var(--secondary);
-        }
-
-        /* Estilos mejorados para el QR */
-        .qr-container {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 3px solid var(--primary);
-        }
-
-        .qr-code {
-            width: 300px;
-            height: 300px;
-            background: var(--white);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            padding: 0.5rem;
-        }
-
-        .qr-code img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-
-        .qr-instructions {
-            text-align: center;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--light);
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
-        }
-
-        body.dark-mode .qr-instructions {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .qr-instructions {
-            background: #d1ecf1;
-        }
-
-        .payment-details {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        body.dark-mode .payment-details {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .payment-details {
-            background: #d1ecf1;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
-            /* Ocultar header de escritorio en móviles */
             .header {
                 display: none;
             }
 
-            /* Mostrar header móvil */
             .mobile-header {
                 display: block;
             }
 
-            /* CORRECCIÓN APLICADA: Aumentar margen superior del contenido principal */
             .main-container {
-                margin: 140px auto 20px; /* Aumentado de 120px a 140px */
+                margin: 140px auto 20px;
                 padding: 0 1rem;
             }
 
-            /* CORRECCIÓN APLICADA: Agregar margen superior al título */
             .page-title {
                 margin-bottom: 1.5rem;
                 padding: 0;
-                margin-top: 20px; /* Margen superior adicional */
+                margin-top: 20px;
             }
 
             .page-title h1 {
@@ -1099,50 +509,12 @@
                 margin: 0;
             }
 
-            .section-title {
-                font-size: 1.5rem;
-                line-height: 1.2;
-            }
-
-            .areas-grid, .courses-grid, .topics-grid {
+            .areas-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .course-stats {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .payment-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .benefits-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .qr-code {
-                width: 280px;
-                height: 280px;
-            }
-            
-            .form-group {
-                flex-direction: column;
-            }
-            
-            /* Ajustes para el visor de PDF en móviles */
-            .pdf-preview-container {
-                height: 400px;
-            }
-            
-            .drive-buttons {
-                flex-direction: column;
-                align-items: center;
             }
         }
 
         @media (max-width: 480px) {
-            /* CORRECCIÓN APLICADA: Ajuste para móviles pequeños */
             .main-container {
                 margin: 130px auto 15px;
             }
@@ -1164,15 +536,6 @@
                 font-size: 0.9rem;
             }
 
-            .section-title {
-                font-size: 1.3rem;
-            }
-
-            .qr-code {
-                width: 250px;
-                height: 250px;
-            }
-            
             .nav-menu {
                 gap: 1rem;
             }
@@ -1180,28 +543,9 @@
             .nav-item span {
                 display: none;
             }
-
-            .course-details h3 {
-                font-size: 1.3rem;
-            }
-
-            .course-stats {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-
-            .course-stats span {
-                font-size: 0.8rem;
-            }
-            
-            /* Ajustes para el visor de PDF en móviles pequeños */
-            .pdf-preview-container {
-                height: 300px;
-            }
         }
 
         @media (max-width: 360px) {
-            /* CORRECCIÓN APLICADA: Ajuste final para móviles muy pequeños */
             .main-container {
                 margin: 125px auto 10px;
             }
@@ -1223,10 +567,6 @@
 
             .page-title p {
                 font-size: 0.85rem;
-            }
-
-            .section-title {
-                font-size: 1.2rem;
             }
 
             .mobile-nav-item {
@@ -1317,7 +657,7 @@
         <!-- Grid de Áreas (Vista Principal) -->
         <div class="areas-grid" id="areasView">
             <!-- Matemática -->
-            <div class="area-card" onclick="showMathCourses()">
+            <div class="area-card" onclick="goToMatematica()">
                 <div class="area-badge available">DISPONIBLE</div>
                 <div class="area-header">
                     <div class="area-icon">
@@ -1370,50 +710,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Vista de Cursos de Matemática -->
-        <div class="courses-section" id="coursesView">
-            <div class="section-header">
-                <button class="back-button" onclick="showAreas()">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <h2 class="section-title">Cursos de Matemática - Preuniversitario</h2>
-            </div>
-            <div class="courses-grid" id="coursesGrid">
-                <!-- Los cursos se cargan dinámicamente aquí -->
-            </div>
-        </div>
-
-        <!-- Vista de Temas de Razonamiento Matemático -->
-        <div class="topics-section" id="topicsView">
-            <div class="section-header">
-                <button class="back-button" onclick="showMathCourses()">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <h2 class="section-title">Razonamiento Matemático</h2>
-            </div>
-
-            <div class="course-info">
-                <div class="course-header">
-                    <div class="course-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <div class="course-details">
-                        <h3>Razonamiento Matemático</h3>
-                        <p>Curso completo de preparación preuniversitaria</p>
-                        <div class="course-stats">
-                            <span><i class="fas fa-clock"></i> 30 horas totales</span>
-                            <span><i class="fas fa-play-circle"></i> 24 lecciones</span>
-                            <span><i class="fas fa-signal"></i> Nivel Intermedio</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="topics-grid" id="topicsGrid">
-                <!-- Los temas se cargan dinámicamente aquí -->
-            </div>
-        </div>
     </div>
 
     <footer class="footer">
@@ -1438,185 +734,6 @@
         </div>
     </footer>
 
-    <!-- Modal de Vista Previa ACTUALIZADO CON TU PDF -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Vista Previa - Libro Planteo de Ecuaciones</h3>
-                <button class="close-modal" onclick="closePreviewModal()">&times;</button>
-            </div>
-            
-            <div class="preview-container">
-                <!-- Visor de PDF con Google Drive -->
-                <div class="pdf-preview-container locked" id="pdfPreview">
-                    <iframe 
-                        src="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/preview" 
-                        class="pdf-iframe"
-                        allow="autoplay">
-                    </iframe>
-                    <div class="locked-message">
-                        <i class="fas fa-lock"></i><br>
-                        VISTA PREVIA<br>
-                        <small>Desbloquea el curso para acceso completo</small>
-                    </div>
-                </div>
-                
-                <div class="preview-info">
-                    <p><strong>📚 Contenido del libro:</strong></p>
-                    <p>• 50+ problemas resueltos paso a paso</p>
-                    <p>• Ejercicios básicos, intermedios y avanzados</p>
-                    <p>• 3 exámenes prácticos con soluciones</p>
-                    <p>• Tips y estrategias de resolución rápida</p>
-                </div>
-                
-                <div class="drive-buttons">
-                    <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
-                       class="drive-button" target="_blank">
-                        <i class="fab fa-google-drive"></i> Ver en Google Drive
-                    </a>
-                    <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
-                       class="btn btn-outline">
-                        <i class="fas fa-download"></i> Descargar PDF
-                    </a>
-                </div>
-                
-                <div class="preview-actions">
-                    <button class="btn btn-primary btn-block" onclick="showPaymentModal()">
-                        <i class="fas fa-lock-open"></i> Desbloquear Curso Completo - S/ 6.00
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Pago MEJORADO -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Desbloquear Curso Completo</h3>
-                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
-            </div>
-            
-            <div class="payment-container">
-                <div class="payment-info">
-                    <h4>💰 Pago por Yape</h4>
-                    
-                    <div class="qr-container">
-                        <h5>📱 Escanea este código QR con Yape:</h5>
-                        <div class="qr-code">
-                            <!-- AQUÍ VA TU QR REAL - MÁS GRANDE Y CLARO -->
-                            <img src="imagen-qr-yape.jpg" alt="QR Code Yape - Escanear con la app Yape">
-                        </div>
-                        <p class="qr-instructions">
-                            <strong>💡 Cómo escanear:</strong><br>
-                            1. Abre la app <strong>Yape</strong><br>
-                            2. Toca <strong>"Escanear QR"</strong><br>
-                            3. Apunta la cámara al código<br>
-                            4. Confirma el pago de <strong>S/ 6.00</strong>
-                        </p>
-                    </div>
-                    
-                    <div class="payment-details">
-                        <h5>📞 Opción alternativa:</h5>
-                        <p><strong>Número de Yape:</strong> 51 973441252</p>
-                        <p><strong>Monto a pagar:</strong> S/ 6.00</p>
-                        <p><strong>Concepto:</strong> Planteo de Ecuaciones</p>
-                    </div>
-                </div>
-                
-                <div class="payment-steps">
-                    <h4>📝 Pasos a seguir después del pago:</h4>
-                    <ol>
-                        <li><strong>Realiza el pago</strong> por Yape (QR o número)</li>
-                        <li><strong>Toma captura</strong> del comprobante de pago</li>
-                        <li><strong>Envía la captura</strong> por WhatsApp al: <strong>51 973441252</strong></li>
-                        <li><strong>Recibirás</strong> tu código de acceso único por WhatsApp en 5-15 minutos</li>
-                    </ol>
-                    
-                    <div class="contact-info">
-                        <p><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> 51 973441252</p>
-                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> neostudy@gmail.com</p>
-                        <p><i class="fas fa-clock"></i> <strong>Horario de atención:</strong> 8:00 AM - 8:00 PM</p>
-                    </div>
-                </div>
-                
-                <div class="unlock-form">
-                    <h4>🔑 ¿Ya tienes tu código?</h4>
-                    <div class="form-group">
-                        <input type="text" id="accessCode" placeholder="Ingresa tu código de acceso (ej: MATH7X9)">
-                        <button class="btn btn-primary" onclick="validateAccessCode()">
-                            <i class="fas fa-key"></i> Desbloquear
-                        </button>
-                    </div>
-                    <p style="font-size: 0.8rem; color: var(--secondary); margin-top: 0.5rem;">
-                        El código tiene 6-7 caracteres (ej: MATH7X9, STUDY4K2)
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Curso Desbloqueado ACTUALIZADO -->
-    <div class="modal" id="unlockedModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🎉 ¡Curso Desbloqueado!</h3>
-                <button class="close-modal" onclick="closeUnlockedModal()">&times;</button>
-            </div>
-            
-            <div class="unlocked-content">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                
-                <h4>¡Felicidades! Ahora tienes acceso completo</h4>
-                
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <i class="fas fa-book"></i>
-                        <h5>Libro Completo</h5>
-                        <p>PDF sin restricciones</p>
-                    </div>
-                    <div class="benefit-card">
-                        <i class="fas fa-video"></i>
-                        <h5>Clases en Vivo</h5>
-                        <p>Viernes, Sábados y Domingos</p>
-                    </div>
-                    <div class="benefit-card">
-                        <i class="fas fa-play-circle"></i>
-                        <h5>Clases Grabadas</h5>
-                        <p>Acceso 24/7</p>
-                    </div>
-                    <div class="benefit-card">
-                        <i class="fas fa-headset"></i>
-                        <h5>Soporte</h5>
-                        <p>Ayuda personalizada</p>
-                    </div>
-                </div>
-                
-                <div style="margin: 2rem 0;">
-                    <h5>📚 Acceso inmediato al libro:</h5>
-                    <div class="drive-buttons">
-                        <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view" 
-                           class="drive-button" target="_blank">
-                            <i class="fab fa-google-drive"></i> Ver Libro Online
-                        </a>
-                        <a href="https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl" 
-                           class="btn btn-primary">
-                            <i class="fas fa-download"></i> Descargar PDF
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="unlocked-actions">
-                    <button class="btn btn-primary btn-block" onclick="closeUnlockedModal()">
-                        <i class="fas fa-play"></i> Comenzar a Estudiar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         // Sistema de temas mejorado - UN SOLO BOTÓN
         let currentTheme = 'normal';
@@ -1633,178 +750,37 @@
         };
 
         function toggleTheme() {
-            // Encontrar el índice del tema actual
             const currentIndex = themes.indexOf(currentTheme);
-            // Calcular el siguiente tema (cíclico)
             const nextIndex = (currentIndex + 1) % themes.length;
             const nextTheme = themes[nextIndex];
-            
-            // Aplicar el nuevo tema
             setTheme(nextTheme);
         }
 
         function setTheme(theme) {
-            // Remover todas las clases de tema
             document.body.classList.remove('normal-mode', 'study-mode', 'dark-mode');
             
-            // Aplicar la clase del nuevo tema si no es 'normal'
             if (theme !== 'normal') {
                 document.body.classList.add(theme + '-mode');
             }
             
-            // Actualizar el tema actual
             currentTheme = theme;
             
-            // Actualizar iconos en desktop y móvil
             const desktopIcon = document.getElementById('themeIcon');
             const mobileIcon = document.getElementById('mobileThemeIcon');
             const tooltip = document.getElementById('themeTooltip');
             
-            // Remover todas las clases de icono
             desktopIcon.className = 'fas';
             mobileIcon.className = 'fas';
             
-            // Agregar la clase del nuevo icono
             desktopIcon.classList.add(themeIcons[theme]);
             mobileIcon.classList.add(themeIcons[theme]);
             
-            // Actualizar tooltip
             if (tooltip) {
                 tooltip.textContent = themeNames[theme];
             }
             
-            // Guardar preferencia
             localStorage.setItem('neoStudyTheme', theme);
         }
-
-        // Función para abrir el modal de vista previa
-        function openPreviewModal() {
-            document.getElementById('previewModal').style.display = 'flex';
-        }
-
-        // Función para cerrar el modal de vista previa
-        function closePreviewModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-
-        // Datos de cursos de Matemática
-        const mathCourses = [
-            {
-                id: 1,
-                title: "Razonamiento Matemático",
-                description: "Desarrolla tu pensamiento lógico y habilidades para resolver problemas matemáticos complejos.",
-                duration: "30 horas",
-                lessons: 24,
-                icon: "fa-brain",
-                available: true,
-                topics: [
-                    {
-                        id: 1,
-                        title: "Planteo de Ecuaciones",
-                        description: "Aprende a plantear y resolver ecuaciones matemáticas a partir de enunciados verbales.",
-                        duration: "6 horas",
-                        lessons: 8,
-                        available: true
-                    },
-                    {
-                        id: 2,
-                        title: "Problemas de Edades",
-                        description: "Domina la resolución de problemas relacionados con edades de personas.",
-                        duration: "4 horas",
-                        lessons: 5,
-                        available: false
-                    },
-                    {
-                        id: 3,
-                        title: "Móviles y Tiempo",
-                        description: "Resuelve problemas de velocidad, tiempo y distancia aplicados a situaciones de movimiento.",
-                        duration: "5 horas",
-                        lessons: 6,
-                        available: false
-                    },
-                    {
-                        id: 4,
-                        title: "Tanto por Ciento",
-                        description: "Aprende sobre porcentajes, descuentos, aumentos sucesivos y aplicaciones comerciales.",
-                        duration: "4 horas",
-                        lessons: 5,
-                        available: false
-                    }
-                ]
-            },
-            {
-                id: 2,
-                title: "Aritmética",
-                description: "Domina los fundamentos de los números, operaciones básicas y propiedades numéricas.",
-                duration: "25 horas",
-                lessons: 20,
-                icon: "fa-calculator",
-                available: false
-            },
-            {
-                id: 3,
-                title: "Álgebra",
-                description: "Profundiza en expresiones algebraicas, ecuaciones y sistemas de ecuaciones.",
-                duration: "28 horas",
-                lessons: 22,
-                icon: "fa-superscript",
-                available: false
-            }
-        ];
-
-        // 50 CÓDIGOS MEZCLADOS - ÚNICOS Y SEGUROS
-        const codigosValidos = {
-            "MATH7X9": { usado: false, fecha: "" },
-            "STUDY4K2": { usado: false, fecha: "" },
-            "NEO8P5R": { usado: false, fecha: "" },
-            "LEARN3V8": { usado: false, fecha: "" },
-            "CODE6M1T": { usado: false, fecha: "" },
-            "EDU9Z4X": { usado: false, fecha: "" },
-            "BOOK2L7Q": { usado: false, fecha: "" },
-            "PREP5N3J": { usado: false, fecha: "" },
-            "MIND8K6W": { usado: false, fecha: "" },
-            "BRAIN1F9": { usado: false, fecha: "" },
-            "QUIZ7S2P": { usado: false, fecha: "" },
-            "TEST4H8M": { usado: false, fecha: "" },
-            "EXAM9D3C": { usado: false, fecha: "" },
-            "SOLVE6V1": { usado: false, fecha: "" },
-            "LOGIC8X5": { usado: false, fecha: "" },
-            "MATH2T7K": { usado: false, fecha: "" },
-            "STUDY5Q9": { usado: false, fecha: "" },
-            "NEO3R6J": { usado: false, fecha: "" },
-            "LEARN7M4": { usado: false, fecha: "" },
-            "CODE1P8W": { usado: false, fecha: "" },
-            "EDU4X2T": { usado: false, fecha: "" },
-            "BOOK9K5": { usado: false, fecha: "" },
-            "PREP6V3Q": { usado: false, fecha: "" },
-            "MIND2H7": { usado: false, fecha: "" },
-            "BRAIN8S1": { usado: false, fecha: "" },
-            "QUIZ5D9M": { usado: false, fecha: "" },
-            "TEST3F6C": { usado: false, fecha: "" },
-            "EXAM7Z2": { usado: false, fecha: "" },
-            "SOLVE4N8": { usado: false, fecha: "" },
-            "LOGIC1T5": { usado: false, fecha: "" },
-            "MATH9Q7": { usado: false, fecha: "" },
-            "STUDY6K3": { usado: false, fecha: "" },
-            "NEO2X8J": { usado: false, fecha: "" },
-            "LEARN5M1": { usado: false, fecha: "" },
-            "CODE8V4": { usado: false, fecha: "" },
-            "EDU3S6T": { usado: false, fecha: "" },
-            "BOOK7H2": { usado: false, fecha: "" },
-            "PREP4D9": { usado: false, fecha: "" },
-            "MIND1Z5": { usado: false, fecha: "" },
-            "BRAIN6F3": { usado: false, fecha: "" },
-            "QUIZ9N7": { usado: false, fecha: "" },
-            "TEST5T2": { usado: false, fecha: "" },
-            "EXAM8K4": { usado: false, fecha: "" },
-            "SOLVE3Q6": { usado: false, fecha: "" },
-            "LOGIC7M9": { usado: false, fecha: "" },
-            "MATH4V1": { usado: false, fecha: "" },
-            "STUDY1X7": { usado: false, fecha: "" },
-            "NEO6S3": { usado: false, fecha: "" },
-            "LEARN8H5": { usado: false, fecha: "" },
-            "CODE2D9": { usado: false, fecha: "" }
-        };
 
         // Datos del usuario
         function loadUserData() {
@@ -1814,7 +790,6 @@
                     document.getElementById('userAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
                     document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
                 } else {
-                    // Mostrar iniciales si no hay foto
                     const initials = userData.nombre ? userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase() : 'US';
                     document.getElementById('mobileUserAvatar').textContent = initials;
                 }
@@ -1830,177 +805,14 @@
             window.location.href = 'modulo3_perfil.html';
         }
 
-        // Mostrar cursos de Matemática
-        function showMathCourses() {
-            const areasView = document.getElementById('areasView');
-            const coursesView = document.getElementById('coursesView');
-            
-            // Ocultar áreas, mostrar cursos
-            areasView.style.display = 'none';
-            coursesView.style.display = 'block';
-            
-            // Renderizar cursos
-            renderCourses(mathCourses);
-        }
-
-        // Volver a la vista de áreas
-        function showAreas() {
-            document.getElementById('areasView').style.display = 'grid';
-            document.getElementById('coursesView').style.display = 'none';
-            document.getElementById('topicsView').style.display = 'none';
-        }
-
-        // Renderizar cursos
-        function renderCourses(courses) {
-            const coursesGrid = document.getElementById('coursesGrid');
-            
-            coursesGrid.innerHTML = courses.map(course => `
-                <div class="course-card" onclick="${course.available ? `showCourseTopics(${course.id})` : 'showComingSoon()'}">
-                    ${course.available ? 
-                        '<div class="course-badge available">DISPONIBLE</div>' : 
-                        '<div class="course-badge proceso">PRÓXIMAMENTE</div>'
-                    }
-                    <div class="course-image">
-                        <i class="fas ${course.icon}"></i>
-                    </div>
-                    <div class="course-content">
-                        <h3 class="course-title">${course.title}</h3>
-                        <p class="course-description">${course.description}</p>
-                        <div class="course-meta">
-                            <span><i class="fas fa-clock"></i> ${course.duration}</span>
-                            <span><i class="fas fa-play-circle"></i> ${course.lessons} lecciones</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Mostrar temas de un curso
-        function showCourseTopics(courseId) {
-            const coursesView = document.getElementById('coursesView');
-            const topicsView = document.getElementById('topicsView');
-            
-            // Ocultar cursos, mostrar temas
-            coursesView.style.display = 'none';
-            topicsView.style.display = 'block';
-            
-            // Encontrar el curso
-            const course = mathCourses.find(c => c.id === courseId);
-            if (course) {
-                renderTopics(course.topics || []);
-            }
-        }
-
-        // Renderizar temas
-        function renderTopics(topics) {
-            const topicsGrid = document.getElementById('topicsGrid');
-            
-            topicsGrid.innerHTML = topics.map(topic => `
-                <div class="topic-card" onclick="${topic.available ? `openTopic(${topic.id})` : 'showComingSoon()'}">
-                    ${topic.available ? 
-                        '<div class="topic-badge">DISPONIBLE</div>' : 
-                        '<div class="topic-badge proceso">PRÓXIMAMENTE</div>'
-                    }
-                    <h3 class="topic-title">${topic.title}</h3>
-                    <p class="topic-description">${topic.description}</p>
-                    <div class="topic-meta">
-                        <span><i class="fas fa-clock"></i> ${topic.duration}</span>
-                        <span><i class="fas fa-play-circle"></i> ${topic.lessons} lecciones</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Funciones para el sistema de modales
-        function showPaymentModal() {
-            closePreviewModal();
-            document.getElementById('paymentModal').style.display = 'flex';
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-            document.getElementById('accessCode').value = '';
-        }
-
-        function closeUnlockedModal() {
-            document.getElementById('unlockedModal').style.display = 'none';
-        }
-
-        // Función mejorada para validar códigos
-        function validateAccessCode() {
-            const code = document.getElementById('accessCode').value.trim().toUpperCase();
-            
-            if (!code) {
-                alert('❌ Por favor ingresa tu código de acceso');
-                return;
-            }
-
-            if (codigosValidos[code]) {
-                if (!codigosValidos[code].usado) {
-                    // Código válido y no usado - DESBLOQUEAR
-                    codigosValidos[code].usado = true;
-                    codigosValidos[code].fecha = new Date().toLocaleDateString();
-                    
-                    localStorage.setItem('cursoPlanteoEcuaciones', 'desbloqueado');
-                    localStorage.setItem('codigoUsado', code);
-                    
-                    closePaymentModal();
-                    showUnlockedModal();
-                    
-                    // Mostrar mensaje de éxito
-                    setTimeout(() => {
-                        alert('✅ ¡Curso desbloqueado correctamente! Ahora tienes acceso completo al libro PDF, clases en vivo y grabadas.');
-                    }, 1000);
-                    
-                } else {
-                    alert('❌ Este código ya fue utilizado. Contacta a soporte: neostudy@gmail.com');
-                }
-            } else {
-                alert('❌ Código inválido. Verifica el código o contacta a neostudy@gmail.com');
-            }
-        }
-
-        function showUnlockedModal() {
-            document.getElementById('unlockedModal').style.display = 'flex';
-        }
-
-        // Abrir tema disponible (solo Planteo de Ecuaciones)
-        function openTopic(topicId) {
-            if (topicId === 1) { // Planteo de Ecuaciones
-                const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
-                
-                if (tieneAcceso) {
-                    // Si está desbloqueado, abrir el PDF completo
-                    window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view', '_blank');
-                } else {
-                    openPreviewModal();
-                }
-            } else {
-                showComingSoon();
-            }
-        }
-
-        // Mensaje para contenido en proceso
-        function showComingSoon() {
-            alert('⏳ ¡Próximamente! Estamos trabajando en este contenido.');
-        }
-
-        // Cerrar modales al hacer click fuera
-        window.onclick = function(event) {
-            const modals = ['previewModal', 'paymentModal', 'unlockedModal'];
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                if (event.target === modal) {
-                    eval(`close${modalId.charAt(0).toUpperCase() + modalId.slice(1)}()`);
-                }
-            });
+        function goToMatematica() {
+            window.location.href = 'modulo4_matematica.html';
         }
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             
-            // Cargar tema guardado
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
 
@@ -2012,5 +824,4 @@
         });
     </script>
 </body>
-    </html>
-
+</html>
