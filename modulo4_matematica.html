@@ -1443,22 +1443,24 @@
                 </div>
                 
                 <div style="margin: 2rem 0;">
-                    <h5>📚 Acceso inmediato al libro:</h5>
+                    <h5>📚 Acceso inmediato al material completo:</h5>
                     <div class="drive-buttons">
-                        <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view" 
+                        <a href="https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link" 
                            class="drive-button" target="_blank">
-                            <i class="fab fa-google-drive"></i> Ver Libro Online
-                        </a>
-                        <a href="https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl" 
-                           class="btn btn-primary">
-                            <i class="fas fa-download"></i> Descargar PDF
+                            <i class="fab fa-google-drive"></i> Acceder a Todo el Material
                         </a>
                     </div>
+                    <p style="font-size: 0.9rem; color: var(--secondary); margin-top: 1rem;">
+                        📁 Encontrarás: Libros completos, ejercicios resueltos, material adicional y más.
+                    </p>
                 </div>
                 
                 <div class="unlocked-actions">
-                    <button class="btn btn-primary btn-block" onclick="closeUnlockedModal()">
-                        <i class="fas fa-play"></i> Comenzar a Estudiar
+                    <button class="btn btn-primary btn-block" onclick="accessFullMaterial()">
+                        <i class="fas fa-external-link-alt"></i> Abrir Material Completo
+                    </button>
+                    <button class="btn btn-outline btn-block" onclick="closeUnlockedModal()">
+                        <i class="fas fa-play"></i> Continuar Explorando
                     </button>
                 </div>
             </div>
@@ -1588,6 +1590,18 @@
             }
         ];
 
+        // SISTEMA MEJORADO DE CÓDIGOS ÚNICOS
+        // Cargar códigos usados desde localStorage
+        function loadUsedCodes() {
+            const usedCodes = localStorage.getItem('neoStudyUsedCodes');
+            return usedCodes ? JSON.parse(usedCodes) : {};
+        }
+
+        // Guardar códigos usados en localStorage
+        function saveUsedCodes(usedCodes) {
+            localStorage.setItem('neoStudyUsedCodes', JSON.stringify(usedCodes));
+        }
+
         // 50 CÓDIGOS MEZCLADOS - ÚNICOS Y SEGUROS
         const codigosValidos = {
             "MATH7X9": { usado: false, fecha: "" },
@@ -1669,6 +1683,11 @@
             window.location.href = 'modulo4_cursos.html';
         }
 
+        // Acceso al material completo
+        function accessFullMaterial() {
+            window.open('https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link', '_blank');
+        }
+
         // Mostrar cursos de Matemática
         function showMathCourses() {
             renderCourses(mathCourses);
@@ -1748,7 +1767,7 @@
             document.getElementById('unlockedModal').style.display = 'none';
         }
 
-        // Función mejorada para validar códigos
+        // FUNCIÓN MEJORADA PARA VALIDAR CÓDIGOS ÚNICOS
         function validateAccessCode() {
             const code = document.getElementById('accessCode').value.trim().toUpperCase();
             
@@ -1757,23 +1776,44 @@
                 return;
             }
 
+            // Cargar códigos usados
+            const usedCodes = loadUsedCodes();
+
             if (codigosValidos[code]) {
+                // Verificar si el código ya fue usado (en localStorage)
+                if (usedCodes[code]) {
+                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
+                    return;
+                }
+
+                // Verificar si está marcado como usado en el objeto actual
                 if (!codigosValidos[code].usado) {
+                    // Marcar como usado en el objeto actual
                     codigosValidos[code].usado = true;
                     codigosValidos[code].fecha = new Date().toLocaleDateString();
                     
+                    // Guardar en localStorage como código usado
+                    usedCodes[code] = {
+                        usado: true,
+                        fecha: new Date().toLocaleString(),
+                        usuario: localStorage.getItem('usuarioNeoStudy') ? JSON.parse(localStorage.getItem('usuarioNeoStudy')).nombre || 'Anónimo' : 'Anónimo'
+                    };
+                    saveUsedCodes(usedCodes);
+                    
+                    // Marcar curso como desbloqueado para este usuario
                     localStorage.setItem('cursoPlanteoEcuaciones', 'desbloqueado');
                     localStorage.setItem('codigoUsado', code);
+                    localStorage.setItem('fechaDesbloqueo', new Date().toLocaleString());
                     
                     closePaymentModal();
                     showUnlockedModal();
                     
                     setTimeout(() => {
-                        alert('✅ ¡Curso desbloqueado correctamente! Ahora tienes acceso completo al libro PDF, clases en vivo y grabadas.');
+                        alert('✅ ¡Curso desbloqueado correctamente! Ahora tienes acceso completo a todo el material.');
                     }, 1000);
                     
                 } else {
-                    alert('❌ Este código ya fue utilizado. Contacta a soporte: neostudy@gmail.com');
+                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
                 }
             } else {
                 alert('❌ Código inválido. Verifica el código o contacta a neostudy@gmail.com');
@@ -1790,7 +1830,8 @@
                 const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
                 
                 if (tieneAcceso) {
-                    window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view', '_blank');
+                    // Si está desbloqueado, abrir el Google Drive completo
+                    accessFullMaterial();
                 } else {
                     openPreviewModal();
                 }
@@ -1821,6 +1862,12 @@
             
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
+
+            // Verificar si el usuario ya tiene acceso
+            const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
+            if (tieneAcceso) {
+                console.log('✅ Usuario ya tiene acceso al curso');
+            }
 
             // Cargar cursos al iniciar
             showMathCourses();
