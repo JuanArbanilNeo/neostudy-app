@@ -734,6 +734,7 @@
         
         .pdf-preview-container.locked .pdf-iframe {
             filter: blur(8px);
+            pointer-events: none;
         }
         
         .locked-message {
@@ -783,6 +784,22 @@
         .drive-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+        }
+        
+        /* NUEVOS ESTILOS PARA BOTONES BLOQUEADOS */
+        .drive-button.locked,
+        .btn-outline.locked {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        .drive-button.locked:hover,
+        .btn-outline.locked:hover {
+            transform: none;
+            box-shadow: none;
         }
 
         /* Estilos para el pago */
@@ -1319,11 +1336,11 @@
                 
                 <div class="drive-buttons">
                     <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
-                       class="drive-button" target="_blank">
+                       class="drive-button locked" id="driveViewButton" target="_blank">
                         <i class="fab fa-google-drive"></i> Ver en Google Drive
                     </a>
                     <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
-                       class="btn btn-outline">
+                       class="btn btn-outline locked" id="downloadButton">
                         <i class="fas fa-download"></i> Descargar PDF
                     </a>
                 </div>
@@ -1518,11 +1535,71 @@
         // Función para abrir el modal de vista previa
         function openPreviewModal() {
             document.getElementById('previewModal').style.display = 'flex';
+            
+            // Verificar si el usuario ya tiene acceso
+            const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
+            
+            if (tieneAcceso) {
+                // Si ya tiene acceso, desbloquear todo
+                unlockContent();
+            } else {
+                // Si no tiene acceso, bloquear todo
+                lockContent();
+            }
         }
 
         // Función para cerrar el modal de vista previa
         function closePreviewModal() {
             document.getElementById('previewModal').style.display = 'none';
+        }
+
+        // Función para bloquear el contenido
+        function lockContent() {
+            const pdfPreview = document.getElementById('pdfPreview');
+            const driveViewButton = document.getElementById('driveViewButton');
+            const downloadButton = document.getElementById('downloadButton');
+            
+            // Aplicar bloqueo al visor de PDF
+            pdfPreview.classList.add('locked');
+            
+            // Aplicar bloqueo a los botones
+            driveViewButton.classList.add('locked');
+            downloadButton.classList.add('locked');
+            
+            // Cambiar comportamiento de los enlaces
+            driveViewButton.href = "javascript:void(0)";
+            downloadButton.href = "javascript:void(0)";
+            
+            // Agregar eventos de clic para mostrar mensaje
+            driveViewButton.onclick = function() {
+                alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso con tu código de acceso.');
+            };
+            
+            downloadButton.onclick = function() {
+                alert('🔒 Para descargar el PDF, primero debes desbloquear el curso con tu código de acceso.');
+            };
+        }
+
+        // Función para desbloquear el contenido
+        function unlockContent() {
+            const pdfPreview = document.getElementById('pdfPreview');
+            const driveViewButton = document.getElementById('driveViewButton');
+            const downloadButton = document.getElementById('downloadButton');
+            
+            // Quitar bloqueo al visor de PDF
+            pdfPreview.classList.remove('locked');
+            
+            // Quitar bloqueo a los botones
+            driveViewButton.classList.remove('locked');
+            downloadButton.classList.remove('locked');
+            
+            // Restaurar enlaces originales
+            driveViewButton.href = "https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing";
+            downloadButton.href = "https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing";
+            
+            // Restaurar comportamiento normal
+            driveViewButton.onclick = null;
+            downloadButton.onclick = null;
         }
 
         // Datos de cursos de Matemática
@@ -1808,6 +1885,9 @@
                     closePaymentModal();
                     showUnlockedModal();
                     
+                    // Desbloquear el contenido en el modal de vista previa
+                    unlockContent();
+                    
                     setTimeout(() => {
                         alert('✅ ¡Curso desbloqueado correctamente! Ahora tienes acceso completo a todo el material.');
                     }, 1000);
@@ -1874,4 +1954,4 @@
         });
     </script>
 </body>
-        </html>
+    </html>
