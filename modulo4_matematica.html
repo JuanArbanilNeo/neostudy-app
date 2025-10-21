@@ -6,7 +6,6 @@
     <title>Neo Study - Matemática</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* (Todos los estilos CSS anteriores se mantienen igual) */
         * {
             margin: 0;
             padding: 0;
@@ -39,44 +38,1111 @@
             --card-dark: #2d2d2d;
         }
 
-        /* (Todos los demás estilos se mantienen igual) */
-        /* ... */
+        /* Modo Normal (por defecto) */
+        body {
+            background: var(--bg-normal);
+            color: var(--text-normal);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
 
-        /* NUEVO ESTILO PARA EL BOTÓN DE SALIR */
-        .exit-course-btn {
-            background: var(--danger);
+        body.study-mode {
+            background: var(--bg-study);
+            color: var(--text-study);
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .header {
+            background: var(--bg-gradient);
             color: var(--white);
-            border: none;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: var(--white);
+            text-decoration: none;
             padding: 0.5rem 1rem;
             border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .theme-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        .theme-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--white);
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .theme-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .theme-btn .tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== HEADER PARA MÓVIL ===== */
+        .mobile-header {
+            display: none;
+            background: var(--bg-gradient);
+            color: var(--white);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+        }
+
+        .mobile-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .mobile-theme-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .mobile-theme-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .mobile-nav-bottom {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            background: var(--bg-gradient);
+        }
+
+        .mobile-nav-item {
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-nav-item.active, .mobile-nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 100px auto 40px;
+            padding: 0 1rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 0.5rem;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow: visible;
+            height: auto;
+        }
+
+        .page-title p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        /* Vista de Cursos de Matemática */
+        .courses-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        body.dark-mode .section-header {
+            border-bottom-color: #555;
+        }
+
+        body.study-mode .section-header {
+            border-bottom-color: #d1ecf1;
+        }
+
+        .back-button {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin: 0;
+            line-height: 1.2;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        body.dark-mode .section-title {
+            color: var(--text-dark);
+        }
+
+        body.study-mode .section-title {
+            color: var(--text-study);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        body.dark-mode .course-card {
+            background: var(--card-dark);
+        }
+
+        body.study-mode .course-card {
+            background: var(--card-study);
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .course-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .course-badge.available {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .course-badge.proceso {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .course-image {
+            height: 160px;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+        }
+
+        .course-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        body.dark-mode .course-title {
+            color: var(--text-dark);
+        }
+
+        body.study-mode .course-title {
+            color: var(--text-study);
+        }
+
+        .course-description {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Vista de Temas de Razonamiento Matemático */
+        .topics-section {
+            display: none;
+            margin-bottom: 3rem;
+        }
+
+        .course-info {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .course-info {
+            background: var(--card-dark);
+        }
+
+        body.study-mode .course-info {
+            background: var(--card-study);
+        }
+
+        .course-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .course-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .course-stats {
+            display: flex;
+            gap: 2rem;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .topic-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 4px solid var(--primary);
+            position: relative;
+        }
+
+        body.dark-mode .topic-card {
+            background: var(--card-dark);
+        }
+
+        body.study-mode .topic-card {
+            background: var(--card-study);
+        }
+
+        .topic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .topic-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--success);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .topic-badge.proceso {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .topic-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            margin-right: 80px;
+            line-height: 1.3;
+        }
+
+        body.dark-mode .topic-title {
+            color: var(--text-dark);
+        }
+
+        body.study-mode .topic-title {
+            color: var(--text-study);
+        }
+
+        .topic-description {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .topic-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-left: 1rem;
         }
 
-        .exit-course-btn:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-        }
-
-        .user-access-info {
-            background: var(--success);
+        .btn-primary {
+            background: var(--bg-gradient);
             color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .btn-disabled {
+            background: var(--secondary);
+            color: var(--white);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .footer {
+            background: var(--dark);
+            color: var(--white);
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #adb5bd;
+            margin-bottom: 0.5rem;
+            display: block;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+        }
+
+        /* Estilos para los modales */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--card-dark);
+        }
+
+        body.study-mode .modal-content {
+            background: var(--card-study);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+
+        /* NUEVOS ESTILOS PARA EL VISOR DE PDF CON GOOGLE DRIVE */
+        .pdf-preview-container {
+            width: 100%;
+            height: 500px;
+            border: 2px solid #00C4FF;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+        }
+        
+        .pdf-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transition: filter 0.3s ease;
+        }
+        
+        .pdf-preview-container.locked .pdf-iframe {
+            filter: blur(8px);
+        }
+        
+        .locked-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .preview-info {
+            background: #e8f4f8;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .drive-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .drive-button {
+            background: #4285F4;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-left: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .drive-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
         }
 
-        /* Resto de estilos igual... */
+        /* Estilos para el pago */
+        .payment-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .payment-steps ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-steps li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .contact-info {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        body.dark-mode .contact-info {
+            background: #3d3d3d;
+        }
+
+        body.study-mode .contact-info {
+            background: #d1ecf1;
+        }
+
+        .unlock-form {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light);
+        }
+
+        .form-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .form-group input {
+            background: #3d3d3d;
+            border-color: #555;
+            color: var(--text-dark);
+        }
+
+        body.study-mode .form-group input {
+            background: var(--card-study);
+            border-color: #b8daff;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
+        }
+
+        /* Estilos para curso desbloqueado */
+        .unlocked-content {
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-card {
+            background: var(--light);
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        body.dark-mode .benefit-card {
+            background: #3d3d3d;
+        }
+
+        body.study-mode .benefit-card {
+            background: #d1ecf1;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .benefit-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-card h5 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .benefit-card p {
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        /* Estilos mejorados para el QR */
+        .qr-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 3px solid var(--primary);
+        }
+
+        .qr-code {
+            width: 300px;
+            height: 300px;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            padding: 0.5rem;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .qr-instructions {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        body.dark-mode .qr-instructions {
+            background: #3d3d3d;
+        }
+
+        body.study-mode .qr-instructions {
+            background: #d1ecf1;
+        }
+
+        .payment-details {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        body.dark-mode .payment-details {
+            background: #3d3d3d;
+        }
+
+        body.study-mode .payment-details {
+            background: #d1ecf1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                display: none;
+            }
+
+            .mobile-header {
+                display: block;
+            }
+
+            .main-container {
+                margin: 140px auto 20px;
+                padding: 0 1rem;
+            }
+
+            .page-title {
+                margin-bottom: 1.5rem;
+                padding: 0;
+                margin-top: 20px;
+            }
+
+            .page-title h1 {
+                font-size: 2rem;
+                line-height: 1.1;
+                padding: 0;
+                margin: 0 0 0.5rem 0;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
+            }
+
+            .page-title p {
+                font-size: 1rem;
+                padding: 0;
+                margin: 0;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                line-height: 1.2;
+            }
+
+            .courses-grid, .topics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .course-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .payment-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .qr-code {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .pdf-preview-container {
+                height: 400px;
+            }
+            
+            .drive-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                margin: 130px auto 15px;
+            }
+            
+            .page-title {
+                margin-top: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.8rem;
+                line-height: 1.1;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
+            }
+
+            .page-title p {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .qr-code {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+            }
+            
+            .nav-item span {
+                display: none;
+            }
+
+            .course-details h3 {
+                font-size: 1.3rem;
+            }
+
+            .course-stats {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .course-stats span {
+                font-size: 0.8rem;
+            }
+            
+            .pdf-preview-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .main-container {
+                margin: 125px auto 10px;
+            }
+            
+            .page-title {
+                margin-top: 10px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.6rem;
+                line-height: 1.2;
+                padding: 0;
+                margin: 0 0 0.5rem 0;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
+            }
+
+            .page-title p {
+                font-size: 0.85rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .mobile-nav-item {
+                font-size: 0.7rem;
+                padding: 0.4rem;
+            }
+
+            .mobile-nav-item i {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -108,11 +1174,6 @@
                 </button>
             </div>
             <div class="user-menu">
-                <!-- NUEVO: Información de acceso y botón salir -->
-                <div id="userAccessInfo" style="display: none;"></div>
-                <button class="exit-course-btn" id="exitCourseBtn" onclick="exitCourse()" style="display: none;">
-                    <i class="fas fa-sign-out-alt"></i> Salir del Curso
-                </button>
                 <div class="avatar" id="userAvatar" onclick="goToProfile()"></div>
             </div>
         </div>
@@ -128,10 +1189,6 @@
             <div class="mobile-controls">
                 <button class="mobile-theme-btn" id="mobileThemeToggle" onclick="toggleTheme()" title="Cambiar tema">
                     <i class="fas fa-sun" id="mobileThemeIcon"></i>
-                </button>
-                <!-- NUEVO: Botón salir en móvil -->
-                <button class="exit-course-btn" id="mobileExitCourseBtn" onclick="exitCourse()" style="display: none;">
-                    <i class="fas fa-sign-out-alt"></i> Salir
                 </button>
                 <div class="avatar" id="mobileUserAvatar" onclick="goToProfile()"></div>
             </div>
@@ -229,7 +1286,7 @@
         </div>
     </footer>
 
-    <!-- Modal de Vista Previa -->
+    <!-- Modal de Vista Previa ACTUALIZADO CON TU PDF -->
     <div class="modal" id="previewModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,6 +1295,7 @@
             </div>
             
             <div class="preview-container">
+                <!-- Visor de PDF con Google Drive -->
                 <div class="pdf-preview-container locked" id="pdfPreview">
                     <iframe 
                         src="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/preview" 
@@ -279,7 +1337,7 @@
         </div>
     </div>
 
-    <!-- Modal de Pago -->
+    <!-- Modal de Pago MEJORADO -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -294,6 +1352,7 @@
                     <div class="qr-container">
                         <h5>📱 Escanea este código QR con Yape:</h5>
                         <div class="qr-code">
+                            <!-- AQUÍ VA TU QR REAL - MÁS GRANDE Y CLARO -->
                             <img src="imagen-qr-yape.jpg" alt="QR Code Yape - Escanear con la app Yape">
                         </div>
                         <p class="qr-instructions">
@@ -345,7 +1404,7 @@
         </div>
     </div>
 
-    <!-- Modal de Curso Desbloqueado -->
+    <!-- Modal de Curso Desbloqueado ACTUALIZADO -->
     <div class="modal" id="unlockedModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -531,7 +1590,7 @@
             }
         ];
 
-        // SISTEMA MEJORADO DE CÓDIGOS PERSONALES POR USUARIO
+        // SISTEMA MEJORADO DE CÓDIGOS ÚNICOS
         // Cargar códigos usados desde localStorage
         function loadUsedCodes() {
             const usedCodes = localStorage.getItem('neoStudyUsedCodes');
@@ -541,17 +1600,6 @@
         // Guardar códigos usados en localStorage
         function saveUsedCodes(usedCodes) {
             localStorage.setItem('neoStudyUsedCodes', JSON.stringify(usedCodes));
-        }
-
-        // Cargar acceso de usuario actual
-        function loadUserAccess() {
-            const userAccess = localStorage.getItem('neoStudyUserAccess');
-            return userAccess ? JSON.parse(userAccess) : null;
-        }
-
-        // Guardar acceso de usuario actual
-        function saveUserAccess(userAccess) {
-            localStorage.setItem('neoStudyUserAccess', JSON.stringify(userAccess));
         }
 
         // 50 CÓDIGOS MEZCLADOS - ÚNICOS Y SEGUROS
@@ -619,37 +1667,6 @@
                     const initials = userData.nombre ? userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase() : 'US';
                     document.getElementById('mobileUserAvatar').textContent = initials;
                 }
-                return userData;
-            }
-            return null;
-        }
-
-        // Mostrar/ocultar botones de acceso
-        function updateAccessUI() {
-            const userAccess = loadUserAccess();
-            const userData = loadUserData();
-            
-            if (userAccess && userAccess.desbloqueado) {
-                // Mostrar botones de salir
-                document.getElementById('exitCourseBtn').style.display = 'inline-flex';
-                document.getElementById('mobileExitCourseBtn').style.display = 'inline-flex';
-                
-                // Mostrar información de acceso
-                const userAccessInfo = document.getElementById('userAccessInfo');
-                userAccessInfo.innerHTML = `
-                    <div class="user-access-info">
-                        <i class="fas fa-unlock"></i>
-                        Acceso Activo
-                    </div>
-                `;
-                userAccessInfo.style.display = 'inline-flex';
-                
-                console.log('✅ Usuario tiene acceso activo al curso');
-            } else {
-                // Ocultar botones de salir
-                document.getElementById('exitCourseBtn').style.display = 'none';
-                document.getElementById('mobileExitCourseBtn').style.display = 'none';
-                document.getElementById('userAccessInfo').style.display = 'none';
             }
         }
 
@@ -669,23 +1686,6 @@
         // Acceso al material completo
         function accessFullMaterial() {
             window.open('https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link', '_blank');
-        }
-
-        // NUEVA FUNCIÓN: Salir del curso
-        function exitCourse() {
-            if (confirm('¿Estás seguro de que quieres salir del curso? Podrás volver a ingresar con tu código cuando quieras.')) {
-                // Limpiar acceso actual pero mantener el código asociado al usuario
-                const userAccess = loadUserAccess();
-                if (userAccess) {
-                    userAccess.sesionActiva = false;
-                    saveUserAccess(userAccess);
-                }
-                
-                // Actualizar UI
-                updateAccessUI();
-                
-                alert('✅ Has salido del curso. Puedes volver a ingresar con tu código cuando quieras.');
-            }
         }
 
         // Mostrar cursos de Matemática
@@ -767,85 +1767,54 @@
             document.getElementById('unlockedModal').style.display = 'none';
         }
 
-        // FUNCIÓN MEJORADA PARA VALIDAR CÓDIGOS PERSONALES
+        // FUNCIÓN MEJORADA PARA VALIDAR CÓDIGOS ÚNICOS
         function validateAccessCode() {
             const code = document.getElementById('accessCode').value.trim().toUpperCase();
-            const userData = loadUserData();
             
             if (!code) {
                 alert('❌ Por favor ingresa tu código de acceso');
                 return;
             }
 
-            // Cargar códigos usados y acceso de usuario
+            // Cargar códigos usados
             const usedCodes = loadUsedCodes();
-            const userAccess = loadUserAccess();
 
-            // Verificar si el usuario YA TIENE un código asignado
-            if (userAccess && userAccess.codigo) {
-                if (code === userAccess.codigo) {
-                    // Mismo usuario, mismo código - REINGRESO PERMITIDO
-                    userAccess.sesionActiva = true;
-                    userAccess.ultimoAcceso = new Date().toLocaleString();
-                    saveUserAccess(userAccess);
+            if (codigosValidos[code]) {
+                // Verificar si el código ya fue usado (en localStorage)
+                if (usedCodes[code]) {
+                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
+                    return;
+                }
+
+                // Verificar si está marcado como usado en el objeto actual
+                if (!codigosValidos[code].usado) {
+                    // Marcar como usado en el objeto actual
+                    codigosValidos[code].usado = true;
+                    codigosValidos[code].fecha = new Date().toLocaleDateString();
+                    
+                    // Guardar en localStorage como código usado
+                    usedCodes[code] = {
+                        usado: true,
+                        fecha: new Date().toLocaleString(),
+                        usuario: localStorage.getItem('usuarioNeoStudy') ? JSON.parse(localStorage.getItem('usuarioNeoStudy')).nombre || 'Anónimo' : 'Anónimo'
+                    };
+                    saveUsedCodes(usedCodes);
+                    
+                    // Marcar curso como desbloqueado para este usuario
+                    localStorage.setItem('cursoPlanteoEcuaciones', 'desbloqueado');
+                    localStorage.setItem('codigoUsado', code);
+                    localStorage.setItem('fechaDesbloqueo', new Date().toLocaleString());
                     
                     closePaymentModal();
                     showUnlockedModal();
-                    updateAccessUI();
                     
                     setTimeout(() => {
-                        alert('✅ ¡Bienvenido de nuevo! Acceso restaurado.');
+                        alert('✅ ¡Curso desbloqueado correctamente! Ahora tienes acceso completo a todo el material.');
                     }, 1000);
-                    return;
+                    
                 } else {
-                    // Usuario intenta usar código diferente
-                    alert('❌ Este código no corresponde a tu usuario. Usa tu código original.');
-                    return;
+                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
                 }
-            }
-
-            // VERIFICAR CÓDIGO NUEVO
-            if (codigosValidos[code]) {
-                // Verificar si el código ya fue usado por OTRO usuario
-                if (usedCodes[code] && usedCodes[code].usuarioId !== (userData?.id || 'anonimo')) {
-                    alert('❌ Este código ya fue utilizado por otro usuario. Cada código es personal e intransferible.');
-                    return;
-                }
-
-                // CÓDIGO VÁLIDO - ASIGNAR AL USUARIO ACTUAL
-                codigosValidos[code].usado = true;
-                codigosValidos[code].fecha = new Date().toLocaleDateString();
-                
-                // Guardar en localStorage como código usado
-                usedCodes[code] = {
-                    usado: true,
-                    fecha: new Date().toLocaleString(),
-                    usuario: userData?.nombre || 'Anónimo',
-                    usuarioId: userData?.id || 'anonimo',
-                    email: userData?.email || 'No disponible'
-                };
-                saveUsedCodes(usedCodes);
-                
-                // Guardar acceso del usuario actual
-                const newUserAccess = {
-                    desbloqueado: true,
-                    sesionActiva: true,
-                    codigo: code,
-                    fechaDesbloqueo: new Date().toLocaleString(),
-                    ultimoAcceso: new Date().toLocaleString(),
-                    usuario: userData?.nombre || 'Anónimo',
-                    usuarioId: userData?.id || 'anonimo'
-                };
-                saveUserAccess(newUserAccess);
-                
-                closePaymentModal();
-                showUnlockedModal();
-                updateAccessUI();
-                
-                setTimeout(() => {
-                    alert('✅ ¡Curso desbloqueado correctamente! Este código es ahora personal y solo tú puedes usarlo.');
-                }, 1000);
-                
             } else {
                 alert('❌ Código inválido. Verifica el código o contacta a neostudy@gmail.com');
             }
@@ -858,10 +1827,10 @@
         // Abrir tema disponible (solo Planteo de Ecuaciones)
         function openTopic(topicId) {
             if (topicId === 1) {
-                const userAccess = loadUserAccess();
-                const tieneAcceso = userAccess && userAccess.desbloqueado && userAccess.sesionActiva;
+                const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
                 
                 if (tieneAcceso) {
+                    // Si está desbloqueado, abrir el Google Drive completo
                     accessFullMaterial();
                 } else {
                     openPreviewModal();
@@ -894,13 +1863,15 @@
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
 
-            // Verificar y actualizar UI de acceso
-            updateAccessUI();
+            // Verificar si el usuario ya tiene acceso
+            const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
+            if (tieneAcceso) {
+                console.log('✅ Usuario ya tiene acceso al curso');
+            }
 
             // Cargar cursos al iniciar
             showMathCourses();
         });
     </script>
 </body>
-</html>
-
+    </html>
