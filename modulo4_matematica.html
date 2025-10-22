@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -1008,6 +1008,81 @@ DOCTYPE html>
             background: #d1ecf1;
         }
 
+        /* ESTILOS PARA EL LOGIN SEGURO */
+        .login-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 4000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .login-container {
+            background: var(--card-dark);
+        }
+
+        .login-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .login-input {
+            background: #3d3d3d;
+            border-color: #555;
+            color: var(--text-dark);
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            display: none;
+        }
+
+        .user-info {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        body.dark-mode .user-info {
+            background: #3d3d3d;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header {
@@ -1163,6 +1238,39 @@ DOCTYPE html>
     </style>
 </head>
 <body>
+    <!-- OVERLAY DE LOGIN SEGURO -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-container">
+            <div class="login-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h3>Acceso Seguro al Curso</h3>
+            <p>Ingresa tus credenciales únicas</p>
+            
+            <div class="user-info" id="userInfo">
+                <strong>Usuario:</strong> <span id="currentUser">Cargando...</span>
+            </div>
+            
+            <input type="text" class="login-input" id="userCode" placeholder="Código de acceso (ej: MATH7X9)">
+            <input type="password" class="login-input" id="userPassword" placeholder="Contraseña personal">
+            
+            <div class="login-error" id="loginError">
+                ❌ Credenciales incorrectas. Verifica tu código y contraseña.
+            </div>
+            
+            <button class="btn btn-primary btn-block" onclick="validateUserAccess()">
+                <i class="fas fa-key"></i> Acceder al Curso
+            </button>
+            
+            <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--secondary);">
+                <p>¿No tienes credenciales? <br>Adquiere el curso y recibe tus accesos únicos por WhatsApp</p>
+                <button class="btn btn-outline" onclick="showPaymentModalFromLogin()">
+                    <i class="fas fa-shopping-cart"></i> Adquirir Curso
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== HEADER PARA ESCRITORIO ===== -->
     <header class="header">
         <div class="nav-container">
@@ -1493,7 +1601,224 @@ DOCTYPE html>
     </div>
 
     <script>
-        // Sistema de temas mejorado - UN SOLO BOTÓN
+        // SISTEMA DE AUTENTICACIÓN SEGURO UNIVERSAL
+        let currentUser = null;
+
+        // ===== SISTEMA DE IDENTIFICACIÓN UNIVERSAL =====
+        function getUniversalUserID() {
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            
+            if (!userData) {
+                return 'anonymous_' + Math.random().toString(36).substring(2, 9);
+            }
+            
+            // PRIORIDAD 1: Email (si existe y es válido)
+            if (userData.email && isValidEmail(userData.email)) {
+                return 'email_' + userData.email.toLowerCase();
+            }
+            
+            // PRIORIDAD 2: Teléfono (si existe)
+            if (userData.telefono) {
+                return 'tel_' + userData.telefono.toString().replace(/\D/g, '');
+            }
+            
+            // PRIORIDAD 3: Nombre de usuario
+            if (userData.nombreUsuario) {
+                return 'user_' + userData.nombreUsuario.toLowerCase().replace(/[^a-z0-9]/g, '');
+            }
+            
+            // PRIORIDAD 4: Nombre completo
+            if (userData.nombre) {
+                return 'name_' + userData.nombre.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            }
+            
+            // ÚLTIMO RECURSO: ID aleatorio
+            return 'unknown_' + Math.random().toString(36).substring(2, 9);
+        }
+
+        // Función para validar email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // ===== SISTEMA DE LOGIN SEGURO =====
+        function showSecureLogin() {
+            const userID = getUniversalUserID();
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            
+            // Mostrar info identificable del usuario
+            let userInfo = 'Usuario: ';
+            if (userData.email) userInfo += userData.email;
+            else if (userData.telefono) userInfo += `Tel: ${userData.telefono}`;
+            else if (userData.nombre) userInfo += userData.nombre;
+            else userInfo += 'Cuenta actual';
+            
+            document.getElementById('currentUser').textContent = userInfo;
+            
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('userCode').value = '';
+            document.getElementById('userPassword').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function validateUserAccess() {
+            const code = document.getElementById('userCode').value.trim().toUpperCase();
+            const password = document.getElementById('userPassword').value.trim();
+            const loginError = document.getElementById('loginError');
+            const userID = getUniversalUserID();
+
+            if (!code || !password) {
+                loginError.textContent = '❌ Por favor completa ambos campos';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            // Obtener usuarios autorizados del localStorage
+            const authorizedUsers = JSON.parse(localStorage.getItem('neoStudyAuthorizedUsers')) || {};
+            
+            // Verificar si el código existe y la contraseña coincide
+            if (authorizedUsers[code] && authorizedUsers[code].password === password) {
+                // VERIFICAR CRUCIAL: Que el userID coincida
+                if (authorizedUsers[code].userID !== userID) {
+                    loginError.textContent = '❌ Estas credenciales no son para esta cuenta. Inicia sesión con la cuenta correcta.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                // Verificar que no esté expirado
+                const expirationDate = new Date(authorizedUsers[code].expiration);
+                const today = new Date();
+                
+                if (expirationDate < today) {
+                    loginError.textContent = '❌ Tu acceso ha expirado. Renueva tu suscripción.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                // MARCAR COMO ACCESO VÁLIDO PARA ESTE USUARIO
+                const userAccessKey = `cursoAcceso_${userID}`;
+                localStorage.setItem(userAccessKey, JSON.stringify({
+                    codigo: code,
+                    fechaAcceso: new Date().toISOString(),
+                    expira: authorizedUsers[code].expiration
+                }));
+
+                // Cerrar login y abrir contenido
+                closeLogin();
+                openPreviewModal();
+                
+            } else {
+                loginError.textContent = '❌ Credenciales incorrectas. Verifica tu código y contraseña.';
+                loginError.style.display = 'block';
+            }
+        }
+
+        function closeLogin() {
+            document.getElementById('loginOverlay').style.display = 'none';
+        }
+
+        function showPaymentModalFromLogin() {
+            closeLogin();
+            showPaymentModal();
+        }
+
+        // ===== VERIFICACIÓN DE ACCESO =====
+        function checkUserAccess() {
+            const userID = getUniversalUserID();
+            const userAccessKey = `cursoAcceso_${userID}`;
+            const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
+            
+            if (userAccess) {
+                // Verificar que no esté expirado
+                const expirationDate = new Date(userAccess.expira);
+                const today = new Date();
+                
+                if (expirationDate > today) {
+                    return true; // TIENE ACCESO VÁLIDO
+                } else {
+                    // Eliminar acceso expirado
+                    localStorage.removeItem(userAccessKey);
+                }
+            }
+            
+            return false; // NO TIENE ACCESO
+        }
+
+        // ===== SISTEMA DE ACTIVACIÓN DE CÓDIGOS =====
+        function validateAccessCode() {
+            const code = document.getElementById('accessCode').value.trim().toUpperCase();
+            const userID = getUniversalUserID();
+            
+            if (!code) {
+                alert('❌ Por favor ingresa tu código de acceso');
+                return;
+            }
+
+            // Cargar códigos usados
+            const usedCodes = loadUsedCodes();
+            const authorizedUsers = JSON.parse(localStorage.getItem('neoStudyAuthorizedUsers')) || {};
+
+            if (codigosValidos[code]) {
+                // Verificar si el código ya fue usado
+                if (usedCodes[code] || authorizedUsers[code]) {
+                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
+                    return;
+                }
+
+                // GENERAR CONTRASEÑA ÚNICA para este usuario
+                const uniquePassword = generateUniquePassword(userID);
+                
+                // Calcular fecha de expiración (1 año desde hoy)
+                const expirationDate = new Date();
+                expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+
+                // Obtener datos del usuario para mostrar info
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+
+                // Guardar usuario autorizado
+                authorizedUsers[code] = {
+                    userID: userID,
+                    usuario: userData.email || userData.telefono || userData.nombre || 'Usuario',
+                    password: uniquePassword,
+                    fechaActivacion: new Date().toISOString(),
+                    expiration: expirationDate.toISOString(),
+                    activado: true
+                };
+
+                // Guardar en localStorage
+                localStorage.setItem('neoStudyAuthorizedUsers', JSON.stringify(authorizedUsers));
+                
+                // Marcar como usado
+                usedCodes[code] = {
+                    usado: true,
+                    fecha: new Date().toLocaleString(),
+                    usuario: userID
+                };
+                saveUsedCodes(usedCodes);
+
+                closePaymentModal();
+                
+                // Mostrar credenciales al usuario
+                setTimeout(() => {
+                    alert(`✅ ¡Curso activado correctamente!\n\n📝 Tus credenciales únicas:\nCódigo: ${code}\nContraseña: ${uniquePassword}\n\n💡 Guarda esta información en un lugar seguro.\n⚠️ Estas credenciales solo funcionarán para tu cuenta actual.`);
+                    showSecureLogin();
+                }, 500);
+                
+            } else {
+                alert('❌ Código inválido. Verifica el código o contacta a neostudy@gmail.com');
+            }
+        }
+
+        // Función para generar contraseña única
+        function generateUniquePassword(userID) {
+            const timestamp = Date.now().toString(36);
+            const userPart = userID.substring(0, 3).toLowerCase();
+            const randomPart = Math.random().toString(36).substring(2, 6);
+            return `NS${userPart}${randomPart}${timestamp.substring(timestamp.length-3)}`.toUpperCase();
+        }
+
+        // ===== SISTEMA DE TEMAS MEJORADO =====
         let currentTheme = 'normal';
         const themes = ['normal', 'study', 'dark'];
         const themeIcons = {
@@ -1540,23 +1865,18 @@ DOCTYPE html>
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        // Función para abrir el modal de vista previa - MEJORADA
+        // ===== SISTEMA DE VISTA PREVIA MEJORADO =====
         function openPreviewModal() {
-            document.getElementById('previewModal').style.display = 'flex';
-            
-            // Verificar si el usuario ya tiene acceso
-            const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
-            
-            if (tieneAcceso) {
-                // Si ya tiene acceso, mostrar todo DESBLOQUEADO
-                showUnlockedPreview();
-            } else {
-                // Si no tiene acceso, mostrar todo BLOQUEADO
-                showLockedPreview();
+            // VERIFICAR ACCESO ANTES DE ABRIR
+            if (!checkUserAccess()) {
+                showSecureLogin();
+                return;
             }
+
+            document.getElementById('previewModal').style.display = 'flex';
+            showUnlockedPreview();
         }
 
-        // Función para mostrar vista previa BLOQUEADA
         function showLockedPreview() {
             const pdfPreview = document.getElementById('pdfPreview');
             const driveViewButton = document.getElementById('driveViewButton');
@@ -1590,7 +1910,6 @@ DOCTYPE html>
             unlockedActions.style.display = 'none';
         }
 
-        // Función para mostrar vista previa DESBLOQUEADA
         function showUnlockedPreview() {
             const pdfPreview = document.getElementById('pdfPreview');
             const driveViewButton = document.getElementById('driveViewButton');
@@ -1603,7 +1922,7 @@ DOCTYPE html>
             // Configurar estado DESBLOQUEADO
             modalTitle.textContent = "🎉 Curso Desbloqueado - Planteo de Ecuaciones";
             pdfPreview.classList.remove('locked');
-            lockedMessage.style.display = 'none'; // OCULTAMOS el mensaje de bloqueo
+            lockedMessage.style.display = 'none';
             
             // Botones desbloqueados
             driveViewButton.classList.remove('locked');
@@ -1619,38 +1938,137 @@ DOCTYPE html>
             unlockedActions.style.display = 'block';
         }
 
-        // Función para cerrar el modal de vista previa
         function closePreviewModal() {
             document.getElementById('previewModal').style.display = 'none';
         }
 
-        // NUEVA FUNCIÓN: Mostrar beneficios del material
         function showMaterialBenefits() {
+            if (!checkUserAccess()) {
+                showSecureLogin();
+                return;
+            }
             closePreviewModal();
             document.getElementById('materialBenefitsModal').style.display = 'flex';
         }
 
-        // Función para cerrar el modal de beneficios
         function closeMaterialBenefitsModal() {
             document.getElementById('materialBenefitsModal').style.display = 'none';
         }
 
-        // NUEVA FUNCIÓN: Abrir enlaces específicos de material
+        // ===== FUNCIONES DE MATERIAL =====
         function openMaterialLink(url) {
             window.open(url, '_blank');
         }
 
-        // Función para abrir WhatsApp
         function openWhatsApp() {
             window.open('https://wa.me/51973441252', '_blank');
         }
 
-        // Función para abrir Google Drive
         function openGoogleDrive() {
             window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
         }
 
-        // Datos de cursos de Matemática
+        // ===== SISTEMA DE CÓDIGOS ÚNICOS =====
+        function loadUsedCodes() {
+            const usedCodes = localStorage.getItem('neoStudyUsedCodes');
+            return usedCodes ? JSON.parse(usedCodes) : {};
+        }
+
+        function saveUsedCodes(usedCodes) {
+            localStorage.setItem('neoStudyUsedCodes', JSON.stringify(usedCodes));
+        }
+
+        // 50 CÓDIGOS MEZCLADOS - ÚNICOS Y SEGUROS
+        const codigosValidos = {
+            "MATH7X9": { usado: false, fecha: "" },
+            "STUDY4K2": { usado: false, fecha: "" },
+            "NEO8P5R": { usado: false, fecha: "" },
+            "LEARN3V8": { usado: false, fecha: "" },
+            "CODE6M1T": { usado: false, fecha: "" },
+            "EDU9Z4X": { usado: false, fecha: "" },
+            "BOOK2L7Q": { usado: false, fecha: "" },
+            "PREP5N3J": { usado: false, fecha: "" },
+            "MIND8K6W": { usado: false, fecha: "" },
+            "BRAIN1F9": { usado: false, fecha: "" },
+            "QUIZ7S2P": { usado: false, fecha: "" },
+            "TEST4H8M": { usado: false, fecha: "" },
+            "EXAM9D3C": { usado: false, fecha: "" },
+            "SOLVE6V1": { usado: false, fecha: "" },
+            "LOGIC8X5": { usado: false, fecha: "" },
+            "MATH2T7K": { usado: false, fecha: "" },
+            "STUDY5Q9": { usado: false, fecha: "" },
+            "NEO3R6J": { usado: false, fecha: "" },
+            "LEARN7M4": { usado: false, fecha: "" },
+            "CODE1P8W": { usado: false, fecha: "" },
+            "EDU4X2T": { usado: false, fecha: "" },
+            "BOOK9K5": { usado: false, fecha: "" },
+            "PREP6V3Q": { usado: false, fecha: "" },
+            "MIND2H7": { usado: false, fecha: "" },
+            "BRAIN8S1": { usado: false, fecha: "" },
+            "QUIZ5D9M": { usado: false, fecha: "" },
+            "TEST3F6C": { usado: false, fecha: "" },
+            "EXAM7Z2": { usado: false, fecha: "" },
+            "SOLVE4N8": { usado: false, fecha: "" },
+            "LOGIC1T5": { usado: false, fecha: "" },
+            "MATH9Q7": { usado: false, fecha: "" },
+            "STUDY6K3": { usado: false, fecha: "" },
+            "NEO2X8J": { usado: false, fecha: "" },
+            "LEARN5M1": { usado: false, fecha: "" },
+            "CODE8V4": { usado: false, fecha: "" },
+            "EDU3S6T": { usado: false, fecha: "" },
+            "BOOK7H2": { usado: false, fecha: "" },
+            "PREP4D9": { usado: false, fecha: "" },
+            "MIND1Z5": { usado: false, fecha: "" },
+            "BRAIN6F3": { usado: false, fecha: "" },
+            "QUIZ9N7": { usado: false, fecha: "" },
+            "TEST5T2": { usado: false, fecha: "" },
+            "EXAM8K4": { usado: false, fecha: "" },
+            "SOLVE3Q6": { usado: false, fecha: "" },
+            "LOGIC7M9": { usado: false, fecha: "" },
+            "MATH4V1": { usado: false, fecha: "" },
+            "STUDY1X7": { usado: false, fecha: "" },
+            "NEO6S3": { usado: false, fecha: "" },
+            "LEARN8H5": { usado: false, fecha: "" },
+            "CODE2D9": { usado: false, fecha: "" }
+        };
+
+        // ===== DATOS Y NAVEGACIÓN =====
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            if (userData) {
+                if (userData.fotoPerfil) {
+                    document.getElementById('userAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
+                    document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
+                } else {
+                    const initials = userData.nombre ? userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase() : 'US';
+                    document.getElementById('mobileUserAvatar').textContent = initials;
+                }
+            }
+        }
+
+        function goToFeed() {
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        function goToProfile() {
+            window.location.href = 'modulo3_perfil.html';
+        }
+
+        function goToCursos() {
+            window.location.href = 'modulo4_cursos.html';
+        }
+
+        function showPaymentModal() {
+            closePreviewModal();
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('accessCode').value = '';
+        }
+
+        // ===== SISTEMA DE CURSOS =====
         const mathCourses = [
             {
                 id: 1,
@@ -1715,110 +2133,10 @@ DOCTYPE html>
             }
         ];
 
-        // SISTEMA MEJORADO DE CÓDIGOS ÚNICOS
-        // Cargar códigos usados desde localStorage
-        function loadUsedCodes() {
-            const usedCodes = localStorage.getItem('neoStudyUsedCodes');
-            return usedCodes ? JSON.parse(usedCodes) : {};
-        }
-
-        // Guardar códigos usados en localStorage
-        function saveUsedCodes(usedCodes) {
-            localStorage.setItem('neoStudyUsedCodes', JSON.stringify(usedCodes));
-        }
-
-        // 50 CÓDIGOS MEZCLADOS - ÚNICOS Y SEGUROS
-        const codigosValidos = {
-            "MATH7X9": { usado: false, fecha: "" },
-            "STUDY4K2": { usado: false, fecha: "" },
-            "NEO8P5R": { usado: false, fecha: "" },
-            "LEARN3V8": { usado: false, fecha: "" },
-            "CODE6M1T": { usado: false, fecha: "" },
-            "EDU9Z4X": { usado: false, fecha: "" },
-            "BOOK2L7Q": { usado: false, fecha: "" },
-            "PREP5N3J": { usado: false, fecha: "" },
-            "MIND8K6W": { usado: false, fecha: "" },
-            "BRAIN1F9": { usado: false, fecha: "" },
-            "QUIZ7S2P": { usado: false, fecha: "" },
-            "TEST4H8M": { usado: false, fecha: "" },
-            "EXAM9D3C": { usado: false, fecha: "" },
-            "SOLVE6V1": { usado: false, fecha: "" },
-            "LOGIC8X5": { usado: false, fecha: "" },
-            "MATH2T7K": { usado: false, fecha: "" },
-            "STUDY5Q9": { usado: false, fecha: "" },
-            "NEO3R6J": { usado: false, fecha: "" },
-            "LEARN7M4": { usado: false, fecha: "" },
-            "CODE1P8W": { usado: false, fecha: "" },
-            "EDU4X2T": { usado: false, fecha: "" },
-            "BOOK9K5": { usado: false, fecha: "" },
-            "PREP6V3Q": { usado: false, fecha: "" },
-            "MIND2H7": { usado: false, fecha: "" },
-            "BRAIN8S1": { usado: false, fecha: "" },
-            "QUIZ5D9M": { usado: false, fecha: "" },
-            "TEST3F6C": { usado: false, fecha: "" },
-            "EXAM7Z2": { usado: false, fecha: "" },
-            "SOLVE4N8": { usado: false, fecha: "" },
-            "LOGIC1T5": { usado: false, fecha: "" },
-            "MATH9Q7": { usado: false, fecha: "" },
-            "STUDY6K3": { usado: false, fecha: "" },
-            "NEO2X8J": { usado: false, fecha: "" },
-            "LEARN5M1": { usado: false, fecha: "" },
-            "CODE8V4": { usado: false, fecha: "" },
-            "EDU3S6T": { usado: false, fecha: "" },
-            "BOOK7H2": { usado: false, fecha: "" },
-            "PREP4D9": { usado: false, fecha: "" },
-            "MIND1Z5": { usado: false, fecha: "" },
-            "BRAIN6F3": { usado: false, fecha: "" },
-            "QUIZ9N7": { usado: false, fecha: "" },
-            "TEST5T2": { usado: false, fecha: "" },
-            "EXAM8K4": { usado: false, fecha: "" },
-            "SOLVE3Q6": { usado: false, fecha: "" },
-            "LOGIC7M9": { usado: false, fecha: "" },
-            "MATH4V1": { usado: false, fecha: "" },
-            "STUDY1X7": { usado: false, fecha: "" },
-            "NEO6S3": { usado: false, fecha: "" },
-            "LEARN8H5": { usado: false, fecha: "" },
-            "CODE2D9": { usado: false, fecha: "" }
-        };
-
-        // Datos del usuario
-        function loadUserData() {
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            if (userData) {
-                if (userData.fotoPerfil) {
-                    document.getElementById('userAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
-                    document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
-                } else {
-                    const initials = userData.nombre ? userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase() : 'US';
-                    document.getElementById('mobileUserAvatar').textContent = initials;
-                }
-            }
-        }
-
-        // Navegación
-        function goToFeed() {
-            window.location.href = 'modulo2_iniciodecesión.html';
-        }
-
-        function goToProfile() {
-            window.location.href = 'modulo3_perfil.html';
-        }
-
-        function goToCursos() {
-            window.location.href = 'modulo4_cursos.html';
-        }
-
-        // Acceso al material completo (ahora abre el modal de beneficios)
-        function accessFullMaterial() {
-            showMaterialBenefits();
-        }
-
-        // Mostrar cursos de Matemática
         function showMathCourses() {
             renderCourses(mathCourses);
         }
 
-        // Renderizar cursos
         function renderCourses(courses) {
             const coursesGrid = document.getElementById('coursesGrid');
             
@@ -1843,7 +2161,6 @@ DOCTYPE html>
             `).join('');
         }
 
-        // Mostrar temas de un curso
         function showCourseTopics(courseId) {
             const coursesView = document.getElementById('coursesView');
             const topicsView = document.getElementById('topicsView');
@@ -1857,7 +2174,6 @@ DOCTYPE html>
             }
         }
 
-        // Renderizar temas
         function renderTopics(topics) {
             const topicsGrid = document.getElementById('topicsGrid');
             
@@ -1877,110 +2193,47 @@ DOCTYPE html>
             `).join('');
         }
 
-        // Funciones para el sistema de modales
-        function showPaymentModal() {
-            closePreviewModal();
-            document.getElementById('paymentModal').style.display = 'flex';
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-            document.getElementById('accessCode').value = '';
-        }
-
-        // FUNCIÓN MEJORADA PARA VALIDAR CÓDIGOS ÚNICOS
-        function validateAccessCode() {
-            const code = document.getElementById('accessCode').value.trim().toUpperCase();
-            
-            if (!code) {
-                alert('❌ Por favor ingresa tu código de acceso');
-                return;
-            }
-
-            // Cargar códigos usados
-            const usedCodes = loadUsedCodes();
-
-            if (codigosValidos[code]) {
-                // Verificar si el código ya fue usado (en localStorage)
-                if (usedCodes[code]) {
-                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
-                    return;
-                }
-
-                // Verificar si está marcado como usado en el objeto actual
-                if (!codigosValidos[code].usado) {
-                    // Marcar como usado en el objeto actual
-                    codigosValidos[code].usado = true;
-                    codigosValidos[code].fecha = new Date().toLocaleDateString();
-                    
-                    // Guardar en localStorage como código usado
-                    usedCodes[code] = {
-                        usado: true,
-                        fecha: new Date().toLocaleString(),
-                        usuario: localStorage.getItem('usuarioNeoStudy') ? JSON.parse(localStorage.getItem('usuarioNeoStudy')).nombre || 'Anónimo' : 'Anónimo'
-                    };
-                    saveUsedCodes(usedCodes);
-                    
-                    // Marcar curso como desbloqueado para este usuario
-                    localStorage.setItem('cursoPlanteoEcuaciones', 'desbloqueado');
-                    localStorage.setItem('codigoUsado', code);
-                    localStorage.setItem('fechaDesbloqueo', new Date().toLocaleString());
-                    
-                    closePaymentModal();
-                    
-                    // Mostrar mensaje de éxito y abrir vista previa DESBLOQUEADA
-                    setTimeout(() => {
-                        alert('✅ ¡Curso desbloqueado correctamente! Ahora tienes acceso completo a todo el material.');
-                        openPreviewModal();
-                    }, 500);
-                    
-                } else {
-                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
-                }
-            } else {
-                alert('❌ Código inválido. Verifica el código o contacta a neostudy@gmail.com');
-            }
-        }
-
-        // Abrir tema disponible (solo Planteo de Ecuaciones) - CORREGIDO
         function openTopic(topicId) {
             if (topicId === 1) {
-                // SIEMPRE abrir el modal de vista previa
-                openPreviewModal();
+                if (!checkUserAccess()) {
+                    showSecureLogin();
+                } else {
+                    openPreviewModal();
+                }
             } else {
                 showComingSoon();
             }
         }
 
-        // Mensaje para contenido en proceso
         function showComingSoon() {
             alert('⏳ ¡Próximamente! Estamos trabajando en este contenido.');
         }
 
-        // Cerrar modales al hacer click fuera
+        // ===== EVENT LISTENERS =====
         window.onclick = function(event) {
-            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal'];
+            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
                     if (modalId === 'previewModal') closePreviewModal();
                     if (modalId === 'paymentModal') closePaymentModal();
                     if (modalId === 'materialBenefitsModal') closeMaterialBenefitsModal();
+                    if (modalId === 'loginOverlay') closeLogin();
                 }
             });
         }
 
-        // Inicialización
+        // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
 
-            // Verificar si el usuario ya tiene acceso
-            const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
+            // Verificar si el usuario ya tiene acceso válido
+            const tieneAcceso = checkUserAccess();
             if (tieneAcceso) {
-                console.log('✅ Usuario ya tiene acceso al curso');
+                console.log('✅ Usuario tiene acceso válido al curso');
             }
 
             // Cargar cursos al iniciar
