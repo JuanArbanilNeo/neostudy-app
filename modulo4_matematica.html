@@ -1113,34 +1113,13 @@
                 font-size: 1.3rem;
             }
 
-            .qr-code {
-                width: 250px;
-                height: 250px;
-            }
-            
-            .nav-menu {
-                gap: 1rem;
-            }
-            
-            .nav-item span {
-                display: none;
+            .mobile-nav-item {
+                font-size: 0.7rem;
+                padding: 0.4rem;
             }
 
-            .course-details h3 {
-                font-size: 1.3rem;
-            }
-
-            .course-stats {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-
-            .course-stats span {
-                font-size: 0.8rem;
-            }
-            
-            .pdf-preview-container {
-                height: 300px;
+            .mobile-nav-item i {
+                font-size: 1rem;
             }
         }
 
@@ -1356,11 +1335,11 @@
                 </div>
                 
                 <div class="drive-buttons">
-                    <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
+                    <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk" 
                        class="drive-button" id="driveViewButton" target="_blank">
                         <i class="fab fa-google-drive"></i> Ver en Google Drive
                     </a>
-                    <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
+                    <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk" 
                        class="btn btn-outline" id="downloadButton">
                         <i class="fas fa-download"></i> Descargar PDF
                     </a>
@@ -1466,12 +1445,12 @@
                 <h4>¡Felicidades! Ahora tienes acceso completo</h4>
                 
                 <div class="benefits-grid">
-                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link')">
+                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
                         <i class="fas fa-book"></i>
                         <h5>Libro Completo</h5>
                         <p>PDF sin restricciones</p>
                     </div>
-                    <div class="benefit-card" onclick="openMaterialLink('https://meet.google.com/tu-enlace-de-meet-aqui')">
+                    <div class="benefit-card" onclick="openMaterialLink('https://meet.google.com/hnq-jhhv-wcn')">
                         <i class="fas fa-video"></i>
                         <h5>Clases en Vivo</h5>
                         <p>Viernes, Sábados y Domingos</p>
@@ -1491,7 +1470,7 @@
                 <div style="margin: 2rem 0;">
                     <h5>📚 Acceso inmediato al material completo:</h5>
                     <div class="drive-buttons">
-                        <a href="https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link" 
+                        <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk" 
                            class="drive-button" target="_blank">
                             <i class="fab fa-google-drive"></i> Acceder a Todo el Material
                         </a>
@@ -1629,8 +1608,8 @@
             // Botones desbloqueados
             driveViewButton.classList.remove('locked');
             downloadButton.classList.remove('locked');
-            driveViewButton.href = "https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing";
-            downloadButton.href = "https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing";
+            driveViewButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
+            downloadButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
             
             driveViewButton.onclick = null;
             downloadButton.onclick = null;
@@ -1668,7 +1647,7 @@
 
         // Función para abrir Google Drive
         function openGoogleDrive() {
-            window.open('https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link', '_blank');
+            window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
         }
 
         // Datos de cursos de Matemática
