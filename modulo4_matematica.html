@@ -762,22 +762,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
-        .unlocked-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--success);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            display: none;
-        }
-        
         .preview-info {
             background: #e8f4f8;
             padding: 1rem;
@@ -922,6 +906,7 @@
             border-radius: 10px;
             text-align: center;
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         body.dark-mode .benefit-card {
@@ -934,22 +919,32 @@
 
         .benefit-card:hover {
             transform: translateY(-3px);
+            background: var(--primary);
+        }
+
+        .benefit-card:hover i,
+        .benefit-card:hover h5,
+        .benefit-card:hover p {
+            color: white;
         }
 
         .benefit-card i {
             font-size: 2rem;
             color: var(--primary);
             margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
         }
 
         .benefit-card h5 {
             margin-bottom: 0.5rem;
             font-size: 1rem;
+            transition: color 0.3s ease;
         }
 
         .benefit-card p {
             font-size: 0.8rem;
             color: var(--secondary);
+            transition: color 0.3s ease;
         }
 
         /* Estilos mejorados para el QR */
@@ -1350,11 +1345,6 @@
                         VISTA PREVIA<br>
                         <small>Desbloquea el curso para acceso completo</small>
                     </div>
-                    <div class="unlocked-message" id="unlockedMessage">
-                        <i class="fas fa-unlock"></i><br>
-                        CONTENIDO DESBLOQUEADO<br>
-                        <small>¡Disfruta de todo el material!</small>
-                    </div>
                 </div>
                 
                 <div class="preview-info">
@@ -1460,7 +1450,7 @@
         </div>
     </div>
 
-    <!-- Modal de Beneficios del Material (NUEVO) -->
+    <!-- Modal de Beneficios del Material (MEJORADO) -->
     <div class="modal" id="materialBenefitsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1476,22 +1466,22 @@
                 <h4>¡Felicidades! Ahora tienes acceso completo</h4>
                 
                 <div class="benefits-grid">
-                    <div class="benefit-card">
+                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link')">
                         <i class="fas fa-book"></i>
                         <h5>Libro Completo</h5>
                         <p>PDF sin restricciones</p>
                     </div>
-                    <div class="benefit-card">
+                    <div class="benefit-card" onclick="openMaterialLink('https://meet.google.com/tu-enlace-de-meet-aqui')">
                         <i class="fas fa-video"></i>
                         <h5>Clases en Vivo</h5>
                         <p>Viernes, Sábados y Domingos</p>
                     </div>
-                    <div class="benefit-card">
+                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/drive/folders/tu-enlace-clases-grabadas')">
                         <i class="fas fa-play-circle"></i>
                         <h5>Clases Grabadas</h5>
                         <p>Acceso 24/7</p>
                     </div>
-                    <div class="benefit-card">
+                    <div class="benefit-card" onclick="openWhatsApp()">
                         <i class="fas fa-headset"></i>
                         <h5>Soporte</h5>
                         <p>Ayuda personalizada</p>
@@ -1513,7 +1503,7 @@
                 
                 <div class="unlocked-actions">
                     <button class="btn btn-primary btn-block" onclick="openGoogleDrive()">
-                        <i class="fab fa-google-drive"></i> Abrir Google Drive
+                        <i class="fab fa-google-drive"></i> Abrir Google Drive Principal
                     </button>
                     <button class="btn btn-outline btn-block" onclick="closeMaterialBenefitsModal()">
                         <i class="fas fa-play"></i> Continuar Explorando
@@ -1594,7 +1584,6 @@
             const downloadButton = document.getElementById('downloadButton');
             const modalTitle = document.getElementById('modalTitle');
             const lockedMessage = document.getElementById('lockedMessage');
-            const unlockedMessage = document.getElementById('unlockedMessage');
             const previewActions = document.getElementById('previewActions');
             const unlockedActions = document.getElementById('unlockedActions');
             
@@ -1602,7 +1591,6 @@
             modalTitle.textContent = "Vista Previa - Libro Planteo de Ecuaciones";
             pdfPreview.classList.add('locked');
             lockedMessage.style.display = 'block';
-            unlockedMessage.style.display = 'none';
             
             // Botones bloqueados
             driveViewButton.classList.add('locked');
@@ -1630,15 +1618,13 @@
             const downloadButton = document.getElementById('downloadButton');
             const modalTitle = document.getElementById('modalTitle');
             const lockedMessage = document.getElementById('lockedMessage');
-            const unlockedMessage = document.getElementById('unlockedMessage');
             const previewActions = document.getElementById('previewActions');
             const unlockedActions = document.getElementById('unlockedActions');
             
             // Configurar estado DESBLOQUEADO
             modalTitle.textContent = "🎉 Curso Desbloqueado - Planteo de Ecuaciones";
             pdfPreview.classList.remove('locked');
-            lockedMessage.style.display = 'none';
-            unlockedMessage.style.display = 'block';
+            lockedMessage.style.display = 'none'; // OCULTAMOS el mensaje de bloqueo
             
             // Botones desbloqueados
             driveViewButton.classList.remove('locked');
@@ -1668,6 +1654,16 @@
         // Función para cerrar el modal de beneficios
         function closeMaterialBenefitsModal() {
             document.getElementById('materialBenefitsModal').style.display = 'none';
+        }
+
+        // NUEVA FUNCIÓN: Abrir enlaces específicos de material
+        function openMaterialLink(url) {
+            window.open(url, '_blank');
+        }
+
+        // Función para abrir WhatsApp
+        function openWhatsApp() {
+            window.open('https://wa.me/51973441252', '_blank');
         }
 
         // Función para abrir Google Drive
@@ -1913,10 +1909,6 @@
             document.getElementById('accessCode').value = '';
         }
 
-        function closeUnlockedModal() {
-            document.getElementById('unlockedModal').style.display = 'none';
-        }
-
         // FUNCIÓN MEJORADA PARA VALIDAR CÓDIGOS ÚNICOS
         function validateAccessCode() {
             const code = document.getElementById('accessCode').value.trim().toUpperCase();
@@ -1969,10 +1961,6 @@
             } else {
                 alert('❌ Código inválido. Verifica el código o contacta a neostudy@gmail.com');
             }
-        }
-
-        function showUnlockedModal() {
-            document.getElementById('unlockedModal').style.display = 'flex';
         }
 
         // Abrir tema disponible (solo Planteo de Ecuaciones) - CORREGIDO
