@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -1704,9 +1704,12 @@ DOCTYPE html>
                     expira: authorizedUsers[code].expiration
                 }));
 
-                // Cerrar login y abrir contenido
+                // Cerrar login y abrir contenido DESBLOQUEADO
                 closeLogin();
-                openPreviewModal();
+                
+                // Ahora mostrar el modal con vista DESBLOQUEADA
+                document.getElementById('previewModal').style.display = 'flex';
+                showUnlockedPreview();
                 
             } else {
                 loginError.textContent = '❌ Credenciales incorrectas. Verifica tu código y contraseña.';
@@ -1743,6 +1746,91 @@ DOCTYPE html>
             }
             
             return false; // NO TIENE ACCESO
+        }
+
+        // ===== SISTEMA DE VISTA PREVIA CORREGIDO =====
+        function openPreviewModal() {
+            document.getElementById('previewModal').style.display = 'flex';
+            
+            // VERIFICAR ACCESO - PERO SIEMPRE MOSTRAR VISTA PREVIA BLOQUEADA PRIMERO
+            if (!checkUserAccess()) {
+                showLockedPreview(); // MOSTRAR BLOQUEADO para que vean el libro con blur
+            } else {
+                showUnlockedPreview(); // Solo mostrar desbloqueado si YA tiene acceso
+            }
+        }
+
+        // Función para mostrar vista previa BLOQUEADA (SIEMPRE se muestra primero)
+        function showLockedPreview() {
+            const pdfPreview = document.getElementById('pdfPreview');
+            const driveViewButton = document.getElementById('driveViewButton');
+            const downloadButton = document.getElementById('downloadButton');
+            const modalTitle = document.getElementById('modalTitle');
+            const lockedMessage = document.getElementById('lockedMessage');
+            const previewActions = document.getElementById('previewActions');
+            const unlockedActions = document.getElementById('unlockedActions');
+            
+            // Configurar estado BLOQUEADO
+            modalTitle.textContent = "Vista Previa - Libro Planteo de Ecuaciones";
+            pdfPreview.classList.add('locked');
+            lockedMessage.style.display = 'block';
+            
+            // Botones bloqueados
+            driveViewButton.classList.add('locked');
+            downloadButton.classList.add('locked');
+            driveViewButton.href = "javascript:void(0)";
+            downloadButton.href = "javascript:void(0)";
+            
+            driveViewButton.onclick = function() {
+                if (!checkUserAccess()) {
+                    alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso con tu código de acceso.');
+                    showSecureLogin(); // Redirigir al login si no tiene acceso
+                }
+            };
+            
+            downloadButton.onclick = function() {
+                if (!checkUserAccess()) {
+                    alert('🔒 Para descargar el PDF, primero debes desbloquear el curso con tu código de acceso.');
+                    showSecureLogin(); // Redirigir al login si no tiene acceso
+                }
+            };
+            
+            // Mostrar botón de desbloquear
+            previewActions.style.display = 'block';
+            unlockedActions.style.display = 'none';
+        }
+
+        // Función para mostrar vista previa DESBLOQUEADA (solo después de login exitoso)
+        function showUnlockedPreview() {
+            const pdfPreview = document.getElementById('pdfPreview');
+            const driveViewButton = document.getElementById('driveViewButton');
+            const downloadButton = document.getElementById('downloadButton');
+            const modalTitle = document.getElementById('modalTitle');
+            const lockedMessage = document.getElementById('lockedMessage');
+            const previewActions = document.getElementById('previewActions');
+            const unlockedActions = document.getElementById('unlockedActions');
+            
+            // Configurar estado DESBLOQUEADO
+            modalTitle.textContent = "🎉 Curso Desbloqueado - Planteo de Ecuaciones";
+            pdfPreview.classList.remove('locked');
+            lockedMessage.style.display = 'none';
+            
+            // Botones desbloqueados
+            driveViewButton.classList.remove('locked');
+            downloadButton.classList.remove('locked');
+            driveViewButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
+            downloadButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
+            
+            driveViewButton.onclick = null;
+            downloadButton.onclick = null;
+            
+            // Mostrar botones de acceso completo
+            previewActions.style.display = 'none';
+            unlockedActions.style.display = 'block';
+        }
+
+        function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
         }
 
         // ===== SISTEMA DE ACTIVACIÓN DE CÓDIGOS =====
@@ -1799,10 +1887,22 @@ DOCTYPE html>
 
                 closePaymentModal();
                 
-                // Mostrar credenciales al usuario
+                // Mostrar credenciales y LUEGO mostrar vista DESBLOQUEADA
                 setTimeout(() => {
                     alert(`✅ ¡Curso activado correctamente!\n\n📝 Tus credenciales únicas:\nCódigo: ${code}\nContraseña: ${uniquePassword}\n\n💡 Guarda esta información en un lugar seguro.\n⚠️ Estas credenciales solo funcionarán para tu cuenta actual.`);
-                    showSecureLogin();
+                    
+                    // MARCAR COMO ACCESO VÁLIDO INMEDIATAMENTE
+                    const userAccessKey = `cursoAcceso_${userID}`;
+                    localStorage.setItem(userAccessKey, JSON.stringify({
+                        codigo: code,
+                        fechaAcceso: new Date().toISOString(),
+                        expira: authorizedUsers[code].expiration
+                    }));
+                    
+                    // Mostrar vista DESBLOQUEADA directamente
+                    document.getElementById('previewModal').style.display = 'flex';
+                    showUnlockedPreview();
+                    
                 }, 500);
                 
             } else {
@@ -1865,83 +1965,7 @@ DOCTYPE html>
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        // ===== SISTEMA DE VISTA PREVIA MEJORADO =====
-        function openPreviewModal() {
-            // VERIFICAR ACCESO ANTES DE ABRIR
-            if (!checkUserAccess()) {
-                showSecureLogin();
-                return;
-            }
-
-            document.getElementById('previewModal').style.display = 'flex';
-            showUnlockedPreview();
-        }
-
-        function showLockedPreview() {
-            const pdfPreview = document.getElementById('pdfPreview');
-            const driveViewButton = document.getElementById('driveViewButton');
-            const downloadButton = document.getElementById('downloadButton');
-            const modalTitle = document.getElementById('modalTitle');
-            const lockedMessage = document.getElementById('lockedMessage');
-            const previewActions = document.getElementById('previewActions');
-            const unlockedActions = document.getElementById('unlockedActions');
-            
-            // Configurar estado BLOQUEADO
-            modalTitle.textContent = "Vista Previa - Libro Planteo de Ecuaciones";
-            pdfPreview.classList.add('locked');
-            lockedMessage.style.display = 'block';
-            
-            // Botones bloqueados
-            driveViewButton.classList.add('locked');
-            downloadButton.classList.add('locked');
-            driveViewButton.href = "javascript:void(0)";
-            downloadButton.href = "javascript:void(0)";
-            
-            driveViewButton.onclick = function() {
-                alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso con tu código de acceso.');
-            };
-            
-            downloadButton.onclick = function() {
-                alert('🔒 Para descargar el PDF, primero debes desbloquear el curso con tu código de acceso.');
-            };
-            
-            // Mostrar botón de desbloquear
-            previewActions.style.display = 'block';
-            unlockedActions.style.display = 'none';
-        }
-
-        function showUnlockedPreview() {
-            const pdfPreview = document.getElementById('pdfPreview');
-            const driveViewButton = document.getElementById('driveViewButton');
-            const downloadButton = document.getElementById('downloadButton');
-            const modalTitle = document.getElementById('modalTitle');
-            const lockedMessage = document.getElementById('lockedMessage');
-            const previewActions = document.getElementById('previewActions');
-            const unlockedActions = document.getElementById('unlockedActions');
-            
-            // Configurar estado DESBLOQUEADO
-            modalTitle.textContent = "🎉 Curso Desbloqueado - Planteo de Ecuaciones";
-            pdfPreview.classList.remove('locked');
-            lockedMessage.style.display = 'none';
-            
-            // Botones desbloqueados
-            driveViewButton.classList.remove('locked');
-            downloadButton.classList.remove('locked');
-            driveViewButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
-            downloadButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
-            
-            driveViewButton.onclick = null;
-            downloadButton.onclick = null;
-            
-            // Mostrar botones de acceso completo
-            previewActions.style.display = 'none';
-            unlockedActions.style.display = 'block';
-        }
-
-        function closePreviewModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-
+        // ===== FUNCIONES DE MATERIAL =====
         function showMaterialBenefits() {
             if (!checkUserAccess()) {
                 showSecureLogin();
@@ -1955,7 +1979,6 @@ DOCTYPE html>
             document.getElementById('materialBenefitsModal').style.display = 'none';
         }
 
-        // ===== FUNCIONES DE MATERIAL =====
         function openMaterialLink(url) {
             window.open(url, '_blank');
         }
@@ -2195,11 +2218,7 @@ DOCTYPE html>
 
         function openTopic(topicId) {
             if (topicId === 1) {
-                if (!checkUserAccess()) {
-                    showSecureLogin();
-                } else {
-                    openPreviewModal();
-                }
+                openPreviewModal(); // SIEMPRE abrir vista previa (mostrará bloqueada o desbloqueada según acceso)
             } else {
                 showComingSoon();
             }
@@ -2230,15 +2249,9 @@ DOCTYPE html>
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
 
-            // Verificar si el usuario ya tiene acceso válido
-            const tieneAcceso = checkUserAccess();
-            if (tieneAcceso) {
-                console.log('✅ Usuario tiene acceso válido al curso');
-            }
-
             // Cargar cursos al iniciar
             showMathCourses();
         });
     </script>
 </body>
-    </html>
+   </html>
