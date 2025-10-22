@@ -1616,6 +1616,29 @@
     </div>
 
     <script>
+        // ===== INTEGRACIÓN CON HOJA DE CÁLCULO =====
+        const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxvD7AYdnYEdcq2afCtiMolovLr0F6Ly_22LGA9jzC1ZUZ18jMmQVlCmklJUzVEET6f/exec';
+
+        // ✅ FUNCIÓN PARA REGISTRAR EN HOJA DE CÁLCULO
+        function registrarEnHojaCalculo(datos) {
+            console.log('📊 Intentando registrar en hoja:', datos);
+            
+            fetch(SHEET_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log('✅ Registrado en hoja:', result);
+            })
+            .catch(error => {
+                console.log('⚠️ No se pudo registrar en hoja, pero acceso concedido');
+            });
+        }
+
         // ===== SISTEMA DE IDENTIFICACIÓN UNIVERSAL =====
         function getUniversalUserID() {
             try {
@@ -1739,6 +1762,16 @@
 
                 localStorage.setItem('neoStudyAuthorizedUsers', JSON.stringify(authorizedUsers));
                 localStorage.setItem('neoStudyUsedCodes', JSON.stringify(usedCodes));
+
+                // ✅ REGISTRAR EN HOJA DE CÁLCULO
+                registrarEnHojaCalculo({
+                    codigo: code,
+                    usuario: userInfo,
+                    contacto: userData.contacto || 'No disponible',
+                    estado: 'ACTIVADO',
+                    fecha: new Date().toLocaleString(),
+                    curso: 'Planteo de Ecuaciones'
+                });
 
                 activateUserAccessWithCode(currentUserID, code, uniquePassword, expirationDate);
                 
@@ -1874,6 +1907,17 @@
                     expira: authorizedUsers[code].expiration,
                     password: password
                 }));
+
+                // ✅ REGISTRAR ACCESO EN HOJA DE CÁLCULO
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                registrarEnHojaCalculo({
+                    codigo: code,
+                    usuario: authorizedUsers[code].usuario,
+                    contacto: userData.contacto || 'No disponible',
+                    estado: 'ACCESO_LOGIN',
+                    fecha: new Date().toLocaleString(),
+                    curso: 'Planteo de Ecuaciones'
+                });
 
                 closeLogin();
                 document.getElementById('previewModal').style.display = 'flex';
