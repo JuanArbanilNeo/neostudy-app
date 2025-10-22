@@ -1383,7 +1383,7 @@
                 </div>
 
                 <div class="unlocked-actions" id="unlockedActions" style="display: none;">
-                    <button class="btn btn-success btn-block" onclick="accessFullMaterial()">
+                    <button class="btn btn-success btn-block" onclick="showMaterialBenefits()">
                         <i class="fas fa-external-link-alt"></i> Acceder a Todo el Material
                     </button>
                     <button class="btn btn-outline btn-block" onclick="closePreviewModal()">
@@ -1460,12 +1460,12 @@
         </div>
     </div>
 
-    <!-- Modal de Curso Desbloqueado -->
-    <div class="modal" id="unlockedModal">
+    <!-- Modal de Beneficios del Material (NUEVO) -->
+    <div class="modal" id="materialBenefitsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🎉 ¡Curso Desbloqueado!</h3>
-                <button class="close-modal" onclick="closeUnlockedModal()">&times;</button>
+                <h3>🎉 ¡Acceso Completo al Material!</h3>
+                <button class="close-modal" onclick="closeMaterialBenefitsModal()">&times;</button>
             </div>
             
             <div class="unlocked-content">
@@ -1512,10 +1512,10 @@
                 </div>
                 
                 <div class="unlocked-actions">
-                    <button class="btn btn-primary btn-block" onclick="accessFullMaterial()">
-                        <i class="fas fa-external-link-alt"></i> Abrir Material Completo
+                    <button class="btn btn-primary btn-block" onclick="openGoogleDrive()">
+                        <i class="fab fa-google-drive"></i> Abrir Google Drive
                     </button>
-                    <button class="btn btn-outline btn-block" onclick="closeUnlockedModal()">
+                    <button class="btn btn-outline btn-block" onclick="closeMaterialBenefitsModal()">
                         <i class="fas fa-play"></i> Continuar Explorando
                     </button>
                 </div>
@@ -1657,6 +1657,22 @@
         // Función para cerrar el modal de vista previa
         function closePreviewModal() {
             document.getElementById('previewModal').style.display = 'none';
+        }
+
+        // NUEVA FUNCIÓN: Mostrar beneficios del material
+        function showMaterialBenefits() {
+            closePreviewModal();
+            document.getElementById('materialBenefitsModal').style.display = 'flex';
+        }
+
+        // Función para cerrar el modal de beneficios
+        function closeMaterialBenefitsModal() {
+            document.getElementById('materialBenefitsModal').style.display = 'none';
+        }
+
+        // Función para abrir Google Drive
+        function openGoogleDrive() {
+            window.open('https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link', '_blank');
         }
 
         // Datos de cursos de Matemática
@@ -1817,9 +1833,9 @@
             window.location.href = 'modulo4_cursos.html';
         }
 
-        // Acceso al material completo
+        // Acceso al material completo (ahora abre el modal de beneficios)
         function accessFullMaterial() {
-            window.open('https://drive.google.com/drive/folders/1Jrq4hTYUjmEmJzhTU0ccB6-1LpEu9IOp?usp=drive_link', '_blank');
+            showMaterialBenefits();
         }
 
         // Mostrar cursos de Matemática
@@ -1976,13 +1992,13 @@
 
         // Cerrar modales al hacer click fuera
         window.onclick = function(event) {
-            const modals = ['previewModal', 'paymentModal', 'unlockedModal'];
+            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
                     if (modalId === 'previewModal') closePreviewModal();
                     if (modalId === 'paymentModal') closePaymentModal();
-                    if (modalId === 'unlockedModal') closeUnlockedModal();
+                    if (modalId === 'materialBenefitsModal') closeMaterialBenefitsModal();
                 }
             });
         }
