@@ -1617,25 +1617,57 @@
 
     <script>
         // ===== INTEGRACIÓN CON HOJA DE CÁLCULO =====
-        const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxvD7AYdnYEdcq2afCtiMolovLr0F6Ly_22LGA9jzC1ZUZ18jMmQVlCmklJUzVEET6f/exec';
+        const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwaJt1gTCfh_MNdV5lIvO4Lf9Rlej6KA4-8Le7IMEtHSt0t7NSThi3w8I-yJAv40NDD/exec';
 
-        // ✅ FUNCIÓN PARA REGISTRAR EN HOJA DE CÁLCULO
+        // ✅ FUNCIÓN MEJORADA PARA REGISTRAR EN HOJA DE CÁLCULO
         function registrarEnHojaCalculo(datos) {
-            console.log('📊 Intentando registrar en hoja:', datos);
+            console.log('📊 Enviando datos a hoja:', datos);
+            
+            // ✅ AGREGAR FECHA EXACTA
+            const datosCompletos = {
+                ...datos,
+                fecha: new Date().toLocaleString('es-PE', { 
+                    timeZone: 'America/Lima',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                })
+            };
             
             fetch(SHEET_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(datos)
+                body: JSON.stringify(datosCompletos)
             })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.text();
+            })
             .then(result => {
-                console.log('✅ Registrado en hoja:', result);
+                console.log('✅ Respuesta de hoja:', result);
+                
+                // ✅ VERIFICAR SI HUBO ERROR
+                try {
+                    const jsonResult = JSON.parse(result);
+                    if (jsonResult.status === 'success') {
+                        console.log('🎉 Registro exitoso en fila:', jsonResult.fila);
+                    } else {
+                        console.log('⚠️ Error en registro:', jsonResult.message);
+                    }
+                } catch (e) {
+                    console.log('📝 Registro completado (respuesta simple)');
+                }
             })
             .catch(error => {
-                console.log('⚠️ No se pudo registrar en hoja, pero acceso concedido');
+                console.log('❌ Error de conexión:', error);
+                // ⚠️ PERO EL ACCESO SE CONCEDE IGUAL
             });
         }
 
@@ -1769,7 +1801,6 @@
                     usuario: userInfo,
                     contacto: userData.contacto || 'No disponible',
                     estado: 'ACTIVADO',
-                    fecha: new Date().toLocaleString(),
                     curso: 'Planteo de Ecuaciones'
                 });
 
@@ -1915,7 +1946,6 @@
                     usuario: authorizedUsers[code].usuario,
                     contacto: userData.contacto || 'No disponible',
                     estado: 'ACCESO_LOGIN',
-                    fecha: new Date().toLocaleString(),
                     curso: 'Planteo de Ecuaciones'
                 });
 
@@ -2345,6 +2375,21 @@
             }
         }
 
+        // ✅ FUNCIÓN PARA PROBAR CONEXIÓN
+        function probarConexionHoja() {
+            console.log('🔍 Probando conexión con hoja...');
+            
+            registrarEnHojaCalculo({
+                codigo: 'TEST123',
+                usuario: 'Usuario Prueba',
+                contacto: '999888777',
+                estado: 'PRUEBA_CONEXION',
+                curso: 'Prueba de Conexión'
+            });
+            
+            alert('✅ Prueba enviada. Revisa la consola (F12) para ver el resultado.');
+        }
+
         window.onclick = function(event) {
             const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay'];
             modals.forEach(modalId => {
@@ -2372,7 +2417,22 @@
             if (!localStorage.getItem('neoStudyAuthorizedUsers')) {
                 localStorage.setItem('neoStudyAuthorizedUsers', JSON.stringify({}));
             }
+
+            // ✅ MOSTRAR BOTÓN DE PRUEBA EN DESARROLLO
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                const devSection = document.getElementById('devTools');
+                if (devSection) {
+                    const testButton = document.createElement('button');
+                    testButton.className = 'btn';
+                    testButton.style.background = '#2196F3';
+                    testButton.style.color = 'white';
+                    testButton.style.marginLeft = '10px';
+                    testButton.innerHTML = '<i class="fas fa-vial"></i> PROBAR CONEXIÓN HOJA';
+                    testButton.onclick = probarConexionHoja;
+                    devSection.appendChild(testButton);
+                }
+            }
         });
     </script>
 </body>
-  </html>
+    </html>
