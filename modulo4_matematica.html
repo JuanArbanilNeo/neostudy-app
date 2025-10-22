@@ -593,6 +593,16 @@
             box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
         }
 
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
         .btn-disabled {
             background: var(--secondary);
             color: var(--white);
@@ -750,6 +760,22 @@
             text-align: center;
             z-index: 10;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .unlocked-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
         }
         
         .preview-info {
@@ -1303,26 +1329,31 @@
         </div>
     </footer>
 
-    <!-- Modal de Vista Previa ACTUALIZADO CON TU PDF -->
+    <!-- Modal de Vista Previa MEJORADO -->
     <div class="modal" id="previewModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Vista Previa - Libro Planteo de Ecuaciones</h3>
+                <h3 id="modalTitle">Vista Previa - Libro Planteo de Ecuaciones</h3>
                 <button class="close-modal" onclick="closePreviewModal()">&times;</button>
             </div>
             
             <div class="preview-container">
                 <!-- Visor de PDF con Google Drive -->
-                <div class="pdf-preview-container locked" id="pdfPreview">
+                <div class="pdf-preview-container" id="pdfPreview">
                     <iframe 
                         src="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/preview" 
                         class="pdf-iframe"
                         allow="autoplay">
                     </iframe>
-                    <div class="locked-message">
+                    <div class="locked-message" id="lockedMessage">
                         <i class="fas fa-lock"></i><br>
                         VISTA PREVIA<br>
                         <small>Desbloquea el curso para acceso completo</small>
+                    </div>
+                    <div class="unlocked-message" id="unlockedMessage">
+                        <i class="fas fa-unlock"></i><br>
+                        CONTENIDO DESBLOQUEADO<br>
+                        <small>¡Disfruta de todo el material!</small>
                     </div>
                 </div>
                 
@@ -1336,25 +1367,34 @@
                 
                 <div class="drive-buttons">
                     <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
-                       class="drive-button locked" id="driveViewButton" target="_blank">
+                       class="drive-button" id="driveViewButton" target="_blank">
                         <i class="fab fa-google-drive"></i> Ver en Google Drive
                     </a>
                     <a href="https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing" 
-                       class="btn btn-outline locked" id="downloadButton">
+                       class="btn btn-outline" id="downloadButton">
                         <i class="fas fa-download"></i> Descargar PDF
                     </a>
                 </div>
                 
-                <div class="preview-actions">
+                <div class="preview-actions" id="previewActions">
                     <button class="btn btn-primary btn-block" onclick="showPaymentModal()">
                         <i class="fas fa-lock-open"></i> Desbloquear Curso Completo - S/ 6.00
+                    </button>
+                </div>
+
+                <div class="unlocked-actions" id="unlockedActions" style="display: none;">
+                    <button class="btn btn-success btn-block" onclick="accessFullMaterial()">
+                        <i class="fas fa-external-link-alt"></i> Acceder a Todo el Material
+                    </button>
+                    <button class="btn btn-outline btn-block" onclick="closePreviewModal()">
+                        <i class="fas fa-play"></i> Continuar Explorando
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Pago MEJORADO -->
+    <!-- Modal de Pago -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1369,7 +1409,6 @@
                     <div class="qr-container">
                         <h5>📱 Escanea este código QR con Yape:</h5>
                         <div class="qr-code">
-                            <!-- AQUÍ VA TU QR REAL - MÁS GRANDE Y CLARO -->
                             <img src="imagen-qr-yape.jpg" alt="QR Code Yape - Escanear con la app Yape">
                         </div>
                         <p class="qr-instructions">
@@ -1421,7 +1460,7 @@
         </div>
     </div>
 
-    <!-- Modal de Curso Desbloqueado ACTUALIZADO -->
+    <!-- Modal de Curso Desbloqueado -->
     <div class="modal" id="unlockedModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1532,7 +1571,7 @@
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        // Función para abrir el modal de vista previa
+        // Función para abrir el modal de vista previa - MEJORADA
         function openPreviewModal() {
             document.getElementById('previewModal').style.display = 'flex';
             
@@ -1540,37 +1579,37 @@
             const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
             
             if (tieneAcceso) {
-                // Si ya tiene acceso, desbloquear todo
-                unlockContent();
+                // Si ya tiene acceso, mostrar todo DESBLOQUEADO
+                showUnlockedPreview();
             } else {
-                // Si no tiene acceso, bloquear todo
-                lockContent();
+                // Si no tiene acceso, mostrar todo BLOQUEADO
+                showLockedPreview();
             }
         }
 
-        // Función para cerrar el modal de vista previa
-        function closePreviewModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-
-        // Función para bloquear el contenido
-        function lockContent() {
+        // Función para mostrar vista previa BLOQUEADA
+        function showLockedPreview() {
             const pdfPreview = document.getElementById('pdfPreview');
             const driveViewButton = document.getElementById('driveViewButton');
             const downloadButton = document.getElementById('downloadButton');
+            const modalTitle = document.getElementById('modalTitle');
+            const lockedMessage = document.getElementById('lockedMessage');
+            const unlockedMessage = document.getElementById('unlockedMessage');
+            const previewActions = document.getElementById('previewActions');
+            const unlockedActions = document.getElementById('unlockedActions');
             
-            // Aplicar bloqueo al visor de PDF
+            // Configurar estado BLOQUEADO
+            modalTitle.textContent = "Vista Previa - Libro Planteo de Ecuaciones";
             pdfPreview.classList.add('locked');
+            lockedMessage.style.display = 'block';
+            unlockedMessage.style.display = 'none';
             
-            // Aplicar bloqueo a los botones
+            // Botones bloqueados
             driveViewButton.classList.add('locked');
             downloadButton.classList.add('locked');
-            
-            // Cambiar comportamiento de los enlaces
             driveViewButton.href = "javascript:void(0)";
             downloadButton.href = "javascript:void(0)";
             
-            // Agregar eventos de clic para mostrar mensaje
             driveViewButton.onclick = function() {
                 alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso con tu código de acceso.');
             };
@@ -1578,28 +1617,46 @@
             downloadButton.onclick = function() {
                 alert('🔒 Para descargar el PDF, primero debes desbloquear el curso con tu código de acceso.');
             };
+            
+            // Mostrar botón de desbloquear
+            previewActions.style.display = 'block';
+            unlockedActions.style.display = 'none';
         }
 
-        // Función para desbloquear el contenido
-        function unlockContent() {
+        // Función para mostrar vista previa DESBLOQUEADA
+        function showUnlockedPreview() {
             const pdfPreview = document.getElementById('pdfPreview');
             const driveViewButton = document.getElementById('driveViewButton');
             const downloadButton = document.getElementById('downloadButton');
+            const modalTitle = document.getElementById('modalTitle');
+            const lockedMessage = document.getElementById('lockedMessage');
+            const unlockedMessage = document.getElementById('unlockedMessage');
+            const previewActions = document.getElementById('previewActions');
+            const unlockedActions = document.getElementById('unlockedActions');
             
-            // Quitar bloqueo al visor de PDF
+            // Configurar estado DESBLOQUEADO
+            modalTitle.textContent = "🎉 Curso Desbloqueado - Planteo de Ecuaciones";
             pdfPreview.classList.remove('locked');
+            lockedMessage.style.display = 'none';
+            unlockedMessage.style.display = 'block';
             
-            // Quitar bloqueo a los botones
+            // Botones desbloqueados
             driveViewButton.classList.remove('locked');
             downloadButton.classList.remove('locked');
-            
-            // Restaurar enlaces originales
             driveViewButton.href = "https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing";
             downloadButton.href = "https://drive.google.com/file/d/1hG4PwEKgvtM5ULb0YtPibFk93NUPEjyb/view?usp=sharing";
             
-            // Restaurar comportamiento normal
             driveViewButton.onclick = null;
             downloadButton.onclick = null;
+            
+            // Mostrar botones de acceso completo
+            previewActions.style.display = 'none';
+            unlockedActions.style.display = 'block';
+        }
+
+        // Función para cerrar el modal de vista previa
+        function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
         }
 
         // Datos de cursos de Matemática
@@ -1883,14 +1940,12 @@
                     localStorage.setItem('fechaDesbloqueo', new Date().toLocaleString());
                     
                     closePaymentModal();
-                    showUnlockedModal();
                     
-                    // Desbloquear el contenido en el modal de vista previa
-                    unlockContent();
-                    
+                    // Mostrar mensaje de éxito y abrir vista previa DESBLOQUEADA
                     setTimeout(() => {
                         alert('✅ ¡Curso desbloqueado correctamente! Ahora tienes acceso completo a todo el material.');
-                    }, 1000);
+                        openPreviewModal();
+                    }, 500);
                     
                 } else {
                     alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
@@ -1904,17 +1959,11 @@
             document.getElementById('unlockedModal').style.display = 'flex';
         }
 
-        // Abrir tema disponible (solo Planteo de Ecuaciones)
+        // Abrir tema disponible (solo Planteo de Ecuaciones) - CORREGIDO
         function openTopic(topicId) {
             if (topicId === 1) {
-                const tieneAcceso = localStorage.getItem('cursoPlanteoEcuaciones') === 'desbloqueado';
-                
-                if (tieneAcceso) {
-                    // Si está desbloqueado, abrir el Google Drive completo
-                    accessFullMaterial();
-                } else {
-                    openPreviewModal();
-                }
+                // SIEMPRE abrir el modal de vista previa
+                openPreviewModal();
             } else {
                 showComingSoon();
             }
@@ -1931,7 +1980,9 @@
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
-                    eval(`close${modalId.charAt(0).toUpperCase() + modalId.slice(1)}()`);
+                    if (modalId === 'previewModal') closePreviewModal();
+                    if (modalId === 'paymentModal') closePaymentModal();
+                    if (modalId === 'unlockedModal') closeUnlockedModal();
                 }
             });
         }
