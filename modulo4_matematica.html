@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -723,7 +723,7 @@
             color: var(--secondary);
         }
 
-        /* NUEVOS ESTILOS PARA EL VISOR DE PDF CON GOOGLE DRIVE */
+        /* NUEVOS ESTILOS MEJORADOS PARA EL VISOR DE PDF */
         .pdf-preview-container {
             width: 100%;
             height: 500px;
@@ -735,16 +735,18 @@
             background: #f8f9fa;
         }
         
-        .pdf-iframe {
+        .pdf-placeholder {
             width: 100%;
             height: 100%;
-            border: none;
-            transition: filter 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
         
-        .pdf-preview-container.locked .pdf-iframe {
+        .pdf-preview-container.locked .pdf-placeholder {
             filter: blur(8px);
-            pointer-events: none;
         }
         
         .locked-message {
@@ -789,6 +791,8 @@
             gap: 0.5rem;
             font-weight: 600;
             transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
         }
         
         .drive-button:hover {
@@ -967,13 +971,15 @@
             justify-content: center;
             margin: 0 auto 1rem;
             padding: 0.5rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
         }
 
         .qr-code img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .qr-instructions {
@@ -1083,6 +1089,47 @@
             background: #3d3d3d;
         }
 
+        /* MEET BUTTONS STYLES */
+        .meet-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .meet-button {
+            background: #00897B;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .meet-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 137, 123, 0.3);
+            background: #00796B;
+        }
+
+        .meet-button.secondary {
+            background: #5C6BC0;
+        }
+
+        .meet-button.secondary:hover {
+            background: #3F51B5;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header {
@@ -1160,6 +1207,14 @@
                 flex-direction: column;
                 align-items: center;
             }
+
+            .meet-buttons {
+                flex-direction: column;
+            }
+
+            .meet-button {
+                min-width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1195,6 +1250,11 @@
 
             .mobile-nav-item i {
                 font-size: 1rem;
+            }
+
+            .qr-code {
+                width: 250px;
+                height: 250px;
             }
         }
 
@@ -1233,6 +1293,11 @@
 
             .mobile-nav-item i {
                 font-size: 1rem;
+            }
+
+            .qr-code {
+                width: 220px;
+                height: 220px;
             }
         }
     </style>
@@ -1420,13 +1485,15 @@
             </div>
             
             <div class="preview-container">
-                <!-- Visor de PDF con Google Drive -->
+                <!-- Visor de PDF MEJORADO - Sin errores de consola -->
                 <div class="pdf-preview-container" id="pdfPreview">
-                    <iframe 
-                        src="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/preview" 
-                        class="pdf-iframe"
-                        allow="autoplay">
-                    </iframe>
+                    <div class="pdf-placeholder" id="pdfPlaceholder">
+                        <div style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-book" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                            <h4>Libro: Planteo de Ecuaciones</h4>
+                            <p>Contenido educativo premium</p>
+                        </div>
+                    </div>
                     <div class="locked-message" id="lockedMessage">
                         <i class="fas fa-lock"></i><br>
                         VISTA PREVIA<br>
@@ -1443,14 +1510,12 @@
                 </div>
                 
                 <div class="drive-buttons">
-                    <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk" 
-                       class="drive-button" id="driveViewButton" target="_blank">
-                        <i class="fab fa-google-drive"></i> Ver en Google Drive
-                    </a>
-                    <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk" 
-                       class="btn btn-outline" id="downloadButton">
+                    <button class="drive-button" id="driveViewButton" onclick="handleDriveAccess()">
+                        <i class="fab fa-google-drive"></i> Ver Libro Completo
+                    </button>
+                    <button class="btn btn-outline" id="downloadButton" onclick="handleDownloadAccess()">
                         <i class="fas fa-download"></i> Descargar PDF
-                    </a>
+                    </button>
                 </div>
                 
                 <div class="preview-actions" id="previewActions">
@@ -1471,7 +1536,7 @@
         </div>
     </div>
 
-    <!-- Modal de Pago -->
+    <!-- Modal de Pago MEJORADO -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1486,7 +1551,13 @@
                     <div class="qr-container">
                         <h5>📱 Escanea este código QR con Yape:</h5>
                         <div class="qr-code">
-                            <img src="imagen-qr-yape.jpg" alt="QR Code Yape - Escanear con la app Yape">
+                            <img src="imagen-qr-yape.jpg" alt="QR Code Yape - Escanear con la app Yape" 
+                                 onerror="this.style.display='none'; document.getElementById('qrFallback').style.display='block'">
+                            <div id="qrFallback" style="display: none; text-align: center; padding: 2rem;">
+                                <i class="fas fa-qrcode" style="font-size: 4rem; color: var(--primary);"></i>
+                                <p style="margin-top: 1rem; font-weight: bold;">QR Code Yape</p>
+                                <p style="font-size: 0.9rem; color: var(--secondary);">Imagen no disponible</p>
+                            </div>
                         </div>
                         <p class="qr-instructions">
                             <strong>💡 Cómo escanear:</strong><br>
@@ -1501,7 +1572,7 @@
                         <h5>📞 Opción alternativa:</h5>
                         <p><strong>Número de Yape:</strong> 51 973441252</p>
                         <p><strong>Monto a pagar:</strong> S/ 6.00</p>
-                        <p><strong>Concepto:</strong> Planteo de Ecuaciones</p>
+                        <p><strong>Concepto:</strong> Curso Planteo de Ecuaciones</p>
                     </div>
                 </div>
                 
@@ -1519,20 +1590,33 @@
                         <p><i class="fas fa-envelope"></i> <strong>Email:</strong> neostudy@gmail.com</p>
                         <p><i class="fas fa-clock"></i> <strong>Horario de atención:</strong> 8:00 AM - 8:00 PM</p>
                     </div>
-                </div>
-                
-                <div class="unlock-form">
-                    <h4>🔑 ¿Ya tienes tu código?</h4>
-                    <div class="form-group">
-                        <input type="text" id="accessCode" placeholder="Ingresa tu código de acceso (ej: MATH7X9)">
-                        <button class="btn btn-primary" onclick="validateAccessCode()">
-                            <i class="fas fa-key"></i> Desbloquear
-                        </button>
+
+                    <!-- VERIFICACIÓN EN TIEMPO REAL MEJORADA -->
+                    <div class="unlock-form">
+                        <h4>🔑 ¿Ya tienes tu código?</h4>
+                        <div class="form-group">
+                            <input type="text" id="accessCode" placeholder="Ingresa tu código de acceso (ej: MATH7X9)" 
+                                   onkeyup="checkCodeRealTime(this.value)">
+                            <button class="btn btn-primary" onclick="validateAccessCode()">
+                                <i class="fas fa-key"></i> Desbloquear
+                            </button>
+                        </div>
+                        <div id="codeStatus" style="font-size: 0.8rem; margin-top: 0.5rem;"></div>
+                        <p style="font-size: 0.8rem; color: var(--secondary); margin-top: 0.5rem;">
+                            El código tiene 6-7 caracteres (ej: MATH7X9, STUDY4K2)
+                        </p>
                     </div>
-                    <p style="font-size: 0.8rem; color: var(--secondary); margin-top: 0.5rem;">
-                        El código tiene 6-7 caracteres (ej: MATH7X9, STUDY4K2)
-                    </p>
                 </div>
+            </div>
+
+            <!-- BOTÓN DE RESET SOLO PARA DESARROLLO -->
+            <div id="devTools" style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border-radius: 10px; text-align: center; display: none;">
+                <button class="btn" onclick="resetAllCodes()" style="background: #f44336; color: white;">
+                    <i class="fas fa-redo"></i> REINICIAR CÓDIGOS (SOLO PRUEBAS)
+                </button>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #856404;">
+                    ⚠️ Solo para desarrollo - Elimina todos los accesos
+                </p>
             </div>
         </div>
     </div>
@@ -1558,39 +1642,48 @@
                         <h5>Libro Completo</h5>
                         <p>PDF sin restricciones</p>
                     </div>
-                    <div class="benefit-card" onclick="openMaterialLink('https://meet.google.com/hnq-jhhv-wcn')">
+                    <div class="benefit-card" onclick="showMeetOptions()">
                         <i class="fas fa-video"></i>
                         <h5>Clases en Vivo</h5>
-                        <p>Viernes, Sábados y Domingos</p>
-                    </div>
-                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/drive/folders/tu-enlace-clases-grabadas')">
-                        <i class="fas fa-play-circle"></i>
-                        <h5>Clases Grabadas</h5>
-                        <p>Acceso 24/7</p>
+                        <p>2 horas continuas</p>
                     </div>
                     <div class="benefit-card" onclick="openWhatsApp()">
                         <i class="fas fa-headset"></i>
                         <h5>Soporte</h5>
                         <p>Ayuda personalizada</p>
                     </div>
+                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
+                        <i class="fas fa-download"></i>
+                        <h5>Descargas</h5>
+                        <p>Material adicional</p>
+                    </div>
                 </div>
                 
                 <div style="margin: 2rem 0;">
                     <h5>📚 Acceso inmediato al material completo:</h5>
                     <div class="drive-buttons">
-                        <a href="https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk" 
-                           class="drive-button" target="_blank">
-                            <i class="fab fa-google-drive"></i> Acceder a Todo el Material
-                        </a>
+                        <button class="drive-button" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
+                            <i class="fab fa-google-drive"></i> Acceder al Libro Completo
+                        </button>
                     </div>
+                    
+                    <div class="meet-buttons">
+                        <button class="meet-button" onclick="openMaterialLink('https://meet.google.com/hns-wxcb-qvk')">
+                            <i class="fas fa-video"></i> Google Meet - Primera Hora
+                        </button>
+                        <button class="meet-button secondary" onclick="openMaterialLink('https://meet.google.com/omq-bwem-jgg')">
+                            <i class="fas fa-video"></i> Google Meet - Segunda Hora
+                        </button>
+                    </div>
+                    
                     <p style="font-size: 0.9rem; color: var(--secondary); margin-top: 1rem;">
-                        📁 Encontrarás: Libros completos, ejercicios resueltos, material adicional y más.
+                        📁 Encontrarás: Libro completo, ejercicios resueltos, acceso a clases en vivo y soporte personalizado.
                     </p>
                 </div>
                 
                 <div class="unlocked-actions">
-                    <button class="btn btn-primary btn-block" onclick="openGoogleDrive()">
-                        <i class="fab fa-google-drive"></i> Abrir Google Drive Principal
+                    <button class="btn btn-primary btn-block" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
+                        <i class="fab fa-google-drive"></i> Abrir Libro Principal
                     </button>
                     <button class="btn btn-outline btn-block" onclick="closeMaterialBenefitsModal()">
                         <i class="fas fa-play"></i> Continuar Explorando
@@ -1606,7 +1699,6 @@
             try {
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
                 
-                // Usar el contacto (email/teléfono) como identificador principal
                 if (userData.contacto) {
                     if (userData.contacto.includes('@')) {
                         return 'email_' + userData.contacto.toLowerCase().trim();
@@ -1618,13 +1710,11 @@
                     }
                 }
                 
-                // Si no hay contacto, usar nombre
                 if (userData.nombre) {
                     const nombreLimpio = userData.nombre.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 20);
                     return 'name_' + nombreLimpio;
                 }
                 
-                // Último recurso: ID anónimo persistente
                 let anonID = localStorage.getItem('neoStudyAnonymousID');
                 if (!anonID) {
                     anonID = 'user_' + Math.random().toString(36).substring(2, 11);
@@ -1638,7 +1728,31 @@
             }
         }
 
-        // ===== SISTEMA DE ACTIVACIÓN COMPLETAMENTE CORREGIDO =====
+        // ===== SISTEMA DE CÓDIGOS ÚNICOS MEJORADO =====
+        const codigosValidos = {
+            "MATH7X8": { usado: false, fecha: "" },
+            "STUDY4K3": { usado: false, fecha: "" },
+            "NEO8P5P": { usado: false, fecha: "" },
+            "LEARN3V7": { usado: false, fecha: "" },
+            "CODE6M1P": { usado: false, fecha: "" },
+            "EDU9Z4X": { usado: false, fecha: "" },
+            "BOOK2L7Q": { usado: false, fecha: "" },
+            "PREP5N3J": { usado: false, fecha: "" },
+            "MIND8K6W": { usado: false, fecha: "" },
+            "BRAIN1F9": { usado: false, fecha: "" },
+            "QUIZ7S2P": { usado: false, fecha: "" },
+            "TEST4H8M": { usado: false, fecha: "" },
+            "EXAM9D3C": { usado: false, fecha: "" },
+            "SOLVE6V1": { usado: false, fecha: "" },
+            "LOGIC8X5": { usado: false, fecha: "" },
+            "MATH2T7K": { usado: false, fecha: "" },
+            "STUDY5Q9": { usado: false, fecha: "" },
+            "NEO3R6J": { usado: false, fecha: "" },
+            "LEARN7M4": { usado: false, fecha: "" },
+            "CODE1P8W": { usado: false, fecha: "" }
+        };
+
+        // ===== SISTEMA DE VALIDACIÓN MEJORADO =====
         function validateAccessCode() {
             try {
                 const codeInput = document.getElementById('accessCode');
@@ -1653,83 +1767,79 @@
                     return;
                 }
 
-                // Obtener ID de usuario ACTUAL
                 const currentUserID = getUniversalUserID();
                 console.log("🔑 Activando código para usuario:", currentUserID);
 
-                // Cargar datos existentes
                 const usedCodes = JSON.parse(localStorage.getItem('neoStudyUsedCodes') || '{}');
                 const authorizedUsers = JSON.parse(localStorage.getItem('neoStudyAuthorizedUsers') || '{}');
 
-                // Verificar si el código es válido
                 if (!codigosValidos[code]) {
                     alert('❌ Código inválido. Verifica el código o contacta a neostudy@gmail.com');
                     return;
                 }
 
-                // Verificar si el código ya fue usado
-                if (usedCodes[code] || authorizedUsers[code]) {
-                    alert('❌ Este código ya fue utilizado. Cada código es de un solo uso.');
+                if (usedCodes[code] && usedCodes[code].usado) {
+                    const usuarioQueUso = usedCodes[code].usuarioInfo || 'otro usuario';
+                    alert(`❌ Este código ya fue utilizado por ${usuarioQueUso}.\n\nCada código es de UN SOLO USO.`);
                     return;
                 }
 
-                // GENERAR CONTRASEÑA ÚNICA
+                const userAccessKey = `cursoAcceso_${currentUserID}`;
+                const userCurrentAccess = JSON.parse(localStorage.getItem(userAccessKey));
+                if (userCurrentAccess) {
+                    const confirmarCambio = confirm(`⚠️ Ya tienes un curso activo con código: ${userCurrentAccess.codigo}\n\n¿Deseas reemplazarlo por el nuevo código ${code}?`);
+                    if (!confirmarCambio) {
+                        return;
+                    }
+                }
+
                 const uniquePassword = generateUniquePassword(currentUserID);
                 
-                // Calcular expiración (1 año)
                 const expirationDate = new Date();
                 expirationDate.setFullYear(expirationDate.getFullYear() + 1);
 
-                // Obtener info del usuario para mostrar
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
                 const userInfo = userData.contacto || userData.nombre || 'Tu cuenta actual';
 
-                // MOSTRAR CONFIRMACIÓN
-                const confirmar = confirm(`¿Estás seguro de activar el código ${code} para:\n\n${userInfo}\n\n⚠️ Estas credenciales quedarán vinculadas permanentemente a esta cuenta.`);
+                const confirmar = confirm(`¿ESTÁS SEGURO de activar el código ${code} para:\n\n👤 ${userInfo}\n\n⚠️ ADVERTENCIA:\n• Este código NO podrá ser usado por nadie más\n• Quedará vinculado PERMANENTEMENTE a tu cuenta`);
                 
                 if (!confirmar) {
-                    return; // El usuario canceló
+                    return;
                 }
 
-                // GUARDAR USUARIO AUTORIZADO
                 authorizedUsers[code] = {
                     userID: currentUserID,
                     usuario: userInfo,
                     password: uniquePassword,
                     fechaActivacion: new Date().toISOString(),
-                    expiration: expirationDate.toISOString()
+                    expiration: expirationDate.toISOString(),
+                    activado: true
                 };
 
-                // GUARDAR EN LOCALSTORAGE
-                localStorage.setItem('neoStudyAuthorizedUsers', JSON.stringify(authorizedUsers));
-                
-                // MARCAR CÓDIGO COMO USADO
                 usedCodes[code] = {
                     usado: true,
                     fecha: new Date().toLocaleString(),
                     usuario: currentUserID,
-                    info: userInfo
+                    usuarioInfo: userInfo,
+                    bloqueadoPermanentemente: true
                 };
+
+                localStorage.setItem('neoStudyAuthorizedUsers', JSON.stringify(authorizedUsers));
                 localStorage.setItem('neoStudyUsedCodes', JSON.stringify(usedCodes));
 
-                // CERRAR MODAL DE PAGO
                 closePaymentModal();
                 
-                // GUARDAR ACCESO AUTOMÁTICO Y MOSTRAR CREDENCIALES
                 setTimeout(() => {
-                    // GUARDAR ACCESO AUTOMÁTICO
-                    const userAccessKey = `cursoAcceso_${currentUserID}`;
                     localStorage.setItem(userAccessKey, JSON.stringify({
                         codigo: code,
                         fechaAcceso: new Date().toISOString(),
-                        expira: expirationDate.toISOString()
+                        expira: expirationDate.toISOString(),
+                        password: uniquePassword
                     }));
 
-                    // MOSTRAR ALERTA CON CREDENCIALES
-                    const mensaje = `✅ ¡Curso activado correctamente!\n\n📝 TUS CREDENCIALES ÚNICAS:\n🔑 Código: ${code}\n🔒 Contraseña: ${uniquePassword}\n👤 Cuenta: ${userInfo}\n\n💡 IMPORTANTE:\n• Guarda esta información en un lugar seguro\n• Estas credenciales SOLO funcionarán con esta cuenta\n• Si cambias de dispositivo, necesitarás estas credenciales\n\n¿Quieres acceder al curso ahora?`;
+                    const mensaje = `✅ ¡Curso activado correctamente!\n\n📝 TUS CREDENCIALES ÚNICAS:\n🔑 Código: ${code}\n🔒 Contraseña: ${uniquePassword}\n👤 Cuenta: ${userInfo}\n\n💡 INFORMACIÓN IMPORTANTE:\n• Estas credenciales SOLO funcionarán con ESTA cuenta\n• El código ${code} ya NO podrá ser usado por nadie más\n\n¿Quieres acceder al curso ahora?`;
                     
                     if (confirm(mensaje)) {
-                        // ACCEDER DIRECTAMENTE AL CURSO
                         document.getElementById('previewModal').style.display = 'flex';
                         showUnlockedPreview();
                     }
@@ -1742,7 +1852,7 @@
             }
         }
 
-        // ===== SISTEMA DE LOGIN CORREGIDO =====
+        // ===== SISTEMA DE LOGIN MEJORADO =====
         function validateUserAccess() {
             try {
                 const code = document.getElementById('userCode').value.trim().toUpperCase();
@@ -1756,51 +1866,53 @@
                     return;
                 }
 
-                // Obtener usuarios autorizados
                 const authorizedUsers = JSON.parse(localStorage.getItem('neoStudyAuthorizedUsers') || {});
+                const usedCodes = JSON.parse(localStorage.getItem('neoStudyUsedCodes') || {});
                 
-                // Verificar si el código existe y la contraseña coincide
-                if (authorizedUsers[code] && authorizedUsers[code].password === password) {
-                    // VERIFICAR que el userID coincida
-                    if (authorizedUsers[code].userID !== currentUserID) {
-                        // MOSTRAR INFORMACIÓN DETALLADA DEL ERROR
-                        const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                        const currentUserInfo = userData.contacto || userData.nombre || 'Cuenta actual';
-                        
-                        loginError.innerHTML = `❌ Estas credenciales no son para esta cuenta.<br>
-                                               <small>Credenciales vinculadas a: ${authorizedUsers[code].usuario}<br>
-                                               Tu cuenta actual: ${currentUserInfo}</small>`;
-                        loginError.style.display = 'block';
-                        return;
-                    }
-
-                    // Verificar que no esté expirado
-                    const expirationDate = new Date(authorizedUsers[code].expiration);
-                    const today = new Date();
-                    
-                    if (expirationDate < today) {
-                        loginError.textContent = '❌ Tu acceso ha expirado. Renueva tu suscripción.';
-                        loginError.style.display = 'block';
-                        return;
-                    }
-
-                    // GUARDAR ACCESO VÁLIDO
-                    const userAccessKey = `cursoAcceso_${currentUserID}`;
-                    localStorage.setItem(userAccessKey, JSON.stringify({
-                        codigo: code,
-                        fechaAcceso: new Date().toISOString(),
-                        expira: authorizedUsers[code].expiration
-                    }));
-
-                    // Cerrar login y abrir contenido DESBLOQUEADO
-                    closeLogin();
-                    document.getElementById('previewModal').style.display = 'flex';
-                    showUnlockedPreview();
-                    
-                } else {
+                if (!authorizedUsers[code] || authorizedUsers[code].password !== password) {
                     loginError.textContent = '❌ Credenciales incorrectas. Verifica tu código y contraseña.';
                     loginError.style.display = 'block';
+                    return;
                 }
+
+                if (authorizedUsers[code].userID !== currentUserID) {
+                    const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                    const currentUserInfo = userData.contacto || userData.nombre || 'Cuenta actual';
+                    
+                    loginError.innerHTML = `❌ Estas credenciales no son para esta cuenta.<br>
+                                           <small>Credenciales vinculadas a: ${authorizedUsers[code].usuario}<br>
+                                           Tu cuenta actual: ${currentUserInfo}</small>`;
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                const expirationDate = new Date(authorizedUsers[code].expiration);
+                const today = new Date();
+                
+                if (expirationDate < today) {
+                    loginError.textContent = '❌ Tu acceso ha expirado. Renueva tu suscripción.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                if (!usedCodes[code] || !usedCodes[code].usado) {
+                    loginError.textContent = '❌ Código no válido. Contacta al soporte.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                const userAccessKey = `cursoAcceso_${currentUserID}`;
+                localStorage.setItem(userAccessKey, JSON.stringify({
+                    codigo: code,
+                    fechaAcceso: new Date().toISOString(),
+                    expira: authorizedUsers[code].expiration,
+                    password: password
+                }));
+
+                closeLogin();
+                document.getElementById('previewModal').style.display = 'flex';
+                showUnlockedPreview();
+                
             } catch (error) {
                 console.error("Error en validateUserAccess:", error);
                 document.getElementById('loginError').textContent = '❌ Error del sistema. Recarga la página.';
@@ -1808,7 +1920,7 @@
             }
         }
 
-        // ===== FUNCIONES AUXILIARES CORREGIDAS =====
+        // ===== FUNCIONES AUXILIARES MEJORADAS =====
         function generateUniquePassword(userID) {
             const timestamp = Date.now().toString(36);
             const userPart = userID.substring(0, 3).toLowerCase();
@@ -1816,28 +1928,47 @@
             return `NS${userPart}${randomPart}${timestamp.substring(timestamp.length-3)}`.toUpperCase();
         }
 
-        function showSecureLogin() {
-            try {
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                const userInfo = userData.contacto || userData.nombre || 'Cuenta actual';
-                
-                document.getElementById('currentUser').textContent = userInfo;
-                document.getElementById('loginOverlay').style.display = 'flex';
-                document.getElementById('userCode').value = '';
-                document.getElementById('userPassword').value = '';
-                document.getElementById('loginError').style.display = 'none';
-            } catch (error) {
-                console.error("Error en showSecureLogin:", error);
+        function checkCodeAvailability(code) {
+            const usedCodes = JSON.parse(localStorage.getItem('neoStudyUsedCodes') || '{}');
+            const authorizedUsers = JSON.parse(localStorage.getItem('neoStudyAuthorizedUsers') || '{}');
+            
+            if (!codigosValidos[code]) {
+                return { disponible: false, motivo: 'Código inválido' };
             }
+            
+            if (usedCodes[code] && usedCodes[code].usado) {
+                return { 
+                    disponible: false, 
+                    motivo: `Ya usado por: ${usedCodes[code].usuarioInfo || 'otro usuario'}` 
+                };
+            }
+            
+            if (authorizedUsers[code]) {
+                return { 
+                    disponible: false, 
+                    motivo: `Ya activado por: ${authorizedUsers[code].usuario}` 
+                };
+            }
+            
+            return { disponible: true, motivo: 'Código disponible' };
         }
 
-        function closeLogin() {
-            document.getElementById('loginOverlay').style.display = 'none';
-        }
-
-        function showPaymentModalFromLogin() {
-            closeLogin();
-            showPaymentModal();
+        function checkCodeRealTime(code) {
+            const codeStatus = document.getElementById('codeStatus');
+            const cleanedCode = code.trim().toUpperCase();
+            
+            if (!cleanedCode) {
+                codeStatus.innerHTML = '';
+                return;
+            }
+            
+            const resultado = checkCodeAvailability(cleanedCode);
+            
+            if (resultado.disponible) {
+                codeStatus.innerHTML = '<span style="color: green;">✅ Código disponible</span>';
+            } else {
+                codeStatus.innerHTML = `<span style="color: red;">❌ ${resultado.motivo}</span>`;
+            }
         }
 
         // ===== SISTEMA DE VERIFICACIÓN DE ACCESO =====
@@ -1864,7 +1995,7 @@
             }
         }
 
-        // ===== SISTEMA DE VISTA PREVIA =====
+        // ===== SISTEMA DE VISTA PREVIA MEJORADO =====
         function openPreviewModal() {
             document.getElementById('previewModal').style.display = 'flex';
             
@@ -1890,22 +2021,6 @@
             
             driveViewButton.classList.add('locked');
             downloadButton.classList.add('locked');
-            driveViewButton.href = "javascript:void(0)";
-            downloadButton.href = "javascript:void(0)";
-            
-            driveViewButton.onclick = function() {
-                if (!checkUserAccess()) {
-                    alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso.');
-                    showSecureLogin();
-                }
-            };
-            
-            downloadButton.onclick = function() {
-                if (!checkUserAccess()) {
-                    alert('🔒 Para descargar el PDF, primero debes desbloquear el curso.');
-                    showSecureLogin();
-                }
-            };
             
             previewActions.style.display = 'block';
             unlockedActions.style.display = 'none';
@@ -1926,82 +2041,57 @@
             
             driveViewButton.classList.remove('locked');
             downloadButton.classList.remove('locked');
-            driveViewButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
-            downloadButton.href = "https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk";
-            
-            driveViewButton.onclick = null;
-            downloadButton.onclick = null;
             
             previewActions.style.display = 'none';
             unlockedActions.style.display = 'block';
+        }
+
+        function handleDriveAccess() {
+            if (!checkUserAccess()) {
+                alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso.');
+                showSecureLogin();
+                return;
+            }
+            window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
+        }
+
+        function handleDownloadAccess() {
+            if (!checkUserAccess()) {
+                alert('🔒 Para descargar el PDF, primero debes desbloquear el curso.');
+                showSecureLogin();
+                return;
+            }
+            window.open('https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl', '_blank');
         }
 
         function closePreviewModal() {
             document.getElementById('previewModal').style.display = 'none';
         }
 
-        // ===== SISTEMA DE CÓDIGOS ÚNICOS =====
-        function loadUsedCodes() {
-            return JSON.parse(localStorage.getItem('neoStudyUsedCodes') || '{}');
+        // ===== SISTEMA DE LOGIN SEGURO =====
+        function showSecureLogin() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                const userInfo = userData.contacto || userData.nombre || 'Cuenta actual';
+                
+                document.getElementById('currentUser').textContent = userInfo;
+                document.getElementById('loginOverlay').style.display = 'flex';
+                document.getElementById('userCode').value = '';
+                document.getElementById('userPassword').value = '';
+                document.getElementById('loginError').style.display = 'none';
+            } catch (error) {
+                console.error("Error en showSecureLogin:", error);
+            }
         }
 
-        function saveUsedCodes(usedCodes) {
-            localStorage.setItem('neoStudyUsedCodes', JSON.stringify(usedCodes));
+        function closeLogin() {
+            document.getElementById('loginOverlay').style.display = 'none';
         }
 
-        // 50 CÓDIGOS VÁLIDOS
-        const codigosValidos = {
-            "MATH7X8": { usado: false, fecha: "" },
-            "STUDY4K3": { usado: false, fecha: "" },
-            "NEO8P5P": { usado: false, fecha: "" },
-            "LEARN3V7": { usado: false, fecha: "" },
-            "CODE6M1P": { usado: false, fecha: "" },
-            "EDU9Z4X": { usado: false, fecha: "" },
-            "BOOK2L7Q": { usado: false, fecha: "" },
-            "PREP5N3J": { usado: false, fecha: "" },
-            "MIND8K6W": { usado: false, fecha: "" },
-            "BRAIN1F9": { usado: false, fecha: "" },
-            "QUIZ7S2P": { usado: false, fecha: "" },
-            "TEST4H8M": { usado: false, fecha: "" },
-            "EXAM9D3C": { usado: false, fecha: "" },
-            "SOLVE6V1": { usado: false, fecha: "" },
-            "LOGIC8X5": { usado: false, fecha: "" },
-            "MATH2T7K": { usado: false, fecha: "" },
-            "STUDY5Q9": { usado: false, fecha: "" },
-            "NEO3R6J": { usado: false, fecha: "" },
-            "LEARN7M4": { usado: false, fecha: "" },
-            "CODE1P8W": { usado: false, fecha: "" },
-            "EDU4X2T": { usado: false, fecha: "" },
-            "BOOK9K5": { usado: false, fecha: "" },
-            "PREP6V3Q": { usado: false, fecha: "" },
-            "MIND2H7": { usado: false, fecha: "" },
-            "BRAIN8S1": { usado: false, fecha: "" },
-            "QUIZ5D9M": { usado: false, fecha: "" },
-            "TEST3F6C": { usado: false, fecha: "" },
-            "EXAM7Z2": { usado: false, fecha: "" },
-            "SOLVE4N8": { usado: false, fecha: "" },
-            "LOGIC1T5": { usado: false, fecha: "" },
-            "MATH9Q7": { usado: false, fecha: "" },
-            "STUDY6K3": { usado: false, fecha: "" },
-            "NEO2X8J": { usado: false, fecha: "" },
-            "LEARN5M1": { usado: false, fecha: "" },
-            "CODE8V4": { usado: false, fecha: "" },
-            "EDU3S6T": { usado: false, fecha: "" },
-            "BOOK7H2": { usado: false, fecha: "" },
-            "PREP4D9": { usado: false, fecha: "" },
-            "MIND1Z5": { usado: false, fecha: "" },
-            "BRAIN6F3": { usado: false, fecha: "" },
-            "QUIZ9N7": { usado: false, fecha: "" },
-            "TEST5T2": { usado: false, fecha: "" },
-            "EXAM8K4": { usado: false, fecha: "" },
-            "SOLVE3Q6": { usado: false, fecha: "" },
-            "LOGIC7M9": { usado: false, fecha: "" },
-            "MATH4V1": { usado: false, fecha: "" },
-            "STUDY1X7": { usado: false, fecha: "" },
-            "NEO6S3": { usado: false, fecha: "" },
-            "LEARN8H5": { usado: false, fecha: "" },
-            "CODE2D9": { usado: false, fecha: "" }
-        };
+        function showPaymentModalFromLogin() {
+            closeLogin();
+            showPaymentModal();
+        }
 
         // ===== SISTEMA DE TEMAS =====
         let currentTheme = 'normal';
@@ -2050,7 +2140,7 @@
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        // ===== FUNCIONES DE MATERIAL =====
+        // ===== FUNCIONES DE MATERIAL MEJORADAS =====
         function showMaterialBenefits() {
             if (!checkUserAccess()) {
                 showSecureLogin();
@@ -2068,15 +2158,16 @@
             window.open(url, '_blank');
         }
 
+        function showMeetOptions() {
+            const mensaje = `🎥 SELECCIONA TU CLASE EN VIVO:\n\n1️⃣ Primera Hora: https://meet.google.com/hns-wxcb-qvk\n2️⃣ Segunda Hora: https://meet.google.com/omq-bwem-jgg\n\n💡 Tienes 2 enlaces para las 2 horas continuas de clase.`;
+            alert(mensaje);
+        }
+
         function openWhatsApp() {
             window.open('https://wa.me/51973441252', '_blank');
         }
 
-        function openGoogleDrive() {
-            window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
-        }
-
-        // ===== DATOS Y NAVEGACIÓN =====
+        // ===== NAVEGACIÓN Y DATOS =====
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             if (userData) {
@@ -2085,6 +2176,7 @@
                     document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
                 } else {
                     const initials = userData.nombre ? userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase() : 'US';
+                    document.getElementById('userAvatar').textContent = initials;
                     document.getElementById('mobileUserAvatar').textContent = initials;
                 }
             }
@@ -2105,11 +2197,16 @@
         function showPaymentModal() {
             closePreviewModal();
             document.getElementById('paymentModal').style.display = 'flex';
+            
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                document.getElementById('devTools').style.display = 'block';
+            }
         }
 
         function closePaymentModal() {
             document.getElementById('paymentModal').style.display = 'none';
             document.getElementById('accessCode').value = '';
+            document.getElementById('codeStatus').innerHTML = '';
         }
 
         // ===== SISTEMA DE CURSOS =====
@@ -2138,22 +2235,6 @@
                         duration: "4 horas",
                         lessons: 5,
                         available: false
-                    },
-                    {
-                        id: 3,
-                        title: "Móviles y Tiempo",
-                        description: "Resuelve problemas de velocidad, tiempo y distancia aplicados a situaciones de movimiento.",
-                        duration: "5 horas",
-                        lessons: 6,
-                        available: false
-                    },
-                    {
-                        id: 4,
-                        title: "Tanto por Ciento",
-                        description: "Aprende sobre porcentajes, descuentos, aumentos sucesivos y aplicaciones comerciales.",
-                        duration: "4 horas",
-                        lessons: 5,
-                        available: false
                     }
                 ]
             },
@@ -2164,15 +2245,6 @@
                 duration: "25 horas",
                 lessons: 20,
                 icon: "fa-calculator",
-                available: false
-            },
-            {
-                id: 3,
-                title: "Álgebra",
-                description: "Profundiza en expresiones algebraicas, ecuaciones y sistemas de ecuaciones.",
-                duration: "28 horas",
-                lessons: 22,
-                icon: "fa-superscript",
                 available: false
             }
         ];
@@ -2249,6 +2321,23 @@
             alert('⏳ ¡Próximamente! Estamos trabajando en este contenido.');
         }
 
+        // ===== HERRAMIENTAS DE DESARROLLO =====
+        function resetAllCodes() {
+            if (confirm('⚠️ ¿ESTÁS SEGURO de reiniciar TODOS los códigos?\n\nEsto eliminará TODOS los accesos existentes.')) {
+                localStorage.removeItem('neoStudyUsedCodes');
+                localStorage.removeItem('neoStudyAuthorizedUsers');
+                
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('cursoAcceso_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                
+                alert('✅ Todos los códigos han sido reiniciados.');
+                location.reload();
+            }
+        }
+
         // ===== EVENT LISTENERS =====
         window.onclick = function(event) {
             const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay'];
@@ -2270,11 +2359,15 @@
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
 
-            // Cargar cursos al iniciar
             showMathCourses();
+            
+            if (!localStorage.getItem('neoStudyUsedCodes')) {
+                localStorage.setItem('neoStudyUsedCodes', JSON.stringify({}));
+            }
+            if (!localStorage.getItem('neoStudyAuthorizedUsers')) {
+                localStorage.setItem('neoStudyAuthorizedUsers', JSON.stringify({}));
+            }
         });
     </script>
 </body>
-                </html>
-
-
+        </html>
