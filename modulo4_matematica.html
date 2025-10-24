@@ -1781,6 +1781,55 @@
             }
         }
 
+        // ✅ SISTEMA DE VERIFICACIÓN MEJORADO - 100% SEGURO
+        async function checkUserAccess() {
+            try {
+                const userID = getUniversalUserID();
+                const userAccessKey = `cursoAcceso_${userID}`;
+                const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
+                
+                if (!userAccess) {
+                    return false;
+                }
+
+                // Verificar expiración local
+                const expirationDate = new Date(userAccess.expira);
+                const today = new Date();
+                if (expirationDate < today) {
+                    localStorage.removeItem(userAccessKey);
+                    return false;
+                }
+
+                // ✅ VERIFICACIÓN OBLIGATORIA EN HOJA DE CÁLCULO
+                try {
+                    const verificacion = await verificarCredencialesEnHoja(userAccess.codigo);
+                    if (!verificacion.valido) {
+                        // Código invalidado en hoja, revocar acceso local
+                        localStorage.removeItem(userAccessKey);
+                        console.log('🔒 Acceso revocado - Código invalidado en hoja');
+                        return false;
+                    }
+                    
+                    // Verificar adicionalmente si el usuario es el correcto
+                    if (verificacion.info.usuario && verificacion.info.usuario !== userAccess.usuario) {
+                        console.log('🔒 Acceso revocado - Usuario no coincide');
+                        localStorage.removeItem(userAccessKey);
+                        return false;
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error verificando en hoja:', error);
+                    // En caso de error de conexión, permitir acceso temporal
+                    console.warn('⚠️ Error de conexión, permitiendo acceso temporal');
+                }
+
+                return true;
+            } catch (error) {
+                console.error("Error en checkUserAccess:", error);
+                return false;
+            }
+        }
+
         // ✅ SISTEMA DE LOGIN MEJORADO (VERIFICA CONTRA HOJA)
         async function validateUserAccess() {
             try {
@@ -1971,45 +2020,6 @@
             }
         }
 
-        // ✅ VERIFICAR ACCESO MEJORADO (CON VALIDACIÓN EN HOJA)
-        async function checkUserAccess() {
-            try {
-                const userID = getUniversalUserID();
-                const userAccessKey = `cursoAcceso_${userID}`;
-                const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
-                
-                if (!userAccess) {
-                    return false;
-                }
-
-                // Verificar expiración local
-                const expirationDate = new Date(userAccess.expira);
-                const today = new Date();
-                if (expirationDate < today) {
-                    localStorage.removeItem(userAccessKey);
-                    return false;
-                }
-
-                // ✅ VERIFICAR EN HOJA DE CÁLCULO (opcional, para seguridad extra)
-                try {
-                    const verificacion = await verificarCredencialesEnHoja(userAccess.codigo);
-                    if (!verificacion.valido) {
-                        // Código invalidado en hoja, revocar acceso local
-                        localStorage.removeItem(userAccessKey);
-                        return false;
-                    }
-                } catch (error) {
-                    // Si falla la verificación en hoja, permitir acceso local
-                    console.warn('⚠️ No se pudo verificar en hoja, usando acceso local');
-                }
-
-                return true;
-            } catch (error) {
-                console.error("Error en checkUserAccess:", error);
-                return false;
-            }
-        }
-
         // ✅ VERIFICAR CÓDIGO EN TIEMPO REAL MEJORADO
         async function checkCodeRealTime(code) {
             const codeStatus = document.getElementById('codeStatus');
@@ -2069,6 +2079,114 @@
             }
         }
 
+        // ✅ BLOQUEAR ACCESO DIRECTO A LOS LINKS - SEGURIDAD MÁXIMA
+        function handleDriveAccess() {
+            checkUserAccess().then(tieneAcceso => {
+                if (!tieneAcceso) {
+                    alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso.');
+                    showSecureLogin();
+                    return;
+                }
+                window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
+            });
+        }
+
+        function handleDownloadAccess() {
+            checkUserAccess().then(tieneAcceso => {
+                if (!tieneAcceso) {
+                    alert('🔒 Para descargar el PDF, primero debes desbloquear el curso.');
+                    showSecureLogin();
+                    return;
+                }
+                window.open('https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl', '_blank');
+            });
+        }
+
+        function showMaterialBenefits() {
+            checkUserAccess().then(tieneAcceso => {
+                if (!tieneAcceso) {
+                    showSecureLogin();
+                    return;
+                }
+                closePreviewModal();
+                document.getElementById('materialBenefitsModal').style.display = 'flex';
+            });
+        }
+
+        // ✅ BLOQUEAR ACCESO DIRECTO DESDE LOS BOTONES DEL MODAL
+        function openMaterialLink(url) {
+            checkUserAccess().then(tieneAcceso => {
+                if (!tieneAcceso) {
+                    alert('🔒 Acceso denegado. Primero debes desbloquear el curso con un código válido.');
+                    showSecureLogin();
+                    return;
+                }
+                window.open(url, '_blank');
+            });
+        }
+
+        // ✅ BLOQUEAR ACCESO DIRECTO A GOOGLE MEET
+        function showMeetOptions() {
+            checkUserAccess().then(tieneAcceso => {
+                if (!tieneAcceso) {
+                    alert('🔒 Para acceder a las clases en vivo, primero debes desbloquear el curso.');
+                    showSecureLogin();
+                    return;
+                }
+                
+                const mensaje = `🎥 SELECCIONA TU CLASE EN VIVO:\n\n1️⃣ Primera Hora: https://meet.google.com/hns-wxcb-qvk\n2️⃣ Segunda Hora: https://meet.google.com/omq-bwem-jgg\n\n💡 Tienes 2 enlaces para las 2 horas continuas de clase.`;
+                alert(mensaje);
+            });
+        }
+
+        // ✅ VERIFICACIÓN EN CADA ACCIÓN
+        function openWhatsApp() {
+            checkUserAccess().then(tieneAcceso => {
+                if (!tieneAcceso) {
+                    alert('🔒 Para contactar soporte, primero necesitas tener el curso activo.');
+                    showSecureLogin();
+                    return;
+                }
+                window.open('https://wa.me/51973441252', '_blank');
+            });
+        }
+
+        // ✅ VERIFICAR AL CARGAR LA PÁGINA SI HAY ACCESO VÁLIDO
+        function verificarAccesoAlCargar() {
+            checkUserAccess().then(tieneAcceso => {
+                if (!tieneAcceso) {
+                    // Limpiar cualquier acceso residual
+                    const userID = getUniversalUserID();
+                    const userAccessKey = `cursoAcceso_${userID}`;
+                    localStorage.removeItem(userAccessKey);
+                    
+                    console.log('🔒 No hay acceso válido - Sesión bloqueada');
+                } else {
+                    console.log('✅ Acceso válido detectado');
+                }
+            });
+        }
+
+        // ✅ FORZAR VERIFICACIÓN AL AGREGAR AL CARRITO O PAGAR
+        function showPaymentModal() {
+            // Siempre forzar verificación de acceso
+            checkUserAccess().then(tieneAcceso => {
+                if (tieneAcceso) {
+                    // Si ya tiene acceso, mostrar directamente el contenido desbloqueado
+                    document.getElementById('previewModal').style.display = 'flex';
+                    showUnlockedPreview();
+                } else {
+                    // Si no tiene acceso, mostrar modal de pago
+                    closePreviewModal();
+                    document.getElementById('paymentModal').style.display = 'flex';
+                    
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        document.getElementById('devTools').style.display = 'block';
+                    }
+                }
+            });
+        }
+
         function openPreviewModal() {
             document.getElementById('previewModal').style.display = 'flex';
             
@@ -2117,24 +2235,6 @@
             
             previewActions.style.display = 'none';
             unlockedActions.style.display = 'block';
-        }
-
-        function handleDriveAccess() {
-            if (!checkUserAccess()) {
-                alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso.');
-                showSecureLogin();
-                return;
-            }
-            window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
-        }
-
-        function handleDownloadAccess() {
-            if (!checkUserAccess()) {
-                alert('🔒 Para descargar el PDF, primero debes desbloquear el curso.');
-                showSecureLogin();
-                return;
-            }
-            window.open('https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl', '_blank');
         }
 
         function closePreviewModal() {
@@ -2211,30 +2311,8 @@
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        function showMaterialBenefits() {
-            if (!checkUserAccess()) {
-                showSecureLogin();
-                return;
-            }
-            closePreviewModal();
-            document.getElementById('materialBenefitsModal').style.display = 'flex';
-        }
-
         function closeMaterialBenefitsModal() {
             document.getElementById('materialBenefitsModal').style.display = 'none';
-        }
-
-        function openMaterialLink(url) {
-            window.open(url, '_blank');
-        }
-
-        function showMeetOptions() {
-            const mensaje = `🎥 SELECCIONA TU CLASE EN VIVO:\n\n1️⃣ Primera Hora: https://meet.google.com/hns-wxcb-qvk\n2️⃣ Segunda Hora: https://meet.google.com/omq-bwem-jgg\n\n💡 Tienes 2 enlaces para las 2 horas continuas de clase.`;
-            alert(mensaje);
-        }
-
-        function openWhatsApp() {
-            window.open('https://wa.me/51973441252', '_blank');
         }
 
         function loadUserData() {
@@ -2261,15 +2339,6 @@
 
         function goToCursos() {
             window.location.href = 'modulo4_cursos.html';
-        }
-
-        function showPaymentModal() {
-            closePreviewModal();
-            document.getElementById('paymentModal').style.display = 'flex';
-            
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                document.getElementById('devTools').style.display = 'block';
-            }
         }
 
         function closePaymentModal() {
@@ -2456,6 +2525,9 @@
                 localStorage.setItem('neoStudyUsedCodes', JSON.stringify({}));
             }
 
+            // ✅ VERIFICAR ACCESO AL CARGAR LA PÁGINA
+            verificarAccesoAlCargar();
+
             // Cargar códigos al iniciar
             cargarCodigosDesdeHoja().then(codigos => {
                 console.log('🚀 Sistema iniciado con', Object.keys(codigos).length, 'códigos');
@@ -2484,9 +2556,25 @@
                     refreshButton.innerHTML = '<i class="fas fa-sync"></i> ACTUALIZAR CÓDIGOS';
                     refreshButton.onclick = () => cargarCodigosDesdeHoja(true).then(() => alert('✅ Códigos actualizados'));
                     devSection.appendChild(refreshButton);
+                    
+                    // Botón para forzar cierre de sesión
+                    const logoutButton = document.createElement('button');
+                    logoutButton.className = 'btn';
+                    logoutButton.style.background = '#f44336';
+                    logoutButton.style.color = 'white';
+                    logoutButton.style.margin = '5px';
+                    logoutButton.innerHTML = '<i class="fas fa-lock"></i> CERRAR SESIÓN';
+                    logoutButton.onclick = function() {
+                        const userID = getUniversalUserID();
+                        const userAccessKey = `cursoAcceso_${userID}`;
+                        localStorage.removeItem(userAccessKey);
+                        alert('🔒 Sesión cerrada. Debes ingresar código nuevamente.');
+                        location.reload();
+                    };
+                    devSection.appendChild(logoutButton);
                 }
             }
         });
     </script>
 </body>
-    </html>
+                </html>
