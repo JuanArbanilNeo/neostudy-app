@@ -1607,17 +1607,22 @@
 
     <script>
         // ===== SISTEMA SEGURO DE CÓDIGOS =====
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYVlsI4AF7kqPf6gIzajdSBaGCsanj2ClSKA9gthLjV4r0xiZ-25-MCcRffp2gLYJ9KA/exec';
+        // ✅ URL CORRECTA DE TU GOOGLE APPS SCRIPT
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLis-QwjHZvDPFZzBUnKKse0a5K1Gsa_avkDR_nbNhkhbGHsxju1k1zCehsE75MvULbg/exec';
 
+        // ✅ VALIDAR CÓDIGO DE ACCESO
         function validateAccessCode() {
             try {
                 const codeInput = document.getElementById('accessCode');
                 const code = codeInput.value.trim().toUpperCase();
+                const codeStatus = document.getElementById('codeStatus');
                 
                 if (!code) {
-                    alert('❌ Por favor ingresa tu código de acceso');
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Ingresa tu código</span>';
                     return;
                 }
+
+                codeStatus.innerHTML = '<span style="color: orange;">⏳ Verificando código...</span>';
 
                 // Verificar código con Google Apps Script
                 fetch(SCRIPT_URL, {
@@ -1633,22 +1638,25 @@
                 })
                 .then(response => response.json())
                 .then(result => {
+                    console.log('Respuesta del servidor:', result);
+                    
                     if (result.status === 'success') {
                         // ✅ CÓDIGO VÁLIDO - ACTIVAR ACCESO
+                        codeStatus.innerHTML = '<span style="color: green;">✅ Código válido - Activando acceso...</span>';
                         activateUserAccessWithCode(code, result.userInfo);
-                        closePaymentModal();
+                        setTimeout(() => closePaymentModal(), 1000);
                     } else {
-                        alert('❌ ' + result.message);
+                        codeStatus.innerHTML = `<span style="color: red;">❌ ${result.message}</span>`;
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('❌ Error de conexión. Intenta nuevamente.');
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Error de conexión</span>';
                 });
                 
             } catch (error) {
                 console.error("Error en validateAccessCode:", error);
-                alert('❌ Error al validar el código. Contacta al soporte.');
+                document.getElementById('codeStatus').innerHTML = '<span style="color: red;">❌ Error del sistema</span>';
             }
         }
 
@@ -1664,6 +1672,9 @@
                     return;
                 }
 
+                loginError.textContent = '⏳ Verificando código...';
+                loginError.style.display = 'block';
+
                 // Verificar código con Google Apps Script
                 fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -1678,11 +1689,17 @@
                 })
                 .then(response => response.json())
                 .then(result => {
+                    console.log('Respuesta login:', result);
+                    
                     if (result.status === 'success') {
                         // ✅ ACCESO PERMITIDO
+                        loginError.style.display = 'none';
+                        activateUserAccessWithCode(code, result.userInfo);
                         closeLogin();
-                        document.getElementById('previewModal').style.display = 'flex';
-                        showUnlockedPreview();
+                        setTimeout(() => {
+                            document.getElementById('previewModal').style.display = 'flex';
+                            showUnlockedPreview();
+                        }, 500);
                     } else {
                         loginError.textContent = '❌ ' + result.message;
                         loginError.style.display = 'block';
@@ -1711,6 +1728,11 @@
                 return;
             }
 
+            if (cleanedCode.length < 6) {
+                codeStatus.innerHTML = '<span style="color: orange;">⚠️ El código debe tener 6-7 caracteres</span>';
+                return;
+            }
+
             // Verificación en tiempo real
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -1724,45 +1746,56 @@
             })
             .then(response => response.json())
             .then(result => {
+                console.log('Check code result:', result);
                 if (result.status === 'success') {
                     const precio = result.precio || '6.00';
-                    codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio}</span>`;
+                    const estado = result.estado || 'activo';
+                    
+                    if (estado === 'activo') {
+                        codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio} - DISPONIBLE</span>`;
+                    } else if (estado === 'usado') {
+                        codeStatus.innerHTML = `<span style="color: red;">❌ Código ya utilizado</span>`;
+                    } else {
+                        codeStatus.innerHTML = `<span style="color: red;">❌ Código bloqueado</span>`;
+                    }
                 } else {
                     codeStatus.innerHTML = `<span style="color: red;">❌ ${result.message}</span>`;
                 }
             })
             .catch(error => {
+                console.error('Error check code:', error);
                 codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando...</span>';
             });
         }
 
         // ✅ ACTIVAR ACCESO DEL USUARIO
         function activateUserAccessWithCode(code, userInfo) {
-            // Guardar acceso del usuario
-            const userAccessKey = `cursoAcceso_${getUniversalUserID()}`;
-            const expirationDate = new Date();
-            expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+            try {
+                // Guardar acceso del usuario
+                const userAccessKey = `cursoAcceso_${getUniversalUserID()}`;
+                const expirationDate = new Date();
+                expirationDate.setFullYear(expirationDate.getFullYear() + 1); // 1 año de acceso
 
-            localStorage.setItem(userAccessKey, JSON.stringify({
-                codigo: code,
-                fechaAcceso: new Date().toISOString(),
-                expira: expirationDate.toISOString(),
-                usuario: userInfo,
-                curso: 'Planteo de Ecuaciones'
-            }));
+                const accessData = {
+                    codigo: code,
+                    fechaAcceso: new Date().toISOString(),
+                    expira: expirationDate.toISOString(),
+                    usuario: userInfo,
+                    curso: 'Planteo de Ecuaciones',
+                    estado: 'activo'
+                };
 
-            // Mostrar confirmación
-            setTimeout(() => {
-                alert(`✅ ¡CURSO ACTIVADO CORRECTAMENTE!\n\n🔑 Código: ${code}\n👤 Usuario: ${userInfo}\n\n¿Quieres acceder al curso ahora?`);
-                
-                document.getElementById('previewModal').style.display = 'flex';
-                showUnlockedPreview();
-            }, 500);
-        }
+                localStorage.setItem(userAccessKey, JSON.stringify(accessData));
 
-        function activateUserAccess(code) {
-            document.getElementById('previewModal').style.display = 'flex';
-            showUnlockedPreview();
+                // Mostrar confirmación
+                setTimeout(() => {
+                    alert(`🎉 ¡CURSO ACTIVADO CORRECTAMENTE!\n\n🔑 Código: ${code}\n👤 Usuario: ${userInfo.nombre || 'Usuario'}\n📚 Curso: Planteo de Ecuaciones\n\nAhora tienes acceso completo al material.`);
+                }, 500);
+
+            } catch (error) {
+                console.error("Error en activateUserAccessWithCode:", error);
+                alert('✅ Curso activado, pero hubo un error guardando los datos. Tu acceso está activo.');
+            }
         }
 
         // ✅ VERIFICAR SI EL USUARIO TIENE ACCESO
@@ -1791,13 +1824,33 @@
             }
         }
 
-        // ===== SISTEMA DE IDENTIFICACIÓN =====
+        // ✅ OBTENER INFORMACIÓN DEL USUARIO ACTUAL
+        function getCurrentUserInfo() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                return {
+                    nombre: userData.nombre || 'Usuario Neo Study',
+                    contacto: userData.contacto || 'No registrado',
+                    email: userData.email || 'No registrado',
+                    fechaAcceso: new Date().toLocaleString()
+                };
+            } catch (error) {
+                return {
+                    nombre: 'Usuario Temporal',
+                    contacto: 'Temporal',
+                    email: 'temporal@neostudy.com',
+                    fechaAcceso: new Date().toLocaleString()
+                };
+            }
+        }
+
+        // ✅ OBTENER ID ÚNICO DEL USUARIO
         function getUniversalUserID() {
             try {
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
                 
                 if (userData.contacto) {
-                    return userData.contacto.toLowerCase().trim();
+                    return userData.contacto.toLowerCase().trim().replace(/[^a-z0-9]/g, '_');
                 }
                 
                 if (userData.nombre) {
@@ -1807,24 +1860,15 @@
                 
                 let anonID = localStorage.getItem('neoStudyAnonymousID');
                 if (!anonID) {
-                    anonID = 'user_' + Math.random().toString(36).substring(2, 11);
+                    anonID = 'user_' + Math.random().toString(36).substring(2, 15);
                     localStorage.setItem('neoStudyAnonymousID', anonID);
                 }
                 return anonID;
                 
             } catch (error) {
                 console.error("Error en getUniversalUserID:", error);
-                return 'emergency_' + Math.random().toString(36).substring(2, 9);
+                return 'user_' + Math.random().toString(36).substring(2, 15);
             }
-        }
-
-        function getCurrentUserInfo() {
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-            return {
-                nombre: userData.nombre || 'Usuario',
-                contacto: userData.contacto || 'No disponible',
-                email: userData.email || 'No disponible'
-            };
         }
 
         // ===== FUNCIONES DE ACCESO AL MATERIAL =====
