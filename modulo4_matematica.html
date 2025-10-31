@@ -1606,15 +1606,16 @@
     </div>
 
     <script>
-        // ===== PASO 1: SINCRONIZACIÓN DE CÓDIGOS DESDE EL SERVIDOR (Google Apps Script) =====
-        // NUEVO URL ACTUALIZADO
+        // ===== SISTEMA MEJORADO DE SINCRONIZACIÓN =====
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqMOdb1OnJbQ-DF8DF_RV8RGhF1QUxPM5F4MNrM-UimSn8kq3NciHSBbeT2XR7uyppyg/exec';
 
-        // Descarga todos los códigos desde el Apps Script y guarda en localStorage (neoStudyCodigosMaestros)
-        async function syncCodigosFromServer() {
+        // Sincronizar códigos automáticamente cada 2 minutos
+        async function sincronizarCodigosAutomaticamente() {
             try {
+                console.log('🔄 Sincronizando códigos...');
                 const res = await fetch(`${SCRIPT_URL}?action=getAllCodes&timestamp=${Date.now()}`);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
+                
                 const data = await res.json();
                 if (data.status === 'success' && data.codigos) {
                     const mapped = {};
@@ -1631,22 +1632,32 @@
                             curso: s.curso || 'Planteo de Ecuaciones'
                         };
                     });
-                    localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(mapped));
-                    console.log('✅ Códigos sincronizados desde servidor:', Object.keys(mapped).length);
-                    return true;
-                } else {
-                    console.warn('⚠ getAllCodes response not success', data);
-                    return false;
+                    
+                    // Solo actualizar si hay cambios
+                    const codigosActuales = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                    if (JSON.stringify(codigosActuales) !== JSON.stringify(mapped)) {
+                        localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(mapped));
+                        console.log('✅ Códigos actualizados automáticamente');
+                    }
                 }
             } catch (err) {
-                console.error('❌ Error sincronizando códigos:', err);
-                return false;
+                console.log('⚠ Error en sincronización automática:', err);
             }
         }
 
-        // ===== SISTEMA SEGURO DE CÓDIGOS (tu lógica existente) =====
-        function validateAccessCode() {
+        // Sincronizar también cuando la página gana visibilidad
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                sincronizarCodigosAutomaticamente();
+            }
+        });
+
+        // ===== FUNCIONES DE VALIDACIÓN ACTUALIZADAS =====
+        async function validateAccessCode() {
             try {
+                // PRIMERO SINCRONIZAR
+                await sincronizarCodigosAutomaticamente();
+                
                 const codeInput = document.getElementById('accessCode');
                 const code = codeInput.value.trim().toUpperCase();
                 
@@ -1655,7 +1666,7 @@
                     return;
                 }
 
-                // CARGAR CÓDIGOS DEL SISTEMA
+                // CARGAR CÓDIGOS ACTUALIZADOS
                 const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
                 const currentUserID = getUniversalUserID();
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
@@ -1677,27 +1688,23 @@
 
                 // VERIFICAR SI YA FUE USADO
                 if (infoCodigo.usado) {
-                    // Si YA lo usó este mismo usuario, permitir acceso
                     if (infoCodigo.usuario === userInfo) {
                         alert('✅ Ya tienes acceso activo a este curso.');
                         closePaymentModal();
                         activateUserAccess(code);
                         return;
                     } else {
-                        // Si lo usó OTRO usuario, BLOQUEAR
                         alert('❌ Este código ya fue utilizado por otro usuario. Cada código es personal e intransferible.');
                         return;
                     }
                 }
 
-                // ✅ ACTIVAR EL CÓDIGO PARA ESTE USUARIO
+                // ✅ ACTIVAR EL CÓDIGO
                 const confirmar = confirm(`¿Activar curso de Matemática para:\n\n👤 ${userInfo}\n📧 ${userData.contacto || 'No disponible'}\n\n🔑 Código: ${code}\n💰 Precio: S/ ${infoCodigo.precio || '6.00'}\n\n⚠️ Este código quedará VINCULADO permanentemente a esta cuenta.`);
                 
-                if (!confirmar) {
-                    return;
-                }
+                if (!confirmar) return;
 
-                // MARCAR CÓDIGO COMO USADO POR ESTE USUARIO
+                // MARCAR CÓDIGO COMO USADO
                 codigosMaestros[code] = {
                     usado: true,
                     usuario: userInfo,
@@ -1720,9 +1727,11 @@
             }
         }
 
-        // ===== VALIDAR CÓDIGO EN LOGIN =====
-        function validateUserAccess() {
+        async function validateUserAccess() {
             try {
+                // PRIMERO SINCRONIZAR
+                await sincronizarCodigosAutomaticamente();
+                
                 const code = document.getElementById('userCode').value.trim().toUpperCase();
                 const loginError = document.getElementById('loginError');
                 const currentUserID = getUniversalUserID();
@@ -1733,7 +1742,7 @@
                     return;
                 }
 
-                // CARGAR CÓDIGOS
+                // CARGAR CÓDIGOS ACTUALIZADOS
                 const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
                 const userInfo = userData.contacto || userData.nombre || 'Usuario';
@@ -2030,15 +2039,12 @@
 
         function showPaymentModalFromLogin() {
             closeLogin();
-            // sync before showing payment modal to ensure codes are fresh
-            syncCodigosFromServer().finally(() => showPaymentModal());
+            sincronizarCodigosAutomaticamente().finally(() => showPaymentModal());
         }
 
         function showPaymentModal() {
             closePreviewModal();
-            // ensure codes are synced when opening payment modal
-            // (if showPaymentModalFromLogin already synced, this is harmless)
-            syncCodigosFromServer().finally(() => {
+            sincronizarCodigosAutomaticamente().finally(() => {
                 document.getElementById('paymentModal').style.display = 'flex';
             });
         }
@@ -2238,23 +2244,10 @@
             alert('⏳ ¡Próximamente! Estamos trabajando en este contenido.');
         }
 
-        // ===== INICIALIZACIÓN =====
-        window.onclick = function(event) {
-            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay'];
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                if (event.target === modal) {
-                    if (modalId === 'previewModal') closePreviewModal();
-                    if (modalId === 'paymentModal') closePaymentModal();
-                    if (modalId === 'materialBenefitsModal') closeMaterialBenefitsModal();
-                    if (modalId === 'loginOverlay') closeLogin();
-                }
-            });
-        }
-
+        // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', async function() {
-            // Sincronizamos los códigos desde el servidor al iniciar (PASO 1)
-            await syncCodigosFromServer();
+            // Sincronizar inmediatamente al cargar
+            await sincronizarCodigosAutomaticamente();
 
             loadUserData();
             
@@ -2263,7 +2256,10 @@
 
             showMathCourses();
             
-            // INICIALIZAR SISTEMA DE CÓDIGOS si no existe aún (fallback)
+            // INICIAR SINCRONIZACIÓN AUTOMÁTICA CADA 2 MINUTOS
+            setInterval(sincronizarCodigosAutomaticamente, 120000);
+            
+            // INICIALIZAR SISTEMA DE CÓDIGOS si no existe aún
             if (!localStorage.getItem('neoStudyCodigosMaestros')) {
                 const codigosIniciales = {
                     "MATH7X9": { 
@@ -2279,6 +2275,19 @@
                 localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosIniciales));
             }
         });
+
+        window.onclick = function(event) {
+            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    if (modalId === 'previewModal') closePreviewModal();
+                    if (modalId === 'paymentModal') closePaymentModal();
+                    if (modalId === 'materialBenefitsModal') closeMaterialBenefitsModal();
+                    if (modalId === 'loginOverlay') closeLogin();
+                }
+            });
+        };
     </script>
 </body>
 </html>
