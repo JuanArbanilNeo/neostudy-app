@@ -1606,65 +1606,126 @@
     </div>
 
     <script>
-        // ===== SISTEMA SEGURO DE CÓDIGOS =====
-        // ✅ URL CORRECTA DE TU GOOGLE APPS SCRIPT
+        // ===== PASO 1: SINCRONIZACIÓN DE CÓDIGOS DESDE EL SERVIDOR (Google Apps Script) =====
+        // Asegúrate que esta URL sea la misma que usas en tu panel
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLis-QwjHZvDPFZzBUnKKse0a5K1Gsa_avkDR_nbNhkhbGHsxju1k1zCehsE75MvULbg/exec';
 
-        // ✅ VALIDAR CÓDIGO DE ACCESO
+        // Descarga todos los códigos desde el Apps Script y guarda en localStorage (neoStudyCodigosMaestros)
+        async function syncCodigosFromServer() {
+            try {
+                const res = await fetch(`${SCRIPT_URL}?action=getAllCodes&timestamp=${Date.now()}`);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (data.status === 'success' && data.codigos) {
+                    const mapped = {};
+                    Object.keys(data.codigos).forEach(k => {
+                        const s = data.codigos[k];
+                        mapped[String(k).trim().toUpperCase()] = {
+                            usado: (String(s.estado || '').toLowerCase() === 'usado') || !!s.usuario,
+                            usuario: s.usuario || null,
+                            contacto: s.contacto || null,
+                            precio: s.precio || '6.00',
+                            activo: String(s.estado || '').toLowerCase() !== 'bloqueado',
+                            fechaCreacion: s.fechaCreacion || '',
+                            fechaActivacion: s.fechaActivacion || null,
+                            curso: s.curso || 'Planteo de Ecuaciones'
+                        };
+                    });
+                    localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(mapped));
+                    console.log('✅ Códigos sincronizados desde servidor:', Object.keys(mapped).length);
+                    return true;
+                } else {
+                    console.warn('⚠ getAllCodes response not success', data);
+                    return false;
+                }
+            } catch (err) {
+                console.error('❌ Error sincronizando códigos:', err);
+                return false;
+            }
+        }
+
+        // ===== SISTEMA SEGURO DE CÓDIGOS (tu lógica existente) =====
         function validateAccessCode() {
             try {
                 const codeInput = document.getElementById('accessCode');
                 const code = codeInput.value.trim().toUpperCase();
-                const codeStatus = document.getElementById('codeStatus');
                 
                 if (!code) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Ingresa tu código</span>';
+                    alert('❌ Por favor ingresa tu código de acceso');
                     return;
                 }
 
-                codeStatus.innerHTML = '<span style="color: orange;">⏳ Verificando código...</span>';
+                // CARGAR CÓDIGOS DEL SISTEMA
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const currentUserID = getUniversalUserID();
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                const userInfo = userData.contacto || userData.nombre || 'Usuario';
 
-                // Verificar código con Google Apps Script
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'validateCode',
-                        codigo: code,
-                        usuario: getCurrentUserInfo()
-                    })
-                })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('Respuesta del servidor:', result);
-                    
-                    if (result.status === 'success') {
-                        // ✅ CÓDIGO VÁLIDO - ACTIVAR ACCESO
-                        codeStatus.innerHTML = '<span style="color: green;">✅ Código válido - Activando acceso...</span>';
-                        activateUserAccessWithCode(code, result.userInfo);
-                        setTimeout(() => closePaymentModal(), 1000);
+                // VERIFICAR SI EL CÓDIGO EXISTE
+                if (!codigosMaestros[code]) {
+                    alert('❌ Código inválido. Contacta a neostudy@gmail.com');
+                    return;
+                }
+
+                const infoCodigo = codigosMaestros[code];
+
+                // VERIFICAR SI ESTÁ ACTIVO
+                if (!infoCodigo.activo) {
+                    alert('❌ Este código está bloqueado. Contacta al administrador.');
+                    return;
+                }
+
+                // VERIFICAR SI YA FUE USADO
+                if (infoCodigo.usado) {
+                    // Si YA lo usó este mismo usuario, permitir acceso
+                    if (infoCodigo.usuario === userInfo) {
+                        alert('✅ Ya tienes acceso activo a este curso.');
+                        closePaymentModal();
+                        activateUserAccess(code);
+                        return;
                     } else {
-                        codeStatus.innerHTML = `<span style="color: red;">❌ ${result.message}</span>`;
+                        // Si lo usó OTRO usuario, BLOQUEAR
+                        alert('❌ Este código ya fue utilizado por otro usuario. Cada código es personal e intransferible.');
+                        return;
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Error de conexión</span>';
-                });
+                }
+
+                // ✅ ACTIVAR EL CÓDIGO PARA ESTE USUARIO
+                const confirmar = confirm(`¿Activar curso de Matemática para:\n\n👤 ${userInfo}\n📧 ${userData.contacto || 'No disponible'}\n\n🔑 Código: ${code}\n💰 Precio: S/ ${infoCodigo.precio || '6.00'}\n\n⚠️ Este código quedará VINCULADO permanentemente a esta cuenta.`);
+                
+                if (!confirmar) {
+                    return;
+                }
+
+                // MARCAR CÓDIGO COMO USADO POR ESTE USUARIO
+                codigosMaestros[code] = {
+                    usado: true,
+                    usuario: userInfo,
+                    contacto: userData.contacto || 'No disponible',
+                    precio: infoCodigo.precio || '6.00',
+                    activo: true,
+                    fechaActivacion: new Date().toLocaleString(),
+                    fechaCreacion: infoCodigo.fechaCreacion || new Date().toLocaleString(),
+                    curso: "Planteo de Ecuaciones"
+                };
+
+                localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosMaestros));
+
+                // ✅ ACTIVAR ACCESO
+                activateUserAccessWithCode(currentUserID, code, userInfo);
                 
             } catch (error) {
                 console.error("Error en validateAccessCode:", error);
-                document.getElementById('codeStatus').innerHTML = '<span style="color: red;">❌ Error del sistema</span>';
+                alert('❌ Error al activar el código. Contacta al soporte.');
             }
         }
 
-        // ✅ VALIDAR CÓDIGO EN LOGIN
+        // ===== VALIDAR CÓDIGO EN LOGIN =====
         function validateUserAccess() {
             try {
                 const code = document.getElementById('userCode').value.trim().toUpperCase();
                 const loginError = document.getElementById('loginError');
+                const currentUserID = getUniversalUserID();
 
                 if (!code) {
                     loginError.textContent = '❌ Por favor ingresa tu código de acceso';
@@ -1672,44 +1733,38 @@
                     return;
                 }
 
-                loginError.textContent = '⏳ Verificando código...';
-                loginError.style.display = 'block';
+                // CARGAR CÓDIGOS
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                const userInfo = userData.contacto || userData.nombre || 'Usuario';
 
-                // Verificar código con Google Apps Script
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'validateCode',
-                        codigo: code,
-                        usuario: getCurrentUserInfo()
-                    })
-                })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('Respuesta login:', result);
-                    
-                    if (result.status === 'success') {
-                        // ✅ ACCESO PERMITIDO
-                        loginError.style.display = 'none';
-                        activateUserAccessWithCode(code, result.userInfo);
-                        closeLogin();
-                        setTimeout(() => {
-                            document.getElementById('previewModal').style.display = 'flex';
-                            showUnlockedPreview();
-                        }, 500);
-                    } else {
-                        loginError.textContent = '❌ ' + result.message;
-                        loginError.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    loginError.textContent = '❌ Error de conexión. Intenta nuevamente.';
+                // VERIFICAR CÓDIGO
+                if (!codigosMaestros[code]) {
+                    loginError.textContent = '❌ Código no encontrado en el sistema';
                     loginError.style.display = 'block';
-                });
+                    return;
+                }
+
+                const infoCodigo = codigosMaestros[code];
+
+                // VERIFICAR SI ESTÁ ACTIVO
+                if (!infoCodigo.activo) {
+                    loginError.textContent = '❌ Este código está bloqueado. Contacta al administrador.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                // VERIFICAR SI PERTENECE A ESTE USUARIO
+                if (!infoCodigo.usado || infoCodigo.usuario !== userInfo) {
+                    loginError.textContent = '❌ Este código no está asignado a tu cuenta.';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                // ✅ ACCESO PERMITIDO
+                closeLogin();
+                document.getElementById('previewModal').style.display = 'flex';
+                showUnlockedPreview();
                 
             } catch (error) {
                 console.error("Error en validateUserAccess:", error);
@@ -1718,7 +1773,7 @@
             }
         }
 
-        // ✅ VERIFICAR CÓDIGO EN TIEMPO REAL
+        // ===== VERIFICAR CÓDIGO EN TIEMPO REAL =====
         function checkCodeRealTime(code) {
             const codeStatus = document.getElementById('codeStatus');
             const cleanedCode = code.trim().toUpperCase();
@@ -1727,78 +1782,61 @@
                 codeStatus.innerHTML = '';
                 return;
             }
-
-            if (cleanedCode.length < 6) {
-                codeStatus.innerHTML = '<span style="color: orange;">⚠️ El código debe tener 6-7 caracteres</span>';
+            
+            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+            const infoCodigo = codigosMaestros[cleanedCode];
+            
+            if (!infoCodigo) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
                 return;
             }
 
-            // Verificación en tiempo real
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    action: 'checkCode',
-                    codigo: cleanedCode
-                })
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Check code result:', result);
-                if (result.status === 'success') {
-                    const precio = result.precio || '6.00';
-                    const estado = result.estado || 'activo';
-                    
-                    if (estado === 'activo') {
-                        codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio} - DISPONIBLE</span>`;
-                    } else if (estado === 'usado') {
-                        codeStatus.innerHTML = `<span style="color: red;">❌ Código ya utilizado</span>`;
-                    } else {
-                        codeStatus.innerHTML = `<span style="color: red;">❌ Código bloqueado</span>`;
-                    }
-                } else {
-                    codeStatus.innerHTML = `<span style="color: red;">❌ ${result.message}</span>`;
-                }
-            })
-            .catch(error => {
-                console.error('Error check code:', error);
-                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando...</span>';
-            });
-        }
-
-        // ✅ ACTIVAR ACCESO DEL USUARIO
-        function activateUserAccessWithCode(code, userInfo) {
-            try {
-                // Guardar acceso del usuario
-                const userAccessKey = `cursoAcceso_${getUniversalUserID()}`;
-                const expirationDate = new Date();
-                expirationDate.setFullYear(expirationDate.getFullYear() + 1); // 1 año de acceso
-
-                const accessData = {
-                    codigo: code,
-                    fechaAcceso: new Date().toISOString(),
-                    expira: expirationDate.toISOString(),
-                    usuario: userInfo,
-                    curso: 'Planteo de Ecuaciones',
-                    estado: 'activo'
-                };
-
-                localStorage.setItem(userAccessKey, JSON.stringify(accessData));
-
-                // Mostrar confirmación
-                setTimeout(() => {
-                    alert(`🎉 ¡CURSO ACTIVADO CORRECTAMENTE!\n\n🔑 Código: ${code}\n👤 Usuario: ${userInfo.nombre || 'Usuario'}\n📚 Curso: Planteo de Ecuaciones\n\nAhora tienes acceso completo al material.`);
-                }, 500);
-
-            } catch (error) {
-                console.error("Error en activateUserAccessWithCode:", error);
-                alert('✅ Curso activado, pero hubo un error guardando los datos. Tu acceso está activo.');
+            if (!infoCodigo.activo) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
+                return;
             }
+
+            if (infoCodigo.usado) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
+                return;
+            }
+
+            const precio = infoCodigo.precio || '6.00';
+            codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio}</span>`;
         }
 
-        // ✅ VERIFICAR SI EL USUARIO TIENE ACCESO
+        // ===== ACTIVAR ACCESO DEL USUARIO =====
+        function activateUserAccessWithCode(userID, code, userInfo) {
+            closePaymentModal();
+            
+            // Guardar acceso del usuario
+            const userAccessKey = `cursoAcceso_${userID}`;
+            const expirationDate = new Date();
+            expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+
+            localStorage.setItem(userAccessKey, JSON.stringify({
+                codigo: code,
+                fechaAcceso: new Date().toISOString(),
+                expira: expirationDate.toISOString(),
+                usuario: userInfo,
+                curso: 'Planteo de Ecuaciones'
+            }));
+
+            // Mostrar confirmación
+            setTimeout(() => {
+                alert(`✅ ¡CURSO ACTIVADO CORRECTAMENTE!\n\n🔑 Código: ${code}\n👤 Usuario: ${userInfo}\n\n¿Quieres acceder al curso ahora?`);
+                
+                document.getElementById('previewModal').style.display = 'flex';
+                showUnlockedPreview();
+            }, 500);
+        }
+
+        function activateUserAccess(code) {
+            document.getElementById('previewModal').style.display = 'flex';
+            showUnlockedPreview();
+        }
+
+        // ===== VERIFICAR SI EL USUARIO TIENE ACCESO =====
         function checkUserAccess() {
             try {
                 const userID = getUniversalUserID();
@@ -1817,6 +1855,15 @@
                     return false;
                 }
 
+                // Verificar en códigos maestros
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const infoCodigo = codigosMaestros[userAccess.codigo];
+                
+                if (!infoCodigo || !infoCodigo.activo || infoCodigo.usuario !== userAccess.usuario) {
+                    localStorage.removeItem(userAccessKey);
+                    return false;
+                }
+
                 return true;
             } catch (error) {
                 console.error("Error en checkUserAccess:", error);
@@ -1824,33 +1871,13 @@
             }
         }
 
-        // ✅ OBTENER INFORMACIÓN DEL USUARIO ACTUAL
-        function getCurrentUserInfo() {
-            try {
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                return {
-                    nombre: userData.nombre || 'Usuario Neo Study',
-                    contacto: userData.contacto || 'No registrado',
-                    email: userData.email || 'No registrado',
-                    fechaAcceso: new Date().toLocaleString()
-                };
-            } catch (error) {
-                return {
-                    nombre: 'Usuario Temporal',
-                    contacto: 'Temporal',
-                    email: 'temporal@neostudy.com',
-                    fechaAcceso: new Date().toLocaleString()
-                };
-            }
-        }
-
-        // ✅ OBTENER ID ÚNICO DEL USUARIO
+        // ===== SISTEMA DE IDENTIFICACIÓN =====
         function getUniversalUserID() {
             try {
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
                 
                 if (userData.contacto) {
-                    return userData.contacto.toLowerCase().trim().replace(/[^a-z0-9]/g, '_');
+                    return userData.contacto.toLowerCase().trim();
                 }
                 
                 if (userData.nombre) {
@@ -1860,14 +1887,14 @@
                 
                 let anonID = localStorage.getItem('neoStudyAnonymousID');
                 if (!anonID) {
-                    anonID = 'user_' + Math.random().toString(36).substring(2, 15);
+                    anonID = 'user_' + Math.random().toString(36).substring(2, 11);
                     localStorage.setItem('neoStudyAnonymousID', anonID);
                 }
                 return anonID;
                 
             } catch (error) {
                 console.error("Error en getUniversalUserID:", error);
-                return 'user_' + Math.random().toString(36).substring(2, 15);
+                return 'emergency_' + Math.random().toString(36).substring(2, 9);
             }
         }
 
@@ -2003,12 +2030,17 @@
 
         function showPaymentModalFromLogin() {
             closeLogin();
-            showPaymentModal();
+            // sync before showing payment modal to ensure codes are fresh
+            syncCodigosFromServer().finally(() => showPaymentModal());
         }
 
         function showPaymentModal() {
             closePreviewModal();
-            document.getElementById('paymentModal').style.display = 'flex';
+            // ensure codes are synced when opening payment modal
+            // (if showPaymentModalFromLogin already synced, this is harmless)
+            syncCodigosFromServer().finally(() => {
+                document.getElementById('paymentModal').style.display = 'flex';
+            });
         }
 
         function closePaymentModal() {
@@ -2220,7 +2252,10 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Sincronizamos los códigos desde el servidor al iniciar (PASO 1)
+            await syncCodigosFromServer();
+
             loadUserData();
             
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
@@ -2228,11 +2263,20 @@
 
             showMathCourses();
             
-            // VERIFICAR SI EL USUARIO YA TIENE ACCESO
-            if (checkUserAccess()) {
-                console.log('✅ Usuario tiene acceso activo al curso');
-            } else {
-                console.log('🔒 Usuario necesita desbloquear el curso');
+            // INICIALIZAR SISTEMA DE CÓDIGOS si no existe aún (fallback)
+            if (!localStorage.getItem('neoStudyCodigosMaestros')) {
+                const codigosIniciales = {
+                    "MATH7X9": { 
+                        usado: false, 
+                        usuario: null, 
+                        contacto: null,
+                        precio: "6.00",
+                        activo: true,
+                        fechaCreacion: new Date().toLocaleString(),
+                        curso: "Planteo de Ecuaciones"
+                    }
+                };
+                localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosIniciales));
             }
         });
     </script>
