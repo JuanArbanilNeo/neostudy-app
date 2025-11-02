@@ -1607,7 +1607,21 @@
 
     <script>
         // ===== SISTEMA MEJORADO DE SINCRONIZACIÓN =====
-        const SCRIPT_URL = 'https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec';
+        const SCRIPT_URLS = [
+            'https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec',
+            'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec')
+        ];
+
+        let currentScriptIndex = 0;
+
+        function getScriptURL() {
+            return SCRIPT_URLS[currentScriptIndex];
+        }
+
+        function switchScriptURL() {
+            currentScriptIndex = (currentScriptIndex + 1) % SCRIPT_URLS.length;
+            console.log(`🔀 Cambiando a URL: ${currentScriptIndex + 1}`);
+        }
 
         // ===== VERIFICAR CÓDIGO EN TIEMPO REAL =====
         async function checkCodeRealTime(code) {
@@ -1621,14 +1635,11 @@
             
             try {
                 // ✅ CONECTAR CON GOOGLE APPS SCRIPT EN TIEMPO REAL
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        action: 'checkCode',
-                        codigo: cleanedCode
-                    })
-                });
+                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${cleanedCode}&timestamp=${Date.now()}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 
                 const result = await response.json();
                 
@@ -1645,21 +1656,8 @@
                     codeStatus.innerHTML = '<span style="color: red;">❌ Código no válido</span>';
                 }
             } catch (error) {
-                // ⚠️ FALLBACK: Si hay error de conexión, usa datos locales
-                console.log('Usando verificación local por error de conexión');
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const infoCodigo = codigosMaestros[cleanedCode];
-                
-                if (!infoCodigo) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
-                } else if (!infoCodigo.activo) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
-                } else if (infoCodigo.usado) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
-                } else {
-                    const precio = infoCodigo.precio || '6.00';
-                    codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio}</span>`;
-                }
+                console.log('⚠️ Error de conexión:', error);
+                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Error de conexión</span>';
             }
         }
 
@@ -1681,15 +1679,20 @@
                 };
 
                 // ✅ CONECTAR DIRECTAMENTE CON GOOGLE APPS SCRIPT
-                const response = await fetch(SCRIPT_URL, {
+                const response = await fetch(getScriptURL(), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         action: 'validateCode',
                         codigo: code,
-                        usuario: userInfo
+                        usuario: userInfo.nombre,
+                        contacto: userInfo.contacto
                     })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
 
                 const result = await response.json();
 
@@ -1729,14 +1732,11 @@
                 };
 
                 // ✅ VERIFICAR CÓDIGO EN TIEMPO REAL
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        action: 'checkCode',
-                        codigo: code
-                    })
-                });
+                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${code}&timestamp=${Date.now()}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
 
                 const result = await response.json();
 
