@@ -1623,7 +1623,7 @@
             console.log(`🔀 Cambiando a URL: ${currentScriptIndex + 1}`);
         }
 
-        // ===== VERIFICAR CÓDIGO EN TIEMPO REAL =====
+        // ===== VERIFICAR CÓDIGO EN TIEMPO REAL - CORREGIDO =====
         async function checkCodeRealTime(code) {
             const codeStatus = document.getElementById('codeStatus');
             const cleanedCode = code.trim().toUpperCase();
@@ -1634,7 +1634,6 @@
             }
             
             try {
-                // ✅ CONECTAR CON GOOGLE APPS SCRIPT EN TIEMPO REAL
                 const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${cleanedCode}&timestamp=${Date.now()}`);
                 
                 if (!response.ok) {
@@ -1644,10 +1643,13 @@
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    if (result.estado === 'usado') {
+                    // ✅ COMPATIBILIDAD CON PANEL DE CONTROL
+                    if (result.estado === 'usado' || result.usado === true) {
                         codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
-                    } else if (result.estado === 'bloqueado') {
+                    } else if (result.estado === 'bloqueado' || result.activo === false) {
                         codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
+                    } else if (result.eliminado === true) {
+                        codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
                     } else {
                         const precio = result.precio || '6.00';
                         codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio}</span>`;
@@ -1658,10 +1660,27 @@
             } catch (error) {
                 console.log('⚠️ Error de conexión:', error);
                 codeStatus.innerHTML = '<span style="color: orange;">⚠️ Error de conexión</span>';
+                
+                // FALLBACK: Verificar en datos locales
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const infoCodigo = codigosMaestros[cleanedCode];
+                
+                if (!infoCodigo) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
+                } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
+                } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
+                } else if (infoCodigo.eliminado === true) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
+                } else {
+                    const precio = infoCodigo.precio || '6.00';
+                    codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio}</span>`;
+                }
             }
         }
 
-        // ===== FUNCIONES DE VALIDACIÓN ACTUALIZADAS =====
+        // ===== FUNCIÓN DE VALIDACIÓN CORREGIDA =====
         async function validateAccessCode() {
             try {
                 const codeInput = document.getElementById('accessCode');
@@ -1678,7 +1697,7 @@
                     contacto: userData.contacto || 'No registrado'
                 };
 
-                // ✅ CONECTAR DIRECTAMENTE CON GOOGLE APPS SCRIPT
+                // ✅ CONECTAR CON GOOGLE APPS SCRIPT
                 const response = await fetch(getScriptURL(), {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -1703,6 +1722,9 @@
                     closePaymentModal();
                     activateUserAccessWithCode(getUniversalUserID(), code, userInfo.nombre);
                     
+                    // ACTUALIZAR DATOS LOCALES
+                    await sincronizarCodigosLocales();
+                    
                 } else {
                     // ❌ ERROR EN LA VALIDACIÓN
                     alert(`❌ ${result.message || 'Error al validar el código'}`);
@@ -1710,10 +1732,42 @@
                 
             } catch (error) {
                 console.error("Error en validateAccessCode:", error);
-                alert('❌ Error de conexión. Verifica tu internet e intenta nuevamente.');
+                
+                // FALLBACK: Validación local
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const infoCodigo = codigosMaestros[code];
+                
+                if (!infoCodigo) {
+                    alert('❌ Código no encontrado');
+                } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
+                    alert('❌ Este código ya fue utilizado');
+                } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
+                    alert('❌ Este código está bloqueado');
+                } else if (infoCodigo.eliminado === true) {
+                    alert('❌ Este código fue revocado');
+                } else {
+                    // ✅ ACTIVAR ACCESO LOCALMENTE
+                    alert(`🎉 ¡CURSO ACTIVADO (Modo Local)!\n\n🔑 Código: ${code}\n👤 Usuario: ${userInfo.nombre}`);
+                    
+                    // Actualizar estado local
+                    codigosMaestros[code] = {
+                        ...codigosMaestros[code],
+                        estado: 'usado',
+                        usado: true,
+                        usuario: userInfo.nombre,
+                        contacto: userInfo.contacto,
+                        fechaActivacion: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosMaestros));
+                    
+                    closePaymentModal();
+                    activateUserAccessWithCode(getUniversalUserID(), code, userInfo.nombre);
+                }
             }
         }
 
+        // ===== VALIDACIÓN DE USUARIO CORREGIDA =====
         async function validateUserAccess() {
             try {
                 const code = document.getElementById('userCode').value.trim().toUpperCase();
@@ -1741,7 +1795,20 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    // VERIFICAR SI EL CÓDIGO PERTENECE A ESTE USUARIO
+                    // ✅ COMPATIBILIDAD CON PANEL DE CONTROL
+                    const estado = result.estado;
+                    const usado = result.usado;
+                    const activo = result.activo;
+                    const eliminado = result.eliminado;
+                    
+                    // VERIFICAR SI EL CÓDIGO ES VÁLIDO
+                    if (estado === 'usado' || usado === true || estado === 'bloqueado' || activo === false || eliminado === true) {
+                        loginError.textContent = '❌ Código no disponible o ya utilizado';
+                        loginError.style.display = 'block';
+                        return;
+                    }
+
+                    // VERIFICAR SI EL CÓDIGO PERTENECE A ESTE USUARIO (si ya está usado)
                     if (result.usuario && result.usuario !== userInfo.nombre) {
                         loginError.textContent = '❌ Este código está asignado a otro usuario.';
                         loginError.style.display = 'block';
@@ -1760,12 +1827,117 @@
                 
             } catch (error) {
                 console.error("Error en validateUserAccess:", error);
-                loginError.textContent = '❌ Error de conexión. Intenta nuevamente.';
-                loginError.style.display = 'block';
+                
+                // FALLBACK: Validación local
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const infoCodigo = codigosMaestros[code];
+                
+                if (!infoCodigo) {
+                    loginError.textContent = '❌ Código no encontrado';
+                    loginError.style.display = 'block';
+                } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
+                    loginError.textContent = '❌ Este código ya fue utilizado';
+                    loginError.style.display = 'block';
+                } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
+                    loginError.textContent = '❌ Este código está bloqueado';
+                    loginError.style.display = 'block';
+                } else if (infoCodigo.eliminado === true) {
+                    loginError.textContent = '❌ Este código fue revocado';
+                    loginError.style.display = 'block';
+                } else {
+                    // ✅ ACCESO PERMITIDO LOCALMENTE
+                    closeLogin();
+                    document.getElementById('previewModal').style.display = 'flex';
+                    showUnlockedPreview();
+                }
             }
         }
 
-        // ===== ACTIVAR ACCESO DEL USUARIO =====
+        // ===== SISTEMA DE SINCRONIZACIÓN MEJORADO =====
+        async function sincronizarCodigosLocales() {
+            try {
+                const response = await fetch(`${getScriptURL()}?action=getAllCodes&timestamp=${Date.now()}`);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        // CONVERTIR ESTRUCTURA PARA COMPATIBILIDAD
+                        const codigosCompatibles = {};
+                        
+                        Object.entries(result.codigos).forEach(([codigo, info]) => {
+                            codigosCompatibles[codigo] = {
+                                // Compatibilidad con Panel de Control
+                                estado: info.estado,
+                                usuario: info.usuario,
+                                precio: info.precio,
+                                fechaCreacion: info.fechaCreacion,
+                                fechaActivacion: info.fechaActivacion,
+                                contacto: info.contacto,
+                                curso: info.curso,
+                                eliminado: info.eliminado,
+                                
+                                // Compatibilidad con Módulo 4
+                                usado: info.estado === 'usado',
+                                activo: info.estado === 'activo'
+                            };
+                        });
+                        
+                        localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosCompatibles));
+                        console.log('✅ Códigos sincronizados y convertidos');
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ Error sincronizando códigos:', error);
+            }
+        }
+
+        // ===== VERIFICAR ACCESO MEJORADO =====
+        function checkUserAccess() {
+            try {
+                const userID = getUniversalUserID();
+                const userAccessKey = `cursoAcceso_${userID}`;
+                const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
+                
+                if (!userAccess) {
+                    return false;
+                }
+
+                // Verificar expiración
+                const expirationDate = new Date(userAccess.expira);
+                const today = new Date();
+                if (expirationDate < today) {
+                    localStorage.removeItem(userAccessKey);
+                    return false;
+                }
+
+                // Verificar en códigos maestros (compatibilidad dual)
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const infoCodigo = codigosMaestros[userAccess.codigo];
+                
+                if (!infoCodigo) {
+                    return false;
+                }
+                
+                // ✅ COMPATIBILIDAD CON AMBAS ESTRUCTURAS
+                const estaActivo = infoCodigo.activo !== false && infoCodigo.estado !== 'bloqueado';
+                const noEstaUsado = infoCodigo.usado !== true && infoCodigo.estado !== 'usado';
+                const noEstaEliminado = infoCodigo.eliminado !== true;
+                const usuarioCoincide = !infoCodigo.usuario || infoCodigo.usuario === userAccess.usuario;
+                
+                if (!estaActivo || !noEstaUsado || !noEstaEliminado || !usuarioCoincide) {
+                    localStorage.removeItem(userAccessKey);
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                console.error("Error en checkUserAccess:", error);
+                return false;
+            }
+        }
+
+        // ===== ACTIVAR ACCESO MEJORADO =====
         function activateUserAccessWithCode(userID, code, userInfo) {
             closePaymentModal();
             
@@ -1789,46 +1961,6 @@
                 document.getElementById('previewModal').style.display = 'flex';
                 showUnlockedPreview();
             }, 500);
-        }
-
-        function activateUserAccess(code) {
-            document.getElementById('previewModal').style.display = 'flex';
-            showUnlockedPreview();
-        }
-
-        // ===== VERIFICAR SI EL USUARIO TIENE ACCESO =====
-        function checkUserAccess() {
-            try {
-                const userID = getUniversalUserID();
-                const userAccessKey = `cursoAcceso_${userID}`;
-                const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
-                
-                if (!userAccess) {
-                    return false;
-                }
-
-                // Verificar expiración
-                const expirationDate = new Date(userAccess.expira);
-                const today = new Date();
-                if (expirationDate < today) {
-                    localStorage.removeItem(userAccessKey);
-                    return false;
-                }
-
-                // Verificar en códigos maestros
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const infoCodigo = codigosMaestros[userAccess.codigo];
-                
-                if (!infoCodigo || !infoCodigo.activo || infoCodigo.usuario !== userAccess.usuario) {
-                    localStorage.removeItem(userAccessKey);
-                    return false;
-                }
-
-                return true;
-            } catch (error) {
-                console.error("Error en checkUserAccess:", error);
-                return false;
-            }
         }
 
         // ===== SISTEMA DE IDENTIFICACIÓN =====
@@ -2202,17 +2334,26 @@
 
             showMathCourses();
             
+            // SINCRONIZAR CÓDIGOS AL INICIAR
+            await sincronizarCodigosLocales();
+            
             // INICIALIZAR SISTEMA DE CÓDIGOS si no existe aún
             if (!localStorage.getItem('neoStudyCodigosMaestros')) {
                 const codigosIniciales = {
                     "MATH7X9": { 
-                        usado: false, 
-                        usuario: null, 
-                        contacto: null,
+                        // Compatibilidad con Panel de Control
+                        estado: 'activo',
+                        usuario: null,
                         precio: "6.00",
-                        activo: true,
                         fechaCreacion: new Date().toLocaleString(),
-                        curso: "Planteo de Ecuaciones"
+                        fechaActivacion: null,
+                        contacto: null,
+                        curso: "Planteo de Ecuaciones",
+                        eliminado: false,
+                        
+                        // Compatibilidad con Módulo 4
+                        usado: false,
+                        activo: true
                     }
                 };
                 localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosIniciales));
