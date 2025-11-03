@@ -1623,6 +1623,163 @@
             console.log(`🔀 Cambiando a URL: ${currentScriptIndex + 1}`);
         }
 
+        // ===== VERIFICAR CÓDIGO EN TIEMPO REAL - VERSIÓN MEJORADA =====
+        async function checkCodeRealTime(code) {
+            const codeStatus = document.getElementById('codeStatus');
+            const cleanedCode = code.trim().toUpperCase();
+            
+            if (!cleanedCode) {
+                codeStatus.innerHTML = '';
+                return;
+            }
+            
+            // Validación básica del formato del código
+            if (!/^[A-Z0-9]{4,10}$/.test(cleanedCode)) {
+                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Formato inválido (solo mayúsculas y números)</span>';
+                return;
+            }
+            
+            try {
+                codeStatus.innerHTML = '<span style="color: blue;">🔍 Verificando código...</span>';
+                
+                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${cleanedCode}&timestamp=${Date.now()}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // ✅ COMPATIBILIDAD TOTAL CON PANEL DE CONTROL - VERIFICACIÓN MÁS PRECISA
+                    const estado = result.estado;
+                    const usado = result.usado;
+                    const activo = result.activo;
+                    const eliminado = result.eliminado;
+                    const accesoRevocado = result.accesoRevocado;
+                    
+                    if (estado === 'usado' || usado === true) {
+                        codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
+                    } else if (estado === 'bloqueado' || activo === false) {
+                        codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
+                    } else if (eliminado === true || accesoRevocado === true) {
+                        codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
+                    } else if (estado === 'activo' || activo === true) {
+                        const precio = result.precio || '6.00';
+                        const usuarioAsignado = result.usuario;
+                        
+                        if (usuarioAsignado) {
+                            codeStatus.innerHTML = `<span style="color: orange;">⚠️ Código asignado a: ${usuarioAsignado}</span>`;
+                        } else {
+                            codeStatus.innerHTML = `<span style="color: green;">✅ VÁLIDO - Precio: S/ ${precio}</span>`;
+                        }
+                    } else {
+                        codeStatus.innerHTML = '<span style="color: green;">✅ Código válido</span>';
+                    }
+                } else {
+                    // Si la API devuelve error, intentar verificación local
+                    codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando localmente...</span>';
+                    setTimeout(() => verificarCodigoLocalMejorado(cleanedCode, codeStatus), 500);
+                }
+            } catch (error) {
+                console.log('⚠️ Error de conexión:', error);
+                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando localmente...</span>';
+                
+                // FALLBACK: Verificar en datos locales después de un breve delay
+                setTimeout(() => verificarCodigoLocalMejorado(cleanedCode, codeStatus), 500);
+            }
+        }
+
+        // ===== VERIFICACIÓN LOCAL MEJORADA =====
+        function verificarCodigoLocalMejorado(codigo, codeStatus) {
+            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+            const infoCodigo = codigosMaestros[codigo];
+            
+            if (!infoCodigo) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
+            } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
+            } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
+            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
+            } else if (infoCodigo.estado === 'activo' || infoCodigo.activo === true) {
+                const precio = infoCodigo.precio || '6.00';
+                const usuarioAsignado = infoCodigo.usuario;
+                
+                if (usuarioAsignado) {
+                    codeStatus.innerHTML = `<span style="color: orange;">⚠️ Código asignado a: ${usuarioAsignado}</span>`;
+                } else {
+                    codeStatus.innerHTML = `<span style="color: green;">✅ VÁLIDO - Precio: S/ ${precio}</span>`;
+                }
+            } else {
+                codeStatus.innerHTML = '<span style="color: green;">✅ Código válido</span>';
+            }
+        }
+
+        // ===== FUNCIÓN DE VALIDACIÓN MEJORADA - MÁS CLARA =====
+        async function validateAccessCode() {
+            try {
+                const codeInput = document.getElementById('accessCode');
+                const code = codeInput.value.trim().toUpperCase();
+                const codeStatus = document.getElementById('codeStatus');
+                
+                if (!code) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Por favor ingresa tu código</span>';
+                    return;
+                }
+
+                // Validación básica del formato
+                if (!/^[A-Z0-9]{4,10}$/.test(code)) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Formato inválido (solo mayúsculas y números, 4-10 caracteres)</span>';
+                    return;
+                }
+
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                const userInfo = {
+                    nombre: userData.nombre || 'Estudiante',
+                    contacto: userData.contacto || 'No registrado'
+                };
+
+                codeStatus.innerHTML = '<span style="color: blue;">🔄 Activando código...</span>';
+
+                // ✅ CONECTAR CON GOOGLE APPS SCRIPT - FORMATO COMPATIBLE
+                const response = await fetch(getScriptURL(), {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'validateCode',
+                        codigo: code,
+                        usuario: userInfo.nombre,
+                        contacto: userInfo.contacto,
+                        curso: 'Planteo de Ecuaciones'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // ✅ CÓDIGO ACTIVADO CORRECTAMENTE
+                    codeStatus.innerHTML = '<span style="color: green;">✅ ¡Código activado!</span>';
+                    await activarAccesoCompleto(code, userInfo.nombre);
+                    
+                } else {
+                    // ❌ ERROR EN LA VALIDACIÓN
+                    codeStatus.innerHTML = `<span style="color: red;">❌ ${result.message || 'Error al validar el código'}</span>`;
+                }
+                
+            } catch (error) {
+                console.error("Error en validateAccessCode:", error);
+                document.getElementById('codeStatus').innerHTML = '<span style="color: red;">❌ Error de conexión, intentando localmente...</span>';
+                
+                // FALLBACK: Validación local después de mostrar mensaje
+                setTimeout(validarCodigoLocalCompleto, 1000);
+            }
+        }
+
         // ===== SISTEMA MEJORADO DE VERIFICACIÓN DE ACCESO =====
         async function verificarAccesoPersistente() {
             try {
@@ -1743,49 +1900,6 @@
             }, 1000);
         }
 
-        // ===== VERIFICAR CÓDIGO EN TIEMPO REAL - COMPATIBLE CON PANEL CONTROL =====
-        async function checkCodeRealTime(code) {
-            const codeStatus = document.getElementById('codeStatus');
-            const cleanedCode = code.trim().toUpperCase();
-            
-            if (!cleanedCode) {
-                codeStatus.innerHTML = '';
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${cleanedCode}&timestamp=${Date.now()}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    // ✅ COMPATIBILIDAD TOTAL CON PANEL DE CONTROL
-                    if (result.estado === 'usado' || result.usado === true) {
-                        codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
-                    } else if (result.estado === 'bloqueado' || result.activo === false) {
-                        codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
-                    } else if (result.eliminado === true || result.accesoRevocado === true) {
-                        codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
-                    } else {
-                        const precio = result.precio || '6.00';
-                        codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio}</span>`;
-                    }
-                } else {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código no válido</span>';
-                }
-            } catch (error) {
-                console.log('⚠️ Error de conexión:', error);
-                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Error de conexión</span>';
-                
-                // FALLBACK: Verificar en datos locales
-                verificarCodigoLocal(cleanedCode, codeStatus);
-            }
-        }
-
         // ===== FUNCIÓN AUXILIAR PARA VERIFICACIÓN LOCAL =====
         function verificarCodigoLocal(codigo, codeStatus) {
             const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
@@ -1802,58 +1916,6 @@
             } else {
                 const precio = infoCodigo.precio || '6.00';
                 codeStatus.innerHTML = `<span style="color: green;">✅ Válido - S/ ${precio}</span>`;
-            }
-        }
-
-        // ===== FUNCIÓN DE VALIDACIÓN MEJORADA =====
-        async function validateAccessCode() {
-            try {
-                const codeInput = document.getElementById('accessCode');
-                const code = codeInput.value.trim().toUpperCase();
-                
-                if (!code) {
-                    alert('❌ Por favor ingresa tu código de acceso');
-                    return;
-                }
-
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                const userInfo = {
-                    nombre: userData.nombre || 'Estudiante',
-                    contacto: userData.contacto || 'No registrado'
-                };
-
-                // ✅ CONECTAR CON GOOGLE APPS SCRIPT - FORMATO COMPATIBLE
-                const response = await fetch(getScriptURL(), {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'validateCode',
-                        codigo: code,
-                        usuario: userInfo.nombre,
-                        contacto: userInfo.contacto,
-                        curso: 'Planteo de Ecuaciones'
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    // ✅ CÓDIGO ACTIVADO CORRECTAMENTE
-                    await activarAccesoCompleto(code, userInfo.nombre);
-                    
-                } else {
-                    // ❌ ERROR EN LA VALIDACIÓN
-                    alert(`❌ ${result.message || 'Error al validar el código'}`);
-                }
-                
-            } catch (error) {
-                console.error("Error en validateAccessCode:", error);
-                
-                // FALLBACK: Validación local
-                validarCodigoLocalCompleto();
             }
         }
 
