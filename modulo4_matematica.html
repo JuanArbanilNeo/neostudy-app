@@ -1651,12 +1651,19 @@
                         
                         if (result.status === 'success') {
                             // Verificar si el código sigue activo en el panel de control
-                            if (result.estado === 'bloqueado' || result.activo === false || result.eliminado === true) {
-                                // ❌ ACCESO REVOCADO DESDE EL PANEL
+                            const estado = result.estado;
+                            const activo = result.activo;
+                            const eliminado = result.eliminado;
+                            const accesoRevocado = result.accesoRevocado;
+                            
+                            // ❌ DETECTAR SI EL ACCESO FUE REVOCADO
+                            if (estado === 'bloqueado' || activo === false || eliminado === true || accesoRevocado === true) {
+                                // ACCESO REVOCADO DESDE EL PANEL - LIMPIAR TODO
                                 localStorage.removeItem(userAccessKey);
                                 return { 
                                     acceso: false, 
-                                    razon: 'Acceso revocado desde el panel de control' 
+                                    razon: 'Acceso revocado desde el panel de control',
+                                    revocado: true
                                 };
                             }
                             
@@ -1668,6 +1675,9 @@
                                     razon: 'Este código está asignado a otro usuario' 
                                 };
                             }
+                        } else {
+                            // Si hay error en la verificación, usar verificación local
+                            return verificarAccesoLocal(userAccess);
                         }
                     }
                 } catch (error) {
@@ -1698,17 +1708,39 @@
                 // ✅ COMPATIBILIDAD CON AMBAS ESTRUCTURAS
                 const estaActivo = infoCodigo.activo !== false && infoCodigo.estado !== 'bloqueado';
                 const noEstaEliminado = infoCodigo.eliminado !== true;
+                const accesoNoRevocado = infoCodigo.accesoRevocado !== true;
                 const usuarioCoincide = !infoCodigo.usuario || infoCodigo.usuario === userAccess.usuario;
                 
-                if (!estaActivo || !noEstaEliminado || !usuarioCoincide) {
+                if (!estaActivo || !noEstaEliminado || !accesoNoRevocado || !usuarioCoincide) {
                     localStorage.removeItem(`cursoAcceso_${getUniversalUserID()}`);
-                    return { acceso: false, razon: 'Acceso revocado localmente' };
+                    return { 
+                        acceso: false, 
+                        razon: 'Acceso revocado localmente',
+                        revocado: true
+                    };
                 }
 
                 return { acceso: true, datos: userAccess };
             } catch (error) {
                 return { acceso: false, razon: 'Error en verificación local' };
             }
+        }
+
+        // ===== MANEJAR ACCESO REVOCADO =====
+        function manejarAccesoRevocado() {
+            // Mostrar mensaje de acceso revocado
+            alert('🚫 ACCESO REVOCADO\n\nTu acceso al curso ha sido revocado por el administrador.\n\nPara continuar usando el material, necesitas adquirir un nuevo código de acceso.');
+            
+            // Forzar cierre de todos los modales
+            closePreviewModal();
+            closePaymentModal();
+            closeMaterialBenefitsModal();
+            closeLogin();
+            
+            // Mostrar modal de pago para que adquiera nuevo código
+            setTimeout(() => {
+                showPaymentModal();
+            }, 1000);
         }
 
         // ===== VERIFICAR CÓDIGO EN TIEMPO REAL - COMPATIBLE CON PANEL CONTROL =====
@@ -1736,7 +1768,7 @@
                         codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
                     } else if (result.estado === 'bloqueado' || result.activo === false) {
                         codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
-                    } else if (result.eliminado === true) {
+                    } else if (result.eliminado === true || result.accesoRevocado === true) {
                         codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
                     } else {
                         const precio = result.precio || '6.00';
@@ -1765,7 +1797,7 @@
                 codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
             } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
                 codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
-            } else if (infoCodigo.eliminado === true) {
+            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
                 codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
             } else {
                 const precio = infoCodigo.precio || '6.00';
@@ -1862,7 +1894,7 @@
                 alert('❌ Este código ya fue utilizado');
             } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
                 alert('❌ Este código está bloqueado');
-            } else if (infoCodigo.eliminado === true) {
+            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
                 alert('❌ Este código fue revocado');
             } else {
                 // ✅ ACTIVAR ACCESO COMPLETO LOCALMENTE
@@ -1903,9 +1935,10 @@
                     const usado = result.usado;
                     const activo = result.activo;
                     const eliminado = result.eliminado;
+                    const accesoRevocado = result.accesoRevocado;
                     
                     // VERIFICAR SI EL CÓDIGO ES VÁLIDO
-                    if (estado === 'usado' || usado === true || estado === 'bloqueado' || activo === false || eliminado === true) {
+                    if (estado === 'usado' || usado === true || estado === 'bloqueado' || activo === false || eliminado === true || accesoRevocado === true) {
                         loginError.textContent = '❌ Código no disponible o ya utilizado';
                         loginError.style.display = 'block';
                         return;
@@ -1976,7 +2009,7 @@
             } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
                 loginError.textContent = '❌ Este código está bloqueado';
                 loginError.style.display = 'block';
-            } else if (infoCodigo.eliminado === true) {
+            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
                 loginError.textContent = '❌ Este código fue revocado';
                 loginError.style.display = 'block';
             } else {
@@ -2008,10 +2041,11 @@
                                 contacto: info.contacto,
                                 curso: info.curso,
                                 eliminado: info.eliminado,
+                                accesoRevocado: info.accesoRevocado,
                                 
                                 // Compatibilidad con Módulo 4
                                 usado: info.estado === 'usado',
-                                activo: info.estado !== 'bloqueado' && !info.eliminado
+                                activo: info.estado !== 'bloqueado' && !info.eliminado && !info.accesoRevocado
                             };
                         });
                         
@@ -2244,6 +2278,11 @@
                 // Aquí puedes agregar lógica para mostrar contenido desbloqueado automáticamente
             } else {
                 console.log('❌ Usuario no tiene acceso:', resultado.razon);
+                
+                // Si el acceso fue revocado, mostrar mensaje específico
+                if (resultado.revocado) {
+                    manejarAccesoRevocado();
+                }
             }
         }
 
@@ -2460,6 +2499,7 @@
                         contacto: null,
                         curso: "Planteo de Ecuaciones",
                         eliminado: false,
+                        accesoRevocado: false,
                         
                         // Compatibilidad con Módulo 4
                         usado: false,
