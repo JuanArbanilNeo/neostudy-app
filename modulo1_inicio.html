@@ -5,18 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
 <style>
+  * {
+    box-sizing: border-box;
+  }
+  
   body {
     margin: 0;
     font-family: "Poppins", sans-serif;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    overflow: hidden;
+    overflow-x: hidden;
     background: linear-gradient(120deg, #001F3F, #003366, #00C4FF);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
+    padding: 20px;
   }
 
   @keyframes gradientBG {
@@ -29,15 +34,24 @@
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
     border-radius: 20px;
-    padding: 40px;
-    width: 90%;
+    padding: 30px;
+    width: 100%;
     max-width: 450px;
     text-align: center;
     box-shadow: 0 0 30px rgba(0,0,0,0.4);
   }
 
-  h1 { color: #00C4FF; font-size: 2em; margin-bottom: 15px; }
-  p { font-size: 1em; color: #dfe9ff; margin-bottom: 25px; }
+  h1 { 
+    color: #00C4FF; 
+    font-size: 2em; 
+    margin-bottom: 15px; 
+  }
+  
+  p { 
+    font-size: 1em; 
+    color: #dfe9ff; 
+    margin-bottom: 25px; 
+  }
 
   select, input, button {
     width: 100%;
@@ -48,8 +62,16 @@
     font-size: 1em;
   }
 
-  input { background: rgba(255,255,255,0.9); color: #333; }
-  input:focus { outline: none; box-shadow: 0 0 12px #00C4FF; transform: scale(1.03); }
+  input { 
+    background: rgba(255,255,255,0.9); 
+    color: #333; 
+  }
+  
+  input:focus { 
+    outline: none; 
+    box-shadow: 0 0 12px #00C4FF; 
+    transform: scale(1.03); 
+  }
 
   button {
     background: linear-gradient(90deg,#00C4FF,#007bff);
@@ -60,18 +82,63 @@
     transition: 0.3s;
   }
 
-  button:hover { transform: scale(1.05); box-shadow: 0 0 25px #00FFFF; }
+  button:hover { 
+    transform: scale(1.05); 
+    box-shadow: 0 0 25px #00FFFF; 
+  }
 
-  .footer { margin-top: 15px; font-size: 0.9em; color: #cbd7ff; }
+  .footer { 
+    margin-top: 15px; 
+    font-size: 0.9em; 
+    color: #cbd7ff; 
+  }
+  
   .footer a { 
     color: #00C4FF; 
     text-decoration: none; 
     cursor: pointer;
     font-weight: bold;
   }
-  .footer a:hover { text-decoration: underline; }
+  
+  .footer a:hover { 
+    text-decoration: underline; 
+  }
 
-  .hidden { display: none; }
+  .hidden { 
+    display: none; 
+  }
+  
+  /* Estilos para etiquetas de fecha */
+  .date-label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    color: #dfe9ff;
+    font-size: 0.9em;
+  }
+  
+  /* Mejoras para dispositivos móviles */
+  @media (max-width: 480px) {
+    body {
+      padding: 10px;
+      align-items: flex-start;
+    }
+    
+    .container {
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+    
+    h1 {
+      font-size: 1.7em;
+    }
+    
+    select, input, button {
+      padding: 14px;
+      font-size: 16px; /* Evita zoom automático en iOS */
+    }
+  }
 </style>
 </head>
 <body>
@@ -94,6 +161,7 @@
     <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
     <input type="text" id="prof_profesion" placeholder="Profesión" required>
     <input type="text" id="prof_carrera" placeholder="Carrera" required>
+    <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="prof_nacimiento" required>
     <input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="prof_password" placeholder="Contraseña" required>
@@ -105,6 +173,7 @@
     <input type="text" id="uni_universidad" placeholder="Universidad" required>
     <input type="text" id="uni_carrera" placeholder="Carrera" required>
     <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
+    <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="uni_nacimiento" required>
     <input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="uni_password" placeholder="Contraseña" required>
@@ -115,6 +184,7 @@
     <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
     <input type="text" id="sec_colegio" placeholder="Colegio" required>
     <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
+    <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="sec_nacimiento" required>
     <input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="sec_password" placeholder="Contraseña" required>
@@ -123,6 +193,7 @@
 
   <form id="formGeneral" class="hidden">
     <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
+    <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="gen_nacimiento" required>
     <input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
     <input type="password" id="gen_password" placeholder="Contraseña" required>
@@ -167,12 +238,24 @@ categoriaSelect.addEventListener("change", () => {
 function saveUser(form, category) {
   const data = { categoria: category };
   Array.from(form.elements).forEach(input => {
-    if(input.type !== "submit") data[input.id] = input.value;
+    if(input.type !== "submit") {
+      data[input.id] = input.value;
+      
+      // Guardar específicamente la fecha de nacimiento para el perfil
+      if (input.id.includes("nacimiento")) {
+        data.fechaNacimiento = input.value;
+      }
+    }
   });
   
   // Guardar también un campo único para login
   data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
   data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+  
+  // Asegurar que la fecha de nacimiento esté guardada
+  if (!data.fechaNacimiento) {
+    data.fechaNacimiento = data.prof_nacimiento || data.uni_nacimiento || data.sec_nacimiento || data.gen_nacimiento;
+  }
   
   localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
   alert("Cuenta creada con éxito ✅");
@@ -226,6 +309,15 @@ document.getElementById("btnLogin").addEventListener("click", () => {
     alert("No hay cuenta registrada. Por favor crea una cuenta primero.");
   }
 });
+
+// Mejora adicional: Formatear fecha para mostrar en el perfil
+function formatearFecha(fechaISO) {
+  if (!fechaISO) return "";
+  
+  const fecha = new Date(fechaISO);
+  const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+  return fecha.toLocaleDateString('es-ES', opciones);
+}
 </script>
 </body>
 </html>
