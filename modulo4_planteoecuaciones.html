@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planteo de Ecuaciones - Neo Study</title>
+    <title>Neo Study - Cursos Disponibles</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -26,6 +26,7 @@
             --white: #ffffff;
             --bg-gradient: linear-gradient(135deg, #00C4FF, #007bff);
             
+            /* Modos de color */
             --bg-normal: #f8f9fa;
             --bg-study: #e8f4f8;
             --bg-dark: #1a1a1a;
@@ -37,6 +38,7 @@
             --card-dark: #2d2d2d;
         }
 
+        /* Modo Normal (por defecto) */
         body {
             background: var(--bg-normal);
             color: var(--text-normal);
@@ -179,6 +181,7 @@
             transform: scale(1.1);
         }
 
+        /* ===== HEADER PARA MÓVIL ===== */
         .mobile-header {
             display: none;
             background: var(--bg-gradient);
@@ -279,6 +282,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.2;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow: visible;
+            height: auto;
         }
 
         .page-title p {
@@ -287,177 +294,90 @@
             line-height: 1.4;
         }
 
-        .courses-section {
+        /* Grid de Áreas */
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             margin-bottom: 3rem;
         }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--light);
-        }
-
-        body.dark-mode .section-header {
-            border-bottom-color: #555;
-        }
-
-        body.study-mode .section-header {
-            border-bottom-color: #d1ecf1;
-        }
-
-        .back-button {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            transform: scale(1.1);
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            color: var(--dark);
-            margin: 0;
-            line-height: 1.2;
-        }
-
-        body.dark-mode .section-title {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .section-title {
-            color: var(--text-study);
-        }
-
-        .course-info {
+        .area-card {
             background: var(--white);
             border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        body.dark-mode .course-info {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .course-info {
-            background: var(--card-study);
-        }
-
-        .course-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .course-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-        }
-
-        .course-details h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-
-        .course-stats {
-            display: flex;
-            gap: 2rem;
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-
-        .topics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .topic-card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            border-left: 4px solid var(--primary);
             position: relative;
         }
 
-        body.dark-mode .topic-card {
+        body.dark-mode .area-card {
             background: var(--card-dark);
         }
 
-        body.study-mode .topic-card {
+        body.study-mode .area-card {
             background: var(--card-study);
         }
 
-        .topic-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        .area-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
 
-        .topic-badge {
+        .area-badge {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: var(--success);
-            color: var(--white);
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.7rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
+            z-index: 2;
         }
 
-        .topic-badge.proceso {
+        .area-badge.available {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .area-badge.proceso {
             background: var(--warning);
             color: var(--dark);
         }
 
-        .topic-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-            margin-right: 80px;
-            line-height: 1.3;
+        .area-header {
+            background: var(--bg-gradient);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
         }
 
-        body.dark-mode .topic-title {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .topic-title {
-            color: var(--text-study);
-        }
-
-        .topic-description {
-            color: var(--secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .area-icon {
+            font-size: 3rem;
             margin-bottom: 1rem;
         }
 
-        .topic-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
+        .area-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .area-description {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .area-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .area-status {
             color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
         .btn {
@@ -480,16 +400,6 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: var(--white);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
         .btn-disabled {
@@ -561,890 +471,7 @@
             color: #adb5bd;
         }
 
-        /* MODALES - Sistema de Acceso */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 2rem;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        body.dark-mode .modal-content {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .modal-content {
-            background: var(--card-study);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--light);
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--secondary);
-        }
-
-        .pdf-preview-container {
-            width: 100%;
-            height: 500px;
-            border: 2px solid #00C4FF;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 1rem;
-            background: #f8f9fa;
-        }
-        
-        .pdf-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .pdf-preview-container.locked .pdf-placeholder {
-            filter: blur(8px);
-        }
-        
-        .locked-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        
-        .preview-info {
-            background: #e8f4f8;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .drive-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 1.5rem 0;
-            flex-wrap: wrap;
-        }
-        
-        .drive-button {
-            background: #4285F4;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .drive-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
-        }
-        
-        .drive-button.locked,
-        .btn-outline.locked {
-            background: #ccc;
-            color: #666;
-            cursor: not-allowed;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-        
-        .drive-button.locked:hover,
-        .btn-outline.locked:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .payment-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .payment-steps ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .payment-steps li {
-            margin-bottom: 0.5rem;
-            line-height: 1.5;
-        }
-
-        .contact-info {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        body.dark-mode .contact-info {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .contact-info {
-            background: #d1ecf1;
-        }
-
-        .unlock-form {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--light);
-        }
-
-        .form-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .form-group input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        body.dark-mode .form-group input {
-            background: #3d3d3d;
-            border-color: #555;
-            color: var(--text-dark);
-        }
-
-        body.study-mode .form-group input {
-            background: var(--card-study);
-            border-color: #b8daff;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
-        }
-
-        .unlocked-content {
-            text-align: center;
-        }
-
-        .success-icon {
-            font-size: 4rem;
-            color: var(--success);
-            margin-bottom: 1.5rem;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .benefit-card {
-            background: var(--light);
-            padding: 1.5rem 1rem;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        body.dark-mode .benefit-card {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .benefit-card {
-            background: #d1ecf1;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-3px);
-            background: var(--primary);
-        }
-
-        .benefit-card:hover i,
-        .benefit-card:hover h5,
-        .benefit-card:hover p {
-            color: white;
-        }
-
-        .benefit-card i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            transition: color 0.3s ease;
-        }
-
-        .benefit-card h5 {
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-            transition: color 0.3s ease;
-        }
-
-        .benefit-card p {
-            font-size: 0.8rem;
-            color: var(--secondary);
-            transition: color 0.3s ease;
-        }
-
-        .qr-container {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 3px solid var(--primary);
-        }
-
-        .qr-code {
-            width: 300px;
-            height: 300px;
-            background: var(--white);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            padding: 0.5rem;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-        }
-
-        .qr-code img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-
-        .qr-instructions {
-            text-align: center;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--light);
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
-        }
-
-        body.dark-mode .qr-instructions {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .qr-instructions {
-            background: #d1ecf1;
-        }
-
-        .payment-details {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        body.dark-mode .payment-details {
-            background: #3d3d3d;
-        }
-
-        body.study-mode .payment-details {
-            background: #d1ecf1;
-        }
-
-        .login-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 4000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-container {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 15px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        body.dark-mode .login-container {
-            background: var(--card-dark);
-        }
-
-        .login-icon {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 1rem;
-            margin: 0.5rem 0;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        body.dark-mode .login-input {
-            background: #3d3d3d;
-            border-color: #555;
-            color: var(--text-dark);
-        }
-
-        .login-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
-        }
-
-        .login-error {
-            color: var(--danger);
-            font-size: 0.9rem;
-            margin: 0.5rem 0;
-            display: none;
-        }
-
-        .user-info {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            text-align: left;
-        }
-
-        body.dark-mode .user-info {
-            background: #3d3d3d;
-        }
-
-        .meet-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .meet-button {
-            background: #00897B;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            flex: 1;
-            min-width: 200px;
-            justify-content: center;
-        }
-
-        .meet-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 137, 123, 0.3);
-            background: #00796B;
-        }
-
-        .meet-button.secondary {
-            background: #5C6BC0;
-        }
-
-        .meet-button.secondary:hover {
-            background: #3F51B5;
-        }
-
-        /* BOTÓN FLOTANTE DE ASISTENCIA */
-        .floating-assistance {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 2000;
-        }
-
-        .floating-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #25D366;
-            color: white;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
-        }
-
-        .floating-tooltip {
-            position: absolute;
-            right: 70px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .floating-btn:hover .floating-tooltip {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* ===== SISTEMA DE CAPTURAS ===== */
-        .capture-section {
-            background: var(--light);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border-left: 4px solid var(--primary);
-        }
-
-        .capture-upload-area {
-            border: 2px dashed var(--primary);
-            border-radius: 10px;
-            padding: 2rem;
-            text-align: center;
-            margin: 1rem 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(0, 196, 255, 0.05);
-        }
-
-        .capture-upload-area:hover {
-            background: rgba(0, 196, 255, 0.1);
-        }
-
-        .code-notification-area {
-            background: var(--success);
-            color: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: center;
-            display: none;
-        }
-
-        .code-display {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(255,255,255,0.2);
-            border-radius: 8px;
-            letter-spacing: 2px;
-        }
-
-        /* ===== MEJORAS DE RESPONSIVIDAD ADICIONALES ===== */
-        @media (max-width: 768px) {
-            /* Mejorar espaciado en móviles */
-            .main-container {
-                margin: 120px auto 20px;
-                padding: 0 0.5rem;
-            }
-            
-            /* Mejorar botones para touch */
-            .btn, .back-button, .theme-btn, .mobile-theme-btn {
-                min-height: 44px; /* Tamaño mínimo para touch */
-                padding: 12px 16px;
-            }
-            
-            .back-button {
-                min-height: 40px;
-                width: 40px;
-            }
-            
-            .theme-btn, .mobile-theme-btn {
-                min-height: 36px;
-                width: 36px;
-            }
-            
-            /* Mejorar tarjetas para móviles */
-            .course-card, .topic-card {
-                margin: 0.5rem 0;
-            }
-            
-            .course-image, .course-info {
-                height: auto;
-                min-height: 120px;
-            }
-            
-            .course-content, .topic-card {
-                padding: 1.25rem;
-            }
-            
-            /* Optimizar textos para móviles */
-            .page-title h1 {
-                font-size: 1.8rem;
-                line-height: 1.3;
-                margin-bottom: 0.75rem;
-            }
-            
-            .page-title p {
-                font-size: 0.95rem;
-                line-height: 1.4;
-            }
-            
-            .section-title {
-                font-size: 1.4rem;
-                line-height: 1.3;
-            }
-            
-            .course-title, .topic-title {
-                font-size: 1.1rem;
-                line-height: 1.3;
-            }
-            
-            .course-description, .topic-description {
-                font-size: 0.85rem;
-                line-height: 1.4;
-            }
-            
-            /* Mejorar modales para móviles */
-            .modal-content {
-                margin: 1rem;
-                padding: 1.5rem;
-                max-height: 85vh;
-            }
-            
-            .modal-header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .payment-container {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .qr-code {
-                width: 250px;
-                height: 250px;
-                margin: 0 auto;
-            }
-            
-            .pdf-preview-container {
-                height: 300px;
-            }
-            
-            .benefits-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.8rem;
-            }
-            
-            .benefit-card {
-                padding: 1rem 0.5rem;
-            }
-            
-            .benefit-card i {
-                font-size: 1.5rem;
-            }
-            
-            .drive-buttons, .meet-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .drive-button, .meet-button {
-                min-width: 100%;
-                text-align: center;
-            }
-            
-            .form-group {
-                flex-direction: column;
-            }
-
-            /* Botón flotante en móviles */
-            .floating-assistance {
-                bottom: 20px;
-                right: 20px;
-            }
-            
-            .floating-btn {
-                width: 55px;
-                height: 55px;
-                font-size: 1.3rem;
-            }
-        }
-
-        /* Mejorar para tablets */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .courses-grid, .topics-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .main-container {
-                margin: 110px auto 30px;
-            }
-            
-            .page-title h1 {
-                font-size: 2.2rem;
-            }
-            
-            .modal-content {
-                margin: 2rem;
-            }
-            
-            .benefits-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Optimizar para móviles muy pequeños */
-        @media (max-width: 360px) {
-            .main-container {
-                margin: 115px auto 10px;
-                padding: 0 0.25rem;
-            }
-            
-            .page-title h1 {
-                font-size: 1.5rem;
-            }
-            
-            .page-title p {
-                font-size: 0.85rem;
-            }
-            
-            .section-title {
-                font-size: 1.2rem;
-            }
-            
-            .course-image, .course-info {
-                height: auto;
-                min-height: 100px;
-            }
-            
-            .course-content, .topic-card {
-                padding: 1rem;
-            }
-            
-            .course-badge, .topic-badge {
-                font-size: 0.7rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
-            .mobile-nav-item {
-                font-size: 0.65rem;
-                padding: 0.4rem;
-            }
-            
-            .mobile-nav-item i {
-                font-size: 1rem;
-            }
-            
-            .qr-code {
-                width: 200px;
-                height: 200px;
-            }
-            
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                margin: 0.5rem;
-                padding: 1rem;
-            }
-        }
-
-        /* Mejoras de accesibilidad y usabilidad */
-        @media (max-width: 768px) {
-            /* Asegurar que los elementos sean fácilmente clickeables */
-            .course-card, .topic-card {
-                min-height: 120px;
-            }
-            
-            .nav-item, .mobile-nav-item {
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            /* Mejorar contraste en modo oscuro para móviles */
-            body.dark-mode .course-card,
-            body.dark-mode .topic-card {
-                border: 1px solid #444;
-            }
-            
-            body.study-mode .course-card,
-            body.study-mode .topic-card {
-                border: 1px solid #d1ecf1;
-            }
-            
-            /* Mejorar visibilidad de textos en modales */
-            .modal-content {
-                font-size: 0.9rem;
-            }
-            
-            .modal-header h3 {
-                font-size: 1.3rem;
-            }
-            
-            /* Optimizar formularios para touch */
-            .login-input, .form-group input {
-                font-size: 16px; /* Evitar zoom en iOS */
-                padding: 12px;
-                min-height: 44px;
-            }
-        }
-
-        /* Optimizar footer para móviles */
-        @media (max-width: 768px) {
-            .footer {
-                padding: 1.5rem 0;
-                margin-top: 2rem;
-            }
-            
-            .footer-content {
-                flex-direction: column;
-                gap: 1.5rem;
-                text-align: center;
-            }
-            
-            .footer-section {
-                min-width: 100%;
-            }
-            
-            .footer-bottom {
-                padding-top: 1.5rem;
-                margin-top: 1.5rem;
-            }
-        }
-
-        /* Mejorar curso-info para móviles */
-        @media (max-width: 768px) {
-            .course-info {
-                padding: 1.5rem;
-            }
-            
-            .course-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-            
-            .course-stats {
-                flex-direction: column;
-                gap: 0.5rem;
-                align-items: center;
-            }
-            
-            .course-icon {
-                font-size: 2rem;
-            }
-            
-            .course-details h3 {
-                font-size: 1.3rem;
-            }
-        }
-
-        /* Mejorar topic-badge para móviles */
-        @media (max-width: 480px) {
-            .topic-badge {
-                position: static;
-                display: inline-block;
-                margin-bottom: 0.5rem;
-            }
-            
-            .topic-title {
-                margin-right: 0;
-            }
-        }
-
-        /* Optimizar login overlay para móviles */
-        @media (max-width: 768px) {
-            .login-container {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-            
-            .login-icon {
-                font-size: 2.5rem;
-            }
-        }
-
-        /* Mejorar scroll en modales para móviles */
-        @media (max-width: 768px) {
-            .modal-content {
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
             .header {
                 display: none;
@@ -1468,57 +495,22 @@
             .page-title h1 {
                 font-size: 2rem;
                 line-height: 1.1;
+                padding: 0;
+                margin: 0 0 0.5rem 0;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
             }
 
             .page-title p {
                 font-size: 1rem;
+                padding: 0;
+                margin: 0;
             }
 
-            .section-title {
-                font-size: 1.5rem;
-            }
-
-            .courses-grid, .topics-grid {
+            .areas-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .course-stats {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .payment-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .benefits-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .qr-code {
-                width: 280px;
-                height: 280px;
-            }
-            
-            .form-group {
-                flex-direction: column;
-            }
-            
-            .pdf-preview-container {
-                height: 400px;
-            }
-            
-            .drive-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .meet-buttons {
-                flex-direction: column;
-            }
-
-            .meet-button {
-                min-width: 100%;
             }
         }
 
@@ -1527,25 +519,29 @@
                 margin: 130px auto 15px;
             }
             
+            .page-title {
+                margin-top: 15px;
+            }
+            
             .page-title h1 {
                 font-size: 1.8rem;
+                line-height: 1.1;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
             }
 
             .page-title p {
                 font-size: 0.9rem;
             }
 
-            .section-title {
-                font-size: 1.3rem;
+            .nav-menu {
+                gap: 1rem;
             }
-
-            .mobile-nav-item {
-                font-size: 0.7rem;
-            }
-
-            .qr-code {
-                width: 250px;
-                height: 250px;
+            
+            .nav-item span {
+                display: none;
             }
         }
 
@@ -1554,217 +550,38 @@
                 margin: 125px auto 10px;
             }
             
+            .page-title {
+                margin-top: 10px;
+            }
+            
             .page-title h1 {
                 font-size: 1.6rem;
+                line-height: 1.2;
+                padding: 0;
+                margin: 0 0 0.5rem 0;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow: visible;
+                height: auto;
             }
 
             .page-title p {
                 font-size: 0.85rem;
             }
 
-            .section-title {
-                font-size: 1.2rem;
+            .mobile-nav-item {
+                font-size: 0.7rem;
+                padding: 0.4rem;
             }
 
-            .qr-code {
-                width: 220px;
-                height: 220px;
+            .mobile-nav-item i {
+                font-size: 1rem;
             }
-        }
-
-        /* ===== ESTILOS FALTANTES PARA CONTENT-SECTION ===== */
-        .content-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .content-card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-            border-top: 4px solid var(--primary);
-        }
-
-        body.dark-mode .content-card {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .content-card {
-            background: var(--card-study);
-        }
-
-        .content-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-        }
-
-        .content-card h3 {
-            margin-bottom: 1rem;
-            color: var(--dark);
-            font-size: 1.2rem;
-        }
-
-        body.dark-mode .content-card h3 {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .content-card h3 {
-            color: var(--text-study);
-        }
-
-        .content-card p {
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .learning-objectives {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
-
-        body.dark-mode .learning-objectives {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .learning-objectives {
-            background: var(--card-study);
-        }
-
-        .learning-objectives h3 {
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-            text-align: center;
-        }
-
-        body.dark-mode .learning-objectives h3 {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .learning-objectives h3 {
-            color: var(--text-study);
-        }
-
-        .learning-objectives ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .learning-objectives li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--light);
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        body.dark-mode .learning-objectives li {
-            border-bottom-color: #555;
-        }
-
-        body.study-mode .learning-objectives li {
-            border-bottom-color: #d1ecf1;
-        }
-
-        .learning-objectives li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        .learning-objectives li:last-child {
-            border-bottom: none;
-        }
-
-        /* ===== NUEVOS ESTILOS PARA NOTIFICACIONES EN TIEMPO REAL ===== */
-        @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(400px); opacity: 0; }
-        }
-
-        .notification-toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #00b09b, #96c93d);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 10000;
-            max-width: 400px;
-            animation: slideIn 0.5s ease;
-        }
-
-        .notification-toast.error {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-        }
-
-        .notification-toast.warning {
-            background: linear-gradient(135deg, #ff9800, #ff5722);
-        }
-
-        .global-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            z-index: 10000;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
-    <!-- Login Overlay -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-container">
-            <div class="login-icon">
-                <i class="fas fa-lock"></i>
-            </div>
-            <h3>Acceso Seguro al Curso</h3>
-            <p>Ingresa tu código de acceso</p>
-            
-            <div class="user-info" id="userInfo">
-                <strong>Usuario:</strong> <span id="currentUser">Cargando...</span>
-            </div>
-            
-            <input type="text" class="login-input" id="userCode" placeholder="Código de acceso (ej: MATH7X9)">
-            
-            <div class="login-error" id="loginError">
-                ❌ Código incorrecto o ya utilizado.
-            </div>
-            
-            <button class="btn btn-primary btn-block" onclick="validateUserAccess()">
-                <i class="fas fa-key"></i> Acceder al Curso
-            </button>
-            
-            <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--secondary);">
-                <p>¿No tienes código? <br>Adquiere el curso y recibe tu código por WhatsApp</p>
-                <button class="btn btn-outline" onclick="showPaymentModalFromLogin()">
-                    <i class="fas fa-shopping-cart"></i> Adquirir Curso
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <!-- ===== HEADER PARA ESCRITORIO ===== -->
     <header class="header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
@@ -1797,6 +614,7 @@
         </div>
     </header>
 
+    <!-- ===== HEADER PARA MÓVIL ===== -->
     <header class="mobile-header">
         <div class="mobile-nav-top">
             <div class="mobile-logo">
@@ -1830,80 +648,66 @@
         </div>
     </header>
 
-    <!-- Botón flotante de asistencia -->
-    <div class="floating-assistance">
-        <button class="floating-btn" onclick="openWhatsAppSupport()">
-            <i class="fab fa-whatsapp"></i>
-            <div class="floating-tooltip">Asistencia NeoStudy</div>
-        </button>
-    </div>
-
     <div class="main-container">
         <div class="page-title">
-            <h1>Planteo de Ecuaciones</h1>
-            <p>Aprende a plantear y resolver ecuaciones matemáticas a partir de enunciados verbales</p>
+            <h1>Áreas de Estudio</h1>
+            <p>Selecciona el área que deseas explorar</p>
         </div>
 
-        <div class="courses-section">
-            <div class="section-header">
-                <button class="back-button" onclick="goToRazonamientoMatematico()">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <h2 class="section-title">Contenido del Tema</h2>
-            </div>
-
-            <div class="course-info">
-                <div class="course-header">
-                    <div class="course-icon">
+        <!-- Grid de Áreas (Vista Principal) -->
+        <div class="areas-grid" id="areasView">
+            <!-- Matemática -->
+            <div class="area-card" onclick="goToMatematica()">
+                <div class="area-badge available">DISPONIBLE</div>
+                <div class="area-header">
+                    <div class="area-icon">
                         <i class="fas fa-calculator"></i>
                     </div>
-                    <div class="course-details">
-                        <h3>Planteo de Ecuaciones</h3>
-                        <p>Domina la habilidad de traducir problemas verbales a ecuaciones matemáticas</p>
-                        <div class="course-stats">
-                            <span><i class="fas fa-clock"></i> 6 horas totales</span>
-                            <span><i class="fas fa-play-circle"></i> 8 lecciones</span>
-                            <span><i class="fas fa-signal"></i> Nivel Intermedio</span>
-                        </div>
+                    <h3 class="area-title">Matemática</h3>
+                    <p class="area-description">Preuniversitario</p>
+                </div>
+                <div class="area-content">
+                    <div class="area-status">Cursos disponibles</div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-play"></i> Ver Cursos
+                    </button>
+                </div>
+            </div>
+
+            <!-- Letras -->
+            <div class="area-card">
+                <div class="area-badge proceso">EN PROCESO</div>
+                <div class="area-header">
+                    <div class="area-icon">
+                        <i class="fas fa-language"></i>
                     </div>
+                    <h3 class="area-title">Letras</h3>
+                    <p class="area-description">Preuniversitario</p>
                 </div>
-            </div>
-
-            <div class="content-section">
-                <div class="content-card">
-                    <h3>📚 Material de Estudio</h3>
-                    <p>Accede al libro completo con teoría, ejemplos y ejercicios prácticos</p>
-                    <button class="btn btn-primary" onclick="openPreviewModal()">
-                        <i class="fas fa-book"></i> Ver Material
-                    </button>
-                </div>
-
-                <div class="content-card">
-                    <h3>🎥 Clases en Vivo</h3>
-                    <p>Participa en nuestras sesiones interactivas de 2 horas continuas</p>
-                    <button class="btn btn-success" onclick="showClassOptionsModal()">
-                        <i class="fas fa-video"></i> Unirse a Clases
-                    </button>
-                </div>
-
-                <div class="content-card">
-                    <h3>📝 Ejercicios Prácticos</h3>
-                    <p>Practica con más de 50 problemas resueltos paso a paso</p>
-                    <button class="btn btn-outline" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
-                        <i class="fas fa-download"></i> Descargar Ejercicios
+                <div class="area-content">
+                    <div class="area-status">Disponible próximamente</div>
+                    <button class="btn btn-disabled">
+                        <i class="fas fa-clock"></i> Próximamente
                     </button>
                 </div>
             </div>
 
-            <div class="learning-objectives">
-                <h3>🎯 Lo que aprenderás</h3>
-                <ul>
-                    <li>Identificar variables y constantes en problemas verbales</li>
-                    <li>Traducir enunciados a ecuaciones matemáticas</li>
-                    <li>Resolver ecuaciones lineales y cuadráticas</li>
-                    <li>Aplicar estrategias para problemas complejos</li>
-                    <li>Verificar soluciones en contexto real</li>
-                </ul>
+            <!-- Ciencias -->
+            <div class="area-card">
+                <div class="area-badge proceso">EN PROCESO</div>
+                <div class="area-header">
+                    <div class="area-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3 class="area-title">Ciencias</h3>
+                    <p class="area-description">Preuniversitario</p>
+                </div>
+                <div class="area-content">
+                    <div class="area-status">Disponible próximamente</div>
+                    <button class="btn btn-disabled">
+                        <i class="fas fa-clock"></i> Próximamente
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1930,1619 +734,8 @@
         </div>
     </footer>
 
-    <!-- Modal de Vista Previa -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Vista Previa - Libro Planteo de Ecuaciones</h3>
-                <button class="close-modal" onclick="closePreviewModal()">&times;</button>
-            </div>
-            
-            <div class="preview-container">
-                <div class="pdf-preview-container" id="pdfPreview">
-                    <div class="pdf-placeholder" id="pdfPlaceholder">
-                        <div style="text-align: center; padding: 2rem;">
-                            <i class="fas fa-book" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                            <h4>Libro: Planteo de Ecuaciones</h4>
-                            <p>Contenido educativo premium</p>
-                        </div>
-                    </div>
-                    <div class="locked-message" id="lockedMessage">
-                        <i class="fas fa-lock"></i><br>
-                        VISTA PREVIA<br>
-                        <small>Desbloquea el curso para acceso completo</small>
-                    </div>
-                </div>
-                
-                <div class="preview-info">
-                    <p><strong>📚 Contenido del libro:</strong></p>
-                    <p>• 50+ problemas resueltos paso a paso</p>
-                    <p>• Ejercicios básicos, intermedios y avanzados</p>
-                    <p>• 3 exámenes prácticos con soluciones</p>
-                    <p>• Tips y estrategias de resolución rápida</p>
-                </div>
-                
-                <div class="drive-buttons">
-                    <button class="drive-button" id="driveViewButton" onclick="handleDriveAccess()">
-                        <i class="fab fa-google-drive"></i> Ver Libro Completo
-                    </button>
-                    <button class="btn btn-outline" id="downloadButton" onclick="handleDownloadAccess()">
-                        <i class="fas fa-download"></i> Descargar PDF
-                    </button>
-                </div>
-                
-                <div class="preview-actions" id="previewActions">
-                    <button class="btn btn-primary btn-block" onclick="showPaymentModal()">
-                        <i class="fas fa-lock-open"></i> Desbloquear Curso Completo - S/ 6.00
-                    </button>
-                </div>
-
-                <div class="unlocked-actions" id="unlockedActions" style="display: none;">
-                    <button class="btn btn-success btn-block" onclick="showMaterialBenefits()">
-                        <i class="fas fa-external-link-alt"></i> Acceder a Todo el Material
-                    </button>
-                    <button class="btn btn-outline btn-block" onclick="closePreviewModal()">
-                        <i class="fas fa-play"></i> Continuar Explorando
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Pago -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Desbloquear Curso Completo</h3>
-                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
-            </div>
-            
-            <div class="payment-container">
-                <div class="payment-info">
-                    <h4>💰 Pago por Yape</h4>
-                    
-                    <div class="qr-container">
-                        <h5>📱 Escanea este código QR con Yape:</h5>
-                        <div class="qr-code">
-                            <img src="imagen-qr-yape.jpg" alt="QR Code Yape" 
-                                 onerror="this.style.display='none'; document.getElementById('qrFallback').style.display='block'">
-                            <div id="qrFallback" style="display: none; text-align: center; padding: 2rem;">
-                                <i class="fas fa-qrcode" style="font-size: 4rem; color: var(--primary);"></i>
-                                <p style="margin-top: 1rem; font-weight: bold;">QR Code Yape</p>
-                                <p style="font-size: 0.9rem; color: var(--secondary);">Imagen no disponible</p>
-                            </div>
-                        </div>
-                        <p class="qr-instructions">
-                            <strong>💡 Cómo escanear:</strong><br>
-                            1. Abre la app <strong>Yape</strong><br>
-                            2. Toca <strong>"Escanear QR"</strong><br>
-                            3. Apunta la cámara al código<br>
-                            4. Confirma el pago de <strong>S/ 6.00</strong>
-                        </p>
-                    </div>
-                    
-                    <div class="payment-details">
-                        <h5>📞 Opción alternativa:</h5>
-                        <p><strong>Número de Yape:</strong> 51 973441252</p>
-                        <p><strong>Monto a pagar:</strong> S/ 6.00</p>
-                        <p><strong>Concepto:</strong> Curso Planteo de Ecuaciones</p>
-                    </div>
-                    
-                    <!-- NUEVA SECCIÓN: ENVÍO DE CAPTURA -->
-                    <div class="capture-section">
-                        <h5>📸 Envíanos tu comprobante de pago</h5>
-                        <p>Después de realizar el pago, sube una captura para que podamos activar tu acceso:</p>
-                        
-                        <div class="capture-upload-area" onclick="document.getElementById('captureInput').click()">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <h5>Haz clic para subir tu captura</h5>
-                            <p>Formatos: JPG, PNG, PDF (máx. 5MB)</p>
-                        </div>
-                        
-                        <input type="file" id="captureInput" accept="image/*,.pdf" style="display: none;" onchange="handleCaptureUpload(this.files)">
-                        
-                        <!-- NUEVO: Estado de verificación -->
-                        <div id="verificationStatus" style="margin: 1rem 0; display: none;">
-                            <div style="text-align: center; padding: 1rem; background: #e8f4f8; border-radius: 10px;">
-                                <i class="fas fa-sync-alt fa-spin"></i>
-                                <div>Verificando estado del pago...</div>
-                            </div>
-                        </div>
-                        
-                        <div class="capture-actions" id="captureActions" style="display: none;">
-                            <button class="btn btn-primary" onclick="submitPaymentCapture()">
-                                <i class="fas fa-paper-plane"></i> Enviar Captura Automáticamente
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- NUEVA SECCIÓN: NOTIFICACIÓN DE CÓDIGO -->
-                    <div class="code-notification-area" id="codeNotification">
-                        <i class="fas fa-gift" style="font-size: 2rem;"></i>
-                        <h4>¡Pago Verificado Exitosamente!</h4>
-                        <p>Tu comprobante ha sido aprobado. Código asignado:</p>
-                        <div class="code-display" id="assignedCode">CARGANDO...</div>
-                        <p style="font-size: 0.9rem; margin: 1rem 0;">
-                            <i class="fas fa-info-circle"></i> 
-                            Este código es personal e intransferible
-                        </p>
-                        <button class="btn btn-success" onclick="useAssignedCode()">
-                            <i class="fas fa-key"></i> Activar Mi Acceso
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="payment-steps">
-                    <h4>📝 Pasos a seguir después del pago:</h4>
-                    <ol>
-                        <li><strong>Realiza el pago</strong> por Yape (QR o número)</li>
-                        <li><strong>Toma captura</strong> del comprobante de pago</li>
-                        <li><strong>Envía la captura</strong> usando el botón de arriba en esta página</li>
-                        <li><strong>Recibirás</strong> tu código de acceso único por WhatsApp en 5-15 minutos</li>
-                    </ol>
-                    
-                    <div class="contact-info">
-                        <p><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> 51 973441252</p>
-                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> neostudy@gmail.com</p>
-                        <p><i class="fas fa-clock"></i> <strong>Horario de atención:</strong> 8:00 AM - 8:00 PM</p>
-                    </div>
-
-                    <div class="unlock-form">
-                        <h4>🔑 ¿Ya tienes tu código?</h4>
-                        <div class="form-group">
-                            <input type="text" id="accessCode" placeholder="Ingresa tu código de acceso (ej: MATH7X9)" 
-                                   onkeyup="checkCodeRealTime(this.value)">
-                            <button class="btn btn-primary" onclick="validateAccessCode()">
-                                <i class="fas fa-key"></i> Desbloquear
-                            </button>
-                        </div>
-                        <div id="codeStatus" style="font-size: 0.8rem; margin-top: 0.5rem;"></div>
-                        <p style="font-size: 0.8rem; color: var(--secondary); margin-top: 0.5rem;">
-                            El código tiene 6-7 caracteres (ej: MATH7X9, STUDY4K2)
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Beneficios -->
-    <div class="modal" id="materialBenefitsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🎉 ¡Acceso Completo al Material!</h3>
-                <button class="close-modal" onclick="closeMaterialBenefitsModal()">&times;</button>
-            </div>
-            
-            <div class="unlocked-content">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                
-                <h4>¡Felicidades! Ahora tienes acceso completo</h4>
-                
-                <div class="benefits-grid">
-                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
-                        <i class="fas fa-book"></i>
-                        <h5>Libro Completo</h5>
-                        <p>PDF sin restricciones</p>
-                    </div>
-                    <div class="benefit-card" onclick="showClassOptionsModal()">
-                        <i class="fas fa-video"></i>
-                        <h5>Clases en Vivo</h5>
-                        <p>2 horas continuas</p>
-                    </div>
-                    <div class="benefit-card" onclick="openWhatsAppSupport()">
-                        <i class="fas fa-headset"></i>
-                        <h5>Soporte</h5>
-                        <p>Ayuda personalizada</p>
-                    </div>
-                    <div class="benefit-card" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
-                        <i class="fas fa-download"></i>
-                        <h5>Descargas</h5>
-                        <p>Material adicional</p>
-                    </div>
-                </div>
-                
-                <div style="margin: 2rem 0;">
-                    <h5>📚 Acceso inmediato al material completo:</h5>
-                    <div class="drive-buttons">
-                        <button class="drive-button" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
-                            <i class="fab fa-google-drive"></i> Acceder al Libro Completo
-                        </button>
-                    </div>
-                    
-                    <div class="meet-buttons">
-                        <button class="meet-button" onclick="openMaterialLink('https://meet.google.com/hns-wxcb-qvk')">
-                            <i class="fas fa-video"></i> Primera Hora de Clase
-                        </button>
-                        <button class="meet-button secondary" onclick="openMaterialLink('https://meet.google.com/omq-bwem-jgg')">
-                            <i class="fas fa-video"></i> Segunda Hora de Clase
-                        </button>
-                    </div>
-                    
-                    <p style="font-size: 0.9rem; color: var(--secondary); margin-top: 1rem;">
-                        📁 Encontrarás: Libro completo, ejercicios resueltos, acceso a clases en vivo y soporte personalizado.
-                    </p>
-                </div>
-                
-                <div class="unlocked-actions">
-                    <button class="btn btn-primary btn-block" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
-                        <i class="fab fa-google-drive"></i> Abrir Libro Principal
-                    </button>
-                    <button class="btn btn-outline btn-block" onclick="closeMaterialBenefitsModal()">
-                        <i class="fas fa-play"></i> Continuar Explorando
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- NUEVO MODAL PARA CLASES EN VIVO -->
-    <div class="modal" id="classOptionsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🎥 Clases en Vivo - Planteo de Ecuaciones</h3>
-                <button class="close-modal" onclick="closeClassOptionsModal()">&times;</button>
-            </div>
-            
-            <div class="unlocked-content">
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <i class="fas fa-video" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                    <h4>Selecciona tu clase en vivo</h4>
-                    <p>Tenemos 2 horas continuas de clase. Elige la sesión que prefieras:</p>
-                </div>
-                
-                <div class="meet-buttons">
-                    <button class="meet-button" onclick="openMaterialLink('https://meet.google.com/hns-wxcb-qvk')">
-                        <i class="fas fa-video"></i> Primera Hora de Clase
-                    </button>
-                    <button class="meet-button secondary" onclick="openMaterialLink('https://meet.google.com/omq-bwem-jgg')">
-                        <i class="fas fa-video"></i> Segunda Hora de Clase
-                    </button>
-                </div>
-                
-                <div style="margin-top: 2rem; padding: 1rem; background: var(--light); border-radius: 10px; text-align: center;">
-                    <p><strong>💡 Información importante:</strong></p>
-                    <p>• Las clases tienen una duración de 2 horas continuas</p>
-                    <p>• Puedes unirte a cualquiera de las dos sesiones</p>
-                    <p>• El contenido es el mismo en ambas horas</p>
-                </div>
-                
-                <div class="unlocked-actions" style="margin-top: 2rem;">
-                    <button class="btn btn-outline btn-block" onclick="closeClassOptionsModal()">
-                        <i class="fas fa-times"></i> Cerrar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // ===== SISTEMA MEJORADO DE SINCRONIZACIÓN =====
-        const SCRIPT_URLS = [
-            'https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec',
-            'https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/dev',
-            'https://corsproxy.io/?' + encodeURIComponent('https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec'),
-            'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec')
-        ];
-
-        let currentScriptIndex = 0;
-        let deteccionActiva = false;
-
-        function getScriptURL() {
-            return SCRIPT_URLS[currentScriptIndex];
-        }
-
-        function switchScriptURL() {
-            currentScriptIndex = (currentScriptIndex + 1) % SCRIPT_URLS.length;
-            console.log(`🔀 Cambiando a URL: ${currentScriptIndex + 1}`);
-        }
-
-        // ===== FUNCIÓN mostrarMensaje() =====
-        function mostrarMensaje(mensaje, tipo = 'info') {
-            // Crear elemento de mensaje si no existe
-            let mensajeDiv = document.getElementById('globalMessage');
-            if (!mensajeDiv) {
-                mensajeDiv = document.createElement('div');
-                mensajeDiv.id = 'globalMessage';
-                mensajeDiv.className = 'global-message';
-                document.body.appendChild(mensajeDiv);
-            }
-            
-            // Colores según el tipo
-            const colores = {
-                'error': '#dc3545',
-                'success': '#28a745', 
-                'info': '#17a2b8',
-                'warning': '#ffc107'
-            };
-            
-            mensajeDiv.style.background = colores[tipo] || colores.info;
-            mensajeDiv.innerHTML = mensaje;
-            mensajeDiv.style.display = 'block';
-            
-            // Auto-ocultar después de 5 segundos
-            setTimeout(() => {
-                mensajeDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        // ===== SISTEMA DE CAPTURAS MEJORADO =====
-        let currentCaptureFile = null;
-
-        function handleCaptureUpload(files) {
-            if (files.length === 0) return;
-            
-            currentCaptureFile = files[0];
-            document.getElementById('captureActions').style.display = 'block';
-        }
-
-        // ===== FUNCIONES DE FEEDBACK VISUAL MEJORADAS =====
-        function mostrarLoading(elementId, mensaje) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<span style="color: blue;">${mensaje}</span>`;
-            element.style.display = 'block';
-        }
-
-        function mostrarError(elementId, mensaje, mostrarReintentar = false) {
-            const element = document.getElementById(elementId);
-            let html = `<span style="color: red;">${mensaje}</span>`;
-            
-            if (mostrarReintentar) {
-                html += `<button class="btn btn-outline" onclick="retryCaptureUpload()" style="margin-left: 10px;">Reintentar</button>`;
-            }
-            
-            element.innerHTML = html;
-        }
-
-        function mostrarExito(elementId, mensaje) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<span style="color: green;">${mensaje}</span>`;
-        }
-
-        // ===== VALIDACIÓN ROBUSTA DE ENTRADA =====
-        function validateUserInput(input, type) {
-            const validations = {
-                codigo: {
-                    regex: /^[A-Z0-9]{4,10}$/,
-                    message: 'El código debe tener 4-10 caracteres (solo mayúsculas y números)'
-                },
-                nombre: {
-                    regex: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/,
-                    message: 'El nombre debe tener 2-50 caracteres (solo letras y espacios)'
-                },
-                contacto: {
-                    regex: /^[a-zA-Z0-9\s@.+_-]{3,100}$/,
-                    message: 'Contacto inválido'
-                }
-            };
-            
-            const validation = validations[type];
-            if (!validation.regex.test(input)) {
-                throw new Error(validation.message);
-            }
-            
-            return input.trim();
-        }
-
-        // ===== FUNCIÓN MODIFICADA PARA OBTENER DATOS DEL USUARIO DESDE MÓDULO 3 (PERFIL) =====
-        function getUserDataFromStorage() {
-            try {
-                // Obtener datos del perfil desde localStorage (módulo3_perfil.html)
-                const perfilData = JSON.parse(localStorage.getItem('perfilUsuarioNeoStudy') || '{}');
-                
-                console.log('📋 Datos obtenidos del perfil:', perfilData);
-                
-                // Verificar que tenga los datos mínimos del perfil
-                if (!perfilData.nombreCompleto || !perfilData.telefono) {
-                    console.warn('⚠️ Datos de perfil incompletos en localStorage');
-                    
-                    // Intentar con datos alternativos del sistema
-                    const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                    
-                    return {
-                        nombre: userData.nombre || 'Usuario No Registrado',
-                        contacto: userData.contacto || 'No Especificado',
-                        email: userData.email || 'No Especificado',
-                        fotoPerfil: userData.fotoPerfil || null
-                    };
-                }
-                
-                // Usar datos del perfil (módulo3)
-                return {
-                    nombre: perfilData.nombreCompleto,
-                    contacto: perfilData.telefono,
-                    email: perfilData.email || 'No Especificado',
-                    fotoPerfil: perfilData.fotoPerfil || null
-                };
-            } catch (error) {
-                console.error('❌ Error obteniendo datos del perfil:', error);
-                
-                // Fallback a datos del sistema general
-                try {
-                    const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                    return {
-                        nombre: userData.nombre || 'Error en Datos',
-                        contacto: userData.contacto || 'Contactar Soporte',
-                        email: userData.email || 'No Especificado',
-                        fotoPerfil: userData.fotoPerfil || null
-                    };
-                } catch (fallbackError) {
-                    return {
-                        nombre: 'Usuario No Registrado',
-                        contacto: 'No Especificado',
-                        email: 'No Especificado',
-                        fotoPerfil: null
-                    };
-                }
-            }
-        }
-
-        // ===== NUEVO SISTEMA DE DETECCIÓN DE ASIGNACIONES EN TIEMPO REAL =====
-        async function verificarCodigoAsignado(userContact) {
-            try {
-                console.log('🔍 Verificando código asignado para:', userContact);
-                
-                // 1. PRIMERO: Verificar si hay notificación push reciente
-                const notificacionReciente = await verificarNotificacionPush(userContact);
-                if (notificacionReciente) {
-                    console.log('✅ Código encontrado vía notificación push:', notificacionReciente.codigo);
-                    return {
-                        codigo: notificacionReciente.codigo,
-                        estado: 'asignado',
-                        fuente: 'notificacion_push'
-                    };
-                }
-                
-                // 2. SEGUNDO: Verificar en el panel de control
-                const response = await fetch(`${getScriptURL()}?action=checkUserPayment&userContact=${userContact}&timestamp=${Date.now()}`);
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    
-                    if (result.status === 'approved' && result.codigo) {
-                        console.log('✅ Código encontrado en panel:', result.codigo);
-                        return {
-                            codigo: result.codigo,
-                            estado: 'asignado',
-                            fuente: 'panel'
-                        };
-                    }
-                }
-                
-                // 3. TERCERO: Verificar en localStorage como respaldo
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const codigoAsignado = Object.keys(codigosMaestros).find(codigo => {
-                    const info = codigosMaestros[codigo];
-                    return info.contacto === userContact && info.estado === 'usado';
-                });
-                
-                if (codigoAsignado) {
-                    console.log('✅ Código encontrado localmente:', codigoAsignado);
-                    return {
-                        codigo: codigoAsignado,
-                        estado: 'asignado',
-                        fuente: 'local'
-                    };
-                }
-                
-                console.log('❌ No se encontró código asignado');
-                return null;
-                
-            } catch (error) {
-                console.log('⚠️ Error verificando código asignado:', error);
-                return null;
-            }
-        }
-
-        // ===== NUEVA FUNCIÓN: VERIFICAR NOTIFICACIONES PUSH =====
-        async function verificarNotificacionPush(userContact) {
-            try {
-                // 1. Verificar notificación específica del usuario
-                const userNotificationKey = `notificacion_${userContact}`;
-                const notificacionUsuario = JSON.parse(localStorage.getItem(userNotificationKey));
-                
-                if (notificacionUsuario && notificacionUsuario.codigo) {
-                    console.log('📢 Notificación push encontrada:', notificacionUsuario.codigo);
-                    
-                    // Limpiar notificación después de usarla
-                    localStorage.removeItem(userNotificationKey);
-                    
-                    return notificacionUsuario;
-                }
-                
-                // 2. Verificar en lista general de notificaciones
-                const notificaciones = JSON.parse(localStorage.getItem('neoStudyNotificaciones') || '[]');
-                const notificacionReciente = notificaciones.find(notif => 
-                    notif.contacto === userContact && 
-                    notif.tipo === 'codigo_asignado'
-                );
-                
-                if (notificacionReciente) {
-                    console.log('📢 Notificación en lista encontrada:', notificacionReciente.codigo);
-                    
-                    // Limpiar esta notificación
-                    const nuevasNotificaciones = notificaciones.filter(notif => 
-                        !(notif.contacto === userContact && notif.tipo === 'codigo_asignado')
-                    );
-                    localStorage.setItem('neoStudyNotificaciones', JSON.stringify(nuevasNotificaciones));
-                    
-                    return notificacionReciente;
-                }
-                
-                return null;
-                
-            } catch (error) {
-                console.log('⚠️ Error verificando notificaciones push:', error);
-                return null;
-            }
-        }
-
-        // ===== SISTEMA DE DETECCIÓN EN TIEMPO REAL =====
-        function iniciarDeteccionTiempoReal() {
-            if (deteccionActiva) return;
-            
-            deteccionActiva = true;
-            
-            // Verificar cada 3 segundos si hay códigos asignados
-            setInterval(async () => {
-                try {
-                    const userInfo = await obtenerDatosUsuarioActualizados();
-                    
-                    if (userInfo.contacto && userInfo.contacto !== 'No Especificado') {
-                        const codigoAsignado = await verificarCodigoAsignado(userInfo.contacto);
-                        
-                        if (codigoAsignado && !tieneAccesoActivo()) {
-                            console.log('🎯 ¡CÓDIGO DETECTADO EN TIEMPO REAL!', codigoAsignado.codigo);
-                            
-                            // Mostrar notificación al usuario
-                            mostrarNotificacionEmergente(codigoAsignado.codigo);
-                            
-                            // Activar acceso automáticamente
-                            await activarAccesoCompleto(codigoAsignado.codigo, userInfo.nombre);
-                        }
-                    }
-                } catch (error) {
-                    console.log('⚠️ Error en detección tiempo real:', error);
-                }
-            }, 3000); // Verificar cada 3 segundos
-        }
-
-        // ===== NUEVA FUNCIÓN: NOTIFICACIÓN EMERGENTE =====
-        function mostrarNotificacionEmergente(codigo) {
-            // Crear notificación emergente
-            const notificacionDiv = document.createElement('div');
-            notificacionDiv.className = 'notification-toast';
-            
-            notificacionDiv.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div style="font-size: 2rem;">🎉</div>
-                    <div>
-                        <h3 style="margin: 0 0 10px 0;">¡CÓDIGO ASIGNADO!</h3>
-                        <p style="margin: 0; font-size: 1.1rem; font-weight: bold;">${codigo}</p>
-                        <p style="margin: 10px 0 0 0; font-size: 0.9rem;">Acceso activado automáticamente</p>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(notificacionDiv);
-            
-            // Auto-remover después de 5 segundos
-            setTimeout(() => {
-                if (notificacionDiv.parentNode) {
-                    notificacionDiv.style.animation = 'slideOut 0.5s ease';
-                    setTimeout(() => {
-                        if (notificacionDiv.parentNode) {
-                            notificacionDiv.parentNode.removeChild(notificacionDiv);
-                        }
-                    }, 500);
-                }
-            }, 5000);
-        }
-
-        // ===== NUEVA FUNCIÓN: VERIFICAR SI TIENE ACCESO ACTIVO =====
-        function tieneAccesoActivo() {
-            const userID = getUniversalUserID();
-            const userAccessKey = `cursoAcceso_${userID}`;
-            const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
-            
-            return userAccess && userAccess.activo === true;
-        }
-
-        // ===== FUNCIÓN MEJORADA PARA INICIAR VERIFICACIÓN =====
-        async function iniciarVerificacionRapida(paymentID, userContact) {
-            let attempts = 0;
-            const maxAttempts = 36; // 3 minutos (36 * 5 segundos)
-            
-            console.log('🔄 Iniciando verificación rápida para:', userContact);
-            
-            const checkInterval = setInterval(async () => {
-                attempts++;
-                
-                try {
-                    // 1. Verificar si el código fue asignado en el panel
-                    const codigoAsignado = await verificarCodigoAsignado(userContact);
-                    
-                    if (codigoAsignado) {
-                        clearInterval(checkInterval);
-                        // MOSTRAR CÓDIGO REAL
-                        mostrarCodigoReal(codigoAsignado.codigo);
-                        return;
-                    }
-                    
-                    // 2. Verificar por ID de pago específico
-                    const response = await fetch(`${getScriptURL()}?action=checkUserPayment&userContact=${userContact}&paymentID=${paymentID}&timestamp=${Date.now()}`);
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        
-                        if (result.status === 'approved' && result.codigo) {
-                            clearInterval(checkInterval);
-                            mostrarCodigoReal(result.codigo);
-                            return;
-                        }
-                    }
-                    
-                    // Actualizar interfaz
-                    actualizarEstadoVerificacion(attempts, maxAttempts);
-                    
-                    if (attempts >= maxAttempts) {
-                        clearInterval(checkInterval);
-                        mostrarMensaje('⏰ Tiempo agotado. Contacta al administrador.', 'warning');
-                        mostrarOpcionContactoDirecto(userContact);
-                    }
-                    
-                } catch (error) {
-                    console.log('Error en verificación:', error);
-                    actualizarEstadoVerificacion(attempts, maxAttempts, true);
-                }
-            }, 5000); // Verificar cada 5 segundos
-        }
-
-        // ===== FUNCIÓN FALTANTE: ACTUALIZAR ESTADO DE VERIFICACIÓN =====
-        function actualizarEstadoVerificacion(attempts, maxAttempts, isError = false) {
-            const minutos = Math.floor(attempts / 12);
-            const segundos = (attempts % 12) * 5;
-            
-            const captureActions = document.getElementById('captureActions');
-            if (!captureActions) return;
-            
-            captureActions.innerHTML = `
-                <div style="text-align: center; padding: 1rem; background: ${isError ? '#f8d7da' : '#e8f4f8'}; border-radius: 10px;">
-                    <div style="color: ${isError ? '#dc3545' : 'blue'}; margin-bottom: 0.5rem;">
-                        <i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-sync-alt fa-spin'}"></i> 
-                        ${isError ? 'Error de conexión' : 'Buscando código asignado'}... 
-                        (${minutos}m ${segundos}s)
-                    </div>
-                    <small style="color: var(--secondary);">
-                        ⏱️ Tiempo restante: ${Math.floor((maxAttempts - attempts) / 12)}m ${((maxAttempts - attempts) % 12) * 5}s
-                    </small>
-                </div>
-            `;
-        }
-
-        // ===== FUNCIÓN MEJORADA PARA MOSTRAR CÓDIGO =====
-        function mostrarCodigoReal(codigo) {
-            document.getElementById('assignedCode').textContent = codigo;
-            document.getElementById('accessCode').value = codigo;
-            
-            // Mostrar mensaje de éxito
-            mostrarMensaje('🎉 ¡Código asignado! Activa tu acceso.', 'success');
-            
-            // Actualizar interfaz
-            document.getElementById('codeNotification').style.display = 'block';
-            document.getElementById('captureActions').style.display = 'none';
-            
-            // Auto-activar después de 3 segundos
-            setTimeout(() => {
-                validateAccessCode();
-            }, 3000);
-        }
-
-        // ===== NUEVA FUNCIÓN: VERIFICACIÓN AUTOMÁTICA AL CARGAR =====
-        async function verificarCodigoExistenteAlCargar() {
-            try {
-                const userInfo = await obtenerDatosUsuarioActualizados();
-                
-                if (userInfo.contacto && userInfo.contacto !== 'No Especificado') {
-                    console.log('🔍 Verificando código existente para:', userInfo.contacto);
-                    
-                    const codigoAsignado = await verificarCodigoAsignado(userInfo.contacto);
-                    
-                    if (codigoAsignado) {
-                        console.log('✅ Usuario ya tiene código asignado:', codigoAsignado.codigo);
-                        
-                        // Verificar si ya tiene acceso activo
-                        const userID = getUniversalUserID();
-                        const userAccessKey = `cursoAcceso_${userID}`;
-                        const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
-                        
-                        if (!userAccess || userAccess.codigo !== codigoAsignado.codigo) {
-                            // Activar acceso automáticamente
-                            mostrarMensaje('✅ Código previamente asignado detectado. Activando acceso...', 'success');
-                            await activarAccesoCompleto(codigoAsignado.codigo, userInfo.nombre);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.log('⚠️ Error en verificación automática:', error);
-            }
-        }
-
-        // ===== MODIFICAR LA FUNCIÓN DE ENVÍO DE CAPTURA =====
-        async function submitPaymentCapture() {
-            if (!currentCaptureFile) {
-                mostrarMensaje('❌ Primero selecciona una captura', 'error');
-                return;
-            }
-            
-            try {
-                // OBTENER DATOS DEL USUARIO
-                const userInfo = await obtenerDatosUsuarioActualizados();
-                
-                // VERIFICAR SI YA TIENE CÓDIGO ASIGNADO
-                const codigoExistente = await verificarCodigoAsignado(userInfo.contacto);
-                if (codigoExistente) {
-                    mostrarMensaje(`✅ Ya tienes un código asignado: ${codigoExistente.codigo}`, 'success');
-                    mostrarCodigoReal(codigoExistente.codigo);
-                    return;
-                }
-
-                mostrarLoading('captureActions', '🔄 Enviando comprobante...');
-
-                // Crear ID único para seguimiento
-                const paymentID = 'pay_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                
-                // ENVIAR DATOS INMEDIATOS AL PANEL
-                const envioExitoso = await enviarDatosInmediatosAlPanel(userInfo, paymentID);
-                
-                if (envioExitoso) {
-                    // MOSTRAR CÓDIGO INSTANTÁNEAMENTE (simulación mientras llega el real)
-                    mostrarCodigoTemporal(userInfo.contacto);
-                    
-                    // INICIAR VERIFICACIÓN RÁPIDA (3 minutos máximo)
-                    iniciarVerificacionRapida(paymentID, userInfo.contacto);
-                    
-                } else {
-                    throw new Error('Error en envío automático');
-                }
-                
-            } catch (error) {
-                console.error("❌ Error:", error);
-                mostrarError('captureActions', '❌ Error al enviar. Usando método directo.', true);
-                mostrarOpcionDirecta();
-            }
-        }
-
-        // ===== NUEVA FUNCIÓN PARA OBTENER DATOS ACTUALIZADOS =====
-        async function obtenerDatosUsuarioActualizados() {
-            return new Promise((resolve) => {
-                // Forzar actualización desde localStorage - PRIORIDAD MÓDULO 3 (PERFIL)
-                const perfilData = JSON.parse(localStorage.getItem('perfilUsuarioNeoStudy') || '{}');
-                
-                if (perfilData && perfilData.nombreCompleto && perfilData.telefono) {
-                    console.log('✅ Datos de perfil encontrados:', perfilData);
-                    resolve({
-                        nombre: perfilData.nombreCompleto,
-                        contacto: perfilData.telefono.replace(/\D/g, ''), // Solo números
-                        email: perfilData.email || 'No especificado',
-                        fotoPerfil: perfilData.fotoPerfil || null
-                    });
-                } else {
-                    // Fallback a datos generales del sistema
-                    const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                    
-                    if (userData && userData.contacto && userData.nombre) {
-                        console.log('⚠️ Usando datos generales del sistema:', userData);
-                        resolve({
-                            nombre: userData.nombre,
-                            contacto: userData.contacto.replace(/\D/g, ''),
-                            email: userData.email || 'No especificado',
-                            fotoPerfil: userData.fotoPerfil || null
-                        });
-                    } else {
-                        // Intentar recuperar de otras fuentes
-                        const savedContact = localStorage.getItem('userContact') || 
-                                            localStorage.getItem('usuarioContacto') ||
-                                            'No Especificado';
-                        
-                        const savedName = localStorage.getItem('userName') || 
-                                         localStorage.getItem('usuarioNombre') || 
-                                         'Usuario No Registrado';
-                        
-                        console.log('⚠️ Datos recuperados alternativos:', { savedName, savedContact });
-                        
-                        resolve({
-                            nombre: savedName,
-                            contacto: savedContact.replace(/\D/g, ''),
-                            email: 'No especificado',
-                            fotoPerfil: null
-                        });
-                    }
-                }
-            });
-        }
-
-        // ===== ENVÍO INMEDIATO AL PANEL =====
-        async function enviarDatosInmediatosAlPanel(userInfo, paymentID) {
-            return new Promise((resolve) => {
-                // Preparar mensaje URGENTE para WhatsApp
-                const mensajeUrgente = `
-🚨 PAGO URGENTE - ASIGNAR CÓDIGO INMEDIATO
-
-👤 USUARIO: ${userInfo.nombre}
-📞 CELULAR: ${userInfo.contacto}
-💰 MONTO: S/ 6.00
-🎓 CURSO: Planteo de Ecuaciones
-🆔 ID: ${paymentID}
-⏰ FECHA: ${new Date().toLocaleString()}
-
-⚡ ASIGNAR CÓDIGO INMEDIATAMENTE
-                `.trim();
-
-                const numeroAdmin = "51973441252";
-                const urlWhatsApp = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensajeUrgente)}`;
-                
-                // Abrir WhatsApp automáticamente
-                window.open(urlWhatsApp, '_blank');
-                
-                // Guardar datos para verificación rápida
-                const pendingData = {
-                    paymentID: paymentID,
-                    userName: userInfo.nombre,
-                    userContact: userInfo.contacto,
-                    timestamp: new Date().toISOString(),
-                    status: 'waiting_code'
-                };
-                
-                localStorage.setItem(`pending_${paymentID}`, JSON.stringify(pendingData));
-                localStorage.setItem('lastPaymentAttempt', JSON.stringify(pendingData));
-                
-                resolve(true);
-            });
-        }
-
-        // ===== MOSTRAR CÓDIGO TEMPORAL =====
-        function mostrarCodigoTemporal(contacto) {
-            document.getElementById('codeNotification').style.display = 'block';
-            document.getElementById('assignedCode').textContent = 'ESPERANDO CÓDIGO...';
-            document.getElementById('captureActions').style.display = 'none';
-            
-            mostrarMensaje('✅ Comprobante enviado. Espera tu código...', 'success');
-        }
-
-        // ===== FUNCIONES DE RESPALDO =====
-        function mostrarOpcionDirecta() {
-            const userInfo = getUserDataFromStorage();
-            
-            document.getElementById('captureActions').innerHTML = `
-                <div style="text-align: center; padding: 1rem; background: #fff3cd; border-radius: 10px; border: 2px solid #ffc107;">
-                    <h4>📤 Método Directo</h4>
-                    <p>Envía manualmente al WhatsApp:</p>
-                    <p><strong>51 973441252</strong></p>
-                    <p>Incluye tu nombre: <strong>${userInfo.nombre}</strong></p>
-                    <button class="btn btn-warning" onclick="abrirWhatsAppDirecto()">
-                        <i class="fab fa-whatsapp"></i> Abrir WhatsApp
-                    </button>
-                </div>
-            `;
-        }
-
-        function abrirWhatsAppDirecto() {
-            const userInfo = getUserDataFromStorage();
-            const mensaje = `Hola, soy ${userInfo.nombre}. Acabo de pagar S/ 6.00 por el curso de Planteo de Ecuaciones. Necesito mi código de acceso.`;
-            window.open(`https://wa.me/51973441252?text=${encodeURIComponent(mensaje)}`, '_blank');
-        }
-
-        function mostrarOpcionContactoDirecto(contacto) {
-            document.getElementById('captureActions').innerHTML = `
-                <div style="text-align: center; padding: 1rem; background: #f8d7da; border-radius: 10px; border: 2px solid #dc3545;">
-                    <h4>⏰ Tiempo agotado</h4>
-                    <p>Contacta directamente al administrador:</p>
-                    <p><strong>51 973441252</strong></p>
-                    <p>Menciona tu número: <strong>${contacto}</strong></p>
-                    <button class="btn btn-danger" onclick="abrirWhatsAppDirecto()">
-                        <i class="fab fa-whatsapp"></i> Contactar Ahora
-                    </button>
-                </div>
-            `;
-        }
-
-        function retryCaptureUpload() {
-            currentCaptureFile = null;
-            document.getElementById('captureActions').style.display = 'none';
-            document.getElementById('captureInput').value = '';
-        }
-
-        function useAssignedCode() {
-            const code = document.getElementById('assignedCode').textContent;
-            document.getElementById('accessCode').value = code;
-            validateAccessCode();
-        }
-
-        // ===== VERIFICAR CÓDIGO EN TIEMPO REAL =====
-        async function checkCodeRealTime(code) {
-            const codeStatus = document.getElementById('codeStatus');
-            const cleanedCode = code.trim().toUpperCase();
-            
-            if (!cleanedCode) {
-                codeStatus.innerHTML = '';
-                return;
-            }
-            
-            try {
-                validateUserInput(cleanedCode, 'codigo');
-            } catch (error) {
-                codeStatus.innerHTML = `<span style="color: orange;">⚠️ ${error.message}</span>`;
-                return;
-            }
-            
-            try {
-                codeStatus.innerHTML = '<span style="color: blue;">🔍 Verificando código...</span>';
-                
-                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${cleanedCode}&timestamp=${Date.now()}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    const estado = result.estado;
-                    const usado = result.usado;
-                    const activo = result.activo;
-                    const eliminado = result.eliminado;
-                    const accesoRevocado = result.accesoRevocado;
-                    
-                    if (estado === 'usado' || usado === true) {
-                        codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
-                    } else if (estado === 'bloqueado' || activo === false) {
-                        codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
-                    } else if (eliminado === true || accesoRevocado === true) {
-                        codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
-                    } else if (estado === 'activo' || activo === true) {
-                        const precio = result.precio || '6.00';
-                        const usuarioAsignado = result.usuario;
-                        
-                        if (usuarioAsignado) {
-                            codeStatus.innerHTML = `<span style="color: orange;">⚠️ Código asignado a: ${usuarioAsignado}</span>`;
-                        } else {
-                            codeStatus.innerHTML = `<span style="color: green;">✅ VÁLIDO - Precio: S/ ${precio}</span>`;
-                        }
-                    } else {
-                        codeStatus.innerHTML = '<span style="color: green;">✅ Código válido</span>';
-                    }
-                } else {
-                    codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando localmente...</span>';
-                    setTimeout(() => verificarCodigoLocalMejorado(cleanedCode, codeStatus), 500);
-                }
-            } catch (error) {
-                console.log('⚠️ Error de conexión:', error);
-                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando localmente...</span>';
-                setTimeout(() => verificarCodigoLocalMejorado(cleanedCode, codeStatus), 500);
-            }
-        }
-
-        // ===== VERIFICACIÓN LOCAL MEJORADA =====
-        function verificarCodigoLocalMejorado(codigo, codeStatus) {
-            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-            const infoCodigo = codigosMaestros[codigo];
-            
-            if (!infoCodigo) {
-                codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
-            } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
-                codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
-            } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
-                codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
-            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
-                codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
-            } else if (infoCodigo.estado === 'activo' || infoCodigo.activo === true) {
-                const precio = infoCodigo.precio || '6.00';
-                const usuarioAsignado = infoCodigo.usuario;
-                
-                if (usuarioAsignado) {
-                    codeStatus.innerHTML = `<span style="color: orange;">⚠️ Código asignado a: ${usuarioAsignado}</span>`;
-                } else {
-                    codeStatus.innerHTML = `<span style="color: green;">✅ VÁLIDO - Precio: S/ ${precio}</span>`;
-                }
-            } else {
-                codeStatus.innerHTML = '<span style="color: green;">✅ Código válido</span>';
-            }
-        }
-
-        // ===== FUNCIÓN DE VALIDACIÓN MEJORADA =====
-        async function validateAccessCode() {
-            try {
-                const codeInput = document.getElementById('accessCode');
-                const code = codeInput.value.trim().toUpperCase();
-                const codeStatus = document.getElementById('codeStatus');
-                
-                if (!code) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Por favor ingresa tu código</span>';
-                    return;
-                }
-
-                // Validar formato del código
-                validateUserInput(code, 'codigo');
-
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                const userInfo = {
-                    nombre: userData.nombre || 'Estudiante',
-                    contacto: userData.contacto || 'No registrado'
-                };
-
-                codeStatus.innerHTML = '<span style="color: blue;">🔄 Activando código...</span>';
-
-                const response = await fetch(getScriptURL(), {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'validateCode',
-                        codigo: code,
-                        usuario: userInfo.nombre,
-                        contacto: userInfo.contacto,
-                        curso: 'Planteo de Ecuaciones'
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    codeStatus.innerHTML = '<span style="color: green;">✅ ¡Código activado!</span>';
-                    await activarAccesoCompleto(code, userInfo.nombre);
-                    
-                } else {
-                    codeStatus.innerHTML = `<span style="color: red;">❌ ${result.message || 'Error al validar el código'}</span>`;
-                }
-                
-            } catch (error) {
-                console.error("Error en validateAccessCode:", error);
-                document.getElementById('codeStatus').innerHTML = '<span style="color: red;">❌ Error de conexión, intentando localmente...</span>';
-                setTimeout(validarCodigoLocalCompleto, 1000);
-            }
-        }
-
-        // ===== SISTEMA MEJORADO DE VERIFICACIÓN DE ACCESO =====
-        async function verificarAccesoPersistente() {
-            try {
-                const userID = getUniversalUserID();
-                const userAccessKey = `cursoAcceso_${userID}`;
-                const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
-                
-                if (!userAccess) {
-                    return { acceso: false, razon: 'No tiene acceso activo' };
-                }
-
-                const expirationDate = new Date(userAccess.expira);
-                const today = new Date();
-                if (expirationDate < today) {
-                    localStorage.removeItem(userAccessKey);
-                    return { acceso: false, razon: 'Acceso expirado' };
-                }
-
-                try {
-                    const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${userAccess.codigo}&timestamp=${Date.now()}`);
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        
-                        if (result.status === 'success') {
-                            const estado = result.estado;
-                            const activo = result.activo;
-                            const eliminado = result.eliminado;
-                            const accesoRevocado = result.accesoRevocado;
-                            
-                            if (estado === 'bloqueado' || activo === false || eliminado === true || accesoRevocado === true) {
-                                localStorage.removeItem(userAccessKey);
-                                return { 
-                                    acceso: false, 
-                                    razon: 'Acceso revocado desde el panel de control',
-                                    revocado: true
-                                };
-                            }
-                            
-                            if (result.usuario && result.usuario !== userAccess.usuario) {
-                                localStorage.removeItem(userAccessKey);
-                                return { 
-                                    acceso: false, 
-                                    razon: 'Este código está asignado a otro usuario' 
-                                };
-                            }
-                        } else {
-                            return verificarAccesoLocal(userAccess);
-                        }
-                    }
-                } catch (error) {
-                    console.log('⚠️ No se pudo verificar con el panel, usando verificación local');
-                    return verificarAccesoLocal(userAccess);
-                }
-
-                return { acceso: true, datos: userAccess };
-
-            } catch (error) {
-                console.error("Error en verificarAccesoPersistente:", error);
-                return { acceso: false, razon: 'Error de verificación' };
-            }
-        }
-
-        // ===== VERIFICACIÓN LOCAL MEJORADA =====
-        function verificarAccesoLocal(userAccess) {
-            try {
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const infoCodigo = codigosMaestros[userAccess.codigo];
-                
-                if (!infoCodigo) {
-                    localStorage.removeItem(`cursoAcceso_${getUniversalUserID()}`);
-                    return { acceso: false, razon: 'Código no encontrado localmente' };
-                }
-                
-                const estaActivo = infoCodigo.activo !== false && infoCodigo.estado !== 'bloqueado';
-                const noEstaEliminado = infoCodigo.eliminado !== true;
-                const accesoNoRevocado = infoCodigo.accesoRevocado !== true;
-                const usuarioCoincide = !infoCodigo.usuario || infoCodigo.usuario === userAccess.usuario;
-                
-                if (!estaActivo || !noEstaEliminado || !accesoNoRevocado || !usuarioCoincide) {
-                    localStorage.removeItem(`cursoAcceso_${getUniversalUserID()}`);
-                    return { 
-                        acceso: false, 
-                        razon: 'Acceso revocado localmente',
-                        revocado: true
-                    };
-                }
-
-                return { acceso: true, datos: userAccess };
-            } catch (error) {
-                return { acceso: false, razon: 'Error en verificación local' };
-            }
-        }
-
-        // ===== MANEJAR ACCESO REVOCADO =====
-        function manejarAccesoRevocado() {
-            alert('🚫 ACCESO REVOCADO\n\nTu acceso al curso ha sido revocado por el administrador.\n\nPara continuar usando el material, necesitas adquirir un nuevo código de acceso.');
-            
-            closePreviewModal();
-            closePaymentModal();
-            closeMaterialBenefitsModal();
-            closeLogin();
-            
-            setTimeout(() => {
-                showPaymentModal();
-            }, 1000);
-        }
-
-        // ===== FUNCIÓN MEJORADA PARA ACTIVAR ACCESO COMPLETO =====
-        async function activarAccesoCompleto(code, userInfo) {
-            activateUserAccessWithCode(getUniversalUserID(), code, userInfo);
-            
-            await sincronizarCodigosLocales();
-            
-            // Mostrar notificación de éxito
-            mostrarNotificacionEmergente(code);
-            
-            alert(`🎉 ¡CURSO ACTIVADO COMPLETAMENTE!\n\n🔑 Código: ${code}\n👤 Usuario: ${userInfo}\n\nAhora tienes acceso a TODO el material del curso.`);
-            
-            closePaymentModal();
-            closeLogin();
-            
-            document.getElementById('materialBenefitsModal').style.display = 'flex';
-        }
-
-        // ===== VALIDACIÓN LOCAL MEJORADA =====
-        function validarCodigoLocalCompleto() {
-            const code = document.getElementById('accessCode').value.trim().toUpperCase();
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-            const userInfo = {
-                nombre: userData.nombre || 'Estudiante',
-                contacto: userData.contacto || 'No registrado'
-            };
-
-            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-            const infoCodigo = codigosMaestros[code];
-            
-            if (!infoCodigo) {
-                alert('❌ Código no encontrado');
-            } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
-                alert('❌ Este código ya fue utilizado');
-            } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
-                alert('❌ Este código está bloqueado');
-            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
-                alert('❌ Este código fue revocado');
-            } else {
-                activarAccesoCompleto(code, userInfo.nombre);
-            }
-        }
-
-        // ===== VALIDACIÓN DE USUARIO MEJORADA =====
-        async function validateUserAccess() {
-            try {
-                const code = document.getElementById('userCode').value.trim().toUpperCase();
-                const loginError = document.getElementById('loginError');
-
-                if (!code) {
-                    loginError.textContent = '❌ Por favor ingresa tu código de acceso';
-                    loginError.style.display = 'block';
-                    return;
-                }
-
-                // Validar formato del código
-                validateUserInput(code, 'codigo');
-
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                const userInfo = {
-                    nombre: userData.nombre || 'Estudiante',
-                    contacto: userData.contacto || 'No registrado'
-                };
-
-                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${code}&timestamp=${Date.now()}`);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    const estado = result.estado;
-                    const usado = result.usado;
-                    const activo = result.activo;
-                    const eliminado = result.eliminado;
-                    const accesoRevocado = result.accesoRevocado;
-                    
-                    if (estado === 'usado' || usado === true || estado === 'bloqueado' || activo === false || eliminado === true || accesoRevocado === true) {
-                        loginError.textContent = '❌ Código no disponible o ya utilizado';
-                        loginError.style.display = 'block';
-                        return;
-                    }
-
-                    if (result.usuario && result.usuario !== userInfo.nombre) {
-                        loginError.textContent = '❌ Este código está asignado a otro usuario.';
-                        loginError.style.display = 'block';
-                        return;
-                    }
-
-                    const activateResponse = await fetch(getScriptURL(), {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: 'validateCode',
-                            codigo: code,
-                            usuario: userInfo.nombre,
-                            contacto: userInfo.contacto,
-                            curso: 'Planteo de Ecuaciones'
-                        })
-                    });
-
-                    if (activateResponse.ok) {
-                        const activateResult = await activateResponse.json();
-                        if (activateResult.status === 'success') {
-                            await activarAccesoCompleto(code, userInfo.nombre);
-                        } else {
-                            throw new Error(activateResult.message);
-                        }
-                    } else {
-                        throw new Error('Error al activar código');
-                    }
-                    
-                } else {
-                    loginError.textContent = `❌ ${result.message || 'Código no válido'}`;
-                    loginError.style.display = 'block';
-                }
-                
-            } catch (error) {
-                console.error("Error en validateUserAccess:", error);
-                validarUsuarioLocalCompleto();
-            }
-        }
-
-        // ===== VALIDACIÓN LOCAL DE USUARIO MEJORADA =====
-        function validarUsuarioLocalCompleto() {
-            const code = document.getElementById('userCode').value.trim().toUpperCase();
-            const loginError = document.getElementById('loginError');
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-            const userInfo = {
-                nombre: userData.nombre || 'Estudiante',
-                contacto: userData.contacto || 'No registrado'
-            };
-
-            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-            const infoCodigo = codigosMaestros[code];
-            
-            if (!infoCodigo) {
-                loginError.textContent = '❌ Código no encontrado';
-                loginError.style.display = 'block';
-            } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
-                loginError.textContent = '❌ Este código ya fue utilizado';
-                loginError.style.display = 'block';
-            } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
-                loginError.textContent = '❌ Este código está bloqueado';
-                loginError.style.display = 'block';
-            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
-                loginError.textContent = '❌ Este código fue revocado';
-                loginError.style.display = 'block';
-            } else {
-                activarAccesoCompleto(code, userInfo.nombre);
-            }
-        }
-
-        // ===== SISTEMA DE SINCRONIZACIÓN MEJORADO =====
-        async function sincronizarCodigosLocales() {
-            try {
-                const response = await fetch(`${getScriptURL()}?action=getAllCodes&timestamp=${Date.now()}`);
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    
-                    if (result.status === 'success') {
-                        const codigosCompatibles = {};
-                        
-                        Object.entries(result.codigos).forEach(([codigo, info]) => {
-                            codigosCompatibles[codigo] = {
-                                estado: info.estado,
-                                usuario: info.usuario,
-                                precio: info.precio,
-                                fechaCreacion: info.fechaCreacion,
-                                fechaActivacion: info.fechaActivacion,
-                                contacto: info.contacto,
-                                curso: info.curso,
-                                eliminado: info.eliminado,
-                                accesoRevocado: info.accesoRevocado,
-                                
-                                usado: info.estado === 'usado',
-                                activo: info.estado !== 'bloqueado' && !info.eliminado && !info.accesoRevocado
-                            };
-                        });
-                        
-                        localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosCompatibles));
-                        console.log('✅ Códigos sincronizados y convertidos');
-                    }
-                }
-            } catch (error) {
-                console.log('⚠️ Error sincronizando códigos:', error);
-            }
-        }
-
-        // ===== VERIFICAR ACCESO MEJORADO - FUNCIÓN PRINCIPAL =====
-        async function checkUserAccess() {
-            const resultado = await verificarAccesoPersistente();
-            return resultado.acceso;
-        }
-
-        // ===== ACTIVAR ACCESO MEJORADO =====
-        function activateUserAccessWithCode(userID, code, userInfo) {
-            closePaymentModal();
-            closeLogin();
-            
-            const userAccessKey = `cursoAcceso_${userID}`;
-            const expirationDate = new Date();
-            expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-
-            localStorage.setItem(userAccessKey, JSON.stringify({
-                codigo: code,
-                fechaAcceso: new Date().toISOString(),
-                expira: expirationDate.toISOString(),
-                usuario: userInfo,
-                curso: 'Planteo de Ecuaciones',
-                activo: true
-            }));
-
-            console.log(`✅ Acceso activado para usuario: ${userInfo} con código: ${code}`);
-        }
-
-        // ===== SISTEMA DE IDENTIFICACIÓN =====
-        function getUniversalUserID() {
-            try {
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                
-                if (userData.contacto) {
-                    return userData.contacto.toLowerCase().trim();
-                }
-                
-                if (userData.nombre) {
-                    const nombreLimpio = userData.nombre.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 20);
-                    return 'name_' + nombreLimpio;
-                }
-                
-                let anonID = localStorage.getItem('neoStudyAnonymousID');
-                if (!anonID) {
-                    anonID = 'user_' + Math.random().toString(36).substring(2, 11);
-                    localStorage.setItem('neoStudyAnonymousID', anonID);
-                }
-                return anonID;
-                
-            } catch (error) {
-                console.error("Error en getUniversalUserID:", error);
-                return 'emergency_' + Math.random().toString(36).substring(2, 9);
-            }
-        }
-
-        // ===== FUNCIONES DE ACCESO AL MATERIAL MEJORADAS =====
-        async function handleDriveAccess() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso.');
-                showSecureLogin();
-                return;
-            }
-            window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
-        }
-
-        async function handleDownloadAccess() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Para descargar el PDF, primero debes desbloquear el curso.');
-                showSecureLogin();
-                return;
-            }
-            window.open('https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl', '_blank');
-        }
-
-        async function showMaterialBenefits() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                showSecureLogin();
-                return;
-            }
-            closePreviewModal();
-            document.getElementById('materialBenefitsModal').style.display = 'flex';
-        }
-
-        async function openMaterialLink(url) {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Acceso denegado. Primero debes desbloquear el curso con un código válido.');
-                showSecureLogin();
-                return;
-            }
-            window.open(url, '_blank');
-        }
-
-        // ===== NUEVA FUNCIÓN PARA MOSTRAR MODAL DE CLASES =====
-        async function showClassOptionsModal() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Para acceder a las clases en vivo, primero debes desbloquear el curso.');
-                showSecureLogin();
-                return;
-            }
-            
-            document.getElementById('classOptionsModal').style.display = 'flex';
-        }
-
-        function closeClassOptionsModal() {
-            document.getElementById('classOptionsModal').style.display = 'none';
-        }
-
-        // ===== NUEVA FUNCIÓN PARA ASISTENCIA TÉCNICA =====
-        function openWhatsAppSupport() {
-            const phoneNumber = "51973441252";
-            const message = "Hola NeoStudy, necesito asistencia técnica con el curso de Planteo de Ecuaciones.";
-            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-        }
-
-        async function openWhatsApp() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Para contactar soporte, primero necesitas tener el curso activo.');
-                showSecureLogin();
-                return;
-            }
-            window.open('https://wa.me/51973441252', '_blank');
-        }
-
-        // ===== FUNCIONES DE INTERFAZ MEJORADAS =====
-        async function openPreviewModal() {
-            document.getElementById('previewModal').style.display = 'flex';
-            
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                showLockedPreview();
-            } else {
-                showUnlockedPreview();
-            }
-        }
-
-        function showLockedPreview() {
-            const pdfPreview = document.getElementById('pdfPreview');
-            const driveViewButton = document.getElementById('driveViewButton');
-            const downloadButton = document.getElementById('downloadButton');
-            const modalTitle = document.getElementById('modalTitle');
-            const lockedMessage = document.getElementById('lockedMessage');
-            const previewActions = document.getElementById('previewActions');
-            const unlockedActions = document.getElementById('unlockedActions');
-            
-            modalTitle.textContent = "Vista Previa - Libro Planteo de Ecuaciones";
-            pdfPreview.classList.add('locked');
-            lockedMessage.style.display = 'block';
-            
-            driveViewButton.classList.add('locked');
-            downloadButton.classList.add('locked');
-            
-            previewActions.style.display = 'block';
-            unlockedActions.style.display = 'none';
-        }
-
-        function showUnlockedPreview() {
-            const pdfPreview = document.getElementById('pdfPreview');
-            const driveViewButton = document.getElementById('driveViewButton');
-            const downloadButton = document.getElementById('downloadButton');
-            const modalTitle = document.getElementById('modalTitle');
-            const lockedMessage = document.getElementById('lockedMessage');
-            const previewActions = document.getElementById('previewActions');
-            const unlockedActions = document.getElementById('unlockedActions');
-            
-            modalTitle.textContent = "🎉 Curso Desbloqueado - Planteo de Ecuaciones";
-            pdfPreview.classList.remove('locked');
-            lockedMessage.style.display = 'none';
-            
-            driveViewButton.classList.remove('locked');
-            downloadButton.classList.remove('locked');
-            
-            previewActions.style.display = 'none';
-            unlockedActions.style.display = 'block';
-        }
-
-        function closePreviewModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-
-        function showSecureLogin() {
-            try {
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                const userInfo = userData.contacto || userData.nombre || 'Cuenta actual';
-                
-                document.getElementById('currentUser').textContent = userInfo;
-                document.getElementById('loginOverlay').style.display = 'flex';
-                document.getElementById('userCode').value = '';
-                document.getElementById('loginError').style.display = 'none';
-            } catch (error) {
-                console.error("Error en showSecureLogin:", error);
-            }
-        }
-
-        function closeLogin() {
-            document.getElementById('loginOverlay').style.display = 'none';
-        }
-
-        function showPaymentModalFromLogin() {
-            closeLogin();
-            showPaymentModal();
-        }
-
-        function showPaymentModal() {
-            closePreviewModal();
-            document.getElementById('paymentModal').style.display = 'flex';
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-            document.getElementById('accessCode').value = '';
-            document.getElementById('codeStatus').innerHTML = '';
-        }
-
-        function closeMaterialBenefitsModal() {
-            document.getElementById('materialBenefitsModal').style.display = 'none';
-        }
-
-        // ===== VERIFICACIÓN AUTOMÁTICA AL CARGAR LA PÁGINA =====
-        async function verificarAccesoAlCargar() {
-            const resultado = await verificarAccesoPersistente();
-            if (resultado.acceso) {
-                console.log('✅ Usuario tiene acceso activo al curso');
-            } else {
-                console.log('❌ Usuario no tiene acceso:', resultado.razon);
-                
-                if (resultado.revocado) {
-                    manejarAccesoRevocado();
-                }
-            }
-        }
-
-        // ===== SISTEMA DE TEMAS =====
+        // Sistema de temas mejorado - UN SOLO BOTÓN
         let currentTheme = 'normal';
         const themes = ['normal', 'study', 'dark'];
         const themeIcons = {
@@ -3589,7 +782,7 @@
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        // ===== SISTEMA DE CURSOS =====
+        // Datos del usuario
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             if (userData) {
@@ -3598,12 +791,12 @@
                     document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
                 } else {
                     const initials = userData.nombre ? userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase() : 'US';
-                    document.getElementById('userAvatar').textContent = initials;
                     document.getElementById('mobileUserAvatar').textContent = initials;
                 }
             }
         }
 
+        // Navegación
         function goToFeed() {
             window.location.href = 'modulo2_iniciodecesión.html';
         }
@@ -3612,61 +805,23 @@
             window.location.href = 'modulo3_perfil.html';
         }
 
-        function goToRazonamientoMatematico() {
-            window.location.href = 'modulo4_razmatematico.html';
+        function goToMatematica() {
+            window.location.href = 'modulo4_matematica.html';
         }
 
-        // ===== INICIALIZACIÓN MEJORADA =====
-        document.addEventListener('DOMContentLoaded', async function() {
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
-            
-            await sincronizarCodigosLocales();
-            
-            await verificarAccesoAlCargar();
-            
-            // NUEVO: Verificar si ya tiene código asignado
-            await verificarCodigoExistenteAlCargar();
-            
-            // NUEVO: Iniciar detección en tiempo real
-            iniciarDeteccionTiempoReal();
-            
-            if (!localStorage.getItem('neoStudyCodigosMaestros')) {
-                const codigosIniciales = {
-                    "MATH7X9": { 
-                        estado: 'activo',
-                        usuario: null,
-                        precio: "6.00",
-                        fechaCreacion: new Date().toLocaleString(),
-                        fechaActivacion: null,
-                        contacto: null,
-                        curso: "Planteo de Ecuaciones",
-                        eliminado: false,
-                        accesoRevocado: false,
-                        
-                        usado: false,
-                        activo: true
-                    }
-                };
-                localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosIniciales));
-            }
-        });
 
-        window.onclick = function(event) {
-            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay', 'classOptionsModal'];
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                if (event.target === modal) {
-                    if (modalId === 'previewModal') closePreviewModal();
-                    if (modalId === 'paymentModal') closePaymentModal();
-                    if (modalId === 'materialBenefitsModal') closeMaterialBenefitsModal();
-                    if (modalId === 'loginOverlay') closeLogin();
-                    if (modalId === 'classOptionsModal') closeClassOptionsModal();
-                }
+            // Deshabilitar clic en Letras y Ciencias
+            document.querySelectorAll('.area-card .btn-disabled').forEach(btn => {
+                btn.parentElement.parentElement.style.cursor = 'not-allowed';
+                btn.parentElement.parentElement.onclick = null;
             });
-        };
+        });
     </script>
 </body>
 </html>
