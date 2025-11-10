@@ -3719,6 +3719,116 @@
             window.location.href = 'modulo4_razmatematico.html';
         }
 
+        // ===== NUEVO: SISTEMA DE SINCRONIZACIÓN ENTRE PESTAÑAS =====
+        function configurarSincronizacionEntrePestanas() {
+            console.log('🔄 Configurando sincronización entre pestañas...');
+            
+            // Escuchar cambios en localStorage de otras pestañas
+            window.addEventListener('storage', function(e) {
+                console.log('📡 Evento storage detectado:', e.key, e.newValue);
+                
+                if (e.key === 'neoStudyCodigosMaestros' && e.newValue) {
+                    console.log('🔄 Sincronizando códigos desde otra pestaña...');
+                    // Los códigos ya se actualizaron automáticamente en localStorage
+                    // Solo necesitamos verificar si tenemos un código asignado
+                    verificarCodigoAsignadoAutomaticamente();
+                }
+                
+                if (e.key && e.key.startsWith('user_code_')) {
+                    const contacto = e.key.replace('user_code_', '');
+                    console.log('🎯 Código directo asignado para:', contacto);
+                    verificarCodigoAsignadoAutomaticamente();
+                }
+            });
+            
+            // También verificar periódicamente por si acaso
+            setInterval(verificarCodigoAsignadoAutomaticamente, 3000);
+        }
+
+        // ===== NUEVA FUNCIÓN: VERIFICACIÓN AUTOMÁTICA MEJORADA =====
+        async function verificarCodigoAsignadoAutomaticamente() {
+            try {
+                const userInfo = await obtenerDatosUsuarioActualizados();
+                
+                if (userInfo.contacto && userInfo.contacto !== 'No Especificado') {
+                    const codigoAsignado = await verificarCodigoAsignado(userInfo.contacto);
+                    
+                    if (codigoAsignado && !tieneAccesoActivo()) {
+                        console.log('🎯 ¡CÓDIGO DETECTADO EN SINCRONIZACIÓN!', codigoAsignado.codigo);
+                        
+                        mostrarNotificacionEmergente(codigoAsignado.codigo);
+                        await activarAccesoCompleto(codigoAsignado.codigo, userInfo.nombre);
+                        limpiarNotificacionesUsadas(userInfo.contacto, codigoAsignado.codigo);
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ Error en verificación automática:', error);
+            }
+        }
+
+        // ===== NUEVO: FORZAR ACTUALIZACIÓN DESDE GOOGLE SHEETS =====
+        async function forzarActualizacionDesdeSheets() {
+            try {
+                console.log('🔄 Forzando actualización desde Google Sheets...');
+                const response = await fetch(`${getScriptURL()}?action=getAllCodes&timestamp=${Date.now()}`);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        // Convertir a formato compatible
+                        const codigosCompatibles = {};
+                        Object.entries(result.codigos).forEach(([codigo, info]) => {
+                            codigosCompatibles[codigo] = {
+                                estado: info.estado,
+                                usuario: info.usuario,
+                                precio: info.precio,
+                                fechaCreacion: info.fechaCreacion,
+                                fechaActivacion: info.fechaActivacion,
+                                contacto: info.contacto,
+                                curso: info.curso,
+                                eliminado: info.eliminado,
+                                accesoRevocado: info.accesoRevocado,
+                                usado: info.estado === 'usado',
+                                activo: info.estado !== 'bloqueado' && !info.eliminado && !info.accesoRevocado
+                            };
+                        });
+                        
+                        localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosCompatibles));
+                        console.log('✅ Códigos actualizados desde Sheets');
+                        
+                        // Verificar si tenemos código después de la actualización
+                        verificarCodigoAsignadoAutomaticamente();
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ Error forzando actualización:', error);
+            }
+        }
+
+        // ===== NUEVO: BOTÓN DE ACTUALIZACIÓN MANUAL PARA USUARIOS =====
+        function agregarBotonActualizacionManual() {
+            // Buscar si ya existe el botón
+            if (document.getElementById('btnActualizarManual')) return;
+            
+            const botonHtml = `
+                <div style="text-align: center; margin: 20px 0;">
+                    <button id="btnActualizarManual" class="btn btn-warning" onclick="forzarActualizacionDesdeSheets()">
+                        <i class="fas fa-sync-alt"></i> ACTUALIZAR CÓDIGO MANUALMENTE
+                    </button>
+                    <p style="font-size: 0.8rem; color: var(--secondary); margin-top: 5px;">
+                        Si no recibes tu código automáticamente, haz clic aquí
+                    </p>
+                </div>
+            `;
+            
+            // Insertar en el modal de pago
+            const unlockForm = document.querySelector('.unlock-form');
+            if (unlockForm) {
+                unlockForm.insertAdjacentHTML('beforebegin', botonHtml);
+            }
+        }
+
         // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', async function() {
             loadUserData();
@@ -3736,6 +3846,15 @@
             // NUEVO: Iniciar detección en tiempo real MEJORADA
             iniciarDeteccionMejorada();
             
+            // ✅ NUEVO: Configurar sincronización entre pestañas
+            configurarSincronizacionEntrePestanas();
+            
+            // ✅ NUEVO: Agregar botón de actualización manual
+            agregarBotonActualizacionManual();
+            
+            // ✅ NUEVO: Forzar una actualización inicial
+            setTimeout(forzarActualizacionDesdeSheets, 2000);
+            
             if (!localStorage.getItem('neoStudyCodigosMaestros')) {
                 const codigosIniciales = {
                     "MATH7X9": { 
@@ -3748,7 +3867,6 @@
                         curso: "Planteo de Ecuaciones",
                         eliminado: false,
                         accesoRevocado: false,
-                        
                         usado: false,
                         activo: true
                     }
