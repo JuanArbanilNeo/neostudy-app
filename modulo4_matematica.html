@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Study - Cursos Disponibles</title>
+    <title>Neo Study - Matemática</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -26,7 +26,6 @@
             --white: #ffffff;
             --bg-gradient: linear-gradient(135deg, #00C4FF, #007bff);
             
-            /* Modos de color */
             --bg-normal: #f8f9fa;
             --bg-study: #e8f4f8;
             --bg-dark: #1a1a1a;
@@ -38,7 +37,6 @@
             --card-dark: #2d2d2d;
         }
 
-        /* Modo Normal (por defecto) */
         body {
             background: var(--bg-normal);
             color: var(--text-normal);
@@ -181,7 +179,6 @@
             transform: scale(1.1);
         }
 
-        /* ===== HEADER PARA MÓVIL ===== */
         .mobile-header {
             display: none;
             background: var(--bg-gradient);
@@ -282,10 +279,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.2;
-            white-space: normal;
-            word-wrap: break-word;
-            overflow: visible;
-            height: auto;
         }
 
         .page-title p {
@@ -294,38 +287,90 @@
             line-height: 1.4;
         }
 
-        /* Grid de Áreas */
-        .areas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+        .courses-section {
             margin-bottom: 3rem;
         }
 
-        .area-card {
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        body.dark-mode .section-header {
+            border-bottom-color: #555;
+        }
+
+        body.study-mode .section-header {
+            border-bottom-color: #d1ecf1;
+        }
+
+        .back-button {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        body.dark-mode .section-title {
+            color: var(--text-dark);
+        }
+
+        body.study-mode .section-title {
+            color: var(--text-study);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
             background: var(--white);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
             position: relative;
+            cursor: pointer;
         }
 
-        body.dark-mode .area-card {
+        body.dark-mode .course-card {
             background: var(--card-dark);
         }
 
-        body.study-mode .area-card {
+        body.study-mode .course-card {
             background: var(--card-study);
         }
 
-        .area-card:hover {
+        .course-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
 
-        .area-badge {
+        .course-badge {
             position: absolute;
             top: 1rem;
             right: 1rem;
@@ -336,48 +381,60 @@
             z-index: 2;
         }
 
-        .area-badge.available {
+        .course-badge.available {
             background: var(--success);
             color: var(--white);
         }
 
-        .area-badge.proceso {
+        .course-badge.proceso {
             background: var(--warning);
             color: var(--dark);
         }
 
-        .area-header {
+        .course-image {
+            height: 160px;
             background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: var(--white);
-            padding: 2rem;
-            text-align: center;
+            font-size: 2.5rem;
+            position: relative;
         }
 
-        .area-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .area-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .area-description {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        .area-content {
+        .course-content {
             padding: 1.5rem;
-            text-align: center;
         }
 
-        .area-status {
+        .course-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+
+        body.dark-mode .course-title {
+            color: var(--text-dark);
+        }
+
+        body.study-mode .course-title {
+            color: var(--text-study);
+        }
+
+        .course-description {
             color: var(--secondary);
             margin-bottom: 1rem;
+            line-height: 1.5;
             font-size: 0.9rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
         }
 
         .btn {
@@ -400,6 +457,16 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
         .btn-disabled {
@@ -471,7 +538,170 @@
             color: #adb5bd;
         }
 
-        /* Responsive */
+        /* ===== MEJORAS DE RESPONSIVIDAD ADICIONALES ===== */
+        @media (max-width: 768px) {
+            /* Mejorar espaciado en móviles */
+            .main-container {
+                margin: 120px auto 20px;
+                padding: 0 0.5rem;
+            }
+            
+            /* Mejorar botones para touch */
+            .btn, .back-button {
+                min-height: 44px; /* Tamaño mínimo para touch */
+                padding: 12px 16px;
+            }
+            
+            .back-button {
+                min-height: 40px;
+                width: 40px;
+            }
+            
+            /* Mejorar curso cards para móviles */
+            .course-card {
+                margin: 0.5rem 0;
+            }
+            
+            .course-image {
+                height: 140px;
+            }
+            
+            .course-content {
+                padding: 1.25rem;
+            }
+            
+            /* Optimizar textos para móviles */
+            .page-title h1 {
+                font-size: 1.8rem;
+                line-height: 1.3;
+                margin-bottom: 0.75rem;
+            }
+            
+            .page-title p {
+                font-size: 0.95rem;
+                line-height: 1.4;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+                line-height: 1.3;
+            }
+            
+            .course-title {
+                font-size: 1.1rem;
+                line-height: 1.3;
+            }
+            
+            .course-description {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+        }
+
+        /* Mejorar para tablets */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .main-container {
+                margin: 110px auto 30px;
+            }
+            
+            .page-title h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Optimizar para móviles muy pequeños */
+        @media (max-width: 360px) {
+            .main-container {
+                margin: 115px auto 10px;
+                padding: 0 0.25rem;
+            }
+            
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+            
+            .page-title p {
+                font-size: 0.85rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .course-image {
+                height: 120px;
+            }
+            
+            .course-content {
+                padding: 1rem;
+            }
+            
+            .course-badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .mobile-nav-item {
+                font-size: 0.65rem;
+                padding: 0.4rem;
+            }
+            
+            .mobile-nav-item i {
+                font-size: 1rem;
+            }
+        }
+
+        /* Mejoras de accesibilidad y usabilidad */
+        @media (max-width: 768px) {
+            /* Asegurar que los elementos sean fácilmente clickeables */
+            .course-card {
+                min-height: 120px;
+            }
+            
+            .nav-item, .mobile-nav-item {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Mejorar contraste en modo oscuro para móviles */
+            body.dark-mode .course-card {
+                border: 1px solid #444;
+            }
+            
+            body.study-mode .course-card {
+                border: 1px solid #d1ecf1;
+            }
+        }
+
+        /* Optimizar footer para móviles */
+        @media (max-width: 768px) {
+            .footer {
+                padding: 1.5rem 0;
+                margin-top: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .footer-section {
+                min-width: 100%;
+            }
+            
+            .footer-bottom {
+                padding-top: 1.5rem;
+                margin-top: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .header {
                 display: none;
@@ -495,22 +725,23 @@
             .page-title h1 {
                 font-size: 2rem;
                 line-height: 1.1;
-                padding: 0;
-                margin: 0 0 0.5rem 0;
-                white-space: normal;
-                word-wrap: break-word;
-                overflow: visible;
-                height: auto;
             }
 
             .page-title p {
                 font-size: 1rem;
-                padding: 0;
-                margin: 0;
             }
 
-            .areas-grid {
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .courses-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .course-stats {
+                flex-direction: column;
+                gap: 0.5rem;
             }
         }
 
@@ -519,29 +750,20 @@
                 margin: 130px auto 15px;
             }
             
-            .page-title {
-                margin-top: 15px;
-            }
-            
             .page-title h1 {
                 font-size: 1.8rem;
-                line-height: 1.1;
-                white-space: normal;
-                word-wrap: break-word;
-                overflow: visible;
-                height: auto;
             }
 
             .page-title p {
                 font-size: 0.9rem;
             }
 
-            .nav-menu {
-                gap: 1rem;
+            .section-title {
+                font-size: 1.3rem;
             }
-            
-            .nav-item span {
-                display: none;
+
+            .mobile-nav-item {
+                font-size: 0.7rem;
             }
         }
 
@@ -550,38 +772,21 @@
                 margin: 125px auto 10px;
             }
             
-            .page-title {
-                margin-top: 10px;
-            }
-            
             .page-title h1 {
                 font-size: 1.6rem;
-                line-height: 1.2;
-                padding: 0;
-                margin: 0 0 0.5rem 0;
-                white-space: normal;
-                word-wrap: break-word;
-                overflow: visible;
-                height: auto;
             }
 
             .page-title p {
                 font-size: 0.85rem;
             }
 
-            .mobile-nav-item {
-                font-size: 0.7rem;
-                padding: 0.4rem;
-            }
-
-            .mobile-nav-item i {
-                font-size: 1rem;
+            .section-title {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ===== HEADER PARA ESCRITORIO ===== -->
     <header class="header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
@@ -614,7 +819,6 @@
         </div>
     </header>
 
-    <!-- ===== HEADER PARA MÓVIL ===== -->
     <header class="mobile-header">
         <div class="mobile-nav-top">
             <div class="mobile-logo">
@@ -650,65 +854,18 @@
 
     <div class="main-container">
         <div class="page-title">
-            <h1>Áreas de Estudio</h1>
-            <p>Selecciona el área que deseas explorar</p>
+            <h1>Cursos de Matemática</h1>
+            <p>Selecciona el curso que deseas explorar</p>
         </div>
 
-        <!-- Grid de Áreas (Vista Principal) -->
-        <div class="areas-grid" id="areasView">
-            <!-- Matemática -->
-            <div class="area-card" onclick="goToMatematica()">
-                <div class="area-badge available">DISPONIBLE</div>
-                <div class="area-header">
-                    <div class="area-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                    <h3 class="area-title">Matemática</h3>
-                    <p class="area-description">Preuniversitario</p>
-                </div>
-                <div class="area-content">
-                    <div class="area-status">Cursos disponibles</div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-play"></i> Ver Cursos
-                    </button>
-                </div>
+        <div class="courses-section">
+            <div class="section-header">
+                <button class="back-button" onclick="goToCursos()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 class="section-title">Cursos de Matemática - Preuniversitario</h2>
             </div>
-
-            <!-- Letras -->
-            <div class="area-card">
-                <div class="area-badge proceso">EN PROCESO</div>
-                <div class="area-header">
-                    <div class="area-icon">
-                        <i class="fas fa-language"></i>
-                    </div>
-                    <h3 class="area-title">Letras</h3>
-                    <p class="area-description">Preuniversitario</p>
-                </div>
-                <div class="area-content">
-                    <div class="area-status">Disponible próximamente</div>
-                    <button class="btn btn-disabled">
-                        <i class="fas fa-clock"></i> Próximamente
-                    </button>
-                </div>
-            </div>
-
-            <!-- Ciencias -->
-            <div class="area-card">
-                <div class="area-badge proceso">EN PROCESO</div>
-                <div class="area-header">
-                    <div class="area-icon">
-                        <i class="fas fa-flask"></i>
-                    </div>
-                    <h3 class="area-title">Ciencias</h3>
-                    <p class="area-description">Preuniversitario</p>
-                </div>
-                <div class="area-content">
-                    <div class="area-status">Disponible próximamente</div>
-                    <button class="btn btn-disabled">
-                        <i class="fas fa-clock"></i> Próximamente
-                    </button>
-                </div>
-            </div>
+            <div class="courses-grid" id="coursesGrid"></div>
         </div>
     </div>
 
@@ -735,7 +892,7 @@
     </footer>
 
     <script>
-        // Sistema de temas mejorado - UN SOLO BOTÓN
+        // ===== SISTEMA DE TEMAS =====
         let currentTheme = 'normal';
         const themes = ['normal', 'study', 'dark'];
         const themeIcons = {
@@ -782,7 +939,7 @@
             localStorage.setItem('neoStudyTheme', theme);
         }
 
-        // Datos del usuario
+        // ===== SISTEMA DE CURSOS =====
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
             if (userData) {
@@ -791,12 +948,12 @@
                     document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${userData.fotoPerfil})`;
                 } else {
                     const initials = userData.nombre ? userData.nombre.split(' ').map(n => n[0]).join('').toUpperCase() : 'US';
+                    document.getElementById('userAvatar').textContent = initials;
                     document.getElementById('mobileUserAvatar').textContent = initials;
                 }
             }
         }
 
-        // Navegación
         function goToFeed() {
             window.location.href = 'modulo2_iniciodecesión.html';
         }
@@ -805,22 +962,89 @@
             window.location.href = 'modulo3_perfil.html';
         }
 
-        function goToMatematica() {
-            window.location.href = 'modulo4_matematica.html';
+        function goToCursos() {
+            window.location.href = 'modulo4_cursos.html';
         }
 
-        // Inicialización
+        function openRazonamientoMatematico() {
+            window.location.href = 'modulo4_razmatematico.html';
+        }
+
+        const mathCourses = [
+            {
+                id: 1,
+                title: "Razonamiento Matemático",
+                description: "Desarrolla tu pensamiento lógico y habilidades para resolver problemas matemáticos complejos.",
+                duration: "30 horas",
+                lessons: 24,
+                icon: "fa-brain",
+                available: true
+            },
+            {
+                id: 2,
+                title: "Aritmética",
+                description: "Domina los fundamentos de los números, operaciones básicas y propiedades numéricas.",
+                duration: "25 horas",
+                lessons: 20,
+                icon: "fa-calculator",
+                available: false
+            },
+            {
+                id: 3,
+                title: "Álgebra",
+                description: "Aprende ecuaciones, polinomios y funciones matemáticas avanzadas.",
+                duration: "28 horas",
+                lessons: 22,
+                icon: "fa-superscript",
+                available: false
+            },
+            {
+                id: 4,
+                title: "Geometría",
+                description: "Estudia formas, espacios y propiedades de las figuras geométricas.",
+                duration: "20 horas",
+                lessons: 18,
+                icon: "fa-shapes",
+                available: false
+            }
+        ];
+
+        function renderCourses() {
+            const coursesGrid = document.getElementById('coursesGrid');
+            
+            coursesGrid.innerHTML = mathCourses.map(course => `
+                <div class="course-card" onclick="${course.available ? 'openRazonamientoMatematico()' : 'showComingSoon()'}">
+                    ${course.available ? 
+                        '<div class="course-badge available">DISPONIBLE</div>' : 
+                        '<div class="course-badge proceso">PRÓXIMAMENTE</div>'
+                    }
+                    <div class="course-image">
+                        <i class="fas ${course.icon}"></i>
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">${course.title}</h3>
+                        <p class="course-description">${course.description}</p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-clock"></i> ${course.duration}</span>
+                            <span><i class="fas fa-play-circle"></i> ${course.lessons} lecciones</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showComingSoon() {
+            alert('⏳ ¡Próximamente! Estamos trabajando en este contenido.');
+        }
+
+        // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
 
-            // Deshabilitar clic en Letras y Ciencias
-            document.querySelectorAll('.area-card .btn-disabled').forEach(btn => {
-                btn.parentElement.parentElement.style.cursor = 'not-allowed';
-                btn.parentElement.parentElement.onclick = null;
-            });
+            renderCourses();
         });
     </script>
 </body>
