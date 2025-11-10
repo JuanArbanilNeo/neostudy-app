@@ -1508,7 +1508,7 @@
                 height: 400px;
             }
             
-            .drive-buttons {
+            .drive-buttons, .meet-buttons {
                 flex-direction: column;
                 align-items: center;
             }
@@ -2379,12 +2379,41 @@
             }
         }
 
-        // ===== NUEVO SISTEMA DE DETECCIÓN DE ASIGNACIONES EN TIEMPO REAL =====
+        // ===== FUNCIÓN MEJORADA: VERIFICAR CÓDIGO ASIGNADO =====
         async function verificarCodigoAsignado(userContact) {
             try {
                 console.log('🔍 Verificando código asignado para:', userContact);
                 
-                // 1. PRIMERO: Verificar si hay notificación push reciente
+                // ✅ 1. PRIMERO: Búsqueda directa por contacto (MÁS RÁPIDO)
+                const userCodeKey = `user_code_${userContact}`;
+                const codigoDirecto = localStorage.getItem(userCodeKey);
+                if (codigoDirecto) {
+                    console.log('✅ Código encontrado vía búsqueda directa:', codigoDirecto);
+                    localStorage.removeItem(userCodeKey); // Limpiar después de usar
+                    return {
+                        codigo: codigoDirecto,
+                        estado: 'asignado',
+                        fuente: 'busqueda_directa'
+                    };
+                }
+                
+                // ✅ 2. SEGUNDO: Verificar en localStorage compartido
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const codigoAsignado = Object.keys(codigosMaestros).find(codigo => {
+                    const info = codigosMaestros[codigo];
+                    return info.contacto === userContact && info.estado === 'usado';
+                });
+                
+                if (codigoAsignado) {
+                    console.log('✅ Código encontrado en localStorage:', codigoAsignado);
+                    return {
+                        codigo: codigoAsignado,
+                        estado: 'asignado',
+                        fuente: 'local_storage'
+                    };
+                }
+                
+                // ✅ 3. TERCERO: Verificar notificación push
                 const notificacionReciente = await verificarNotificacionPush(userContact);
                 if (notificacionReciente) {
                     console.log('✅ Código encontrado vía notificación push:', notificacionReciente.codigo);
@@ -2395,7 +2424,7 @@
                     };
                 }
                 
-                // 2. SEGUNDO: Verificar en el panel de control
+                // ✅ 4. CUARTO: Verificar en el panel de control (Google Sheets)
                 const response = await fetch(`${getScriptURL()}?action=checkUserPayment&userContact=${userContact}&timestamp=${Date.now()}`);
                 
                 if (response.ok) {
@@ -2403,28 +2432,30 @@
                     
                     if (result.status === 'approved' && result.codigo) {
                         console.log('✅ Código encontrado en panel:', result.codigo);
+                        
+                        // Guardar localmente para futuras consultas
+                        const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                        codigosMaestros[result.codigo] = {
+                            estado: 'usado',
+                            usuario: result.userInfo?.nombre || 'Estudiante',
+                            contacto: userContact,
+                            precio: '6.00',
+                            fechaCreacion: new Date().toLocaleString(),
+                            fechaActivacion: new Date().toLocaleString(),
+                            curso: 'Planteo de Ecuaciones',
+                            eliminado: false,
+                            accesoRevocado: false,
+                            usado: true,
+                            activo: true
+                        };
+                        localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosMaestros));
+                        
                         return {
                             codigo: result.codigo,
                             estado: 'asignado',
                             fuente: 'panel'
                         };
                     }
-                }
-                
-                // 3. TERCERO: Verificar en localStorage como respaldo
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const codigoAsignado = Object.keys(codigosMaestros).find(codigo => {
-                    const info = codigosMaestros[codigo];
-                    return info.contacto === userContact && info.estado === 'usado';
-                });
-                
-                if (codigoAsignado) {
-                    console.log('✅ Código encontrado localmente:', codigoAsignado);
-                    return {
-                        codigo: codigoAsignado,
-                        estado: 'asignado',
-                        fuente: 'local'
-                    };
                 }
                 
                 console.log('❌ No se encontró código asignado');
@@ -2479,34 +2510,49 @@
             }
         }
 
-        // ===== SISTEMA DE DETECCIÓN EN TIEMPO REAL =====
-        function iniciarDeteccionTiempoReal() {
+        // ===== NUEVA FUNCIÓN: SISTEMA DE DETECCIÓN MEJORADO =====
+        function iniciarDeteccionMejorada() {
             if (deteccionActiva) return;
             
             deteccionActiva = true;
+            let deteccionCount = 0;
             
-            // Verificar cada 3 segundos si hay códigos asignados
-            setInterval(async () => {
+            // Verificar cada 2 segundos (más frecuente)
+            const detectionInterval = setInterval(async () => {
                 try {
+                    deteccionCount++;
                     const userInfo = await obtenerDatosUsuarioActualizados();
                     
                     if (userInfo.contacto && userInfo.contacto !== 'No Especificado') {
                         const codigoAsignado = await verificarCodigoAsignado(userInfo.contacto);
                         
                         if (codigoAsignado && !tieneAccesoActivo()) {
-                            console.log('🎯 ¡CÓDIGO DETECTADO EN TIEMPO REAL!', codigoAsignado.codigo);
+                            console.log('🎯 ¡CÓDIGO DETECTADO EN TIEMPO REAL!', codigoAsignado.codigo, 'Fuente:', codigoAsignado.fuente);
                             
                             // Mostrar notificación al usuario
                             mostrarNotificacionEmergente(codigoAsignado.codigo);
                             
                             // Activar acceso automáticamente
                             await activarAccesoCompleto(codigoAsignado.codigo, userInfo.nombre);
+                            
+                            // Limpiar notificaciones usadas
+                            limpiarNotificacionesUsadas(userInfo.contacto, codigoAsignado.codigo);
                         }
                     }
+                    
+                    // Limpiar intervalo después de 10 minutos para evitar sobrecarga
+                    if (deteccionCount > 300) { // 10 minutos (300 * 2 segundos)
+                        clearInterval(detectionInterval);
+                        deteccionActiva = false;
+                        console.log('🛑 Detección automática detenida después de 10 minutos');
+                    }
+                    
                 } catch (error) {
                     console.log('⚠️ Error en detección tiempo real:', error);
                 }
-            }, 3000); // Verificar cada 3 segundos
+            }, 2000); // Verificar cada 2 segundos
+            
+            console.log('🔄 Sistema de detección mejorado iniciado');
         }
 
         // ===== NUEVA FUNCIÓN: NOTIFICACIÓN EMERGENTE =====
@@ -2548,6 +2594,63 @@
             const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
             
             return userAccess && userAccess.activo === true;
+        }
+
+        // ===== FUNCIÓN MEJORADA: VERIFICACIÓN AL CARGAR =====
+        async function verificarCodigoExistenteAlCargar() {
+            try {
+                const userInfo = await obtenerDatosUsuarioActualizados();
+                
+                if (userInfo.contacto && userInfo.contacto !== 'No Especificado') {
+                    console.log('🔍 Verificando código existente para:', userInfo.contacto);
+                    
+                    const codigoAsignado = await verificarCodigoAsignado(userInfo.contacto);
+                    
+                    if (codigoAsignado) {
+                        console.log('✅ Usuario ya tiene código asignado:', codigoAsignado.codigo, 'Fuente:', codigoAsignado.fuente);
+                        
+                        // Verificar si ya tiene acceso activo
+                        const userID = getUniversalUserID();
+                        const userAccessKey = `cursoAcceso_${userID}`;
+                        const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
+                        
+                        if (!userAccess || userAccess.codigo !== codigoAsignado.codigo) {
+                            // Activar acceso automáticamente
+                            mostrarMensaje('✅ Código previamente asignado detectado. Activando acceso...', 'success');
+                            await activarAccesoCompleto(codigoAsignado.codigo, userInfo.nombre);
+                            
+                            // Limpiar notificaciones usadas
+                            limpiarNotificacionesUsadas(userInfo.contacto, codigoAsignado.codigo);
+                        } else {
+                            console.log('ℹ️ Usuario ya tiene acceso activo con este código');
+                        }
+                    } else {
+                        console.log('❌ No se encontró código asignado para este usuario');
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ Error en verificación automática:', error);
+            }
+        }
+
+        // ===== FUNCIÓN AUXILIAR: LIMPIAR NOTIFICACIONES USADAS =====
+        function limpiarNotificacionesUsadas(contacto, codigo) {
+            try {
+                // Limpiar notificación específica del usuario
+                const userNotificationKey = `notificacion_${contacto}`;
+                localStorage.removeItem(userNotificationKey);
+                
+                // Limpiar de la lista general
+                const notificaciones = JSON.parse(localStorage.getItem('neoStudyNotificaciones') || '[]');
+                const nuevasNotificaciones = notificaciones.filter(notif => 
+                    !(notif.contacto === contacto && notif.codigo === codigo)
+                );
+                localStorage.setItem('neoStudyNotificaciones', JSON.stringify(nuevasNotificaciones));
+                
+                console.log('🧹 Notificaciones limpiadas para:', contacto);
+            } catch (error) {
+                console.log('⚠️ Error limpiando notificaciones:', error);
+            }
         }
 
         // ===== FUNCIÓN MEJORADA PARA INICIAR VERIFICACIÓN =====
@@ -3630,8 +3733,8 @@
             // NUEVO: Verificar si ya tiene código asignado
             await verificarCodigoExistenteAlCargar();
             
-            // NUEVO: Iniciar detección en tiempo real
-            iniciarDeteccionTiempoReal();
+            // NUEVO: Iniciar detección en tiempo real MEJORADA
+            iniciarDeteccionMejorada();
             
             if (!localStorage.getItem('neoStudyCodigosMaestros')) {
                 const codigosIniciales = {
