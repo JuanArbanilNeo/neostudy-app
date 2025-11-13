@@ -6,6 +6,7 @@
     <title>Planteo de Ecuaciones - Neo Study</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ESTILOS ORIGINALES (sin cambios) */
         * {
             margin: 0;
             padding: 0;
@@ -1499,7 +1500,7 @@
                 </a>
             </nav>
             <div class="theme-controls">
-                <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">
+                <button class="theme-btn" id="themeToggle" onclick="toggleThemeMode()" title="Cambiar tema">
                     <i class="fas fa-sun" id="themeIcon"></i>
                     <div class="tooltip" id="themeTooltip">Modo Normal</div>
                 </button>
@@ -1517,7 +1518,7 @@
                 Neo Study
             </div>
             <div class="mobile-controls">
-                <button class="mobile-theme-btn" id="mobileThemeToggle" onclick="toggleTheme()" title="Cambiar tema">
+                <button class="mobile-theme-btn" id="mobileThemeToggle" onclick="toggleThemeMode()" title="Cambiar tema">
                     <i class="fas fa-sun" id="mobileThemeIcon"></i>
                 </button>
                 <div class="avatar" id="mobileUserAvatar" onclick="goToProfile()"></div>
@@ -2765,5 +2766,8 @@
             });
         };
     </script>
+    
+    <!-- Incluir el sistema de temas mejorado -->
+    <script src="theme-system.js"></script>
 </body>
-</html>
+    </html>
