@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planteo de Ecuaciones - Neo Study</title>
+    <title>Razonamiento Matemático - Neo Study</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ESTILOS ORIGINALES (sin cambios) */
         * {
             margin: 0;
             padding: 0;
@@ -1013,173 +1012,332 @@
             background: #3F51B5;
         }
 
-        /* BOTÓN FLOTANTE DE ASISTENCIA WHATSAPP */
-        .floating-assistance {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 2000;
-        }
-
-        .floating-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #25D366;
-            color: white;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
-        }
-
-        .floating-tooltip {
-            position: absolute;
-            right: 70px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .floating-btn:hover .floating-tooltip {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* ===== SISTEMA DE CAPTURAS ===== */
-        .capture-section {
-            background: var(--light);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border-left: 4px solid var(--primary);
-        }
-
-        .capture-upload-area {
-            border: 2px dashed var(--primary);
-            border-radius: 10px;
-            padding: 2rem;
-            text-align: center;
-            margin: 1rem 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(0, 196, 255, 0.05);
-        }
-
-        .capture-upload-area:hover {
-            background: rgba(0, 196, 255, 0.1);
-        }
-
-        .code-notification-area {
-            background: var(--success);
-            color: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: center;
-            display: none;
-        }
-
-        .code-display {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(255,255,255,0.2);
-            border-radius: 8px;
-            letter-spacing: 2px;
-        }
-
-        /* ===== ESTILOS PARA MODAL DE DATOS PERSONALES ===== */
-        .user-data-input {
-            width: 100%;
-            padding: 1rem;
-            margin: 0.5rem 0;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .user-data-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
-        }
-
-        body.dark-mode .user-data-input {
-            background: #3d3d3d;
-            border-color: #555;
-            color: var(--text-dark);
-        }
-
-        .telegram-success {
-            background: #28a745;
-            color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            text-align: center;
-            display: none;
-        }
-
-        .telegram-success h4 {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        /* ===== BOTÓN DE TELEGRAM MEJORADO EN CAPTURE SECTION ===== */
-        .telegram-capture-btn {
-            background: #0088cc;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 25px;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 136, 204, 0.4);
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
-            font-size: 1rem;
-        }
-
-        .telegram-capture-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 136, 204, 0.6);
-            background: #0077b3;
-        }
-
-        .telegram-capture-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
         /* ===== MEJORAS DE RESPONSIVIDAD ADICIONALES ===== */
+        @media (max-width: 768px) {
+            /* Mejorar espaciado en móviles */
+            .main-container {
+                margin: 120px auto 20px;
+                padding: 0 0.5rem;
+            }
+            
+            /* Mejorar botones para touch */
+            .btn, .back-button, .theme-btn, .mobile-theme-btn {
+                min-height: 44px; /* Tamaño mínimo para touch */
+                padding: 12px 16px;
+            }
+            
+            .back-button {
+                min-height: 40px;
+                width: 40px;
+            }
+            
+            .theme-btn, .mobile-theme-btn {
+                min-height: 36px;
+                width: 36px;
+            }
+            
+            /* Mejorar tarjetas para móviles */
+            .course-card, .topic-card {
+                margin: 0.5rem 0;
+            }
+            
+            .course-image, .course-info {
+                height: auto;
+                min-height: 120px;
+            }
+            
+            .course-content, .topic-card {
+                padding: 1.25rem;
+            }
+            
+            /* Optimizar textos para móviles */
+            .page-title h1 {
+                font-size: 1.8rem;
+                line-height: 1.3;
+                margin-bottom: 0.75rem;
+            }
+            
+            .page-title p {
+                font-size: 0.95rem;
+                line-height: 1.4;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+                line-height: 1.3;
+            }
+            
+            .course-title, .topic-title {
+                font-size: 1.1rem;
+                line-height: 1.3;
+            }
+            
+            .course-description, .topic-description {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+            
+            /* Mejorar modales para móviles */
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+                max-height: 85vh;
+            }
+            
+            .modal-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .payment-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .qr-code {
+                width: 250px;
+                height: 250px;
+                margin: 0 auto;
+            }
+            
+            .pdf-preview-container {
+                height: 300px;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .benefit-card {
+                padding: 1rem 0.5rem;
+            }
+            
+            .benefit-card i {
+                font-size: 1.5rem;
+            }
+            
+            .drive-buttons, .meet-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .drive-button, .meet-button {
+                min-width: 100%;
+                text-align: center;
+            }
+            
+            .form-group {
+                flex-direction: column;
+            }
+        }
+
+        /* Mejorar para tablets */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .courses-grid, .topics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .main-container {
+                margin: 110px auto 30px;
+            }
+            
+            .page-title h1 {
+                font-size: 2.2rem;
+            }
+            
+            .modal-content {
+                margin: 2rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Optimizar para móviles muy pequeños */
+        @media (max-width: 360px) {
+            .main-container {
+                margin: 115px auto 10px;
+                padding: 0 0.25rem;
+            }
+            
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+            
+            .page-title p {
+                font-size: 0.85rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .course-image, .course-info {
+                height: auto;
+                min-height: 100px;
+            }
+            
+            .course-content, .topic-card {
+                padding: 1rem;
+            }
+            
+            .course-badge, .topic-badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            .mobile-nav-item {
+                font-size: 0.65rem;
+                padding: 0.4rem;
+            }
+            
+            .mobile-nav-item i {
+                font-size: 1rem;
+            }
+            
+            .qr-code {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Mejoras de accesibilidad y usabilidad */
+        @media (max-width: 768px) {
+            /* Asegurar que los elementos sean fácilmente clickeables */
+            .course-card, .topic-card {
+                min-height: 120px;
+            }
+            
+            .nav-item, .mobile-nav-item {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Mejorar contraste en modo oscuro para móviles */
+            body.dark-mode .course-card,
+            body.dark-mode .topic-card {
+                border: 1px solid #444;
+            }
+            
+            body.study-mode .course-card,
+            body.study-mode .topic-card {
+                border: 1px solid #d1ecf1;
+            }
+            
+            /* Mejorar visibilidad de textos en modales */
+            .modal-content {
+                font-size: 0.9rem;
+            }
+            
+            .modal-header h3 {
+                font-size: 1.3rem;
+            }
+            
+            /* Optimizar formularios para touch */
+            .login-input, .form-group input {
+                font-size: 16px; /* Evitar zoom en iOS */
+                padding: 12px;
+                min-height: 44px;
+            }
+        }
+
+        /* Optimizar footer para móviles */
+        @media (max-width: 768px) {
+            .footer {
+                padding: 1.5rem 0;
+                margin-top: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .footer-section {
+                min-width: 100%;
+            }
+            
+            .footer-bottom {
+                padding-top: 1.5rem;
+                margin-top: 1.5rem;
+            }
+        }
+
+        /* Mejorar curso-info para móviles */
+        @media (max-width: 768px) {
+            .course-info {
+                padding: 1.5rem;
+            }
+            
+            .course-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .course-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .course-icon {
+                font-size: 2rem;
+            }
+            
+            .course-details h3 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Mejorar topic-badge para móviles */
+        @media (max-width: 480px) {
+            .topic-badge {
+                position: static;
+                display: inline-block;
+                margin-bottom: 0.5rem;
+            }
+            
+            .topic-title {
+                margin-right: 0;
+            }
+        }
+
+        /* Optimizar login overlay para móviles */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .login-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Mejorar scroll en modales para móviles */
+        @media (max-width: 768px) {
+            .modal-content {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
         @media (max-width: 768px) {
             .header {
                 display: none;
@@ -1194,8 +1352,19 @@
                 padding: 0 1rem;
             }
 
+            .page-title {
+                margin-bottom: 1.5rem;
+                padding: 0;
+                margin-top: 20px;
+            }
+
             .page-title h1 {
                 font-size: 2rem;
+                line-height: 1.1;
+            }
+
+            .page-title p {
+                font-size: 1rem;
             }
 
             .section-title {
@@ -1204,6 +1373,11 @@
 
             .courses-grid, .topics-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .course-stats {
+                flex-direction: column;
+                gap: 0.5rem;
             }
             
             .payment-container {
@@ -1219,11 +1393,15 @@
                 height: 280px;
             }
             
+            .form-group {
+                flex-direction: column;
+            }
+            
             .pdf-preview-container {
                 height: 400px;
             }
             
-            .drive-buttons, .meet-buttons {
+            .drive-buttons {
                 flex-direction: column;
                 align-items: center;
             }
@@ -1234,17 +1412,6 @@
 
             .meet-button {
                 min-width: 100%;
-            }
-            
-            .floating-assistance {
-                bottom: 20px;
-                right: 20px;
-            }
-            
-            .floating-btn {
-                width: 55px;
-                height: 55px;
-                font-size: 1.3rem;
             }
         }
 
@@ -1257,8 +1424,16 @@
                 font-size: 1.8rem;
             }
 
+            .page-title p {
+                font-size: 0.9rem;
+            }
+
             .section-title {
                 font-size: 1.3rem;
+            }
+
+            .mobile-nav-item {
+                font-size: 0.7rem;
             }
 
             .qr-code {
@@ -1276,6 +1451,10 @@
                 font-size: 1.6rem;
             }
 
+            .page-title p {
+                font-size: 0.85rem;
+            }
+
             .section-title {
                 font-size: 1.2rem;
             }
@@ -1284,165 +1463,6 @@
                 width: 220px;
                 height: 220px;
             }
-        }
-
-        /* ===== ESTILOS FALTANTES PARA CONTENT-SECTION ===== */
-        .content-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .content-card {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-            border-top: 4px solid var(--primary);
-        }
-
-        body.dark-mode .content-card {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .content-card {
-            background: var(--card-study);
-        }
-
-        .content-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-        }
-
-        .content-card h3 {
-            margin-bottom: 1rem;
-            color: var(--dark);
-            font-size: 1.2rem;
-        }
-
-        body.dark-mode .content-card h3 {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .content-card h3 {
-            color: var(--text-study);
-        }
-
-        .content-card p {
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .learning-objectives {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
-
-        body.dark-mode .learning-objectives {
-            background: var(--card-dark);
-        }
-
-        body.study-mode .learning-objectives {
-            background: var(--card-study);
-        }
-
-        .learning-objectives h3 {
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-            text-align: center;
-        }
-
-        body.dark-mode .learning-objectives h3 {
-            color: var(--text-dark);
-        }
-
-        body.study-mode .learning-objectives h3 {
-            color: var(--text-study);
-        }
-
-        .learning-objectives ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .learning-objectives li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--light);
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        body.dark-mode .learning-objectives li {
-            border-bottom-color: #555;
-        }
-
-        body.study-mode .learning-objectives li {
-            border-bottom-color: #d1ecf1;
-        }
-
-        .learning-objectives li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        .learning-objectives li:last-child {
-            border-bottom: none;
-        }
-
-        /* ===== NUEVOS ESTILOS PARA NOTIFICACIONES EN TIEMPO REAL ===== */
-        @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(400px); opacity: 0; }
-        }
-
-        .notification-toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #00b09b, #96c93d);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 10000;
-            max-width: 400px;
-            animation: slideIn 0.5s ease;
-        }
-
-        .notification-toast.error {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-        }
-
-        .notification-toast.warning {
-            background: linear-gradient(135deg, #ff9800, #ff5722);
-        }
-
-        .global-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            z-index: 10000;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -1500,12 +1520,15 @@
                 </a>
             </nav>
             <div class="theme-controls">
-                <button class="theme-btn" id="themeToggle" onclick="toggleThemeMode()" title="Cambiar tema">
+                <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">
                     <i class="fas fa-sun" id="themeIcon"></i>
                     <div class="tooltip" id="themeTooltip">Modo Normal</div>
                 </button>
             </div>
             <div class="user-menu">
+                <button class="btn btn-primary" onclick="toggleThemeMode()">
+                    <i class="fas fa-moon"></i> Modo Normal
+                </button>
                 <div class="avatar" id="userAvatar" onclick="goToProfile()"></div>
             </div>
         </div>
@@ -1518,7 +1541,10 @@
                 Neo Study
             </div>
             <div class="mobile-controls">
-                <button class="mobile-theme-btn" id="mobileThemeToggle" onclick="toggleThemeMode()" title="Cambiar tema">
+                <button class="btn btn-primary" onclick="toggleThemeMode()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="mobile-theme-btn" id="mobileThemeToggle" onclick="toggleTheme()" title="Cambiar tema">
                     <i class="fas fa-sun" id="mobileThemeIcon"></i>
                 </button>
                 <div class="avatar" id="mobileUserAvatar" onclick="goToProfile()"></div>
@@ -1544,81 +1570,38 @@
         </div>
     </header>
 
-    <!-- Botón flotante de Asistencia WhatsApp -->
-    <div class="floating-assistance">
-        <button class="floating-btn" onclick="openWhatsAppSupport()">
-            <i class="fab fa-whatsapp"></i>
-            <div class="floating-tooltip">Asistencia NeoStudy</div>
-        </button>
-    </div>
-
     <div class="main-container">
         <div class="page-title">
-            <h1>Planteo de Ecuaciones</h1>
-            <p>Aprende a plantear y resolver ecuaciones matemáticas a partir de enunciados verbales</p>
+            <h1>Razonamiento Matemático</h1>
+            <p>Curso completo de preparación preuniversitaria</p>
         </div>
 
         <div class="courses-section">
             <div class="section-header">
-                <button class="back-button" onclick="goToRazonamientoMatematico()">
+                <button class="back-button" onclick="goToMatematica()">
                     <i class="fas fa-arrow-left"></i>
                 </button>
-                <h2 class="section-title">Contenido del Tema</h2>
+                <h2 class="section-title">Temas del Curso</h2>
             </div>
 
             <div class="course-info">
                 <div class="course-header">
                     <div class="course-icon">
-                        <i class="fas fa-calculator"></i>
+                        <i class="fas fa-brain"></i>
                     </div>
                     <div class="course-details">
-                        <h3>Planteo de Ecuaciones</h3>
-                        <p>Domina la habilidad de traducir problemas verbales a ecuaciones matemáticas</p>
+                        <h3>Razonamiento Matemático</h3>
+                        <p>Curso completo de preparación preuniversitaria</p>
                         <div class="course-stats">
-                            <span><i class="fas fa-clock"></i> 6 horas totales</span>
-                            <span><i class="fas fa-play-circle"></i> 8 lecciones</span>
+                            <span><i class="fas fa-clock"></i> 30 horas totales</span>
+                            <span><i class="fas fa-play-circle"></i> 24 lecciones</span>
                             <span><i class="fas fa-signal"></i> Nivel Intermedio</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="content-section">
-                <div class="content-card">
-                    <h3>📚 Material de Estudio</h3>
-                    <p>Accede al libro completo con teoría, ejemplos y ejercicios prácticos</p>
-                    <button class="btn btn-primary" onclick="openPreviewModal()">
-                        <i class="fas fa-book"></i> Ver Material
-                    </button>
-                </div>
-
-                <div class="content-card">
-                    <h3>🎥 Clases en Vivo</h3>
-                    <p>Participa en nuestras sesiones interactivas de 2 horas continuas</p>
-                    <button class="btn btn-success" onclick="showClassOptionsModal()">
-                        <i class="fas fa-video"></i> Unirse a Clases
-                    </button>
-                </div>
-
-                <div class="content-card">
-                    <h3>📝 Ejercicios Prácticos</h3>
-                    <p>Practica con más de 50 problemas resueltos paso a paso</p>
-                    <button class="btn btn-outline" onclick="openMaterialLink('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk')">
-                        <i class="fas fa-download"></i> Descargar Ejercicios
-                    </button>
-                </div>
-            </div>
-
-            <div class="learning-objectives">
-                <h3>🎯 Lo que aprenderás</h3>
-                <ul>
-                    <li>Identificar variables y constantes en problemas verbales</li>
-                    <li>Traducir enunciados a ecuaciones matemáticas</li>
-                    <li>Resolver ecuaciones lineales y cuadráticas</li>
-                    <li>Aplicar estrategias para problemas complejos</li>
-                    <li>Verificar soluciones en contexto real</li>
-                </ul>
-            </div>
+            <div class="topics-grid" id="topicsGrid"></div>
         </div>
     </div>
 
@@ -1631,7 +1614,7 @@
             <div class="footer-section">
                 <h3>Contacto</h3>
                 <p><i class="fas fa-envelope"></i> neostudy@gmail.com</p>
-                <p><i class="fab fa-whatsapp"></i> 51 973441252</p>
+                <p><i class="fas fa-phone"></i> 51 973441252</p>
             </div>
             <div class="footer-section">
                 <h3>Horario de Atención</h3>
@@ -1643,56 +1626,6 @@
             <p>&copy; 2024 Neo Study. Todos los derechos reservados.</p>
         </div>
     </footer>
-
-    <!-- MODAL DE DATOS PERSONALES MEJORADO - INTEGRADO EN EL MODAL DE PAGO -->
-    <div class="modal" id="userDataModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="userDataModalTitle">📋 Completa tus datos para NeoStudy</h3>
-                <button class="close-modal" onclick="closeUserDataModal()">&times;</button>
-            </div>
-            
-            <div class="unlocked-content">
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <i class="fab fa-telegram" style="font-size: 4rem; color: #0088cc; margin-bottom: 1rem;"></i>
-                    <h4 id="userDataModalSubtitle">Envío 100% Automático con NeoStudy</h4>
-                    <p>Necesitamos tus datos para asignarte tu código de acceso personalizado</p>
-                </div>
-                
-                <div style="margin-bottom: 2rem;">
-                    <div class="form-group" style="flex-direction: column;">
-                        <label for="userNameInput" style="text-align: left; margin-bottom: 0.5rem; font-weight: bold;">
-                            <i class="fas fa-user"></i> Nombre completo:
-                        </label>
-                        <input type="text" id="userNameInput" class="user-data-input" placeholder="Ej: Juan Pérez García" 
-                               style="width: 100%; margin-bottom: 1rem;">
-                        
-                        <label for="userPhoneInput" style="text-align: left; margin-bottom: 0.5rem; font-weight: bold;">
-                            <i class="fab fa-whatsapp"></i> Número de WhatsApp:
-                        </label>
-                        <input type="tel" id="userPhoneInput" class="user-data-input" placeholder="Ej: 51987654321" 
-                               style="width: 100%; margin-bottom: 1rem;">
-                    </div>
-                    
-                    <div style="background: #e8f4f8; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-                        <p><strong>💡 Información importante:</strong></p>
-                        <p>• Tus datos se enviarán automáticamente al administrador</p>
-                        <p>• Recibirás tu código de acceso en 5-15 minutos</p>
-                        <p>• El número debe ser real para recibir tu código por WhatsApp</p>
-                    </div>
-                </div>
-                
-                <div class="unlocked-actions">
-                    <button class="btn btn-primary btn-block" id="sendDataButton" onclick="sendUserData()" style="background: #0088cc;">
-                        <i class="fab fa-telegram"></i> Enviar a NeoStudy Automáticamente
-                    </button>
-                    <button class="btn btn-outline btn-block" onclick="closeUserDataModal()">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal de Vista Previa -->
     <div class="modal" id="previewModal">
@@ -1791,56 +1724,6 @@
                         <p><strong>Monto a pagar:</strong> S/ 6.00</p>
                         <p><strong>Concepto:</strong> Curso Planteo de Ecuaciones</p>
                     </div>
-                    
-                    <!-- SECCIÓN MEJORADA: ENVÍO DE CAPTURA -->
-                    <div class="capture-section">
-                        <h5>📸 Envíanos tu comprobante de pago</h5>
-                        <p>Después de realizar el pago, sube una captura para que podamos activar tu acceso:</p>
-                        
-                        <div class="capture-upload-area" onclick="openGallery()">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <h5>Haz clic para subir tu captura</h5>
-                            <p>Formatos: JPG, PNG, PDF (máx. 5MB)</p>
-                        </div>
-                        
-                        <input type="file" id="captureInput" accept="image/*,.pdf" capture="environment" style="display: none;" onchange="handleCaptureUpload(this.files)">
-                        
-                        <!-- Vista previa de la captura -->
-                        <div id="capturePreview" style="display: none; margin: 1rem 0; text-align: center;">
-                            <h5>📷 Vista previa de tu comprobante:</h5>
-                            <img id="previewImage" src="" alt="Vista previa del comprobante" style="max-width: 100%; max-height: 200px; border-radius: 10px; border: 2px solid var(--primary);">
-                            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Comprobante listo para enviar</p>
-                            
-                            <!-- BOTÓN DE TELEGRAM MEJORADO - COLOCADO DEBAJO DE LA FOTO -->
-                            <button class="telegram-capture-btn" id="telegramCaptureBtn" onclick="prepareSendToTelegram()">
-                                <i class="fab fa-telegram"></i>
-                                Enviar a NeoStudy Automáticamente
-                            </button>
-                        </div>
-
-                        <!-- Mensaje de éxito de Telegram -->
-                        <div class="telegram-success" id="telegramSuccess" style="display: none;">
-                            <i class="fab fa-telegram" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                            <h4>¡Comprobante Enviado Exitosamente!</h4>
-                            <p>Tu comprobante ha sido enviado automáticamente al administrador</p>
-                            <p>Recibirás tu código de acceso en 5-15 minutos</p>
-                        </div>
-                    </div>
-                    
-                    <!-- NOTIFICACIÓN DE CÓDIGO -->
-                    <div class="code-notification-area" id="codeNotification">
-                        <i class="fas fa-gift" style="font-size: 2rem;"></i>
-                        <h4>¡Pago Verificado Exitosamente!</h4>
-                        <p>Tu comprobante ha sido aprobado. Código asignado:</p>
-                        <div class="code-display" id="assignedCode">CARGANDO...</div>
-                        <p style="font-size: 0.9rem; margin: 1rem 0;">
-                            <i class="fas fa-info-circle"></i> 
-                            Este código es personal e intransferible
-                        </p>
-                        <button class="btn btn-success" onclick="useAssignedCode()">
-                            <i class="fas fa-key"></i> Activar Mi Acceso
-                        </button>
-                    </div>
                 </div>
                 
                 <div class="payment-steps">
@@ -1848,12 +1731,12 @@
                     <ol>
                         <li><strong>Realiza el pago</strong> por Yape (QR o número)</li>
                         <li><strong>Toma captura</strong> del comprobante de pago</li>
-                        <li><strong>Envía la captura</strong> usando el botón de Telegram debajo de la vista previa</li>
+                        <li><strong>Envía la captura</strong> por WhatsApp al: <strong>51 973441252</strong></li>
                         <li><strong>Recibirás</strong> tu código de acceso único por WhatsApp en 5-15 minutos</li>
                     </ol>
                     
                     <div class="contact-info">
-                        <p><i class="fab fa-whatsapp"></i> <strong>WhatsApp de Asistencia:</strong> 51 973441252</p>
+                        <p><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> 51 973441252</p>
                         <p><i class="fas fa-envelope"></i> <strong>Email:</strong> neostudy@gmail.com</p>
                         <p><i class="fas fa-clock"></i> <strong>Horario de atención:</strong> 8:00 AM - 8:00 PM</p>
                     </div>
@@ -1898,12 +1781,12 @@
                         <h5>Libro Completo</h5>
                         <p>PDF sin restricciones</p>
                     </div>
-                    <div class="benefit-card" onclick="showClassOptionsModal()">
+                    <div class="benefit-card" onclick="showMeetOptions()">
                         <i class="fas fa-video"></i>
                         <h5>Clases en Vivo</h5>
                         <p>2 horas continuas</p>
                     </div>
-                    <div class="benefit-card" onclick="openWhatsAppSupport()">
+                    <div class="benefit-card" onclick="openWhatsApp()">
                         <i class="fas fa-headset"></i>
                         <h5>Soporte</h5>
                         <p>Ayuda personalizada</p>
@@ -1925,10 +1808,10 @@
                     
                     <div class="meet-buttons">
                         <button class="meet-button" onclick="openMaterialLink('https://meet.google.com/hns-wxcb-qvk')">
-                            <i class="fas fa-video"></i> Primera Hora de Clase
+                            <i class="fas fa-video"></i> Google Meet - Primera Hora
                         </button>
                         <button class="meet-button secondary" onclick="openMaterialLink('https://meet.google.com/omq-bwem-jgg')">
-                            <i class="fas fa-video"></i> Segunda Hora de Clase
+                            <i class="fas fa-video"></i> Google Meet - Segunda Hora
                         </button>
                     </div>
                     
@@ -1949,404 +1832,26 @@
         </div>
     </div>
 
-    <!-- MODAL PARA CLASES EN VIVO -->
-    <div class="modal" id="classOptionsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🎥 Clases en Vivo - Planteo de Ecuaciones</h3>
-                <button class="close-modal" onclick="closeClassOptionsModal()">&times;</button>
-            </div>
-            
-            <div class="unlocked-content">
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <i class="fas fa-video" style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                    <h4>Selecciona tu clase en vivo</h4>
-                    <p>Tenemos 2 horas continuas de clase. Elige la sesión que prefieras:</p>
-                </div>
-                
-                <div class="meet-buttons">
-                    <button class="meet-button" onclick="openMaterialLink('https://meet.google.com/hns-wxcb-qvk')">
-                        <i class="fas fa-video"></i> Primera Hora de Clase
-                    </button>
-                    <button class="meet-button secondary" onclick="openMaterialLink('https://meet.google.com/omq-bwem-jgg')">
-                        <i class="fas fa-video"></i> Segunda Hora de Clase
-                    </button>
-                </div>
-                
-                <div style="margin-top: 2rem; padding: 1rem; background: var(--light); border-radius: 10px; text-align: center;">
-                    <p><strong>💡 Información importante:</strong></p>
-                    <p>• Las clases tienen una duración de 2 horas continuas</p>
-                    <p>• Puedes unirte a cualquiera de las dos sesiones</p>
-                    <p>• El contenido es el mismo en ambas horas</p>
-                </div>
-                
-                <div class="unlocked-actions" style="margin-top: 2rem;">
-                    <button class="btn btn-outline btn-block" onclick="closeClassOptionsModal()">
-                        <i class="fas fa-times"></i> Cerrar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // ===== VARIABLES GLOBALES =====
-        let currentCaptureFile = null;
-        let imageBase64 = null;
+        // ===== SISTEMA MEJORADO DE SINCRONIZACIÓN =====
+        const SCRIPT_URLS = [
+            'https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec',
+            'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://script.google.com/macros/s/AKfycbx7BL0jYif7kCc6U2xtGtSptEYtWaKLYeLgN9-8soNn2_Q59pyvlKiFQRxV3dfc2NpE/exec')
+        ];
 
-        // ===== CONFIGURACIÓN DE TELEGRAM =====
-        const TELEGRAM_CONFIG = {
-            botToken: '8039305706:AAEFpp68fkgdIAtlUK22LQATSA3ZTyrLYiI',
-            chatId: '8553985280',
-            apiUrl: 'https://api.telegram.org/bot'
-        };
+        let currentScriptIndex = 0;
 
-        // ===== FUNCIÓN PARA MOSTRAR MENSAJES =====
-        function mostrarMensaje(mensaje, tipo = 'info') {
-            let mensajeDiv = document.getElementById('globalMessage');
-            if (!mensajeDiv) {
-                mensajeDiv = document.createElement('div');
-                mensajeDiv.id = 'globalMessage';
-                mensajeDiv.className = 'global-message';
-                document.body.appendChild(mensajeDiv);
-            }
-            
-            const colores = {
-                'error': '#dc3545',
-                'success': '#28a745', 
-                'info': '#17a2b8',
-                'warning': '#ffc107'
-            };
-            
-            mensajeDiv.style.background = colores[tipo] || colores.info;
-            mensajeDiv.innerHTML = mensaje;
-            mensajeDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                mensajeDiv.style.display = 'none';
-            }, 5000);
+        function getScriptURL() {
+            return SCRIPT_URLS[currentScriptIndex];
         }
 
-        // ===== SISTEMA DE ENVÍO POR TELEGRAM =====
-        function prepareSendToTelegram() {
-            if (!currentCaptureFile) {
-                mostrarMensaje('❌ Primero selecciona una captura del comprobante', 'error');
-                return;
-            }
-            showUserDataModal();
+        function switchScriptURL() {
+            currentScriptIndex = (currentScriptIndex + 1) % SCRIPT_URLS.length;
+            console.log(`🔀 Cambiando a URL: ${currentScriptIndex + 1}`);
         }
 
-        function showUserDataModal() {
-            document.getElementById('userDataModal').style.display = 'flex';
-            
-            // Cargar datos guardados si existen
-            const savedData = getUserPaymentData();
-            if (savedData) {
-                document.getElementById('userNameInput').value = savedData.nombre || '';
-                document.getElementById('userPhoneInput').value = savedData.telefono || '';
-            }
-        }
-
-        function closeUserDataModal() {
-            document.getElementById('userDataModal').style.display = 'none';
-        }
-
-        function sendUserData() {
-            const nombre = document.getElementById('userNameInput').value.trim();
-            const telefono = document.getElementById('userPhoneInput').value.trim();
-            
-            if (!nombre) {
-                mostrarMensaje('❌ Por favor ingresa tu nombre completo', 'error');
-                return;
-            }
-            
-            if (!telefono) {
-                mostrarMensaje('❌ Por favor ingresa tu número de WhatsApp', 'error');
-                return;
-            }
-            
-            const telefonoLimpio = telefono.replace(/\D/g, '');
-            if (telefonoLimpio.length < 9) {
-                mostrarMensaje('❌ Por favor ingresa un número de WhatsApp válido', 'error');
-                return;
-            }
-            
-            // Guardar datos del usuario
-            const userData = {
-                nombre: nombre,
-                telefono: telefonoLimpio,
-                fechaRegistro: new Date().toISOString()
-            };
-            
-            localStorage.setItem('userPaymentData', JSON.stringify(userData));
-            closeUserDataModal();
-            
-            // Ejecutar el envío por Telegram
-            sendToTelegram(userData);
-        }
-
-        function getUserPaymentData() {
-            try {
-                return JSON.parse(localStorage.getItem('userPaymentData'));
-            } catch (error) {
-                return null;
-            }
-        }
-
-        // ===== SISTEMA DE CAPTURAS =====
-        function openGallery() {
-            document.getElementById('captureInput').click();
-        }
-
-        function handleCaptureUpload(files) {
-            if (files.length === 0) return;
-            
-            currentCaptureFile = files[0];
-            
-            if (currentCaptureFile.size > 5 * 1024 * 1024) {
-                mostrarMensaje('❌ El archivo es demasiado grande. Máximo 5MB permitido.', 'error');
-                currentCaptureFile = null;
-                return;
-            }
-            
-            if (currentCaptureFile.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('previewImage').src = e.target.result;
-                    document.getElementById('capturePreview').style.display = 'block';
-                    imageBase64 = e.target.result.split(',')[1];
-                    
-                    // Habilitar el botón de Telegram debajo de la foto
-                    document.getElementById('telegramCaptureBtn').disabled = false;
-                    
-                    mostrarMensaje('✅ Captura cargada correctamente. Usa el botón de Telegram para enviar.', 'success');
-                };
-                reader.readAsDataURL(currentCaptureFile);
-            } else {
-                document.getElementById('capturePreview').style.display = 'none';
-                imageBase64 = null;
-                mostrarMensaje('❌ Por favor selecciona una imagen (JPG, PNG)', 'error');
-            }
-        }
-
-        // ===== FUNCIÓN PRINCIPAL DE ENVÍO POR TELEGRAM =====
-        async function sendToTelegram(userData) {
-            try {
-                mostrarMensaje('🔄 Enviando comprobante automáticamente...', 'info');
-
-                const paymentID = 'pay_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                
-                const mensajeTelegram = `
-🚨 COMPROBANTE DE PAGO - ASIGNAR CÓDIGO INMEDIATO
-
-👤 USUARIO: ${userData.nombre}
-📞 WHATSAPP: ${userData.telefono}
-💰 MONTO: S/ 6.00
-🎓 CURSO: Planteo de Ecuaciones
-🆔 ID: ${paymentID}
-⏰ FECHA: ${new Date().toLocaleString()}
-
-⚡ ASIGNAR CÓDIGO INMEDIATAMENTE
-                `.trim();
-
-                const envioExitoso = await enviarMensajeTelegram(mensajeTelegram);
-                
-                if (envioExitoso) {
-                    document.getElementById('telegramSuccess').style.display = 'block';
-                    
-                    mostrarMensaje('✅ Comprobante enviado automáticamente al administrador', 'success');
-                    
-                    const pendingData = {
-                        paymentID: paymentID,
-                        userName: userData.nombre,
-                        userContact: userData.telefono,
-                        timestamp: new Date().toISOString(),
-                        status: 'waiting_code',
-                        metodo: 'telegram'
-                    };
-                    
-                    localStorage.setItem(`pending_${paymentID}`, JSON.stringify(pendingData));
-                    localStorage.setItem('lastPaymentAttempt', JSON.stringify(pendingData));
-                    
-                    mostrarCodigoTemporal(userData.telefono);
-                    iniciarVerificacionRapida(paymentID, userData.telefono);
-                    
-                } else {
-                    throw new Error('Error al enviar a Telegram');
-                }
-                
-            } catch (error) {
-                console.error("❌ Error:", error);
-                mostrarMensaje('❌ Error al enviar automáticamente. Intenta nuevamente.', 'error');
-            }
-        }
-
-        async function enviarMensajeTelegram(mensaje) {
-            try {
-                const urlMensaje = `${TELEGRAM_CONFIG.apiUrl}${TELEGRAM_CONFIG.botToken}/sendMessage`;
-                
-                const respuestaMensaje = await fetch(urlMensaje, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CONFIG.chatId,
-                        text: mensaje,
-                        parse_mode: 'HTML'
-                    })
-                });
-                
-                if (!respuestaMensaje.ok) {
-                    console.error('Error enviando mensaje a Telegram:', await respuestaMensaje.text());
-                    return false;
-                }
-                
-                if (currentCaptureFile) {
-                    const urlImagen = `${TELEGRAM_CONFIG.apiUrl}${TELEGRAM_CONFIG.botToken}/sendPhoto`;
-                    const formData = new FormData();
-                    formData.append('chat_id', TELEGRAM_CONFIG.chatId);
-                    formData.append('photo', currentCaptureFile);
-                    formData.append('caption', '📎 Comprobante de pago adjunto');
-                    
-                    const respuestaImagen = await fetch(urlImagen, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    if (!respuestaImagen.ok) {
-                        console.error('Error enviando imagen a Telegram:', await respuestaImagen.text());
-                        return false;
-                    }
-                }
-                
-                console.log('✅ Mensaje enviado exitosamente a Telegram');
-                return true;
-                
-            } catch (error) {
-                console.error('❌ Error en enviarMensajeTelegram:', error);
-                return false;
-            }
-        }
-
-        // ===== FUNCIÓN DE ASISTENCIA POR WHATSAPP =====
-        function openWhatsAppSupport() {
-            const phoneNumber = "51973441252";
-            const message = "Hola NeoStudy, necesito asistencia técnica con el curso de Planteo de Ecuaciones.";
-            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-        }
-
-        // ===== FUNCIONES DE VERIFICACIÓN =====
-        function mostrarCodigoTemporal(contacto) {
-            document.getElementById('codeNotification').style.display = 'block';
-            document.getElementById('assignedCode').textContent = 'ESPERANDO CÓDIGO...';
-            
-            mostrarMensaje('✅ Comprobante enviado. Espera tu código...', 'success');
-        }
-
-        function iniciarVerificacionRapida(paymentID, userContact) {
-            let attempts = 0;
-            const maxAttempts = 36;
-            
-            const checkInterval = setInterval(async () => {
-                attempts++;
-                
-                try {
-                    const codigoAsignado = await verificarCodigoAsignado(userContact);
-                    
-                    if (codigoAsignado) {
-                        clearInterval(checkInterval);
-                        mostrarCodigoReal(codigoAsignado.codigo);
-                        return;
-                    }
-                    
-                    actualizarEstadoVerificacion(attempts, maxAttempts);
-                    
-                    if (attempts >= maxAttempts) {
-                        clearInterval(checkInterval);
-                        mostrarMensaje('⏰ Tiempo agotado. Contacta al administrador.', 'warning');
-                    }
-                    
-                } catch (error) {
-                    console.log('Error en verificación:', error);
-                    actualizarEstadoVerificacion(attempts, maxAttempts, true);
-                }
-            }, 5000);
-        }
-
-        function actualizarEstadoVerificacion(attempts, maxAttempts, isError = false) {
-            const minutos = Math.floor(attempts / 12);
-            const segundos = (attempts % 12) * 5;
-            
-            const statusElement = document.getElementById('verificationStatus');
-            if (!statusElement) return;
-            
-            statusElement.innerHTML = `
-                <div style="text-align: center; padding: 1rem; background: ${isError ? '#f8d7da' : '#e8f4f8'}; border-radius: 10px;">
-                    <div style="color: ${isError ? '#dc3545' : 'blue'}; margin-bottom: 0.5rem;">
-                        <i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-sync-alt fa-spin'}"></i> 
-                        ${isError ? 'Error de conexión' : 'Buscando código asignado'}... 
-                        (${minutos}m ${segundos}s)
-                    </div>
-                    <small style="color: var(--secondary);">
-                        ⏱️ Tiempo restante: ${Math.floor((maxAttempts - attempts) / 12)}m ${((maxAttempts - attempts) % 12) * 5}s
-                    </small>
-                </div>
-            `;
-            statusElement.style.display = 'block';
-        }
-
-        function mostrarCodigoReal(codigo) {
-            document.getElementById('assignedCode').textContent = codigo;
-            document.getElementById('accessCode').value = codigo;
-            
-            mostrarMensaje('🎉 ¡Código asignado! Activa tu acceso.', 'success');
-            
-            document.getElementById('codeNotification').style.display = 'block';
-            
-            setTimeout(() => {
-                validateAccessCode();
-            }, 3000);
-        }
-
-        async function verificarCodigoAsignado(userContact) {
-            try {
-                const userCodeKey = `user_code_${userContact}`;
-                const codigoDirecto = localStorage.getItem(userCodeKey);
-                if (codigoDirecto) {
-                    localStorage.removeItem(userCodeKey);
-                    return {
-                        codigo: codigoDirecto,
-                        estado: 'asignado',
-                        fuente: 'busqueda_directa'
-                    };
-                }
-                
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const codigoAsignado = Object.keys(codigosMaestros).find(codigo => {
-                    const info = codigosMaestros[codigo];
-                    return info.contacto === userContact && info.estado === 'usado';
-                });
-                
-                if (codigoAsignado) {
-                    return {
-                        codigo: codigoAsignado,
-                        estado: 'asignado',
-                        fuente: 'local_storage'
-                    };
-                }
-                
-                return null;
-                
-            } catch (error) {
-                console.log('⚠️ Error verificando código asignado:', error);
-                return null;
-            }
-        }
-
-        // ===== FUNCIONES DE VALIDACIÓN DE CÓDIGO =====
-        function checkCodeRealTime(code) {
+        // ===== VERIFICAR CÓDIGO EN TIEMPO REAL =====
+        async function checkCodeRealTime(code) {
             const codeStatus = document.getElementById('codeStatus');
             const cleanedCode = code.trim().toUpperCase();
             
@@ -2356,95 +1861,440 @@
             }
             
             if (!/^[A-Z0-9]{4,10}$/.test(cleanedCode)) {
-                codeStatus.innerHTML = '<span style="color: orange;">⚠️ El código debe tener 4-10 caracteres (solo mayúsculas y números)</span>';
+                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Formato inválido (solo mayúsculas y números)</span>';
                 return;
             }
             
-            codeStatus.innerHTML = '<span style="color: blue;">🔍 Verificando código...</span>';
-            
-            setTimeout(() => {
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const infoCodigo = codigosMaestros[cleanedCode];
+            try {
+                codeStatus.innerHTML = '<span style="color: blue;">🔍 Verificando código...</span>';
                 
-                if (!infoCodigo) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
-                } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
-                } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
-                } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
-                } else if (infoCodigo.estado === 'activo' || infoCodigo.activo === true) {
-                    const precio = infoCodigo.precio || '6.00';
-                    const usuarioAsignado = infoCodigo.usuario;
+                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${cleanedCode}&timestamp=${Date.now()}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const estado = result.estado;
+                    const usado = result.usado;
+                    const activo = result.activo;
+                    const eliminado = result.eliminado;
+                    const accesoRevocado = result.accesoRevocado;
                     
-                    if (usuarioAsignado) {
-                        codeStatus.innerHTML = `<span style="color: orange;">⚠️ Código asignado a: ${usuarioAsignado}</span>`;
+                    if (estado === 'usado' || usado === true) {
+                        codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
+                    } else if (estado === 'bloqueado' || activo === false) {
+                        codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
+                    } else if (eliminado === true || accesoRevocado === true) {
+                        codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
+                    } else if (estado === 'activo' || activo === true) {
+                        const precio = result.precio || '6.00';
+                        const usuarioAsignado = result.usuario;
+                        
+                        if (usuarioAsignado) {
+                            codeStatus.innerHTML = `<span style="color: orange;">⚠️ Código asignado a: ${usuarioAsignado}</span>`;
+                        } else {
+                            codeStatus.innerHTML = `<span style="color: green;">✅ VÁLIDO - Precio: S/ ${precio}</span>`;
+                        }
                     } else {
-                        codeStatus.innerHTML = `<span style="color: green;">✅ VÁLIDO - Precio: S/ ${precio}</span>`;
+                        codeStatus.innerHTML = '<span style="color: green;">✅ Código válido</span>';
                     }
                 } else {
-                    codeStatus.innerHTML = '<span style="color: green;">✅ Código válido</span>';
+                    codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando localmente...</span>';
+                    setTimeout(() => verificarCodigoLocalMejorado(cleanedCode, codeStatus), 500);
                 }
-            }, 500);
+            } catch (error) {
+                console.log('⚠️ Error de conexión:', error);
+                codeStatus.innerHTML = '<span style="color: orange;">⚠️ Verificando localmente...</span>';
+                setTimeout(() => verificarCodigoLocalMejorado(cleanedCode, codeStatus), 500);
+            }
         }
 
-        function validateAccessCode() {
-            const code = document.getElementById('accessCode').value.trim().toUpperCase();
-            const codeStatus = document.getElementById('codeStatus');
+        // ===== VERIFICACIÓN LOCAL MEJORADA =====
+        function verificarCodigoLocalMejorado(codigo, codeStatus) {
+            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+            const infoCodigo = codigosMaestros[codigo];
             
-            if (!code) {
-                codeStatus.innerHTML = '<span style="color: red;">❌ Por favor ingresa tu código</span>';
-                return;
+            if (!infoCodigo) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
+            } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código ya utilizado</span>';
+            } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Código bloqueado</span>';
+            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
+                codeStatus.innerHTML = '<span style="color: red;">❌ Acceso revocado</span>';
+            } else if (infoCodigo.estado === 'activo' || infoCodigo.activo === true) {
+                const precio = infoCodigo.precio || '6.00';
+                const usuarioAsignado = infoCodigo.usuario;
+                
+                if (usuarioAsignado) {
+                    codeStatus.innerHTML = `<span style="color: orange;">⚠️ Código asignado a: ${usuarioAsignado}</span>`;
+                } else {
+                    codeStatus.innerHTML = `<span style="color: green;">✅ VÁLIDO - Precio: S/ ${precio}</span>`;
+                }
+            } else {
+                codeStatus.innerHTML = '<span style="color: green;">✅ Código válido</span>';
             }
+        }
 
-            if (!/^[A-Z0-9]{4,10}$/.test(code)) {
-                codeStatus.innerHTML = '<span style="color: red;">❌ Formato de código inválido</span>';
-                return;
+        // ===== FUNCIÓN DE VALIDACIÓN MEJORADA =====
+        async function validateAccessCode() {
+            try {
+                const codeInput = document.getElementById('accessCode');
+                const code = codeInput.value.trim().toUpperCase();
+                const codeStatus = document.getElementById('codeStatus');
+                
+                if (!code) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Por favor ingresa tu código</span>';
+                    return;
+                }
+
+                if (!/^[A-Z0-9]{4,10}$/.test(code)) {
+                    codeStatus.innerHTML = '<span style="color: red;">❌ Formato inválido (solo mayúsculas y números, 4-10 caracteres)</span>';
+                    return;
+                }
+
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                const userInfo = {
+                    nombre: userData.nombre || 'Estudiante',
+                    contacto: userData.contacto || 'No registrado'
+                };
+
+                codeStatus.innerHTML = '<span style="color: blue;">🔄 Activando código...</span>';
+
+                const response = await fetch(getScriptURL(), {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'validateCode',
+                        codigo: code,
+                        usuario: userInfo.nombre,
+                        contacto: userInfo.contacto,
+                        curso: 'Planteo de Ecuaciones'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    codeStatus.innerHTML = '<span style="color: green;">✅ ¡Código activado!</span>';
+                    await activarAccesoCompleto(code, userInfo.nombre);
+                    
+                } else {
+                    codeStatus.innerHTML = `<span style="color: red;">❌ ${result.message || 'Error al validar el código'}</span>`;
+                }
+                
+            } catch (error) {
+                console.error("Error en validateAccessCode:", error);
+                document.getElementById('codeStatus').innerHTML = '<span style="color: red;">❌ Error de conexión, intentando localmente...</span>';
+                setTimeout(validarCodigoLocalCompleto, 1000);
             }
+        }
 
+        // ===== SISTEMA MEJORADO DE VERIFICACIÓN DE ACCESO =====
+        async function verificarAccesoPersistente() {
+            try {
+                const userID = getUniversalUserID();
+                const userAccessKey = `cursoAcceso_${userID}`;
+                const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
+                
+                if (!userAccess) {
+                    return { acceso: false, razon: 'No tiene acceso activo' };
+                }
+
+                const expirationDate = new Date(userAccess.expira);
+                const today = new Date();
+                if (expirationDate < today) {
+                    localStorage.removeItem(userAccessKey);
+                    return { acceso: false, razon: 'Acceso expirado' };
+                }
+
+                try {
+                    const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${userAccess.codigo}&timestamp=${Date.now()}`);
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        
+                        if (result.status === 'success') {
+                            const estado = result.estado;
+                            const activo = result.activo;
+                            const eliminado = result.eliminado;
+                            const accesoRevocado = result.accesoRevocado;
+                            
+                            if (estado === 'bloqueado' || activo === false || eliminado === true || accesoRevocado === true) {
+                                localStorage.removeItem(userAccessKey);
+                                return { 
+                                    acceso: false, 
+                                    razon: 'Acceso revocado desde el panel de control',
+                                    revocado: true
+                                };
+                            }
+                            
+                            if (result.usuario && result.usuario !== userAccess.usuario) {
+                                localStorage.removeItem(userAccessKey);
+                                return { 
+                                    acceso: false, 
+                                    razon: 'Este código está asignado a otro usuario' 
+                                };
+                            }
+                        } else {
+                            return verificarAccesoLocal(userAccess);
+                        }
+                    }
+                } catch (error) {
+                    console.log('⚠️ No se pudo verificar con el panel, usando verificación local');
+                    return verificarAccesoLocal(userAccess);
+                }
+
+                return { acceso: true, datos: userAccess };
+
+            } catch (error) {
+                console.error("Error en verificarAccesoPersistente:", error);
+                return { acceso: false, razon: 'Error de verificación' };
+            }
+        }
+
+        // ===== VERIFICACIÓN LOCAL MEJORADA =====
+        function verificarAccesoLocal(userAccess) {
+            try {
+                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+                const infoCodigo = codigosMaestros[userAccess.codigo];
+                
+                if (!infoCodigo) {
+                    localStorage.removeItem(`cursoAcceso_${getUniversalUserID()}`);
+                    return { acceso: false, razon: 'Código no encontrado localmente' };
+                }
+                
+                const estaActivo = infoCodigo.activo !== false && infoCodigo.estado !== 'bloqueado';
+                const noEstaEliminado = infoCodigo.eliminado !== true;
+                const accesoNoRevocado = infoCodigo.accesoRevocado !== true;
+                const usuarioCoincide = !infoCodigo.usuario || infoCodigo.usuario === userAccess.usuario;
+                
+                if (!estaActivo || !noEstaEliminado || !accesoNoRevocado || !usuarioCoincide) {
+                    localStorage.removeItem(`cursoAcceso_${getUniversalUserID()}`);
+                    return { 
+                        acceso: false, 
+                        razon: 'Acceso revocado localmente',
+                        revocado: true
+                    };
+                }
+
+                return { acceso: true, datos: userAccess };
+            } catch (error) {
+                return { acceso: false, razon: 'Error en verificación local' };
+            }
+        }
+
+        // ===== MANEJAR ACCESO REVOCADO =====
+        function manejarAccesoRevocado() {
+            alert('🚫 ACCESO REVOCADO\n\nTu acceso al curso ha sido revocado por el administrador.\n\nPara continuar usando el material, necesitas adquirir un nuevo código de acceso.');
+            
+            closePreviewModal();
+            closePaymentModal();
+            closeMaterialBenefitsModal();
+            closeLogin();
+            
+            setTimeout(() => {
+                showPaymentModal();
+            }, 1000);
+        }
+
+        // ===== FUNCIÓN MEJORADA PARA ACTIVAR ACCESO COMPLETO =====
+        async function activarAccesoCompleto(code, userInfo) {
+            activateUserAccessWithCode(getUniversalUserID(), code, userInfo);
+            
+            await sincronizarCodigosLocales();
+            
+            alert(`🎉 ¡CURSO ACTIVADO COMPLETAMENTE!\n\n🔑 Código: ${code}\n👤 Usuario: ${userInfo}\n\nAhora tienes acceso a TODO el material del curso.`);
+            
+            closePaymentModal();
+            closeLogin();
+            
+            document.getElementById('materialBenefitsModal').style.display = 'flex';
+        }
+
+        // ===== VALIDACIÓN LOCAL MEJORADA =====
+        function validarCodigoLocalCompleto() {
+            const code = document.getElementById('accessCode').value.trim().toUpperCase();
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
             const userInfo = {
                 nombre: userData.nombre || 'Estudiante',
                 contacto: userData.contacto || 'No registrado'
             };
 
-            codeStatus.innerHTML = '<span style="color: blue;">🔄 Activando código...</span>';
-
-            setTimeout(() => {
-                const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
-                const infoCodigo = codigosMaestros[code];
-                
-                if (!infoCodigo) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Código no encontrado</span>';
-                } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Este código ya fue utilizado</span>';
-                } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Este código está bloqueado</span>';
-                } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
-                    codeStatus.innerHTML = '<span style="color: red;">❌ Este código fue revocado</span>';
-                } else {
-                    codeStatus.innerHTML = '<span style="color: green;">✅ ¡Código activado!</span>';
-                    activarAccesoCompleto(code, userInfo.nombre);
-                }
-            }, 1000);
-        }
-
-        function useAssignedCode() {
-            const code = document.getElementById('assignedCode').textContent;
-            document.getElementById('accessCode').value = code;
-            validateAccessCode();
-        }
-
-        // ===== FUNCIONES DE ACCESO AL MATERIAL =====
-        async function checkUserAccess() {
-            const userID = getUniversalUserID();
-            const userAccessKey = `cursoAcceso_${userID}`;
-            const userAccess = JSON.parse(localStorage.getItem(userAccessKey));
+            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+            const infoCodigo = codigosMaestros[code];
             
-            return userAccess && userAccess.activo === true;
+            if (!infoCodigo) {
+                alert('❌ Código no encontrado');
+            } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
+                alert('❌ Este código ya fue utilizado');
+            } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
+                alert('❌ Este código está bloqueado');
+            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
+                alert('❌ Este código fue revocado');
+            } else {
+                activarAccesoCompleto(code, userInfo.nombre);
+            }
         }
 
+        // ===== VALIDACIÓN DE USUARIO MEJORADA =====
+        async function validateUserAccess() {
+            try {
+                const code = document.getElementById('userCode').value.trim().toUpperCase();
+                const loginError = document.getElementById('loginError');
+
+                if (!code) {
+                    loginError.textContent = '❌ Por favor ingresa tu código de acceso';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                const userInfo = {
+                    nombre: userData.nombre || 'Estudiante',
+                    contacto: userData.contacto || 'No registrado'
+                };
+
+                const response = await fetch(`${getScriptURL()}?action=checkCode&codigo=${code}&timestamp=${Date.now()}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const estado = result.estado;
+                    const usado = result.usado;
+                    const activo = result.activo;
+                    const eliminado = result.eliminado;
+                    const accesoRevocado = result.accesoRevocado;
+                    
+                    if (estado === 'usado' || usado === true || estado === 'bloqueado' || activo === false || eliminado === true || accesoRevocado === true) {
+                        loginError.textContent = '❌ Código no disponible o ya utilizado';
+                        loginError.style.display = 'block';
+                        return;
+                    }
+
+                    if (result.usuario && result.usuario !== userInfo.nombre) {
+                        loginError.textContent = '❌ Este código está asignado a otro usuario.';
+                        loginError.style.display = 'block';
+                        return;
+                    }
+
+                    const activateResponse = await fetch(getScriptURL(), {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'validateCode',
+                            codigo: code,
+                            usuario: userInfo.nombre,
+                            contacto: userInfo.contacto,
+                            curso: 'Planteo de Ecuaciones'
+                        })
+                    });
+
+                    if (activateResponse.ok) {
+                        const activateResult = await activateResponse.json();
+                        if (activateResult.status === 'success') {
+                            await activarAccesoCompleto(code, userInfo.nombre);
+                        } else {
+                            throw new Error(activateResult.message);
+                        }
+                    } else {
+                        throw new Error('Error al activar código');
+                    }
+                    
+                } else {
+                    loginError.textContent = `❌ ${result.message || 'Código no válido'}`;
+                    loginError.style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error("Error en validateUserAccess:", error);
+                validarUsuarioLocalCompleto();
+            }
+        }
+
+        // ===== VALIDACIÓN LOCAL DE USUARIO MEJORADA =====
+        function validarUsuarioLocalCompleto() {
+            const code = document.getElementById('userCode').value.trim().toUpperCase();
+            const loginError = document.getElementById('loginError');
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+            const userInfo = {
+                nombre: userData.nombre || 'Estudiante',
+                contacto: userData.contacto || 'No registrado'
+            };
+
+            const codigosMaestros = JSON.parse(localStorage.getItem('neoStudyCodigosMaestros') || '{}');
+            const infoCodigo = codigosMaestros[code];
+            
+            if (!infoCodigo) {
+                loginError.textContent = '❌ Código no encontrado';
+                loginError.style.display = 'block';
+            } else if (infoCodigo.estado === 'usado' || infoCodigo.usado === true) {
+                loginError.textContent = '❌ Este código ya fue utilizado';
+                loginError.style.display = 'block';
+            } else if (infoCodigo.estado === 'bloqueado' || infoCodigo.activo === false) {
+                loginError.textContent = '❌ Este código está bloqueado';
+                loginError.style.display = 'block';
+            } else if (infoCodigo.eliminado === true || infoCodigo.accesoRevocado === true) {
+                loginError.textContent = '❌ Este código fue revocado';
+                loginError.style.display = 'block';
+            } else {
+                activarAccesoCompleto(code, userInfo.nombre);
+            }
+        }
+
+        // ===== SISTEMA DE SINCRONIZACIÓN MEJORADO =====
+        async function sincronizarCodigosLocales() {
+            try {
+                const response = await fetch(`${getScriptURL()}?action=getAllCodes&timestamp=${Date.now()}`);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        const codigosCompatibles = {};
+                        
+                        Object.entries(result.codigos).forEach(([codigo, info]) => {
+                            codigosCompatibles[codigo] = {
+                                estado: info.estado,
+                                usuario: info.usuario,
+                                precio: info.precio,
+                                fechaCreacion: info.fechaCreacion,
+                                fechaActivacion: info.fechaActivacion,
+                                contacto: info.contacto,
+                                curso: info.curso,
+                                eliminado: info.eliminado,
+                                accesoRevocado: info.accesoRevocado,
+                                
+                                usado: info.estado === 'usado',
+                                activo: info.estado !== 'bloqueado' && !info.eliminado && !info.accesoRevocado
+                            };
+                        });
+                        
+                        localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosCompatibles));
+                        console.log('✅ Códigos sincronizados y convertidos');
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ Error sincronizando códigos:', error);
+            }
+        }
+
+        // ===== VERIFICAR ACCESO MEJORADO - FUNCIÓN PRINCIPAL =====
+        async function checkUserAccess() {
+            const resultado = await verificarAccesoPersistente();
+            return resultado.acceso;
+        }
+
+        // ===== ACTIVAR ACCESO MEJORADO =====
         function activateUserAccessWithCode(userID, code, userInfo) {
             closePaymentModal();
             closeLogin();
@@ -2465,19 +2315,97 @@
             console.log(`✅ Acceso activado para usuario: ${userInfo} con código: ${code}`);
         }
 
-        async function activarAccesoCompleto(code, userInfo) {
-            const userID = getUniversalUserID();
-            activateUserAccessWithCode(userID, code, userInfo);
-            
-            mostrarMensaje('🎉 ¡CURSO ACTIVADO COMPLETAMENTE!', 'success');
-            
-            closePaymentModal();
-            closeLogin();
-            
+        // ===== SISTEMA DE IDENTIFICACIÓN =====
+        function getUniversalUserID() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+                
+                if (userData.contacto) {
+                    return userData.contacto.toLowerCase().trim();
+                }
+                
+                if (userData.nombre) {
+                    const nombreLimpio = userData.nombre.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 20);
+                    return 'name_' + nombreLimpio;
+                }
+                
+                let anonID = localStorage.getItem('neoStudyAnonymousID');
+                if (!anonID) {
+                    anonID = 'user_' + Math.random().toString(36).substring(2, 11);
+                    localStorage.setItem('neoStudyAnonymousID', anonID);
+                }
+                return anonID;
+                
+            } catch (error) {
+                console.error("Error en getUniversalUserID:", error);
+                return 'emergency_' + Math.random().toString(36).substring(2, 9);
+            }
+        }
+
+        // ===== FUNCIONES DE ACCESO AL MATERIAL MEJORADAS =====
+        async function handleDriveAccess() {
+            const acceso = await checkUserAccess();
+            if (!acceso) {
+                alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso.');
+                showSecureLogin();
+                return;
+            }
+            window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
+        }
+
+        async function handleDownloadAccess() {
+            const acceso = await checkUserAccess();
+            if (!acceso) {
+                alert('🔒 Para descargar el PDF, primero debes desbloquear el curso.');
+                showSecureLogin();
+                return;
+            }
+            window.open('https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl', '_blank');
+        }
+
+        async function showMaterialBenefits() {
+            const acceso = await checkUserAccess();
+            if (!acceso) {
+                showSecureLogin();
+                return;
+            }
+            closePreviewModal();
             document.getElementById('materialBenefitsModal').style.display = 'flex';
         }
 
-        // ===== FUNCIONES DE INTERFAZ =====
+        async function openMaterialLink(url) {
+            const acceso = await checkUserAccess();
+            if (!acceso) {
+                alert('🔒 Acceso denegado. Primero debes desbloquear el curso con un código válido.');
+                showSecureLogin();
+                return;
+            }
+            window.open(url, '_blank');
+        }
+
+        async function showMeetOptions() {
+            const acceso = await checkUserAccess();
+            if (!acceso) {
+                alert('🔒 Para acceder a las clases en vivo, primero debes desbloquear el curso.');
+                showSecureLogin();
+                return;
+            }
+            
+            const mensaje = `🎥 SELECCIONA TU CLASE EN VIVO:\n\n1️⃣ Primera Hora: https://meet.google.com/hns-wxcb-qvk\n2️⃣ Segunda Hora: https://meet.google.com/omq-bwem-jgg\n\n💡 Tienes 2 enlaces para las 2 horas continuas de clase.`;
+            alert(mensaje);
+        }
+
+        async function openWhatsApp() {
+            const acceso = await checkUserAccess();
+            if (!acceso) {
+                alert('🔒 Para contactar soporte, primero necesitas tener el curso activo.');
+                showSecureLogin();
+                return;
+            }
+            window.open('https://wa.me/51973441252', '_blank');
+        }
+
+        // ===== FUNCIONES DE INTERFAZ MEJORADAS =====
         async function openPreviewModal() {
             document.getElementById('previewModal').style.display = 'flex';
             
@@ -2533,29 +2461,6 @@
             document.getElementById('previewModal').style.display = 'none';
         }
 
-        function showPaymentModal() {
-            closePreviewModal();
-            document.getElementById('paymentModal').style.display = 'flex';
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-            document.getElementById('accessCode').value = '';
-            document.getElementById('codeStatus').innerHTML = '';
-        }
-
-        function closeMaterialBenefitsModal() {
-            document.getElementById('materialBenefitsModal').style.display = 'none';
-        }
-
-        function showClassOptionsModal() {
-            document.getElementById('classOptionsModal').style.display = 'flex';
-        }
-
-        function closeClassOptionsModal() {
-            document.getElementById('classOptionsModal').style.display = 'none';
-        }
-
         function showSecureLogin() {
             try {
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
@@ -2579,70 +2484,32 @@
             showPaymentModal();
         }
 
-        async function handleDriveAccess() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Para acceder a este contenido, primero debes desbloquear el curso.');
-                showSecureLogin();
-                return;
-            }
-            window.open('https://drive.google.com/file/d/1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl/view?usp=drivesdk', '_blank');
-        }
-
-        async function handleDownloadAccess() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Para descargar el PDF, primero debes desbloquear el curso.');
-                showSecureLogin();
-                return;
-            }
-            window.open('https://drive.google.com/uc?export=download&id=1ySq93TmOCrIAfHWcXyJfhDwiP9UZ3cvl', '_blank');
-        }
-
-        async function showMaterialBenefits() {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                showSecureLogin();
-                return;
-            }
+        function showPaymentModal() {
             closePreviewModal();
-            document.getElementById('materialBenefitsModal').style.display = 'flex';
+            document.getElementById('paymentModal').style.display = 'flex';
         }
 
-        async function openMaterialLink(url) {
-            const acceso = await checkUserAccess();
-            if (!acceso) {
-                alert('🔒 Acceso denegado. Primero debes desbloquear el curso con un código válido.');
-                showSecureLogin();
-                return;
-            }
-            window.open(url, '_blank');
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('accessCode').value = '';
+            document.getElementById('codeStatus').innerHTML = '';
         }
 
-        // ===== SISTEMA DE IDENTIFICACIÓN =====
-        function getUniversalUserID() {
-            try {
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
+        function closeMaterialBenefitsModal() {
+            document.getElementById('materialBenefitsModal').style.display = 'none';
+        }
+
+        // ===== VERIFICACIÓN AUTOMÁTICA AL CARGAR LA PÁGINA =====
+        async function verificarAccesoAlCargar() {
+            const resultado = await verificarAccesoPersistente();
+            if (resultado.acceso) {
+                console.log('✅ Usuario tiene acceso activo al curso');
+            } else {
+                console.log('❌ Usuario no tiene acceso:', resultado.razon);
                 
-                if (userData.contacto) {
-                    return userData.contacto.toLowerCase().trim();
+                if (resultado.revocado) {
+                    manejarAccesoRevocado();
                 }
-                
-                if (userData.nombre) {
-                    const nombreLimpio = userData.nombre.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 20);
-                    return 'name_' + nombreLimpio;
-                }
-                
-                let anonID = localStorage.getItem('neoStudyAnonymousID');
-                if (!anonID) {
-                    anonID = 'user_' + Math.random().toString(36).substring(2, 11);
-                    localStorage.setItem('neoStudyAnonymousID', anonID);
-                }
-                return anonID;
-                
-            } catch (error) {
-                console.error("Error en getUniversalUserID:", error);
-                return 'emergency_' + Math.random().toString(36).substring(2, 9);
             }
         }
 
@@ -2716,18 +2583,94 @@
             window.location.href = 'modulo3_perfil.html';
         }
 
-        function goToRazonamientoMatematico() {
-            window.location.href = 'modulo4_razmatematico.html';
+        // ===== FUNCIÓN CORREGIDA PARA VOLVER A MATEMÁTICA =====
+        function goToMatematica() {
+            window.location.href = 'modulo4_matematica.html';
         }
 
-        // ===== INICIALIZACIÓN =====
-        document.addEventListener('DOMContentLoaded', function() {
+        function goToPlanteoEcuaciones() {
+            window.location.href = 'modulo4_planteoecuaciones.html';
+        }
+
+        const topics = [
+            {
+                id: 1,
+                title: "Planteo de Ecuaciones",
+                description: "Aprende a plantear y resolver ecuaciones matemáticas a partir de enunciados verbales.",
+                duration: "6 horas",
+                lessons: 8,
+                available: true
+            },
+            {
+                id: 2,
+                title: "Problemas de Edades",
+                description: "Domina la resolución de problemas relacionados con edades de personas.",
+                duration: "4 horas",
+                lessons: 5,
+                available: false
+            },
+            {
+                id: 3,
+                title: "Problemas de Móviles",
+                description: "Resuelve problemas de velocidad, tiempo y distancia de manera eficiente.",
+                duration: "5 horas",
+                lessons: 6,
+                available: false
+            },
+            {
+                id: 4,
+                title: "Razonamiento Lógico",
+                description: "Desarrolla tu pensamiento crítico y habilidades de deducción.",
+                duration: "4 horas",
+                lessons: 4,
+                available: false
+            }
+        ];
+
+        function renderTopics() {
+            const topicsGrid = document.getElementById('topicsGrid');
+            
+            topicsGrid.innerHTML = topics.map(topic => `
+                <div class="topic-card" onclick="${topic.available ? `openTopic(${topic.id})` : 'showComingSoon()'}">
+                    ${topic.available ? 
+                        '<div class="topic-badge">DISPONIBLE</div>' : 
+                        '<div class="topic-badge proceso">PRÓXIMAMENTE</div>'
+                    }
+                    <h3 class="topic-title">${topic.title}</h3>
+                    <p class="topic-description">${topic.description}</p>
+                    <div class="topic-meta">
+                        <span><i class="fas fa-clock"></i> ${topic.duration}</span>
+                        <span><i class="fas fa-play-circle"></i> ${topic.lessons} lecciones</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openTopic(topicId) {
+            if (topicId === 1) {
+                goToPlanteoEcuaciones();
+            } else {
+                showComingSoon();
+            }
+        }
+
+        function showComingSoon() {
+            alert('⏳ ¡Próximamente! Estamos trabajando en este contenido.');
+        }
+
+        // ===== INICIALIZACIÓN MEJORADA =====
+        document.addEventListener('DOMContentLoaded', async function() {
             loadUserData();
             
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setTheme(savedTheme);
+
+            renderTopics();
             
-            // Inicializar códigos maestros si no existen
+            await sincronizarCodigosLocales();
+            
+            await verificarAccesoAlCargar();
+            
             if (!localStorage.getItem('neoStudyCodigosMaestros')) {
                 const codigosIniciales = {
                     "MATH7X9": { 
@@ -2740,19 +2683,17 @@
                         curso: "Planteo de Ecuaciones",
                         eliminado: false,
                         accesoRevocado: false,
+                        
                         usado: false,
                         activo: true
                     }
                 };
                 localStorage.setItem('neoStudyCodigosMaestros', JSON.stringify(codigosIniciales));
             }
-            
-            // Deshabilitar el botón de Telegram inicialmente
-            document.getElementById('telegramCaptureBtn').disabled = true;
         });
 
         window.onclick = function(event) {
-            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay', 'classOptionsModal', 'userDataModal'];
+            const modals = ['previewModal', 'paymentModal', 'materialBenefitsModal', 'loginOverlay'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
@@ -2760,14 +2701,175 @@
                     if (modalId === 'paymentModal') closePaymentModal();
                     if (modalId === 'materialBenefitsModal') closeMaterialBenefitsModal();
                     if (modalId === 'loginOverlay') closeLogin();
-                    if (modalId === 'classOptionsModal') closeClassOptionsModal();
-                    if (modalId === 'userDataModal') closeUserDataModal();
                 }
             });
         };
     </script>
-    
+
     <!-- Incluir el sistema de temas mejorado -->
-    <script src="theme-system.js"></script>
+    <script>
+        // theme-system.js - Sistema unificado de temas para NeoStudy
+
+        let currentMode = 'normal';
+
+        function toggleThemeMode() {
+            if (currentMode === 'normal') {
+                setThemeMode('oscuro');
+            } else if (currentMode === 'oscuro') {
+                setThemeMode('estudio');
+            } else {
+                setThemeMode('normal');
+            }
+        }
+
+        function setThemeMode(mode) {
+            document.body.classList.remove('study-mode', 'dark-mode');
+            
+            if (mode === 'estudio') {
+                document.body.classList.add('study-mode');
+            } else if (mode === 'oscuro') {
+                document.body.classList.add('dark-mode');
+            }
+            
+            currentMode = mode;
+            
+            // Actualizar todos los botones de tema en la página
+            const themeButtons = document.querySelectorAll('.btn-primary');
+            const icons = {
+                'normal': 'fas fa-sun',
+                'oscuro': 'fas fa-moon', 
+                'estudio': 'fas fa-graduation-cap'
+            };
+            const texts = {
+                'normal': 'Modo Normal',
+                'oscuro': 'Modo Oscuro',
+                'estudio': 'Modo Estudio'
+            };
+            
+            themeButtons.forEach(btn => {
+                if (btn.innerHTML.includes('fa-moon') || btn.innerHTML.includes('fa-sun') || btn.innerHTML.includes('fa-graduation-cap')) {
+                    btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
+                }
+            });
+            
+            showNotification(`${texts[mode]} activado`, 'info');
+            localStorage.setItem('neoStudyTheme', mode);
+        }
+
+        function showNotification(message, type = 'info') {
+            // Eliminar notificación existente si hay una
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Crear nueva notificación
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = 
+                type === 'success' ? '#28a745' :
+                type === 'warning' ? '#ffc107' :
+                type === 'danger' ? '#dc3545' : '#17a2b8';
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Estilos para la notificación
+            notification.style.position = 'fixed';
+            notification.style.top = '100px';
+            notification.style.right = '20px';
+            notification.style.background = notification.style.background;
+            notification.style.color = 'white';
+            notification.style.padding = '1rem 1.5rem';
+            notification.style.borderRadius = '10px';
+            notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+            notification.style.zIndex = '10000';
+            notification.style.animation = 'fadeIn 0.3s ease';
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Aplicar estilos CSS necesarios para los modos
+        function injectThemeStyles() {
+            if (!document.querySelector('#theme-styles')) {
+                const style = document.createElement('style');
+                style.id = 'theme-styles';
+                style.textContent = `
+                    .study-mode {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                    }
+                    .study-mode .header,
+                    .study-mode .desktop-header,
+                    .study-mode .mobile-header {
+                        background: rgba(0,0,0,0.2);
+                    }
+                    .study-mode .sidebar,
+                    .study-mode .create-post,
+                    .study-mode .post,
+                    .study-mode .live-classes,
+                    .study-mode .card {
+                        background: rgba(255,255,255,0.1);
+                        backdrop-filter: blur(10px);
+                        color: white;
+                        border: 1px solid rgba(255,255,255,0.2);
+                    }
+                    .study-mode .post-input,
+                    .study-mode input,
+                    .study-mode textarea {
+                        background: rgba(255,255,255,0.1);
+                        color: white;
+                        border-color: rgba(255,255,255,0.3);
+                    }
+                    .study-mode .post-input::placeholder,
+                    .study-mode input::placeholder {
+                        color: rgba(255,255,255,0.7);
+                    }
+                    .dark-mode {
+                        background: #1a1a1a;
+                        color: #f0f0f0;
+                    }
+                    .dark-mode .header,
+                    .dark-mode .desktop-header,
+                    .dark-mode .mobile-header {
+                        background: linear-gradient(135deg, #2c3e50, #34495e);
+                    }
+                    .dark-mode .sidebar,
+                    .dark-mode .create-post,
+                    .dark-mode .post,
+                    .dark-mode .live-classes,
+                    .dark-mode .card {
+                        background: #2d2d2d;
+                        color: #f0f0f0;
+                        border: 1px solid #3d3d3d;
+                    }
+                    .dark-mode .post-input,
+                    .dark-mode input,
+                    .dark-mode textarea {
+                        background: #3d3d3d;
+                        color: #f0f0f0;
+                        border-color: #444;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Inicializar tema al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            injectThemeStyles();
+            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            setThemeMode(savedTheme);
+        });
+    </script>
 </body>
-                            </html>
+    </html>
