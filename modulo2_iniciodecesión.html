@@ -34,6 +34,7 @@
             color: var(--dark);
             overflow-x: hidden;
             line-height: 1.5;
+            transition: all 0.3s ease;
         }
 
         /* ===== HEADER PARA ESCRITORIO ===== */
@@ -302,10 +303,28 @@
             border-radius: 10px;
             text-align: center;
             transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .stat-card:hover {
             transform: translateY(-2px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
         }
 
         .stat-number {
@@ -327,6 +346,8 @@
             padding: 0.8rem 0;
             border-bottom: 1px solid var(--light);
             transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .goal-item:hover {
@@ -345,6 +366,11 @@
             justify-content: center;
             color: var(--white);
             flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .goal-item:hover .goal-icon {
+            transform: scale(1.1);
         }
 
         .goal-info {
@@ -362,6 +388,7 @@
             background: var(--light);
             border-radius: 3px;
             overflow: hidden;
+            position: relative;
         }
 
         .goal-progress-bar {
@@ -369,6 +396,23 @@
             background: var(--primary);
             border-radius: 3px;
             transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .goal-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         /* ===== FEED PRINCIPAL ===== */
@@ -498,6 +542,8 @@
             font-weight: 500;
             width: 100%;
             max-width: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .post-action:hover {
@@ -508,6 +554,11 @@
 
         .post-action i {
             font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .post-action:hover i {
+            transform: scale(1.1);
         }
 
         /* ===== PUBLICACIONES MEJORADAS - MÁS ORDENADAS Y VISUALES ===== */
@@ -627,6 +678,8 @@
             border-radius: 10px;
             text-align: center;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .achievement-card:hover {
@@ -637,6 +690,11 @@
         .achievement-icon {
             font-size: 1.8rem;
             margin-bottom: 0.4rem;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-card:hover .achievement-icon {
+            transform: scale(1.1);
         }
 
         .achievement-title {
@@ -697,6 +755,27 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
         }
 
         .btn-primary {
@@ -984,6 +1063,11 @@
             border-radius: 10px;
             text-align: center;
             border-left: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-progress-card:hover {
+            transform: translateY(-2px);
         }
 
         .mobile-goal-item {
@@ -992,6 +1076,11 @@
             border-radius: 10px;
             margin-bottom: 0.8rem;
             border-left: 4px solid var(--success);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-goal-item:hover {
+            transform: translateX(5px);
         }
 
         .mobile-achievement-item {
@@ -1002,6 +1091,11 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-achievement-item:hover {
+            transform: translateY(-2px);
         }
 
         .mobile-achievement-icon {
@@ -1009,6 +1103,11 @@
             width: 50px;
             text-align: center;
             flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-achievement-item:hover .mobile-achievement-icon {
+            transform: scale(1.1);
         }
 
         /* ===== MODO ESTUDIO - MEJOR CONTRASTE ===== */
