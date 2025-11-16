@@ -2125,8 +2125,89 @@
             }
         }
 
-        // ===== SISTEMA MEJORADO DE GALERÍA =====
-        function loadGallery() {
+        // ===== SISTEMA MEJORADO DE GALERÍA CON FIREBASE =====
+        async function loadGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = '';
+
+            try {
+                const user = auth.currentUser;
+                if (!user) return;
+
+                // CARGAR HISTORIAL DE FOTOS DESDE FIREBASE
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+                
+                // OBTENER FOTOS DESDE MÚLTIPLES FUENTES
+                let profilePhotos = [];
+                let coverPhotos = [];
+                
+                // 1. Buscar en Firestore
+                if (userData.perfil) {
+                    if (userData.perfil.fotoPerfil && userData.perfil.fotoPerfil.startsWith('data:image')) {
+                        profilePhotos = [userData.perfil.fotoPerfil];
+                    }
+                    if (userData.perfil.portada && userData.perfil.portada.url) {
+                        coverPhotos = [userData.perfil.portada.url];
+                    }
+                }
+                
+                // 2. Buscar en localStorage como respaldo
+                const localPhotosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
+                    profile: [],
+                    cover: []
+                };
+                
+                profilePhotos = [...new Set([...profilePhotos, ...localPhotosHistory.profile])];
+                coverPhotos = [...new Set([...coverPhotos, ...localPhotosHistory.cover])];
+
+                let photosToShow = [];
+
+                if (currentGalleryTab === 'all') {
+                    photosToShow = [
+                        ...profilePhotos.map(photo => ({ photo, type: 'Perfil' })),
+                        ...coverPhotos.map(photo => ({ photo, type: 'Portada' }))
+                    ];
+                } else if (currentGalleryTab === 'profile') {
+                    photosToShow = profilePhotos.map(photo => ({ photo, type: 'Perfil' }));
+                } else if (currentGalleryTab === 'cover') {
+                    photosToShow = coverPhotos.map(photo => ({ photo, type: 'Portada' }));
+                }
+
+                // MOSTRAR FOTOS EN LA GALERÍA
+                photosToShow.forEach((item, index) => {
+                    const photoItem = document.createElement('div');
+                    photoItem.className = 'gallery-item';
+                    photoItem.innerHTML = `
+                        <img src="${item.photo}" alt="${item.type} ${index + 1}" 
+                             onerror="this.style.display='none'">
+                        <div class="photo-label">${item.type}</div>
+                    `;
+                    photoItem.addEventListener('click', () => openGalleryModal(item.type, index));
+                    galleryGrid.appendChild(photoItem);
+                });
+
+                document.getElementById('photoCount').textContent = photosToShow.length;
+
+                if (photosToShow.length === 0) {
+                    galleryGrid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--secondary);">
+                            <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <p>No hay fotos en tu galería</p>
+                            <p style="font-size: 0.8rem; margin-top: 0.5rem;">Cambia tu foto de perfil o portada para agregar fotos</p>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('❌ Error cargando galería:', error);
+                // Fallback a localStorage si hay error
+                loadGalleryFallback();
+            }
+        }
+
+        // Función de respaldo para la galería
+        function loadGalleryFallback() {
             const galleryGrid = document.getElementById('galleryGrid');
             galleryGrid.innerHTML = '';
 
@@ -2155,16 +2236,6 @@
             });
 
             document.getElementById('photoCount').textContent = photosToShow.length;
-
-            if (photosToShow.length === 0) {
-                galleryGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--secondary);">
-                        <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                        <p>No hay fotos en tu galería</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Cambia tu foto de perfil o portada para agregar fotos</p>
-                    </div>
-                `;
-            }
         }
 
         function changeGalleryTab(tab) {
@@ -2272,22 +2343,96 @@
             }
         }
 
-        // ===== VISUALIZADOR DE GALERÍA =====
-        function viewProfilePhotos() {
+        // ===== VISUALIZADOR DE GALERÍA MEJORADO =====
+        async function viewProfilePhotos() {
             currentGalleryType = 'profile';
-            openGalleryModal('profile', 0);
+            
+            try {
+                const user = auth.currentUser;
+                if (!user) return;
+
+                // CARGAR FOTOS DESDE FIREBASE
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+                
+                let profilePhotos = [];
+                
+                // Buscar foto actual en Firestore
+                if (userData.perfil && userData.perfil.fotoPerfil && userData.perfil.fotoPerfil.startsWith('data:image')) {
+                    profilePhotos = [userData.perfil.fotoPerfil];
+                }
+                
+                // Combinar con localStorage
+                const localPhotosHistory = JSON.parse(localStorage.getItem('photosHistory')) || { profile: [] };
+                profilePhotos = [...new Set([...profilePhotos, ...localPhotosHistory.profile])];
+                
+                if (profilePhotos.length === 0) {
+                    alert('No tienes fotos de perfil aún.');
+                    return;
+                }
+                
+                openGalleryModal('profile', 0, profilePhotos);
+                
+            } catch (error) {
+                console.error('Error cargando fotos de perfil:', error);
+                // Fallback a localStorage
+                if (profilePhotosHistory.length === 0) {
+                    alert('No tienes fotos de perfil aún.');
+                    return;
+                }
+                openGalleryModal('profile', 0, profilePhotosHistory);
+            }
+            
             document.getElementById('avatarDropdown').classList.remove('show');
         }
 
-        function viewCoverPhotos() {
+        async function viewCoverPhotos() {
             currentGalleryType = 'cover';
-            openGalleryModal('cover', 0);
+            
+            try {
+                const user = auth.currentUser;
+                if (!user) return;
+
+                // CARGAR FOTOS DESDE FIREBASE
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+                
+                let coverPhotos = [];
+                
+                // Buscar portada actual en Firestore
+                if (userData.perfil && userData.perfil.portada && userData.perfil.portada.url) {
+                    coverPhotos = [userData.perfil.portada.url];
+                }
+                
+                // Combinar con localStorage
+                const localPhotosHistory = JSON.parse(localStorage.getItem('photosHistory')) || { cover: [] };
+                coverPhotos = [...new Set([...coverPhotos, ...localPhotosHistory.cover])];
+                
+                if (coverPhotos.length === 0) {
+                    alert('No tienes fotos de portada aún.');
+                    return;
+                }
+                
+                openGalleryModal('cover', 0, coverPhotos);
+                
+            } catch (error) {
+                console.error('Error cargando fotos de portada:', error);
+                // Fallback a localStorage
+                if (coverPhotosHistory.length === 0) {
+                    alert('No tienes fotos de portada aún.');
+                    return;
+                }
+                openGalleryModal('cover', 0, coverPhotosHistory);
+            }
+            
             document.getElementById('coverOptions').classList.remove('show');
         }
 
-        function openGalleryModal(type, index) {
+        function openGalleryModal(type, index, customPhotos = null) {
             currentGalleryType = type;
-            const photos = type === 'profile' ? profilePhotosHistory : coverPhotosHistory;
+            
+            // Usar las fotos proporcionadas o cargar desde las variables globales
+            const photos = customPhotos || (type === 'profile' ? profilePhotosHistory : coverPhotosHistory);
             
             if (photos.length === 0) {
                 alert(`No tienes fotos de ${type === 'profile' ? 'perfil' : 'portada'} aún.`);
@@ -2306,7 +2451,7 @@
                 const thumbnail = document.createElement('div');
                 thumbnail.className = `thumbnail ${i === index ? 'active' : ''}`;
                 thumbnail.innerHTML = `
-                    <img src="${photo}" alt="Foto ${i+1}">
+                    <img src="${photo}" alt="Foto ${i+1}" onerror="this.style.display='none'">
                     <button class="delete-thumbnail" onclick="deleteGalleryPhoto('${type}', ${i})">
                         <i class="fas fa-times"></i>
                     </button>
