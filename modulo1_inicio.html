@@ -1,213 +1,249 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
-<style>
-  * {
-    box-sizing: border-box;
-  }
-  
-  body {
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    overflow-x: hidden;
-    background: linear-gradient(120deg, #001F3F, #003366, #00C4FF);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    padding: 20px;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow-x: hidden;
+            background: linear-gradient(120deg, #001F3F, #003366, #00C4FF);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 20px;
+        }
 
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-  .container {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 30px;
-    width: 100%;
-    max-width: 450px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0,0,0,0.4);
-  }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.4);
+        }
 
-  h1 { 
-    color: #00C4FF; 
-    font-size: 2em; 
-    margin-bottom: 15px; 
-  }
-  
-  p { 
-    font-size: 1em; 
-    color: #dfe9ff; 
-    margin-bottom: 25px; 
-  }
+        h1 { 
+            color: #00C4FF; 
+            font-size: 2em; 
+            margin-bottom: 15px; 
+        }
+        
+        p { 
+            font-size: 1em; 
+            color: #dfe9ff; 
+            margin-bottom: 25px; 
+        }
 
-  select, input, button {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: none;
-    font-size: 1em;
-  }
+        select, input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: none;
+            font-size: 1em;
+        }
 
-  input { 
-    background: rgba(255,255,255,0.9); 
-    color: #333; 
-  }
-  
-  input:focus { 
-    outline: none; 
-    box-shadow: 0 0 12px #00C4FF; 
-    transform: scale(1.03); 
-  }
+        input { 
+            background: rgba(255,255,255,0.9); 
+            color: #333; 
+        }
+        
+        input:focus { 
+            outline: none; 
+            box-shadow: 0 0 12px #00C4FF; 
+            transform: scale(1.03); 
+        }
 
-  button {
-    background: linear-gradient(90deg,#00C4FF,#007bff);
-    color: white;
-    cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 0 15px #00C4FF;
-    transition: 0.3s;
-  }
+        button {
+            background: linear-gradient(90deg,#00C4FF,#007bff);
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 0 15px #00C4FF;
+            transition: 0.3s;
+        }
 
-  button:hover { 
-    transform: scale(1.05); 
-    box-shadow: 0 0 25px #00FFFF; 
-  }
+        button:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0 0 25px #00FFFF; 
+        }
 
-  .footer { 
-    margin-top: 15px; 
-    font-size: 0.9em; 
-    color: #cbd7ff; 
-  }
-  
-  .footer a { 
-    color: #00C4FF; 
-    text-decoration: none; 
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .footer a:hover { 
-    text-decoration: underline; 
-  }
+        .footer { 
+            margin-top: 15px; 
+            font-size: 0.9em; 
+            color: #cbd7ff; 
+        }
+        
+        .footer a { 
+            color: #00C4FF; 
+            text-decoration: none; 
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .footer a:hover { 
+            text-decoration: underline; 
+        }
 
-  .hidden { 
-    display: none; 
-  }
-  
-  /* Estilos para etiquetas de fecha */
-  .date-label {
-    display: block;
-    text-align: left;
-    margin: 10px 0 5px;
-    color: #dfe9ff;
-    font-size: 0.9em;
-  }
-  
-  /* Mejoras para dispositivos móviles */
-  @media (max-width: 480px) {
-    body {
-      padding: 10px;
-      align-items: flex-start;
-    }
-    
-    .container {
-      padding: 20px;
-      border-radius: 15px;
-      margin-top: 20px;
-    }
-    
-    h1 {
-      font-size: 1.7em;
-    }
-    
-    select, input, button {
-      padding: 14px;
-      font-size: 16px; /* Evita zoom automático en iOS */
-    }
-  }
-</style>
+        .hidden { 
+            display: none; 
+        }
+        
+        /* Estilos para etiquetas de fecha */
+        .date-label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+            color: #dfe9ff;
+            font-size: 0.9em;
+        }
+        
+        /* Mejoras para dispositivos móviles */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+                margin-top: 20px;
+            }
+            
+            h1 {
+                font-size: 1.7em;
+            }
+            
+            select, input, button {
+                padding: 14px;
+                font-size: 16px; /* Evita zoom automático en iOS */
+            }
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #00C4FF;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
 
+<!-- Loading overlay -->
+<div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Procesando...</p>
+</div>
+
 <div class="container">
-  <h1>NeoStudy 🚀</h1>
-  <p>Tu educación digital comienza aquí</p>
+    <h1>NeoStudy 🚀</h1>
+    <p>Tu educación digital comienza aquí</p>
 
-  <!-- Selección de categoría -->
-  <select id="categoria">
-    <option value="">Selecciona tu categoría</option>
-    <option value="profesional">Profesional</option>
-    <option value="universitario">Estudiante Universitario</option>
-    <option value="secundaria">Alumno de Secundaria</option>
-    <option value="general">Público en general</option>
-  </select>
+    <!-- Selección de categoría -->
+    <select id="categoria">
+        <option value="">Selecciona tu categoría</option>
+        <option value="profesional">Profesional</option>
+        <option value="universitario">Estudiante Universitario</option>
+        <option value="secundaria">Alumno de Secundaria</option>
+        <option value="general">Público en general</option>
+    </select>
 
-  <!-- Formularios dinámicos -->
-  <form id="formProfesional" class="hidden">
-    <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
-    <input type="text" id="prof_profesion" placeholder="Profesión" required>
-    <input type="text" id="prof_carrera" placeholder="Carrera" required>
-    <label class="date-label">Fecha de nacimiento</label>
-    <input type="date" id="prof_nacimiento" required>
-    <input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="prof_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
-  </form>
+    <!-- Formularios dinámicos -->
+    <form id="formProfesional" class="hidden">
+        <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
+        <input type="text" id="prof_profesion" placeholder="Profesión" required>
+        <input type="text" id="prof_carrera" placeholder="Carrera" required>
+        <label class="date-label">Fecha de nacimiento</label>
+        <input type="date" id="prof_nacimiento" required>
+        <input type="email" id="prof_contacto" placeholder="Correo Electrónico" required>
+        <input type="password" id="prof_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <button type="submit">Crear Cuenta</button>
+    </form>
 
-  <form id="formUniversitario" class="hidden">
-    <input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
-    <input type="text" id="uni_universidad" placeholder="Universidad" required>
-    <input type="text" id="uni_carrera" placeholder="Carrera" required>
-    <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
-    <label class="date-label">Fecha de nacimiento</label>
-    <input type="date" id="uni_nacimiento" required>
-    <input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="uni_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
-  </form>
+    <form id="formUniversitario" class="hidden">
+        <input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
+        <input type="text" id="uni_universidad" placeholder="Universidad" required>
+        <input type="text" id="uni_carrera" placeholder="Carrera" required>
+        <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
+        <label class="date-label">Fecha de nacimiento</label>
+        <input type="date" id="uni_nacimiento" required>
+        <input type="email" id="uni_contacto" placeholder="Correo Electrónico" required>
+        <input type="password" id="uni_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <button type="submit">Crear Cuenta</button>
+    </form>
 
-  <form id="formSecundaria" class="hidden">
-    <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
-    <input type="text" id="sec_colegio" placeholder="Colegio" required>
-    <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
-    <label class="date-label">Fecha de nacimiento</label>
-    <input type="date" id="sec_nacimiento" required>
-    <input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="sec_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
-  </form>
+    <form id="formSecundaria" class="hidden">
+        <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
+        <input type="text" id="sec_colegio" placeholder="Colegio" required>
+        <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
+        <label class="date-label">Fecha de nacimiento</label>
+        <input type="date" id="sec_nacimiento" required>
+        <input type="email" id="sec_contacto" placeholder="Correo Electrónico" required>
+        <input type="password" id="sec_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <button type="submit">Crear Cuenta</button>
+    </form>
 
-  <form id="formGeneral" class="hidden">
-    <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
-    <label class="date-label">Fecha de nacimiento</label>
-    <input type="date" id="gen_nacimiento" required>
-    <input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
-    <input type="password" id="gen_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
-  </form>
+    <form id="formGeneral" class="hidden">
+        <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
+        <label class="date-label">Fecha de nacimiento</label>
+        <input type="date" id="gen_nacimiento" required>
+        <input type="email" id="gen_contacto" placeholder="Correo Electrónico" required>
+        <input type="password" id="gen_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <button type="submit">Crear Cuenta</button>
+    </form>
 
-  <h3>O Inicia Sesión</h3>
-  <input type="text" id="login_contacto" placeholder="Teléfono o Correo Electrónico">
-  <input type="password" id="login_password" placeholder="Contraseña">
-  <button id="btnLogin">Iniciar Sesión</button>
+    <h3>O Inicia Sesión</h3>
+    <input type="email" id="login_contacto" placeholder="Correo Electrónico">
+    <input type="password" id="login_password" placeholder="Contraseña">
+    <button id="btnLogin">Iniciar Sesión</button>
 
-  <div class="footer">
-    ¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
-  </div>
+    <div class="footer">
+        ¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
+    </div>
 </div>
 
 <!-- Firebase SDK -->
@@ -218,138 +254,229 @@
 <script>
 // ✅ CONFIGURACIÓN FIREBASE - CON TUS CREDENCIALES REALES
 const firebaseConfig = {
-  apiKey: "AIzaSyCHB95PmLOai7HLaNPxVoe0lVwLKIwkgEw",
-  authDomain: "neostudy-6c7ad.firebaseapp.com",
-  projectId: "neostudy-6c7ad",
-  storageBucket: "neostudy-6c7ad.firebasestorage.app",
-  messagingSenderId: "764552186350",
-  appId: "1:764552186350:web:c744108415108889e826ff",
-  measurementId: "G-NB40VTEZB3"
+    apiKey: "AIzaSyCHB95PmLOai7HLaNPxVoe0lVwLKIwkgEw",
+    authDomain: "neostudy-6c7ad.firebaseapp.com",
+    projectId: "neostudy-6c7ad",
+    storageBucket: "neostudy-6c7ad.firebasestorage.app",
+    messagingSenderId: "764552186350",
+    appId: "1:764552186350:web:c744108415108889e826ff",
+    measurementId: "G-NB40VTEZB3"
 };
 
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+// Verificar que Firebase se inicializa correctamente
+try {
+    // Inicializar Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    } else {
+        firebase.app(); // Si ya está inicializado, usa esa instancia
+    }
+    
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    console.log("Firebase inicializado correctamente");
+} catch (error) {
+    console.error("Error al inicializar Firebase:", error);
+    alert("Error de configuración. Por favor contacta al administrador.");
+}
 
 // 🔹 MOSTRAR FORMULARIOS SEGÚN CATEGORÍA
 const categoriaSelect = document.getElementById("categoria");
 const forms = {
-  profesional: document.getElementById("formProfesional"),
-  universitario: document.getElementById("formUniversitario"),
-  secundaria: document.getElementById("formSecundaria"),
-  general: document.getElementById("formGeneral")
+    profesional: document.getElementById("formProfesional"),
+    universitario: document.getElementById("formUniversitario"),
+    secundaria: document.getElementById("formSecundaria"),
+    general: document.getElementById("formGeneral")
 };
 
+// Elementos de UI
+const loadingElement = document.getElementById("loading");
+
+// Funciones de utilidad
+function showLoading() {
+    loadingElement.style.display = 'flex';
+}
+
+function hideLoading() {
+    loadingElement.style.display = 'none';
+}
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
-  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
-  categoriaSelect.focus();
-  alert("Por favor selecciona tu categoría para crear tu cuenta");
+    categoriaSelect.scrollIntoView({ behavior: 'smooth' });
+    categoriaSelect.focus();
+    alert("Por favor selecciona tu categoría para crear tu cuenta");
 });
 
 categoriaSelect.addEventListener("change", () => {
-  const value = categoriaSelect.value;
-  Object.values(forms).forEach(f => f.classList.add("hidden"));
-  if(value && forms[value]) forms[value].classList.remove("hidden");
+    const value = categoriaSelect.value;
+    Object.values(forms).forEach(f => f.classList.add("hidden"));
+    if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
 // 🔹 CREAR CUENTA CON FIREBASE
 async function saveUser(form, category) {
-  try {
-    const inputs = form.querySelectorAll('input');
-    let email = '';
-    let password = '';
-    let userData = { categoria: category };
-
-    // Recoger todos los datos del formulario
-    inputs.forEach(input => {
-      if (input.type !== 'submit') {
-        userData[input.id] = input.value;
+    try {
+        showLoading();
         
-        if (input.placeholder.includes('Correo') || input.placeholder.includes('Teléfono')) {
-          email = input.value;
-        }
-        if (input.type === 'password') {
-          password = input.value;
-        }
-        if (input.type === 'date') {
-          userData.fechaNacimiento = input.value;
-        }
-      }
-    });
+        const inputs = form.querySelectorAll('input');
+        let email = '';
+        let password = '';
+        let userData = { 
+            categoria: category,
+            fechaRegistro: new Date().toISOString()
+        };
 
-    if (!email || !password) {
-      alert("Por favor ingresa un correo/teléfono y contraseña válidos");
-      return;
+        // Recoger todos los datos del formulario
+        inputs.forEach(input => {
+            if (input.type !== 'submit') {
+                userData[input.id] = input.value;
+                
+                if (input.type === 'email') {
+                    email = input.value;
+                }
+                if (input.type === 'password') {
+                    password = input.value;
+                }
+                if (input.type === 'date') {
+                    userData.fechaNacimiento = input.value;
+                }
+            }
+        });
+
+        // Validaciones
+        if (!email || !password) {
+            hideLoading();
+            alert("Por favor ingresa un correo y contraseña válidos");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            hideLoading();
+            alert("Por favor ingresa un correo electrónico válido");
+            return;
+        }
+
+        if (password.length < 6) {
+            hideLoading();
+            alert("La contraseña debe tener al menos 6 caracteres");
+            return;
+        }
+
+        // CREAR USUARIO EN FIREBASE
+        console.log("Intentando crear usuario con email:", email);
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        console.log("Usuario creado:", user.uid);
+
+        // GUARDAR DATOS ADICIONALES EN FIRESTORE
+        await firebase.firestore().collection('usuarios').doc(user.uid).set({
+            ...userData,
+            uid: user.uid,
+            ultimoAcceso: new Date().toISOString()
+        });
+
+        hideLoading();
+        alert("✅ Cuenta creada con éxito. Bienvenido a NeoStudy!");
+        
+        // Redirigir después de crear cuenta
+        setTimeout(() => {
+            window.location.href = "modulo2_iniciodecesión.html";
+        }, 1000);
+
+    } catch (error) {
+        hideLoading();
+        console.error("Error completo:", error);
+        
+        // Manejo específico de errores de Firebase
+        if (error.code === 'auth/email-already-in-use') {
+            alert("❌ Este correo ya está registrado. Por favor usa otro o inicia sesión.");
+        } else if (error.code === 'auth/weak-password') {
+            alert("❌ La contraseña es muy débil. Debe tener al menos 6 caracteres.");
+        } else if (error.code === 'auth/invalid-email') {
+            alert("❌ El formato del correo electrónico no es válido.");
+        } else if (error.code === 'auth/operation-not-allowed') {
+            alert("❌ La creación de cuentas con email/contraseña no está habilitada. Contacta al administrador.");
+        } else if (error.code === 'auth/configuration-not-found') {
+            alert("❌ Error de configuración de Firebase. Verifica que Authentication esté habilitado en Firebase Console.");
+        } else {
+            alert("❌ Error al crear cuenta: " + error.message);
+        }
     }
-
-    // CREAR USUARIO EN FIREBASE
-    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    const user = userCredential.user;
-
-    // GUARDAR DATOS ADICIONALES EN FIRESTORE
-    await db.collection('usuarios').doc(user.uid).set({
-      ...userData,
-      fechaRegistro: new Date(),
-      ultimoAcceso: new Date()
-    });
-
-    alert("✅ Cuenta creada con éxito. Bienvenido a NeoStudy!");
-    window.location.href = "modulo2_iniciodecesión.html";
-
-  } catch (error) {
-    console.error("Error:", error);
-    
-    if (error.code === 'auth/email-already-in-use') {
-      alert("❌ Este correo ya está registrado. Por favor usa otro o inicia sesión.");
-    } else if (error.code === 'auth/weak-password') {
-      alert("❌ La contraseña es muy débil. Debe tener al menos 6 caracteres.");
-    } else {
-      alert("❌ Error al crear cuenta: " + error.message);
-    }
-  }
 }
 
 // 🔹 INICIAR SESIÓN CON FIREBASE
 document.getElementById("btnLogin").addEventListener("click", async () => {
-  const email = document.getElementById("login_contacto").value;
-  const password = document.getElementById("login_password").value;
-  
-  if (!email || !password) {
-    alert("Por favor completa todos los campos");
-    return;
-  }
-
-  try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    const user = userCredential.user;
-
-    await db.collection('usuarios').doc(user.uid).update({
-      ultimoAcceso: new Date()
-    });
-
-    alert("✅ Inicio de sesión exitoso. Bienvenido de vuelta!");
-    window.location.href = "modulo2_iniciodecesión.html";
-
-  } catch (error) {
-    console.error("Error:", error);
+    const email = document.getElementById("login_contacto").value;
+    const password = document.getElementById("login_password").value;
     
-    if (error.code === 'auth/user-not-found') {
-      alert("❌ Usuario no encontrado. Por favor crea una cuenta primero.");
-    } else if (error.code === 'auth/wrong-password') {
-      alert("❌ Contraseña incorrecta. Intenta nuevamente.");
-    } else {
-      alert("❌ Error al iniciar sesión: " + error.message);
+    if (!email || !password) {
+        alert("Por favor completa todos los campos");
+        return;
     }
-  }
+
+    if (!isValidEmail(email)) {
+        alert("Por favor ingresa un correo electrónico válido");
+        return;
+    }
+
+    try {
+        showLoading();
+        
+        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        // Actualizar último acceso en Firestore
+        await firebase.firestore().collection('usuarios').doc(user.uid).update({
+            ultimoAcceso: new Date().toISOString()
+        });
+
+        hideLoading();
+        alert("✅ Inicio de sesión exitoso. Bienvenido de vuelta!");
+        
+        setTimeout(() => {
+            window.location.href = "modulo2_iniciodecesión.html";
+        }, 1000);
+
+    } catch (error) {
+        hideLoading();
+        console.error("Error:", error);
+        
+        if (error.code === 'auth/user-not-found') {
+            alert("❌ Usuario no encontrado. Por favor crea una cuenta primero.");
+        } else if (error.code === 'auth/wrong-password') {
+            alert("❌ Contraseña incorrecta. Intenta nuevamente.");
+        } else if (error.code === 'auth/invalid-email') {
+            alert("❌ El formato del correo electrónico no es válido.");
+        } else if (error.code === 'auth/user-disabled') {
+            alert("❌ Esta cuenta ha sido deshabilitada. Contacta al administrador.");
+        } else {
+            alert("❌ Error al iniciar sesión: " + error.message);
+        }
+    }
 });
 
 // 🔹 ASIGNAR EVENTOS A LOS FORMULARIOS
 Object.keys(forms).forEach(cat => {
-  forms[cat].addEventListener("submit", async (e) => {
-    e.preventDefault();
-    await saveUser(forms[cat], cat);
-  });
+    forms[cat].addEventListener("submit", async (e) => {
+        e.preventDefault();
+        await saveUser(forms[cat], cat);
+    });
+});
+
+// Verificar estado de autenticación al cargar la página
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        console.log("Usuario ya autenticado:", user.email);
+        // Si el usuario ya está logueado, podríamos redirigirlo automáticamente
+        // window.location.href = "modulo2_iniciodecesión.html";
+    }
 });
 </script>
 </body>
