@@ -169,6 +169,24 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #ff6b6b;
+        }
+
+        .success-message {
+            color: #51cf66;
+            background: rgba(81, 207, 102, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #51cf66;
+        }
     </style>
 </head>
 <body>
@@ -182,6 +200,9 @@
 <div class="container">
     <h1>NeoStudy 🚀</h1>
     <p>Tu educación digital comienza aquí</p>
+
+    <!-- Mensajes de estado -->
+    <div id="messageContainer"></div>
 
     <!-- Selección de categoría -->
     <select id="categoria">
@@ -199,8 +220,8 @@
         <input type="text" id="prof_carrera" placeholder="Carrera" required>
         <label class="date-label">Fecha de nacimiento</label>
         <input type="date" id="prof_nacimiento" required>
-        <input type="email" id="prof_contacto" placeholder="Correo Electrónico" required>
-        <input type="password" id="prof_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <input type="email" id="prof_email" placeholder="Correo Electrónico" required>
+        <input type="password" id="prof_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
         <button type="submit">Crear Cuenta</button>
     </form>
 
@@ -211,8 +232,8 @@
         <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
         <label class="date-label">Fecha de nacimiento</label>
         <input type="date" id="uni_nacimiento" required>
-        <input type="email" id="uni_contacto" placeholder="Correo Electrónico" required>
-        <input type="password" id="uni_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <input type="email" id="uni_email" placeholder="Correo Electrónico" required>
+        <input type="password" id="uni_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
         <button type="submit">Crear Cuenta</button>
     </form>
 
@@ -222,8 +243,8 @@
         <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
         <label class="date-label">Fecha de nacimiento</label>
         <input type="date" id="sec_nacimiento" required>
-        <input type="email" id="sec_contacto" placeholder="Correo Electrónico" required>
-        <input type="password" id="sec_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <input type="email" id="sec_email" placeholder="Correo Electrónico" required>
+        <input type="password" id="sec_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
         <button type="submit">Crear Cuenta</button>
     </form>
 
@@ -231,14 +252,14 @@
         <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
         <label class="date-label">Fecha de nacimiento</label>
         <input type="date" id="gen_nacimiento" required>
-        <input type="email" id="gen_contacto" placeholder="Correo Electrónico" required>
-        <input type="password" id="gen_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+        <input type="email" id="gen_email" placeholder="Correo Electrónico" required>
+        <input type="password" id="gen_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
         <button type="submit">Crear Cuenta</button>
     </form>
 
     <h3>O Inicia Sesión</h3>
-    <input type="email" id="login_contacto" placeholder="Correo Electrónico">
-    <input type="password" id="login_password" placeholder="Contraseña">
+    <input type="email" id="login_email" placeholder="Correo Electrónico" required>
+    <input type="password" id="login_password" placeholder="Contraseña" required>
     <button id="btnLogin">Iniciar Sesión</button>
 
     <div class="footer">
@@ -252,7 +273,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
 <script>
-// ✅ CONFIGURACIÓN FIREBASE - CON TUS CREDENCIALES REALES
+// ✅ CONFIGURACIÓN FIREBASE
 const firebaseConfig = {
     apiKey: "AIzaSyCHB95PmLOai7HLaNPxVoe0lVwLKIwkgEw",
     authDomain: "neostudy-6c7ad.firebaseapp.com",
@@ -263,26 +284,24 @@ const firebaseConfig = {
     measurementId: "G-NB40VTEZB3"
 };
 
-// Verificar que Firebase se inicializa correctamente
+// Inicializar Firebase
+let auth, db;
 try {
-    // Inicializar Firebase
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
-    } else {
-        firebase.app(); // Si ya está inicializado, usa esa instancia
     }
-    
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    console.log("Firebase inicializado correctamente");
+    auth = firebase.auth();
+    db = firebase.firestore();
+    console.log("✅ Firebase inicializado correctamente");
 } catch (error) {
-    console.error("Error al inicializar Firebase:", error);
-    alert("Error de configuración. Por favor contacta al administrador.");
+    console.error("❌ Error al inicializar Firebase:", error);
 }
 
-// 🔹 MOSTRAR FORMULARIOS SEGÚN CATEGORÍA
+// 🔹 ELEMENTOS DEL DOM
 const categoriaSelect = document.getElementById("categoria");
+const messageContainer = document.getElementById("messageContainer");
+const loadingElement = document.getElementById("loading");
+
 const forms = {
     profesional: document.getElementById("formProfesional"),
     universitario: document.getElementById("formUniversitario"),
@@ -290,10 +309,7 @@ const forms = {
     general: document.getElementById("formGeneral")
 };
 
-// Elementos de UI
-const loadingElement = document.getElementById("loading");
-
-// Funciones de utilidad
+// 🔹 FUNCIONES DE UTILIDAD
 function showLoading() {
     loadingElement.style.display = 'flex';
 }
@@ -302,15 +318,23 @@ function hideLoading() {
     loadingElement.style.display = 'none';
 }
 
+function showMessage(message, type = 'error') {
+    messageContainer.innerHTML = `<div class="${type === 'error' ? 'error-message' : 'success-message'}">${message}</div>`;
+    setTimeout(() => {
+        messageContainer.innerHTML = '';
+    }, 5000);
+}
+
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
+// 🔹 MOSTRAR FORMULARIOS SEGÚN CATEGORÍA
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
     categoriaSelect.scrollIntoView({ behavior: 'smooth' });
     categoriaSelect.focus();
-    alert("Por favor selecciona tu categoría para crear tu cuenta");
+    showMessage("Por favor selecciona tu categoría para crear tu cuenta", 'success');
 });
 
 categoriaSelect.addEventListener("change", () => {
@@ -338,7 +362,7 @@ async function saveUser(form, category) {
                 userData[input.id] = input.value;
                 
                 if (input.type === 'email') {
-                    email = input.value;
+                    email = input.value.trim().toLowerCase();
                 }
                 if (input.type === 'password') {
                     password = input.value;
@@ -352,112 +376,145 @@ async function saveUser(form, category) {
         // Validaciones
         if (!email || !password) {
             hideLoading();
-            alert("Por favor ingresa un correo y contraseña válidos");
+            showMessage("Por favor ingresa un correo y contraseña válidos");
             return;
         }
 
         if (!isValidEmail(email)) {
             hideLoading();
-            alert("Por favor ingresa un correo electrónico válido");
+            showMessage("Por favor ingresa un correo electrónico válido");
             return;
         }
 
         if (password.length < 6) {
             hideLoading();
-            alert("La contraseña debe tener al menos 6 caracteres");
+            showMessage("La contraseña debe tener al menos 6 caracteres");
             return;
         }
 
-        // CREAR USUARIO EN FIREBASE
-        console.log("Intentando crear usuario con email:", email);
-        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+        console.log("📝 Intentando crear usuario:", email);
+
+        // CREAR USUARIO EN FIREBASE AUTH
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        console.log("Usuario creado:", user.uid);
+        console.log("✅ Usuario creado en Auth:", user.uid);
 
-        // GUARDAR DATOS ADICIONALES EN FIRESTORE
-        await firebase.firestore().collection('usuarios').doc(user.uid).set({
-            ...userData,
+        // PREPARAR DATOS PARA FIRESTORE
+        const userProfile = {
             uid: user.uid,
+            email: email,
+            nombre: userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre,
+            categoria: category,
+            fechaNacimiento: userData.fechaNacimiento,
+            fechaRegistro: new Date().toISOString(),
             ultimoAcceso: new Date().toISOString()
-        });
+        };
+
+        // Agregar campos específicos por categoría
+        if (category === 'profesional') {
+            userProfile.profesion = userData.prof_profesion;
+            userProfile.carrera = userData.prof_carrera;
+        } else if (category === 'universitario') {
+            userProfile.universidad = userData.uni_universidad;
+            userProfile.carrera = userData.uni_carrera;
+            userProfile.ciclo = userData.uni_ciclo;
+        } else if (category === 'secundaria') {
+            userProfile.colegio = userData.sec_colegio;
+            userProfile.grado = userData.sec_grado;
+        }
+
+        // GUARDAR EN FIRESTORE
+        await db.collection('usuarios').doc(user.uid).set(userProfile);
+        console.log("💾 Datos guardados en Firestore");
 
         hideLoading();
-        alert("✅ Cuenta creada con éxito. Bienvenido a NeoStudy!");
+        showMessage("✅ Cuenta creada con éxito. Bienvenido a NeoStudy!", 'success');
         
-        // Redirigir después de crear cuenta
+        // Limpiar formulario
+        form.reset();
+        
+        // Redirigir después de 2 segundos
         setTimeout(() => {
             window.location.href = "modulo2_iniciodecesión.html";
-        }, 1000);
+        }, 2000);
 
     } catch (error) {
         hideLoading();
-        console.error("Error completo:", error);
+        console.error("❌ Error completo:", error);
         
-        // Manejo específico de errores de Firebase
+        // Manejo específico de errores
         if (error.code === 'auth/email-already-in-use') {
-            alert("❌ Este correo ya está registrado. Por favor usa otro o inicia sesión.");
+            showMessage("❌ Este correo ya está registrado. Por favor inicia sesión.");
         } else if (error.code === 'auth/weak-password') {
-            alert("❌ La contraseña es muy débil. Debe tener al menos 6 caracteres.");
+            showMessage("❌ La contraseña debe tener al menos 6 caracteres.");
         } else if (error.code === 'auth/invalid-email') {
-            alert("❌ El formato del correo electrónico no es válido.");
+            showMessage("❌ El formato del correo electrónico no es válido.");
         } else if (error.code === 'auth/operation-not-allowed') {
-            alert("❌ La creación de cuentas con email/contraseña no está habilitada. Contacta al administrador.");
-        } else if (error.code === 'auth/configuration-not-found') {
-            alert("❌ Error de configuración de Firebase. Verifica que Authentication esté habilitado en Firebase Console.");
+            showMessage("❌ Error del sistema. Contacta al administrador.");
         } else {
-            alert("❌ Error al crear cuenta: " + error.message);
+            showMessage("❌ Error al crear cuenta: " + error.message);
         }
     }
 }
 
 // 🔹 INICIAR SESIÓN CON FIREBASE
 document.getElementById("btnLogin").addEventListener("click", async () => {
-    const email = document.getElementById("login_contacto").value;
+    const email = document.getElementById("login_email").value.trim().toLowerCase();
     const password = document.getElementById("login_password").value;
     
     if (!email || !password) {
-        alert("Por favor completa todos los campos");
+        showMessage("Por favor completa todos los campos");
         return;
     }
 
     if (!isValidEmail(email)) {
-        alert("Por favor ingresa un correo electrónico válido");
+        showMessage("Por favor ingresa un correo electrónico válido");
         return;
     }
 
     try {
         showLoading();
+        console.log("🔐 Intentando iniciar sesión:", email);
         
-        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
+        console.log("✅ Sesión iniciada para:", user.email);
+
         // Actualizar último acceso en Firestore
-        await firebase.firestore().collection('usuarios').doc(user.uid).update({
+        await db.collection('usuarios').doc(user.uid).update({
             ultimoAcceso: new Date().toISOString()
         });
 
         hideLoading();
-        alert("✅ Inicio de sesión exitoso. Bienvenido de vuelta!");
+        showMessage("✅ Inicio de sesión exitoso. Bienvenido de vuelta!", 'success');
         
+        // Limpiar campos de login
+        document.getElementById('login_email').value = '';
+        document.getElementById('login_password').value = '';
+        
+        // Redirigir después de 1 segundo
         setTimeout(() => {
             window.location.href = "modulo2_iniciodecesión.html";
         }, 1000);
 
     } catch (error) {
         hideLoading();
-        console.error("Error:", error);
+        console.error("❌ Error de login:", error);
         
         if (error.code === 'auth/user-not-found') {
-            alert("❌ Usuario no encontrado. Por favor crea una cuenta primero.");
+            showMessage("❌ No existe una cuenta con este correo. Por favor crea una cuenta primero.");
         } else if (error.code === 'auth/wrong-password') {
-            alert("❌ Contraseña incorrecta. Intenta nuevamente.");
+            showMessage("❌ Contraseña incorrecta. Intenta nuevamente.");
         } else if (error.code === 'auth/invalid-email') {
-            alert("❌ El formato del correo electrónico no es válido.");
-        } else if (error.code === 'auth/user-disabled') {
-            alert("❌ Esta cuenta ha sido deshabilitada. Contacta al administrador.");
+            showMessage("❌ El formato del correo electrónico no es válido.");
+        } else if (error.code === 'auth/invalid-login-credentials') {
+            showMessage("❌ Correo o contraseña incorrectos. Verifica tus credenciales.");
+        } else if (error.code === 'auth/too-many-requests') {
+            showMessage("❌ Demasiados intentos fallidos. Intenta más tarde.");
         } else {
-            alert("❌ Error al iniciar sesión: " + error.message);
+            showMessage("❌ Error al iniciar sesión: " + error.message);
         }
     }
 });
@@ -470,13 +527,34 @@ Object.keys(forms).forEach(cat => {
     });
 });
 
-// Verificar estado de autenticación al cargar la página
-firebase.auth().onAuthStateChanged((user) => {
+// 🔹 VERIFICAR ESTADO DE AUTENTICACIÓN
+auth.onAuthStateChanged((user) => {
     if (user) {
-        console.log("Usuario ya autenticado:", user.email);
-        // Si el usuario ya está logueado, podríamos redirigirlo automáticamente
+        console.log("👤 Usuario autenticado:", user.email);
+        // Opcional: redirigir automáticamente si ya está logueado
         // window.location.href = "modulo2_iniciodecesión.html";
+    } else {
+        console.log("🔒 No hay usuario autenticado");
     }
+});
+
+// 🔹 VERIFICAR CONEXIÓN CON FIREBASE
+// Función para probar la conexión con Firebase
+async function testFirebaseConnection() {
+    try {
+        // Intentar una operación simple para verificar la conexión
+        await db.collection('test').doc('connection').get();
+        console.log("✅ Conexión con Firebase establecida correctamente");
+        return true;
+    } catch (error) {
+        console.error("❌ Error de conexión con Firebase:", error);
+        return false;
+    }
+}
+
+// Ejecutar prueba de conexión al cargar la página
+window.addEventListener('load', () => {
+    testFirebaseConnection();
 });
 </script>
 </body>
