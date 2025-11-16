@@ -210,7 +210,29 @@
   </div>
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
 <script>
+// ✅ CONFIGURACIÓN FIREBASE - CON TUS CREDENCIALES REALES
+const firebaseConfig = {
+  apiKey: "AIzaSyCHB95PmLOai7HLaNPxVoe0lVwLKIwkgEw",
+  authDomain: "neostudy-6c7ad.firebaseapp.com",
+  projectId: "neostudy-6c7ad",
+  storageBucket: "neostudy-6c7ad.firebasestorage.app",
+  messagingSenderId: "764552186350",
+  appId: "1:764552186350:web:c744108415108889e826ff",
+  measurementId: "G-NB40VTEZB3"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// 🔹 MOSTRAR FORMULARIOS SEGÚN CATEGORÍA
 const categoriaSelect = document.getElementById("categoria");
 const forms = {
   profesional: document.getElementById("formProfesional"),
@@ -219,105 +241,116 @@ const forms = {
   general: document.getElementById("formGeneral")
 };
 
-// SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
-  // Enfocar y mostrar la selección de categoría
   categoriaSelect.scrollIntoView({ behavior: 'smooth' });
   categoriaSelect.focus();
   alert("Por favor selecciona tu categoría para crear tu cuenta");
 });
 
-// Mostrar formulario según categoría
 categoriaSelect.addEventListener("change", () => {
   const value = categoriaSelect.value;
   Object.values(forms).forEach(f => f.classList.add("hidden"));
   if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
-// Crear cuenta
-function saveUser(form, category) {
-  const data = { categoria: category };
-  Array.from(form.elements).forEach(input => {
-    if(input.type !== "submit") {
-      data[input.id] = input.value;
-      
-      // Guardar específicamente la fecha de nacimiento para el perfil
-      if (input.id.includes("nacimiento")) {
-        data.fechaNacimiento = input.value;
+// 🔹 CREAR CUENTA CON FIREBASE
+async function saveUser(form, category) {
+  try {
+    const inputs = form.querySelectorAll('input');
+    let email = '';
+    let password = '';
+    let userData = { categoria: category };
+
+    // Recoger todos los datos del formulario
+    inputs.forEach(input => {
+      if (input.type !== 'submit') {
+        userData[input.id] = input.value;
+        
+        if (input.placeholder.includes('Correo') || input.placeholder.includes('Teléfono')) {
+          email = input.value;
+        }
+        if (input.type === 'password') {
+          password = input.value;
+        }
+        if (input.type === 'date') {
+          userData.fechaNacimiento = input.value;
+        }
       }
+    });
+
+    if (!email || !password) {
+      alert("Por favor ingresa un correo/teléfono y contraseña válidos");
+      return;
     }
-  });
-  
-  // Guardar también un campo único para login
-  data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
-  data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
-  
-  // Asegurar que la fecha de nacimiento esté guardada
-  if (!data.fechaNacimiento) {
-    data.fechaNacimiento = data.prof_nacimiento || data.uni_nacimiento || data.sec_nacimiento || data.gen_nacimiento;
+
+    // CREAR USUARIO EN FIREBASE
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+
+    // GUARDAR DATOS ADICIONALES EN FIRESTORE
+    await db.collection('usuarios').doc(user.uid).set({
+      ...userData,
+      fechaRegistro: new Date(),
+      ultimoAcceso: new Date()
+    });
+
+    alert("✅ Cuenta creada con éxito. Bienvenido a NeoStudy!");
+    window.location.href = "modulo2_iniciodecesión.html";
+
+  } catch (error) {
+    console.error("Error:", error);
+    
+    if (error.code === 'auth/email-already-in-use') {
+      alert("❌ Este correo ya está registrado. Por favor usa otro o inicia sesión.");
+    } else if (error.code === 'auth/weak-password') {
+      alert("❌ La contraseña es muy débil. Debe tener al menos 6 caracteres.");
+    } else {
+      alert("❌ Error al crear cuenta: " + error.message);
+    }
   }
-  
-  localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
-  alert("Cuenta creada con éxito ✅");
-  
-  // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
-  window.location.href = "modulo2_iniciodecesión.html";
 }
 
-Object.keys(forms).forEach(cat => {
-  forms[cat].addEventListener("submit", e => {
-    e.preventDefault();
-    saveUser(forms[cat], cat);
-  });
-});
-
-// SOLUCIÓN PROBLEMA 2: Login simplificado y funcional
-document.getElementById("btnLogin").addEventListener("click", () => {
-  const emailOrPhone = document.getElementById("login_contacto").value;
+// 🔹 INICIAR SESIÓN CON FIREBASE
+document.getElementById("btnLogin").addEventListener("click", async () => {
+  const email = document.getElementById("login_contacto").value;
   const password = document.getElementById("login_password").value;
   
-  if (!emailOrPhone || !password) {
+  if (!email || !password) {
     alert("Por favor completa todos los campos");
     return;
   }
 
-  const storedUser = JSON.parse(localStorage.getItem("usuarioNeoStudy"));
+  try {
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
 
-  if (storedUser) {
-    // Verificación SIMPLIFICADA y CORRECTA
-    const contactoGuardado = storedUser.contacto || 
-                            storedUser.prof_contacto || 
-                            storedUser.uni_contacto || 
-                            storedUser.sec_contacto || 
-                            storedUser.gen_contacto;
+    await db.collection('usuarios').doc(user.uid).update({
+      ultimoAcceso: new Date()
+    });
+
+    alert("✅ Inicio de sesión exitoso. Bienvenido de vuelta!");
+    window.location.href = "modulo2_iniciodecesión.html";
+
+  } catch (error) {
+    console.error("Error:", error);
     
-    const passwordGuardado = storedUser.password || 
-                            storedUser.prof_password || 
-                            storedUser.uni_password || 
-                            storedUser.sec_password || 
-                            storedUser.gen_password;
-
-    if (contactoGuardado === emailOrPhone && passwordGuardado === password) {
-      alert("Inicio de sesión exitoso ✅");
-      
-      // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
-      window.location.href = "modulo2_iniciodecesión.html";
+    if (error.code === 'auth/user-not-found') {
+      alert("❌ Usuario no encontrado. Por favor crea una cuenta primero.");
+    } else if (error.code === 'auth/wrong-password') {
+      alert("❌ Contraseña incorrecta. Intenta nuevamente.");
     } else {
-      alert("Usuario o contraseña incorrectos ❌");
+      alert("❌ Error al iniciar sesión: " + error.message);
     }
-  } else {
-    alert("No hay cuenta registrada. Por favor crea una cuenta primero.");
   }
 });
 
-// Mejora adicional: Formatear fecha para mostrar en el perfil
-function formatearFecha(fechaISO) {
-  if (!fechaISO) return "";
-  
-  const fecha = new Date(fechaISO);
-  const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-  return fecha.toLocaleDateString('es-ES', opciones);
-}
+// 🔹 ASIGNAR EVENTOS A LOS FORMULARIOS
+Object.keys(forms).forEach(cat => {
+  forms[cat].addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await saveUser(forms[cat], cat);
+  });
+});
 </script>
 </body>
 </html>
