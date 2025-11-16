@@ -187,6 +187,15 @@
             margin: 10px 0;
             border: 1px solid #51cf66;
         }
+
+        .sync-info {
+            background: rgba(0, 196, 255, 0.1);
+            border: 1px solid #00C4FF;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -194,12 +203,18 @@
 <!-- Loading overlay -->
 <div class="loading" id="loading">
     <div class="spinner"></div>
-    <p>Procesando...</p>
+    <p id="loadingText">Procesando...</p>
 </div>
 
 <div class="container">
     <h1>NeoStudy 🚀</h1>
     <p>Tu educación digital comienza aquí</p>
+
+    <!-- Información de sincronización -->
+    <div class="sync-info">
+        🔄 <strong>Sincronización en la nube activada</strong><br>
+        Tus datos estarán disponibles en todos tus dispositivos
+    </div>
 
     <!-- Mensajes de estado -->
     <div id="messageContainer"></div>
@@ -271,6 +286,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
 
 <script>
 // ✅ CONFIGURACIÓN FIREBASE
@@ -285,13 +301,14 @@ const firebaseConfig = {
 };
 
 // Inicializar Firebase
-let auth, db;
+let auth, db, storage;
 try {
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
     auth = firebase.auth();
     db = firebase.firestore();
+    storage = firebase.storage();
     console.log("✅ Firebase inicializado correctamente");
 } catch (error) {
     console.error("❌ Error al inicializar Firebase:", error);
@@ -301,6 +318,7 @@ try {
 const categoriaSelect = document.getElementById("categoria");
 const messageContainer = document.getElementById("messageContainer");
 const loadingElement = document.getElementById("loading");
+const loadingText = document.getElementById("loadingText");
 
 const forms = {
     profesional: document.getElementById("formProfesional"),
@@ -310,7 +328,8 @@ const forms = {
 };
 
 // 🔹 FUNCIONES DE UTILIDAD
-function showLoading() {
+function showLoading(text = "Procesando...") {
+    loadingText.textContent = text;
     loadingElement.style.display = 'flex';
 }
 
@@ -330,6 +349,85 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
+// 🔹 INICIALIZAR DATOS DE USUARIO EN FIRESTORE
+async function initializeUserData(uid, userData) {
+    try {
+        console.log("🔄 Inicializando datos del usuario...");
+        
+        // Crear estructura inicial de datos del usuario
+        const userStructure = {
+            // Perfil del usuario
+            perfil: {
+                nombre: userData.nombre,
+                email: userData.email,
+                categoria: userData.categoria,
+                fechaNacimiento: userData.fechaNacimiento,
+                fechaRegistro: new Date().toISOString(),
+                fotoPerfil: "", // URL de la foto de perfil
+                tema: "claro" // Preferencia de tema
+            },
+            
+            // Libros comprados
+            biblioteca: {
+                librosComprados: [],
+                favoritos: [],
+                ultimaLectura: null,
+                progresoGlobal: 0
+            },
+            
+            // Configuraciones
+            configuraciones: {
+                notificaciones: true,
+                sincronizacionAuto: true,
+                idioma: "es",
+                modoOffline: false
+            },
+            
+            // Datos de aprendizaje
+            progreso: {
+                cursosCompletados: 0,
+                horasEstudiadas: 0,
+                logros: [],
+                puntos: 0
+            },
+            
+            // Dispositivos conectados
+            dispositivos: [{
+                tipo: navigator.userAgent.includes('Mobile') ? 'movil' : 'escritorio',
+                ultimaConexion: new Date().toISOString(),
+                id: generateDeviceId()
+            }]
+        };
+
+        // Agregar campos específicos por categoría
+        if (userData.categoria === 'profesional') {
+            userStructure.perfil.profesion = userData.profesion;
+            userStructure.perfil.carrera = userData.carrera;
+        } else if (userData.categoria === 'universitario') {
+            userStructure.perfil.universidad = userData.universidad;
+            userStructure.perfil.carrera = userData.carrera;
+            userStructure.perfil.ciclo = userData.ciclo;
+        } else if (userData.categoria === 'secundaria') {
+            userStructure.perfil.colegio = userData.colegio;
+            userStructure.perfil.grado = userData.grado;
+        }
+
+        // Guardar estructura en Firestore
+        await db.collection('usuarios').doc(uid).set(userStructure, { merge: true });
+        
+        console.log("✅ Datos de usuario inicializados correctamente");
+        return true;
+    } catch (error) {
+        console.error("❌ Error al inicializar datos:", error);
+        return false;
+    }
+}
+
+// Generar ID único para el dispositivo
+function generateDeviceId() {
+    return 'device_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+}
+
 // 🔹 MOSTRAR FORMULARIOS SEGÚN CATEGORÍA
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
     categoriaSelect.scrollIntoView({ behavior: 'smooth' });
@@ -346,7 +444,7 @@ categoriaSelect.addEventListener("change", () => {
 // 🔹 CREAR CUENTA CON FIREBASE
 async function saveUser(form, category) {
     try {
-        showLoading();
+        showLoading("Creando tu cuenta...");
         
         const inputs = form.querySelectorAll('input');
         let email = '';
@@ -400,15 +498,12 @@ async function saveUser(form, category) {
 
         console.log("✅ Usuario creado en Auth:", user.uid);
 
-        // PREPARAR DATOS PARA FIRESTORE
+        // PREPARAR DATOS PARA INICIALIZACIÓN
         const userProfile = {
-            uid: user.uid,
-            email: email,
             nombre: userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre,
+            email: email,
             categoria: category,
-            fechaNacimiento: userData.fechaNacimiento,
-            fechaRegistro: new Date().toISOString(),
-            ultimoAcceso: new Date().toISOString()
+            fechaNacimiento: userData.fechaNacimiento
         };
 
         // Agregar campos específicos por categoría
@@ -424,12 +519,12 @@ async function saveUser(form, category) {
             userProfile.grado = userData.sec_grado;
         }
 
-        // GUARDAR EN FIRESTORE
-        await db.collection('usuarios').doc(user.uid).set(userProfile);
-        console.log("💾 Datos guardados en Firestore");
+        // INICIALIZAR DATOS EN FIRESTORE
+        showLoading("Configurando tu perfil...");
+        await initializeUserData(user.uid, userProfile);
 
         hideLoading();
-        showMessage("✅ Cuenta creada con éxito. Bienvenido a NeoStudy!", 'success');
+        showMessage("✅ Cuenta creada con éxito. Tus datos se sincronizarán en todos tus dispositivos!", 'success');
         
         // Limpiar formulario
         form.reset();
@@ -474,7 +569,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     }
 
     try {
-        showLoading();
+        showLoading("Iniciando sesión...");
         console.log("🔐 Intentando iniciar sesión:", email);
         
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
@@ -482,13 +577,33 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
 
         console.log("✅ Sesión iniciada para:", user.email);
 
-        // Actualizar último acceso en Firestore
+        // ACTUALIZAR DISPOSITIVO EN FIRESTORE
+        showLoading("Sincronizando datos...");
+        const deviceInfo = {
+            tipo: navigator.userAgent.includes('Mobile') ? 'movil' : 'escritorio',
+            ultimaConexion: new Date().toISOString(),
+            id: generateDeviceId()
+        };
+
         await db.collection('usuarios').doc(user.uid).update({
-            ultimoAcceso: new Date().toISOString()
+            ultimoAcceso: new Date().toISOString(),
+            [`dispositivos.${deviceInfo.id}`]: deviceInfo
         });
 
+        // VERIFICAR SI EXISTE ESTRUCTURA DE DATOS
+        const userDoc = await db.collection('usuarios').doc(user.uid).get();
+        if (!userDoc.exists) {
+            console.log("🔄 Usuario nuevo, inicializando estructura...");
+            await initializeUserData(user.uid, {
+                nombre: user.email.split('@')[0],
+                email: user.email,
+                categoria: 'general',
+                fechaNacimiento: null
+            });
+        }
+
         hideLoading();
-        showMessage("✅ Inicio de sesión exitoso. Bienvenido de vuelta!", 'success');
+        showMessage("✅ Inicio de sesión exitoso. Sincronizando tus datos...", 'success');
         
         // Limpiar campos de login
         document.getElementById('login_email').value = '';
@@ -531,6 +646,8 @@ Object.keys(forms).forEach(cat => {
 auth.onAuthStateChanged((user) => {
     if (user) {
         console.log("👤 Usuario autenticado:", user.email);
+        console.log("📱 Tipo de dispositivo:", navigator.userAgent.includes('Mobile') ? 'Móvil' : 'Escritorio');
+        
         // Opcional: redirigir automáticamente si ya está logueado
         // window.location.href = "modulo2_iniciodecesión.html";
     } else {
@@ -538,24 +655,69 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
-// 🔹 VERIFICAR CONEXIÓN CON FIREBASE
-// Función para probar la conexión con Firebase
-async function testFirebaseConnection() {
+// 🔹 FUNCIONES PARA SINCRONIZACIÓN (para usar en otros módulos)
+// Estas funciones deben implementarse en tus otros archivos HTML
+
+// Función para guardar libros comprados
+window.guardarLibroComprado = async function(libroData) {
     try {
-        // Intentar una operación simple para verificar la conexión
-        await db.collection('test').doc('connection').get();
-        console.log("✅ Conexión con Firebase establecida correctamente");
+        const user = auth.currentUser;
+        if (!user) return false;
+
+        await db.collection('usuarios').doc(user.uid).update({
+            'biblioteca.librosComprados': firebase.firestore.FieldValue.arrayUnion(libroData),
+            'ultimoAcceso': new Date().toISOString()
+        });
+        
+        console.log("✅ Libro guardado en la nube:", libroData.titulo);
         return true;
     } catch (error) {
-        console.error("❌ Error de conexión con Firebase:", error);
+        console.error("❌ Error al guardar libro:", error);
         return false;
     }
-}
+};
 
-// Ejecutar prueba de conexión al cargar la página
-window.addEventListener('load', () => {
-    testFirebaseConnection();
-});
+// Función para guardar foto de perfil
+window.guardarFotoPerfil = async function(fotoUrl) {
+    try {
+        const user = auth.currentUser;
+        if (!user) return false;
+
+        await db.collection('usuarios').doc(user.uid).update({
+            'perfil.fotoPerfil': fotoUrl,
+            'ultimoAcceso': new Date().toISOString()
+        });
+        
+        console.log("✅ Foto de perfil guardada en la nube");
+        return true;
+    } catch (error) {
+        console.error("❌ Error al guardar foto:", error);
+        return false;
+    }
+};
+
+// Función para cargar datos del usuario
+window.cargarDatosUsuario = async function() {
+    try {
+        const user = auth.currentUser;
+        if (!user) return null;
+
+        const userDoc = await db.collection('usuarios').doc(user.uid).get();
+        if (userDoc.exists) {
+            console.log("✅ Datos cargados desde Firestore");
+            return userDoc.data();
+        }
+        return null;
+    } catch (error) {
+        console.error("❌ Error al cargar datos:", error);
+        return null;
+    }
+};
+
+console.log("🔄 Sistema de sincronización activado");
+console.log("📚 Los libros y fotos se guardarán en la nube automáticamente");
 </script>
 </body>
 </html>
+
+ese cogigo donde lo coloco
