@@ -1967,44 +1967,64 @@
         </aside>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
     <script>
+        // ===== CONFIGURACIÓN FIREBASE - AGREGADO AL INICIO DEL SCRIPT =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyCHB95PmLOai7HLaNPxVoe0lVwLKIwkgEw",
+            authDomain: "neostudy-6c7ad.firebaseapp.com",
+            projectId: "neostudy-6c7ad",
+            storageBucket: "neostudy-6c7ad.firebasestorage.app",
+            messagingSenderId: "764552186350",
+            appId: "1:764552186350:web:c744108415108889e826ff",
+            measurementId: "G-NB40VTEZB3"
+        };
+
+        // Inicializar Firebase
+        let auth, db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            auth = firebase.auth();
+            db = firebase.firestore();
+            console.log("✅ Firebase inicializado en módulo 2");
+        } catch (error) {
+            console.error("❌ Error Firebase:", error);
+        }
+
         // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
         let welcomeNotificationShown = false;
 
-        // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
-        function checkSession() {
-            const userData = localStorage.getItem('usuarioNeoStudy');
-            
-            if (!userData) {
-                console.log('No hay usuario registrado, redirigiendo al login...');
-                showNotification('Por favor inicia sesión primero', 'danger');
-                setTimeout(() => {
-                    window.location.href = 'modulo1_inicio.html';
-                }, 2000);
-                return false;
-            }
-            
-            console.log('Usuario encontrado en localStorage:', JSON.parse(userData));
-            return true;
-        }
-
-        // ===== SISTEMA DE CARGA DE USUARIO COMPATIBLE CON MODULO1 =====
-        function loadUserData() {
-            if (!checkSession()) return;
-            
+        // ===== REEMPLAZAR LA FUNCIÓN loadUserData() COMPLETAMENTE =====
+        async function loadUserData() {
             try {
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                const user = auth.currentUser;
                 
-                console.log('Datos completos del usuario:', userData);
+                if (!user) {
+                    console.log('No hay usuario autenticado en Firebase');
+                    window.location.href = 'modulo1_inicio.html';
+                    return;
+                }
+
+                console.log('Usuario Firebase:', user.email);
                 
-                if (userData && typeof userData === 'object') {
-                    // DETECTAR TIPO DE USUARIO Y EXTRAER DATOS CORRECTAMENTE
+                // CARGAR DATOS DESDE FIRESTORE
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    console.log('Datos desde Firestore:', userData);
+                    
+                    // Extraer nombre según la categoría (compatible con modulo1)
                     let nombreCompleto = '';
                     let titulo = '';
-                    let categoria = userData.categoria || '';
+                    const categoria = userData.categoria || '';
                     
-                    // Extraer nombre según la categoría del modulo1
                     if (categoria === 'profesional') {
                         nombreCompleto = userData.prof_nombre || 'Profesional';
                         titulo = userData.prof_profesion || 'Profesional';
@@ -2030,16 +2050,69 @@
                     
                     console.log('Nombre detectado:', nombreCompleto);
                     console.log('Título detectado:', titulo);
-                    console.log('Categoría:', categoria);
                     
-                    // Actualizar todos los lugares donde aparece el nombre
-                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], profileData);
+                    // Actualizar interfaz con datos de Firestore
+                    updateUserProfile(
+                        nombreCompleto,
+                        titulo,
+                        nombreCompleto.split(' ')[0] || 'Usuario',
+                        userData.perfil || {}
+                    );
                     
                 } else {
-                    throw new Error('Formato de datos inválido');
+                    console.log('No se encontraron datos en Firestore, usando datos locales');
+                    // Fallback a datos locales si no hay en Firestore
+                    loadFromLocalStorage();
+                }
+                
+            } catch (error) {
+                console.error('Error cargando datos desde Firebase:', error);
+                // Fallback a datos locales en caso de error
+                loadFromLocalStorage();
+            }
+        }
+
+        // ===== FUNCIÓN DE FALLBACK PARA DATOS LOCALES =====
+        function loadFromLocalStorage() {
+            try {
+                const userData = localStorage.getItem('usuarioNeoStudy');
+                const profileData = localStorage.getItem('profileData') || {};
+                
+                if (userData) {
+                    const parsedData = JSON.parse(userData);
+                    console.log('Usando datos locales:', parsedData);
+                    
+                    let nombreCompleto = '';
+                    let titulo = '';
+                    const categoria = parsedData.categoria || '';
+                    
+                    if (categoria === 'profesional') {
+                        nombreCompleto = parsedData.prof_nombre || 'Profesional';
+                        titulo = parsedData.prof_profesion || 'Profesional';
+                    } 
+                    else if (categoria === 'universitario') {
+                        nombreCompleto = parsedData.uni_nombre || 'Estudiante Universitario';
+                        titulo = parsedData.uni_carrera || 'Estudiante';
+                    }
+                    else if (categoria === 'secundaria') {
+                        nombreCompleto = parsedData.sec_nombre || 'Estudiante de Secundaria';
+                        titulo = parsedData.sec_grado || 'Estudiante';
+                    }
+                    else if (categoria === 'general') {
+                        nombreCompleto = parsedData.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Usuario General';
+                    }
+                    else {
+                        nombreCompleto = 'Usuario NeoStudy';
+                        titulo = 'Estudiante';
+                    }
+                    
+                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], profileData);
+                } else {
+                    throw new Error('No hay datos locales');
                 }
             } catch (error) {
-                console.error('Error cargando datos:', error);
+                console.error('Error cargando datos locales:', error);
                 showNotification('Error al cargar los datos del usuario', 'danger');
                 setTimeout(() => {
                     window.location.href = 'modulo1_inicio.html';
@@ -2078,7 +2151,7 @@
             // Actualizar avatar y foto de perfil
             updateProfilePhoto(primerNombre, profileData);
             
-            // CORRECCIÓN MEJORADA: Actualizar placeholder del post con el nombre del usuario
+            // Actualizar placeholder del post con el nombre del usuario
             const nombreParaSaludo = primerNombre || 'Usuario';
             const postContentElement = document.getElementById('postContent');
             if (postContentElement) {
@@ -2259,13 +2332,24 @@
             window.location.href = 'modulo3_perfil.html';
         }
 
-        // ===== SISTEMA DE CERRAR SESIÓN =====
-        function logout() {
+        // ===== SISTEMA DE CERRAR SESIÓN MEJORADO CON FIREBASE =====
+        async function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                showNotification('Sesión cerrada correctamente', 'info');
-                setTimeout(() => {
-                    window.location.href = 'modulo1_inicio.html';
-                }, 1500);
+                try {
+                    await auth.signOut();
+                    localStorage.removeItem('usuarioNeoStudy');
+                    localStorage.removeItem('profileData');
+                    showNotification('Sesión cerrada correctamente', 'info');
+                    setTimeout(() => {
+                        window.location.href = 'modulo1_inicio.html';
+                    }, 1500);
+                } catch (error) {
+                    console.error('Error cerrando sesión:', error);
+                    showNotification('Sesión cerrada correctamente', 'info');
+                    setTimeout(() => {
+                        window.location.href = 'modulo1_inicio.html';
+                    }, 1500);
+                }
             }
         }
 
@@ -2275,77 +2359,99 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        // ===== SISTEMA DE PUBLICACIONES =====
-        function createPost() {
+        // ===== SISTEMA DE PUBLICACIONES MEJORADO CON FIREBASE =====
+        async function createPost() {
             const content = document.getElementById('postContent').value;
             if (content.trim() === '') {
                 showNotification('Por favor escribe algo para publicar', 'warning');
                 return;
             }
 
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            
-            // Extraer nombre según categoría (igual que en loadUserData)
-            let nombreCompleto = 'Usuario';
-            const categoria = userData?.categoria || '';
-            
-            if (categoria === 'profesional') {
-                nombreCompleto = userData.prof_nombre || 'Profesional';
-            } 
-            else if (categoria === 'universitario') {
-                nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
-            }
-            else if (categoria === 'secundaria') {
-                nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
-            }
-            else if (categoria === 'general') {
-                nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
-            }
-            
-            const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
-            const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
-            
-            let userAvatarHTML;
-            if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
-                userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
-            } else {
-                userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
-            }
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('Debes iniciar sesión para publicar', 'danger');
+                    return;
+                }
 
-            const newPost = document.createElement('div');
-            newPost.className = 'post fade-in';
-            newPost.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        ${userAvatarHTML}
-                        <div class="post-user-info">
-                            <h4>${nombreCompleto}</h4>
-                            <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+                
+                // Extraer nombre según categoría
+                let nombreCompleto = 'Usuario';
+                const categoria = userData.categoria || '';
+                
+                if (categoria === 'profesional') {
+                    nombreCompleto = userData.prof_nombre || 'Profesional';
+                } 
+                else if (categoria === 'universitario') {
+                    nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+                }
+                else if (categoria === 'secundaria') {
+                    nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+                }
+                else if (categoria === 'general') {
+                    nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
+                }
+                
+                const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+                const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                let userAvatarHTML;
+                const profileData = userData.perfil || {};
+                if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
+                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
+                } else {
+                    userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
+                }
+
+                const newPost = document.createElement('div');
+                newPost.className = 'post fade-in';
+                newPost.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-user">
+                            ${userAvatarHTML}
+                            <div class="post-user-info">
+                                <h4>${nombreCompleto}</h4>
+                                <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="post-content">${content}</div>
-                <div class="post-stats">
-                    <span>0 reacciones</span>
-                    <span>0 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="likePost(this)">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            `;
+                    <div class="post-content">${content}</div>
+                    <div class="post-stats">
+                        <span>0 reacciones</span>
+                        <span>0 comentarios</span>
+                    </div>
+                    <div class="post-actions-bar">
+                        <button class="post-action-btn" onclick="likePost(this)">
+                            <i class="fas fa-thumbs-up"></i> Me gusta
+                        </button>
+                        <button class="post-action-btn">
+                            <i class="fas fa-comment"></i> Comentar
+                        </button>
+                        <button class="post-action-btn">
+                            <i class="fas fa-share"></i> Compartir
+                        </button>
+                    </div>
+                `;
 
-            document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
-            document.getElementById('postContent').value = '';
-            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
+                document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
+                document.getElementById('postContent').value = '';
+                showNotification('¡Publicación creada exitosamente! 🎉', 'success');
+
+                // Guardar en Firebase si se desea
+                // await db.collection('publicaciones').add({
+                //     userId: user.uid,
+                //     contenido: content,
+                //     fecha: new Date(),
+                //     reacciones: 0,
+                //     comentarios: 0
+                // });
+
+            } catch (error) {
+                console.error('Error creando publicación:', error);
+                showNotification('Error al crear la publicación', 'danger');
+            }
         }
 
         function likePost(button) {
@@ -2469,20 +2575,13 @@
 
         // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
         function checkForProfileUpdates() {
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            
-            if (userData) {
-                loadUserData(); // Recargar datos completos
-            }
+            // Esta función puede ser usada para actualizaciones en tiempo real
+            // desde Firebase si se implementa esa funcionalidad
         }
 
-        // ===== INICIALIZACIÓN MEJORADA =====
+        // ===== INICIALIZACIÓN MEJORADA CON FIREBASE =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar datos del usuario primero
-            loadUserData();
-            
-            // Configurar tema
+            // Configurar tema primero
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setThemeMode(savedTheme);
             
@@ -2501,6 +2600,17 @@
 
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 5000);
+        });
+
+        // ===== AGREGADO AL FINAL: Verificar autenticación con Firebase =====
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("Usuario autenticado:", user.email);
+                loadUserData();
+            } else {
+                console.log("No autenticado, redirigiendo...");
+                window.location.href = 'modulo1_inicio.html';
+            }
         });
     </script>
 </body>
