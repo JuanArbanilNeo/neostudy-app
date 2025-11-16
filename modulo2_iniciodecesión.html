@@ -6,6 +6,7 @@
     <title>Neo Study - Plataforma Educativa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* TODOS TUS ESTILOS CSS ORIGINALES SE MANTIENEN IGUAL */
         * {
             margin: 0;
             padding: 0;
@@ -1971,7 +1972,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
 
     <script>
         // ===== CONFIGURACIÓN FIREBASE - AGREGADO AL INICIO DEL SCRIPT =====
@@ -1986,14 +1986,13 @@
         };
 
         // Inicializar Firebase
-        let auth, db, storage;
+        let auth, db;
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
             auth = firebase.auth();
             db = firebase.firestore();
-            storage = firebase.storage();
             console.log("✅ Firebase inicializado en módulo 2");
         } catch (error) {
             console.error("❌ Error Firebase:", error);
@@ -2002,66 +2001,7 @@
         // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
         let welcomeNotificationShown = false;
 
-        // ===== SISTEMA DE FOTOS CON FIREBASE STORAGE =====
-        async function uploadProfilePhoto(file) {
-            try {
-                const user = auth.currentUser;
-                if (!user) {
-                    showNotification('Debes iniciar sesión para subir fotos', 'warning');
-                    return null;
-                }
-
-                showNotification('Subiendo foto... 📸', 'info');
-
-                // Crear referencia única para la foto
-                const storageRef = storage.ref();
-                const photoRef = storageRef.child(`profile_photos/${user.uid}/profile.jpg`);
-                
-                // Subir archivo
-                const snapshot = await photoRef.put(file);
-                
-                // Obtener URL de descarga
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                
-                // Guardar URL en Firestore
-                await db.collection('usuarios').doc(user.uid).update({
-                    'perfil.profilePhoto': downloadURL,
-                    'perfil.photoUpdated': new Date()
-                });
-
-                console.log('Foto subida exitosamente:', downloadURL);
-                return downloadURL;
-                
-            } catch (error) {
-                console.error('Error subiendo foto:', error);
-                showNotification('Error al subir la foto', 'danger');
-                return null;
-            }
-        }
-
-        async function loadProfilePhotoFromStorage() {
-            try {
-                const user = auth.currentUser;
-                if (!user) return null;
-
-                const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    if (userData.perfil && userData.perfil.profilePhoto) {
-                        console.log('Foto cargada desde Firestore:', userData.perfil.profilePhoto);
-                        return userData.perfil.profilePhoto;
-                    }
-                }
-                
-                return null;
-            } catch (error) {
-                console.error('Error cargando foto desde Storage:', error);
-                return null;
-            }
-        }
-
-        // ===== REEMPLAZAR LA FUNCIÓN loadUserData() COMPLETAMENTE =====
+        // ===== SISTEMA MEJORADO DE CARGA DE USUARIO =====
         async function loadUserData() {
             try {
                 const user = auth.currentUser;
@@ -2081,7 +2021,30 @@
                     const userData = userDoc.data();
                     console.log('Datos desde Firestore:', userData);
                     
-                    // Extraer nombre según la categoría (compatible con modulo1)
+                    // ✅ NUEVO: CARGAR FOTO DE PERFIL DESDE MÚLTIPLES FUENTES
+                    let profilePhoto = '';
+                    
+                    // 1. Buscar en perfil de Firestore
+                    if (userData.perfil && userData.perfil.fotoPerfil) {
+                        profilePhoto = userData.perfil.fotoPerfil;
+                        console.log("✅ Foto encontrada en Firestore perfil");
+                    }
+                    // 2. Buscar en datos locales (módulo3)
+                    else {
+                        const localProfileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                        if (localProfileData.profilePhoto) {
+                            profilePhoto = localProfileData.profilePhoto;
+                            console.log("✅ Foto encontrada en localStorage profileData");
+                        }
+                        // 3. Buscar en usuarioNeoStudy (módulo3)
+                        const localUserData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+                        if (localUserData.fotoPerfil) {
+                            profilePhoto = localUserData.fotoPerfil;
+                            console.log("✅ Foto encontrada en localStorage usuarioNeoStudy");
+                        }
+                    }
+                    
+                    // Extraer nombre según la categoría
                     let nombreCompleto = '';
                     let titulo = '';
                     const categoria = userData.categoria || '';
@@ -2103,7 +2066,6 @@
                         titulo = 'Usuario General';
                     }
                     else {
-                        // Fallback por si no se detecta la categoría
                         nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
                                        userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Estudiante';
@@ -2111,31 +2073,23 @@
                     
                     console.log('Nombre detectado:', nombreCompleto);
                     console.log('Título detectado:', titulo);
+                    console.log('Foto de perfil encontrada:', profilePhoto ? 'SÍ' : 'NO');
                     
-                    // Cargar foto desde Storage
-                    const photoURL = await loadProfilePhotoFromStorage();
-                    const profileData = userData.perfil || {};
-                    if (photoURL) {
-                        profileData.profilePhoto = photoURL;
-                    }
-                    
-                    // Actualizar interfaz con datos de Firestore
+                    // Actualizar interfaz con datos
                     updateUserProfile(
                         nombreCompleto,
                         titulo,
                         nombreCompleto.split(' ')[0] || 'Usuario',
-                        profileData
+                        { profilePhoto: profilePhoto }
                     );
                     
                 } else {
                     console.log('No se encontraron datos en Firestore, usando datos locales');
-                    // Fallback a datos locales si no hay en Firestore
                     loadFromLocalStorage();
                 }
                 
             } catch (error) {
                 console.error('Error cargando datos desde Firebase:', error);
-                // Fallback a datos locales en caso de error
                 loadFromLocalStorage();
             }
         }
@@ -2144,7 +2098,7 @@
         function loadFromLocalStorage() {
             try {
                 const userData = localStorage.getItem('usuarioNeoStudy');
-                const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+                const profileData = localStorage.getItem('profileData') || {};
                 
                 if (userData) {
                     const parsedData = JSON.parse(userData);
@@ -2175,7 +2129,15 @@
                         titulo = 'Estudiante';
                     }
                     
-                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], profileData);
+                    // ✅ NUEVO: Buscar foto en múltiples fuentes locales
+                    let profilePhoto = '';
+                    if (profileData.profilePhoto) {
+                        profilePhoto = profileData.profilePhoto;
+                    } else if (parsedData.fotoPerfil) {
+                        profilePhoto = parsedData.fotoPerfil;
+                    }
+                    
+                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], { profilePhoto: profilePhoto });
                 } else {
                     throw new Error('No hay datos locales');
                 }
@@ -2188,6 +2150,7 @@
             }
         }
 
+        // ===== FUNCIÓN MEJORADA PARA ACTUALIZAR PERFIL =====
         function updateUserProfile(nombreCompleto, titulo, primerNombre, profileData) {
             // Actualizar escritorio
             const userNameElement = document.getElementById('userName');
@@ -2216,8 +2179,8 @@
             const postUserNameElement = document.getElementById('postUserName');
             if (postUserNameElement) postUserNameElement.textContent = primerNombre;
             
-            // Actualizar avatar y foto de perfil
-            updateProfilePhoto(primerNombre, profileData);
+            // ✅ NUEVO: ACTUALIZAR TODOS LOS AVATARES CON FOTO
+            updateAllAvatars(primerNombre, profileData);
             
             // Actualizar placeholder del post con el nombre del usuario
             const nombreParaSaludo = primerNombre || 'Usuario';
@@ -2233,103 +2196,33 @@
             }
         }
 
-        // ===== FUNCIÓN MEJORADA PARA ACTUALIZAR FOTO =====
-        async function updateProfilePhoto(userName, profileData) {
-            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, #mobileUserAvatar, #mobileProfileAvatar');
+        // ===== FUNCIÓN MEJORADA PARA ACTUALIZAR AVATARES =====
+        function updateAllAvatars(userName, profileData) {
+            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, #mobileUserAvatar, #mobileProfileAvatar, #mainAvatar, #userAvatar, #postAvatar');
             const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
             
-            // INTENTAR CARGAR FOTO DESDE STORAGE PRIMERO
-            let photoURL = await loadProfilePhotoFromStorage();
-            
-            // Si no hay en storage, usar datos locales
-            if (!photoURL && profileData && profileData.profilePhoto) {
-                photoURL = profileData.profilePhoto;
-            }
+            console.log('Actualizando avatares con foto:', profileData.profilePhoto ? 'SÍ' : 'NO');
             
             avatares.forEach(avatar => {
-                if (photoURL && 
-                    photoURL !== "" && 
-                    photoURL !== "null" && 
-                    photoURL !== "undefined" &&
-                    (photoURL.startsWith('data:image') || photoURL.startsWith('https://'))) {
+                if (profileData.profilePhoto && 
+                    profileData.profilePhoto !== "" && 
+                    profileData.profilePhoto !== "null" && 
+                    profileData.profilePhoto !== "undefined" &&
+                    profileData.profilePhoto.startsWith('data:image')) {
                     
-                    avatar.style.backgroundImage = `url(${photoURL})`;
+                    // Usar foto de perfil
+                    avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
                     avatar.textContent = '';
                     avatar.style.backgroundSize = 'cover';
                     avatar.style.backgroundPosition = 'center';
-                    avatar.style.cursor = 'pointer';
-                    avatar.title = 'Haz clic para cambiar foto';
+                    avatar.style.color = 'transparent';
                 } else {
+                    // Usar iniciales
                     avatar.textContent = initials;
                     avatar.style.backgroundImage = 'none';
                     avatar.style.background = 'var(--bg-gradient)';
-                    avatar.style.cursor = 'pointer';
-                    avatar.title = 'Haz clic para cambiar foto';
+                    avatar.style.color = 'var(--white)';
                 }
-            });
-
-            // Agregar funcionalidad de subida de foto
-            addPhotoUploadFeature();
-        }
-
-        // ===== FUNCIÓN PARA SUBIR FOTOS DESDE LOS AVATARES =====
-        function addPhotoUploadFeature() {
-            const avatares = document.querySelectorAll('.avatar, .post-avatar, .mobile-profile-avatar');
-            
-            avatares.forEach(avatar => {
-                // Remover event listeners existentes para evitar duplicados
-                avatar.replaceWith(avatar.cloneNode(true));
-            });
-
-            // Volver a obtener los avatares después del clone
-            const refreshedAvatares = document.querySelectorAll('.avatar, .post-avatar, .mobile-profile-avatar');
-            
-            refreshedAvatares.forEach(avatar => {
-                avatar.style.cursor = 'pointer';
-                avatar.title = 'Haz clic para cambiar foto';
-                
-                avatar.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'image/*';
-                    input.style.display = 'none';
-                    
-                    input.onchange = async (event) => {
-                        const file = event.target.files[0];
-                        if (file) {
-                            // Validar tipo de archivo
-                            if (!file.type.startsWith('image/')) {
-                                showNotification('Por favor selecciona una imagen válida', 'warning');
-                                return;
-                            }
-                            
-                            // Validar tamaño (máximo 5MB)
-                            if (file.size > 5 * 1024 * 1024) {
-                                showNotification('La imagen debe ser menor a 5MB', 'warning');
-                                return;
-                            }
-                            
-                            const photoURL = await uploadProfilePhoto(file);
-                            if (photoURL) {
-                                showNotification('¡Foto actualizada en todos los dispositivos! 📸', 'success');
-                                
-                                // Actualizar interfaz inmediatamente
-                                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy') || '{}');
-                                const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
-                                profileData.profilePhoto = photoURL;
-                                localStorage.setItem('profileData', JSON.stringify(profileData));
-                                
-                                const nombreCompleto = userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre || 'Usuario';
-                                updateProfilePhoto(nombreCompleto.split(' ')[0], profileData);
-                            }
-                        }
-                    };
-                    
-                    document.body.appendChild(input);
-                    input.click();
-                    document.body.removeChild(input);
-                });
             });
         }
 
@@ -2376,7 +2269,7 @@
             }
         }
 
-        // ===== SISTEMA DE COMPARTIR - SIMPLIFICADO CON TU QR IMAGEN =====
+        // ===== SISTEMA DE COMPARTIR =====
         function openShareModal() {
             const modal = document.getElementById('shareModal');
             if (modal) {
@@ -2462,7 +2355,7 @@
             try {
                 const link = document.createElement('a');
                 link.download = 'neostudy-qr-code.png';
-                link.href = 'imagen-qrneostady.png'; // Tu imagen QR
+                link.href = 'imagen-qrneostady.png';
                 link.click();
                 showNotification('QR descargado exitosamente 📱', 'success');
             } catch (error) {
@@ -2503,7 +2396,7 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        // ===== SISTEMA DE PUBLICACIONES MEJORADO CON FIREBASE =====
+        // ===== SISTEMA DE PUBLICACIONES MEJORADO =====
         async function createPost() {
             const content = document.getElementById('postContent').value;
             if (content.trim() === '') {
@@ -2541,12 +2434,20 @@
                 const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                 const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
                 
-                let userAvatarHTML;
-                const profileData = userData.perfil || {};
-                const photoURL = await loadProfilePhotoFromStorage();
+                // ✅ NUEVO: BUSCAR FOTO ACTUALIZADA PARA LA PUBLICACIÓN
+                let profilePhoto = '';
+                if (userData.perfil && userData.perfil.fotoPerfil) {
+                    profilePhoto = userData.perfil.fotoPerfil;
+                } else {
+                    const localProfileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                    if (localProfileData.profilePhoto) {
+                        profilePhoto = localProfileData.profilePhoto;
+                    }
+                }
                 
-                if (photoURL) {
-                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${photoURL}); background-size: cover; background-position: center;"></div>`;
+                let userAvatarHTML;
+                if (profilePhoto && profilePhoto.startsWith('data:image')) {
+                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profilePhoto}); background-size: cover; background-position: center;"></div>`;
                 } else {
                     userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
                 }
@@ -2712,8 +2613,11 @@
 
         // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
         function checkForProfileUpdates() {
-            // Esta función puede ser usada para actualizaciones en tiempo real
-            // desde Firebase si se implementa esa funcionalidad
+            // Esta función verifica si hay cambios en el perfil
+            const user = auth.currentUser;
+            if (user) {
+                loadUserData(); // Recargar datos para actualizar foto
+            }
         }
 
         // ===== INICIALIZACIÓN MEJORADA CON FIREBASE =====
@@ -2735,7 +2639,7 @@
                 }
             });
 
-            // Verificar actualizaciones periódicamente
+            // Verificar actualizaciones periódicamente (cada 5 segundos)
             setInterval(checkForProfileUpdates, 5000);
         });
 
