@@ -1627,10 +1627,43 @@
         let currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
         let currentEditorImage = null;
         let isDarkMode = false;
+        let unsubscribeUserListener = null;
+        let isRealTimeEnabled = false;
+
+        // ===== SISTEMA DE SINCRONIZACIÓN EN TIEMPO REAL =====
+        function enableRealTimeUpdates() {
+            const user = auth.currentUser;
+            if (!user || isRealTimeEnabled) return;
+
+            console.log('🔔 Activando sincronización en tiempo real...');
+            
+            // Escuchar cambios en el documento del usuario
+            unsubscribeUserListener = db.collection('usuarios').doc(user.uid)
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        console.log('🔄 Datos actualizados en tiempo real');
+                        const userData = doc.data();
+                        updateProfileInterface(userData);
+                        loadProfilePhotos(user.uid, userData);
+                    }
+                }, (error) => {
+                    console.error('❌ Error en sincronización:', error);
+                });
+            
+            isRealTimeEnabled = true;
+        }
+
+        function disableRealTimeUpdates() {
+            if (unsubscribeUserListener) {
+                unsubscribeUserListener();
+                unsubscribeUserListener = null;
+            }
+            isRealTimeEnabled = false;
+            console.log('🔕 Sincronización desactivada');
+        }
 
         // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Verificar autenticación primero
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     console.log("✅ Usuario autenticado en módulo 3:", user.email);
@@ -1638,8 +1671,10 @@
                     checkDarkModePreference();
                     checkBirthday();
                     updateThemeButton();
+                    enableRealTimeUpdates(); // <- ACTIVAR SINCRONIZACIÓN
                 } else {
                     console.log("❌ No autenticado, redirigiendo...");
+                    disableRealTimeUpdates(); // <- DESACTIVAR AL CERRAR SESIÓN
                     window.location.href = 'modulo1_inicio.html';
                 }
             });
@@ -1717,8 +1752,15 @@
         function updateProfileInterface(userData) {
             const perfil = userData.perfil || {};
             
+            // Solo actualizar si los datos son diferentes
+            const currentName = document.getElementById('profileName').textContent;
+            const newName = perfil.nombre || 'Usuario NeoStudy';
+            
+            if (currentName !== newName) {
+                document.getElementById('profileName').textContent = newName;
+            }
+            
             // Información básica
-            document.getElementById('profileName').textContent = perfil.nombre || 'Usuario NeoStudy';
             document.getElementById('profileTitle').textContent = perfil.titulo || 'Estudiante';
             
             // Frase motivacional
@@ -1750,36 +1792,98 @@
             document.getElementById('infoUbicacion').textContent = perfil.ubicacion || 'Lima, Perú';
 
             // Actualizar avatares
-            updateAllAvatars(perfil.nombre, perfil);
+            updateAllAvatars(newName, perfil);
         }
 
-        // ===== SISTEMA MEJORADO DE FOTOS =====
+        // ===== SISTEMA MEJORADO DE FOTOS CON CACHE INTELIGENTE =====
         async function loadProfilePhotos(uid, userData) {
             try {
                 console.log('🔄 Cargando fotos del perfil...');
                 
                 const perfil = userData.perfil || {};
 
-                // CARGAR FOTO DE PERFIL DESDE FIREBASE
+                // CARGAR FOTO DE PERFIL
                 if (perfil.fotoPerfil && perfil.fotoPerfil.startsWith('data:image')) {
-                    document.getElementById('profileAvatar').innerHTML = `<img src="${perfil.fotoPerfil}" alt="Foto de perfil">`;
-                    document.getElementById('userAvatar').style.backgroundImage = `url(${perfil.fotoPerfil})`;
-                    document.getElementById('userAvatar').textContent = '';
-                    document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${perfil.fotoPerfil})`;
-                    document.getElementById('mobileUserAvatar').textContent = '';
+                    updateAvatarImages(perfil.fotoPerfil);
+                } else {
+                    // Si no hay foto, usar iniciales
+                    const userName = perfil.nombre || 'Usuario NeoStudy';
+                    resetToInitials(userName);
                 }
 
-                // CARGAR FOTO DE PORTADA DESDE FIREBASE
+                // CARGAR FOTO DE PORTADA
                 if (perfil.portada && perfil.portada.url) {
                     applyCoverPhoto(perfil.portada.url, perfil.portada.ajustes || { x: 0, y: 0, zoom: 1 });
+                } else {
+                    // Si no hay portada, resetear
+                    document.getElementById('coverPhoto').innerHTML = '';
+                    currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
                 }
 
                 // CARGAR GALERÍA
                 loadGallery();
-
+                
             } catch (error) {
                 console.error('❌ Error cargando fotos:', error);
             }
+        }
+
+        // ===== FUNCIÓN MEJORADA PARA ACTUALIZAR AVATARES =====
+        function updateAvatarImages(photoUrl) {
+            // Actualizar avatar principal
+            document.getElementById('profileAvatar').innerHTML = `<img src="${photoUrl}" alt="Foto de perfil">`;
+            
+            // Actualizar avatares del header
+            document.getElementById('userAvatar').style.backgroundImage = `url(${photoUrl})`;
+            document.getElementById('userAvatar').textContent = '';
+            document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${photoUrl})`;
+            document.getElementById('mobileUserAvatar').textContent = '';
+        }
+
+        function resetToInitials(userName) {
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            document.getElementById('profileAvatar').innerHTML = initials;
+            document.getElementById('userAvatar').textContent = initials;
+            document.getElementById('mobileUserAvatar').textContent = initials;
+            document.getElementById('userAvatar').style.backgroundImage = '';
+            document.getElementById('mobileUserAvatar').style.backgroundImage = '';
+        }
+
+        function updateAllAvatars(userName, profileData) {
+            const avatares = document.querySelectorAll('.avatar, #mobileUserAvatar, #userAvatar, #profileAvatar');
+            const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+            
+            console.log('Actualizando avatares con foto:', profileData.fotoPerfil ? 'SÍ' : 'NO');
+            
+            avatares.forEach(avatar => {
+                if (profileData.fotoPerfil && 
+                    profileData.fotoPerfil !== "" && 
+                    profileData.fotoPerfil !== "null" && 
+                    profileData.fotoPerfil !== "undefined" &&
+                    profileData.fotoPerfil.startsWith('data:image')) {
+                    
+                    // Usar foto de perfil
+                    if (avatar.id === 'profileAvatar') {
+                        avatar.innerHTML = `<img src="${profileData.fotoPerfil}" alt="Foto de perfil">`;
+                    } else {
+                        avatar.style.backgroundImage = `url(${profileData.fotoPerfil})`;
+                        avatar.textContent = '';
+                        avatar.style.backgroundSize = 'cover';
+                        avatar.style.backgroundPosition = 'center';
+                    }
+                } else {
+                    // Usar iniciales
+                    if (avatar.id === 'profileAvatar') {
+                        avatar.innerHTML = initials;
+                    } else {
+                        avatar.textContent = initials;
+                        avatar.style.backgroundImage = 'none';
+                        avatar.style.background = 'var(--bg-gradient)';
+                        avatar.style.color = 'var(--white)';
+                    }
+                }
+            });
         }
 
         // ===== SISTEMA MEJORADO DE GUARDADO EN FIREBASE =====
@@ -1889,6 +1993,85 @@
                 
             } catch (error) {
                 console.error('Error actualizando historial:', error);
+            }
+        }
+
+        // ===== SISTEMA MEJORADO DE ELIMINACIÓN =====
+        async function deleteProfilePhoto() {
+            if (confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
+                try {
+                    const user = auth.currentUser;
+                    if (!user) return;
+
+                    showNotification('Eliminando foto... ⏳', 'info');
+
+                    // ELIMINAR DE FIREBASE
+                    await db.collection('usuarios').doc(user.uid).set({
+                        'perfil.fotoPerfil': '',
+                        'perfil.ultimaActualizacion': new Date().toISOString()
+                    }, { merge: true });
+                    
+                    // También eliminar del historial
+                    await removeFromPhotoHistory('profile');
+                    
+                    showNotification('Foto de perfil eliminada ✅', 'success');
+                    
+                    // Los avatares se actualizarán automáticamente por la sincronización
+                    
+                } catch (error) {
+                    console.error('Error eliminando foto:', error);
+                    showNotification('Error al eliminar la foto ❌', 'danger');
+                }
+            }
+        }
+
+        async function deleteCoverPhoto() {
+            if (confirm('¿Estás seguro de que quieres eliminar tu foto de portada?')) {
+                try {
+                    const user = auth.currentUser;
+                    if (!user) return;
+
+                    showNotification('Eliminando portada... ⏳', 'info');
+
+                    // ELIMINAR DE FIREBASE
+                    await db.collection('usuarios').doc(user.uid).set({
+                        'perfil.portada': '',
+                        'perfil.ultimaActualizacion': new Date().toISOString()
+                    }, { merge: true });
+                    
+                    // También eliminar del historial
+                    await removeFromPhotoHistory('cover');
+                    
+                    showNotification('Foto de portada eliminada ✅', 'success');
+                    
+                } catch (error) {
+                    console.error('Error eliminando portada:', error);
+                    showNotification('Error al eliminar la portada ❌', 'danger');
+                }
+            }
+        }
+
+        // ===== FUNCIÓN PARA ELIMINAR DEL HISTORIAL =====
+        async function removeFromPhotoHistory(type) {
+            try {
+                const user = auth.currentUser;
+                const userRef = db.collection('usuarios').doc(user.uid);
+                const userDoc = await userRef.get();
+                
+                if (userDoc.exists && userDoc.data().perfil && userDoc.data().perfil.historialFotos) {
+                    const historialActual = userDoc.data().perfil.historialFotos;
+                    const nuevoHistorial = {
+                        ...historialActual,
+                        [type]: []
+                    };
+                    
+                    await userRef.set({
+                        'perfil.historialFotos': nuevoHistorial
+                    }, { merge: true });
+                }
+                
+            } catch (error) {
+                console.error('Error limpiando historial:', error);
             }
         }
 
@@ -2057,12 +2240,14 @@
         document.getElementById('posY').addEventListener('input', updateEditorPreview);
         document.getElementById('zoomLevel').addEventListener('input', updateEditorPreview);
 
+        // ===== MEJORAR LA FUNCIÓN DE GUARDADO =====
         async function saveCoverImage() {
             try {
                 const user = auth.currentUser;
                 if (!user) return;
 
-                // GUARDAR EN FIREBASE
+                showNotification('Guardando portada... ⏳', 'info');
+
                 const coverData = {
                     url: currentEditorImage,
                     ajustes: currentCoverAdjustments
@@ -2070,81 +2255,12 @@
                 
                 await saveCoverToFirebase(coverData);
                 
-                // Aplicar a la vista
-                applyCoverPhoto(currentEditorImage, currentCoverAdjustments);
-                
                 closeCoverEditor();
-                loadGallery();
                 showNotification('¡Portada guardada correctamente! ✅', 'success');
                 
             } catch (error) {
                 console.error('Error guardando portada:', error);
-                showNotification('Error al guardar la portada', 'danger');
-            }
-        }
-
-        // ===== ELIMINAR FOTOS =====
-        async function deleteProfilePhoto() {
-            if (confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
-                try {
-                    const user = auth.currentUser;
-                    if (!user) return;
-
-                    // ELIMINAR DE FIREBASE
-                    await db.collection('usuarios').doc(user.uid).set({
-                        'perfil.fotoPerfil': '',
-                        'perfil.ultimaActualizacion': new Date().toISOString()
-                    }, { merge: true });
-                    
-                    // Restaurar iniciales
-                    const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                    const userName = userDoc.exists && userDoc.data().perfil ? userDoc.data().perfil.nombre : 'Usuario NeoStudy';
-                    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
-                    
-                    document.getElementById('profileAvatar').innerHTML = initials;
-                    document.getElementById('userAvatar').textContent = initials;
-                    document.getElementById('mobileUserAvatar').textContent = initials;
-                    document.getElementById('userAvatar').style.backgroundImage = '';
-                    document.getElementById('mobileUserAvatar').style.backgroundImage = '';
-                    
-                    // Cerrar menús
-                    document.getElementById('avatarOptions').classList.remove('show');
-                    document.getElementById('avatarDropdown').classList.remove('show');
-                    
-                    showNotification('Foto de perfil eliminada ✅', 'success');
-                    
-                } catch (error) {
-                    console.error('Error eliminando foto:', error);
-                    showNotification('Error al eliminar la foto', 'danger');
-                }
-            }
-        }
-
-        async function deleteCoverPhoto() {
-            if (confirm('¿Estás seguro de que quieres eliminar tu foto de portada?')) {
-                try {
-                    const user = auth.currentUser;
-                    if (!user) return;
-
-                    // ELIMINAR DE FIREBASE
-                    await db.collection('usuarios').doc(user.uid).set({
-                        'perfil.portada': '',
-                        'perfil.ultimaActualizacion': new Date().toISOString()
-                    }, { merge: true });
-                    
-                    // Restaurar gradiente
-                    document.getElementById('coverPhoto').innerHTML = '';
-                    currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
-                    
-                    // Cerrar menú
-                    document.getElementById('coverOptions').classList.remove('show');
-                    
-                    showNotification('Foto de portada eliminada ✅', 'success');
-                    
-                } catch (error) {
-                    console.error('Error eliminando portada:', error);
-                    showNotification('Error al eliminar la portada', 'danger');
-                }
+                showNotification('Error al guardar la portada ❌', 'danger');
             }
         }
 
@@ -2273,7 +2389,7 @@
             }
         });
 
-        // ===== SISTEMA DE SUBIDA DE FOTOS MEJORADO =====
+        // ===== SISTEMA MEJORADO DE SUBIDA DE FOTOS =====
         function changeProfilePhoto() {
             document.getElementById('profilePhotoInput').click();
             document.getElementById('avatarOptions').classList.remove('show');
@@ -2295,31 +2411,36 @@
 
         async function handlePhotoUpload(file, type) {
             if (file) {
+                // Mostrar loader
+                showNotification('Subiendo foto... ⏳', 'info');
+                
                 const reader = new FileReader();
                 reader.onload = async function(e) {
-                    if (type === 'profilePhoto') {
-                        // Para foto de perfil
-                        await saveProfilePhotoToFirebase(e.target.result);
-
-                        // Actualizar la vista
-                        document.getElementById('profileAvatar').innerHTML = `<img src="${e.target.result}" alt="Foto de perfil">`;
-                        document.getElementById('userAvatar').style.backgroundImage = `url(${e.target.result})`;
-                        document.getElementById('userAvatar').textContent = '';
-                        document.getElementById('mobileUserAvatar').style.backgroundImage = `url(${e.target.result})`;
-                        document.getElementById('mobileUserAvatar').textContent = '';
+                    try {
+                        if (type === 'profilePhoto') {
+                            await saveProfilePhotoToFirebase(e.target.result);
+                            showNotification('¡Foto de perfil actualizada correctamente! ✅', 'success');
+                            
+                        } else {
+                            currentEditorImage = e.target.result;
+                            document.getElementById('editorPreview').src = currentEditorImage;
+                            resetEditor();
+                            document.getElementById('coverEditor').classList.add('show');
+                            showNotification('Foto cargada, ahora puedes editarla ✏️', 'info');
+                        }
                         
-                        showNotification('¡Foto de perfil actualizada correctamente! ✅', 'success');
-                    } else {
-                        // Para foto de portada, abrir el editor
-                        currentEditorImage = e.target.result;
-                        document.getElementById('editorPreview').src = currentEditorImage;
-                        resetEditor();
-                        document.getElementById('coverEditor').classList.add('show');
+                        // La galería se actualizará automáticamente por la sincronización en tiempo real
+                        
+                    } catch (error) {
+                        console.error('Error subiendo foto:', error);
+                        showNotification('Error al subir la foto ❌', 'danger');
                     }
-                    
-                    // Actualizar galería
-                    loadGallery();
                 };
+                
+                reader.onerror = function() {
+                    showNotification('Error al leer el archivo ❌', 'danger');
+                };
+                
                 reader.readAsDataURL(file);
             }
         }
@@ -2552,43 +2673,6 @@
                 console.error('Error guardando perfil:', error);
                 showNotification('Error al guardar el perfil', 'danger');
             }
-        }
-
-        // ===== FUNCIÓN MEJORADA PARA ACTUALIZAR AVATARES =====
-        function updateAllAvatars(userName, profileData) {
-            const avatares = document.querySelectorAll('.avatar, #mobileUserAvatar, #userAvatar, #profileAvatar');
-            const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
-            
-            console.log('Actualizando avatares con foto:', profileData.fotoPerfil ? 'SÍ' : 'NO');
-            
-            avatares.forEach(avatar => {
-                if (profileData.fotoPerfil && 
-                    profileData.fotoPerfil !== "" && 
-                    profileData.fotoPerfil !== "null" && 
-                    profileData.fotoPerfil !== "undefined" &&
-                    profileData.fotoPerfil.startsWith('data:image')) {
-                    
-                    // Usar foto de perfil
-                    if (avatar.id === 'profileAvatar') {
-                        avatar.innerHTML = `<img src="${profileData.fotoPerfil}" alt="Foto de perfil">`;
-                    } else {
-                        avatar.style.backgroundImage = `url(${profileData.fotoPerfil})`;
-                        avatar.textContent = '';
-                        avatar.style.backgroundSize = 'cover';
-                        avatar.style.backgroundPosition = 'center';
-                    }
-                } else {
-                    // Usar iniciales
-                    if (avatar.id === 'profileAvatar') {
-                        avatar.innerHTML = initials;
-                    } else {
-                        avatar.textContent = initials;
-                        avatar.style.backgroundImage = 'none';
-                        avatar.style.background = 'var(--bg-gradient)';
-                        avatar.style.color = 'var(--white)';
-                    }
-                }
-            });
         }
 
         // ===== NAVEGACIÓN =====
