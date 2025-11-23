@@ -1,1275 +1,481 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        
-        body {
-            margin: 0;
-            font-family: "Poppins", sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            overflow-x: hidden;
-            background: linear-gradient(120deg, #001F3F, #003366, #00C4FF);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            padding: 20px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    overflow-x: hidden;
+    background: linear-gradient(120deg, #001F3F, #003366, #00C4FF);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    padding: 20px;
+  }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.4);
-        }
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  }
 
-        h1 { 
-            color: #00C4FF; 
-            font-size: 2em; 
-            margin-bottom: 15px; 
-        }
-        
-        p { 
-            font-size: 1em; 
-            color: #dfe9ff; 
-            margin-bottom: 25px; 
-        }
+  h1 { 
+    color: #00C4FF; 
+    font-size: 2em; 
+    margin-bottom: 15px; 
+  }
+  
+  p { 
+    font-size: 1em; 
+    color: #dfe9ff; 
+    margin-bottom: 25px; 
+  }
 
-        select, input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 10px;
-            border: none;
-            font-size: 1em;
-        }
+  select, input, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: none;
+    font-size: 1em;
+  }
 
-        input { 
-            background: rgba(255,255,255,0.9); 
-            color: #333; 
-        }
-        
-        input:focus { 
-            outline: none; 
-            box-shadow: 0 0 12px #00C4FF; 
-            transform: scale(1.03); 
-        }
+  input { 
+    background: rgba(255,255,255,0.9); 
+    color: #333; 
+  }
+  
+  input:focus { 
+    outline: none; 
+    box-shadow: 0 0 12px #00C4FF; 
+    transform: scale(1.03); 
+  }
 
-        button {
-            background: linear-gradient(90deg,#00C4FF,#007bff);
-            color: white;
-            cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 0 15px #00C4FF;
-            transition: 0.3s;
-        }
+  button {
+    background: linear-gradient(90deg,#00C4FF,#007bff);
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 0 15px #00C4FF;
+    transition: 0.3s;
+  }
 
-        button:hover { 
-            transform: scale(1.05); 
-            box-shadow: 0 0 25px #00FFFF; 
-        }
+  button:hover { 
+    transform: scale(1.05); 
+    box-shadow: 0 0 25px #00FFFF; 
+  }
 
-        .footer { 
-            margin-top: 15px; 
-            font-size: 0.9em; 
-            color: #cbd7ff; 
-        }
-        
-        .footer a { 
-            color: #00C4FF; 
-            text-decoration: none; 
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .footer a:hover { 
-            text-decoration: underline; 
-        }
+  .footer { 
+    margin-top: 15px; 
+    font-size: 0.9em; 
+    color: #cbd7ff; 
+  }
+  
+  .footer a { 
+    color: #00C4FF; 
+    text-decoration: none; 
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .footer a:hover { 
+    text-decoration: underline; 
+  }
 
-        .hidden { 
-            display: none; 
-        }
-        
-        /* Estilos para etiquetas de fecha */
-        .date-label {
-            display: block;
-            text-align: left;
-            margin: 10px 0 5px;
-            color: #dfe9ff;
-            font-size: 0.9em;
-        }
-        
-        /* Mejoras para dispositivos móviles */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-                align-items: flex-start;
-            }
-            
-            .container {
-                padding: 20px;
-                border-radius: 15px;
-                margin-top: 20px;
-            }
-            
-            h1 {
-                font-size: 1.7em;
-            }
-            
-            select, input, button {
-                padding: 14px;
-                font-size: 16px; /* Evita zoom automático en iOS */
-            }
-        }
+  .hidden { 
+    display: none; 
+  }
+  
+  /* Estilos para etiquetas de fecha */
+  .date-label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    color: #dfe9ff;
+    font-size: 0.9em;
+  }
+  
+  /* Mejoras para dispositivos móviles */
+  @media (max-width: 480px) {
+    body {
+      padding: 10px;
+      align-items: flex-start;
+    }
+    
+    .container {
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+    
+    h1 {
+      font-size: 1.7em;
+    }
+    
+    select, input, button {
+      padding: 14px;
+      font-size: 16px; /* Evita zoom automático en iOS */
+    }
+  }
 
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: white;
-        }
+  /* Estilos para mensajes de carga y estado */
+  .loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
 
-        .spinner {
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 5px solid #00C4FF;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
+  .message {
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    text-align: center;
+  }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+  .success {
+    background: rgba(0, 255, 0, 0.2);
+    border: 1px solid #00ff00;
+  }
 
-        .error-message {
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid #ff6b6b;
-        }
-
-        .success-message {
-            color: #51cf66;
-            background: rgba(81, 207, 102, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border: 1px solid #51cf66;
-        }
-
-        .sync-info {
-            background: rgba(0, 196, 255, 0.1);
-            border: 1px solid #00C4FF;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 0.9em;
-        }
-
-        /* Estilos para el panel de administración */
-        .admin-panel {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            border: 1px solid #00C4FF;
-        }
-
-        .admin-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .admin-buttons button {
-            flex: 1;
-            padding: 10px;
-            font-size: 0.9em;
-        }
-
-        .backup-info {
-            font-size: 0.8em;
-            color: #cbd7ff;
-            margin-top: 10px;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .file-label {
-            display: block;
-            background: rgba(0, 123, 255, 0.2);
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            border: 1px dashed #00C4FF;
-            margin: 5px 0;
-        }
-
-        .file-label:hover {
-            background: rgba(0, 123, 255, 0.3);
-        }
-    </style>
+  .error {
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid #ff0000;
+  }
+</style>
 </head>
 <body>
 
-<!-- Loading overlay -->
-<div class="loading" id="loading">
-    <div class="spinner"></div>
-    <p id="loadingText">Procesando...</p>
-</div>
-
 <div class="container">
-    <h1>NeoStudy 🚀</h1>
-    <p>Tu educación digital comienza aquí</p>
+  <h1>NeoStudy 🚀</h1>
+  <p>Tu educación digital comienza aquí</p>
 
-    <!-- Información actualizada -->
-    <div class="sync-info">
-        💾 <strong>Base de datos local activada</strong><br>
-        Tus datos se guardarán de forma segura en tu dispositivo
-    </div>
+  <!-- Mensajes de estado -->
+  <div id="message" class="message hidden"></div>
 
-    <!-- Panel de administración para exportar/importar -->
-    <div class="admin-panel">
-        <strong>🔄 Gestión de Base de Datos</strong>
-        <div class="admin-buttons">
-            <button id="btnExport" style="background: linear-gradient(90deg, #28a745, #20c997);">📤 Exportar BD</button>
-            <button id="btnImport" style="background: linear-gradient(90deg, #ffc107, #fd7e14);">📥 Importar BD</button>
-        </div>
-        <input type="file" id="fileInput" class="file-input" accept=".json">
-        <label for="fileInput" class="file-label" id="fileLabel">Seleccionar archivo de respaldo</label>
-        <div class="backup-info">
-            💡 <strong>Consejo:</strong> Exporta tu BD antes de cambiar de computadora
-        </div>
-    </div>
+  <!-- Selección de categoría -->
+  <select id="categoria">
+    <option value="">Selecciona tu categoría</option>
+    <option value="profesional">Profesional</option>
+    <option value="universitario">Estudiante Universitario</option>
+    <option value="secundaria">Alumno de Secundaria</option>
+    <option value="general">Público en general</option>
+  </select>
 
-    <!-- Mensajes de estado -->
-    <div id="messageContainer"></div>
+  <!-- Formularios dinámicos -->
+  <form id="formProfesional" class="hidden">
+    <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
+    <input type="text" id="prof_profesion" placeholder="Profesión" required>
+    <input type="text" id="prof_carrera" placeholder="Carrera" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="prof_nacimiento" required>
+    <input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="prof_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
 
-    <!-- Selección de categoría -->
-    <select id="categoria">
-        <option value="">Selecciona tu categoría</option>
-        <option value="profesional">Profesional</option>
-        <option value="universitario">Estudiante Universitario</option>
-        <option value="secundaria">Alumno de Secundaria</option>
-        <option value="general">Público en general</option>
-    </select>
+  <form id="formUniversitario" class="hidden">
+    <input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
+    <input type="text" id="uni_universidad" placeholder="Universidad" required>
+    <input type="text" id="uni_carrera" placeholder="Carrera" required>
+    <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="uni_nacimiento" required>
+    <input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="uni_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
 
-    <!-- Formularios dinámicos -->
-    <form id="formProfesional" class="hidden">
-        <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
-        <input type="text" id="prof_profesion" placeholder="Profesión" required>
-        <input type="text" id="prof_carrera" placeholder="Carrera" required>
-        <label class="date-label">Fecha de nacimiento</label>
-        <input type="date" id="prof_nacimiento" required>
-        <input type="email" id="prof_email" placeholder="Correo Electrónico" required>
-        <input type="password" id="prof_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
-        <button type="submit">Crear Cuenta</button>
-    </form>
+  <form id="formSecundaria" class="hidden">
+    <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
+    <input type="text" id="sec_colegio" placeholder="Colegio" required>
+    <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="sec_nacimiento" required>
+    <input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="sec_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
 
-    <form id="formUniversitario" class="hidden">
-        <input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
-        <input type="text" id="uni_universidad" placeholder="Universidad" required>
-        <input type="text" id="uni_carrera" placeholder="Carrera" required>
-        <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
-        <label class="date-label">Fecha de nacimiento</label>
-        <input type="date" id="uni_nacimiento" required>
-        <input type="email" id="uni_email" placeholder="Correo Electrónico" required>
-        <input type="password" id="uni_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
-        <button type="submit">Crear Cuenta</button>
-    </form>
+  <form id="formGeneral" class="hidden">
+    <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="gen_nacimiento" required>
+    <input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="gen_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
 
-    <form id="formSecundaria" class="hidden">
-        <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
-        <input type="text" id="sec_colegio" placeholder="Colegio" required>
-        <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
-        <label class="date-label">Fecha de nacimiento</label>
-        <input type="date" id="sec_nacimiento" required>
-        <input type="email" id="sec_email" placeholder="Correo Electrónico" required>
-        <input type="password" id="sec_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
-        <button type="submit">Crear Cuenta</button>
-    </form>
+  <h3>O Inicia Sesión</h3>
+  <input type="text" id="login_contacto" placeholder="Teléfono o Correo Electrónico">
+  <input type="password" id="login_password" placeholder="Contraseña">
+  <button id="btnLogin">Iniciar Sesión</button>
 
-    <form id="formGeneral" class="hidden">
-        <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
-        <label class="date-label">Fecha de nacimiento</label>
-        <input type="date" id="gen_nacimiento" required>
-        <input type="email" id="gen_email" placeholder="Correo Electrónico" required>
-        <input type="password" id="gen_password" placeholder="Contraseña (mínimo 6 caracteres)" required minlength="6">
-        <button type="submit">Crear Cuenta</button>
-    </form>
-
-    <h3>O Inicia Sesión</h3>
-    <input type="email" id="login_email" placeholder="Correo Electrónico" required>
-    <input type="password" id="login_password" placeholder="Contraseña" required>
-    <button id="btnLogin">Iniciar Sesión</button>
-
-    <div class="footer">
-        ¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
-    </div>
+  <div class="footer">
+    ¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
+  </div>
 </div>
+
+<!-- Incluir Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// 🔹 CONFIGURACIÓN DE LA BASE DE DATOS LOCAL
-class LocalDatabase {
-    constructor() {
-        this.dbName = 'NeoStudyDB';
-        this.dbVersion = 2;
-        this.db = null;
-        this.init();
-    }
+// Configuración de Supabase
+const supabaseUrl = 'https://ghayqhfhfzxgtyvjezhu.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoYXlxaGZoZnp4Z3R5dmplemh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NDQzNDAsImV4cCI6MjA3OTQyMDM0MH0.wOKcksN2Dm_CO8pRMTuBPQ7Mx_49njcOj9m8jpMn4HE';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Inicializar la base de datos
-    async init() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, this.dbVersion);
-            
-            request.onerror = () => {
-                console.error('❌ Error al abrir la base de datos:', request.error);
-                reject(request.error);
-            };
-            
-            request.onsuccess = () => {
-                this.db = request.result;
-                console.log('✅ Base de datos local inicializada correctamente');
-                resolve(this.db);
-            };
-            
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                
-                // Crear almacén de usuarios si no existe
-                if (!db.objectStoreNames.contains('usuarios')) {
-                    const userStore = db.createObjectStore('usuarios', { keyPath: 'id', autoIncrement: true });
-                    userStore.createIndex('email', 'perfil.email', { unique: true });
-                    userStore.createIndex('categoria', 'perfil.categoria', { unique: false });
-                    console.log('✅ Almacén de usuarios creado');
-                }
-                
-                // Crear almacén de sesiones
-                if (!db.objectStoreNames.contains('sesiones')) {
-                    const sessionStore = db.createObjectStore('sesiones', { keyPath: 'id' });
-                    console.log('✅ Almacén de sesiones creado');
-                }
-                
-                // Crear almacén de libros
-                if (!db.objectStoreNames.contains('biblioteca')) {
-                    const libraryStore = db.createObjectStore('biblioteca', { keyPath: 'id', autoIncrement: true });
-                    libraryStore.createIndex('usuarioId', 'usuarioId', { unique: false });
-                    console.log('✅ Almacén de biblioteca creado');
-                }
-
-                // Crear almacén de configuraciones
-                if (!db.objectStoreNames.contains('configuraciones')) {
-                    const configStore = db.createObjectStore('configuraciones', { keyPath: 'id' });
-                    console.log('✅ Almacén de configuraciones creado');
-                }
-            };
-        });
-    }
-
-    // Método genérico para realizar operaciones en la base de datos
-    async execute(storeName, mode, operation) {
-        if (!this.db) {
-            await this.init();
-        }
-        
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([storeName], mode);
-            const store = transaction.objectStore(storeName);
-            
-            transaction.oncomplete = () => resolve();
-            transaction.onerror = () => reject(transaction.error);
-            
-            operation(store);
-        });
-    }
-
-    // Guardar usuario
-    async saveUser(userData) {
-        try {
-            await this.execute('usuarios', 'readwrite', (store) => {
-                store.add(userData);
-            });
-            console.log('✅ Usuario guardado en la base de datos local');
-            return true;
-        } catch (error) {
-            console.error('❌ Error al guardar usuario:', error);
-            return false;
-        }
-    }
-
-    // Obtener usuario por email
-    async getUserByEmail(email) {
-        return new Promise((resolve, reject) => {
-            if (!this.db) {
-                reject(new Error('Base de datos no inicializada'));
-                return;
-            }
-            
-            const transaction = this.db.transaction(['usuarios'], 'readonly');
-            const store = transaction.objectStore('usuarios');
-            const index = store.index('email');
-            const request = index.get(email);
-            
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-            
-            request.onerror = () => {
-                reject(request.error);
-            };
-        });
-    }
-
-    // Obtener todos los usuarios
-    async getAllUsers() {
-        return new Promise((resolve, reject) => {
-            if (!this.db) {
-                reject(new Error('Base de datos no inicializada'));
-                return;
-            }
-            
-            const transaction = this.db.transaction(['usuarios'], 'readonly');
-            const store = transaction.objectStore('usuarios');
-            const request = store.getAll();
-            
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-            
-            request.onerror = () => {
-                reject(request.error);
-            };
-        });
-    }
-
-    // Obtener todos los datos de una tabla
-    async getAllData(storeName) {
-        return new Promise((resolve, reject) => {
-            if (!this.db) {
-                reject(new Error('Base de datos no inicializada'));
-                return;
-            }
-            
-            const transaction = this.db.transaction([storeName], 'readonly');
-            const store = transaction.objectStore(storeName);
-            const request = store.getAll();
-            
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-            
-            request.onerror = () => {
-                reject(request.error);
-            };
-        });
-    }
-
-    // Guardar sesión activa
-    async saveSession(sessionData) {
-        try {
-            await this.execute('sesiones', 'readwrite', (store) => {
-                store.put(sessionData);
-            });
-            console.log('✅ Sesión guardada en la base de datos local');
-            return true;
-        } catch (error) {
-            console.error('❌ Error al guardar sesión:', error);
-            return false;
-        }
-    }
-
-    // Obtener sesión activa
-    async getActiveSession() {
-        return new Promise((resolve, reject) => {
-            if (!this.db) {
-                reject(new Error('Base de datos no inicializada'));
-                return;
-            }
-            
-            const transaction = this.db.transaction(['sesiones'], 'readonly');
-            const store = transaction.objectStore('sesiones');
-            const request = store.get('current');
-            
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-            
-            request.onerror = () => {
-                reject(request.error);
-            };
-        });
-    }
-
-    // Cerrar sesión
-    async logout() {
-        try {
-            await this.execute('sesiones', 'readwrite', (store) => {
-                store.delete('current');
-            });
-            console.log('✅ Sesión cerrada correctamente');
-            return true;
-        } catch (error) {
-            console.error('❌ Error al cerrar sesión:', error);
-            return false;
-        }
-    }
-
-    // Guardar libro en biblioteca
-    async saveBook(bookData) {
-        try {
-            await this.execute('biblioteca', 'readwrite', (store) => {
-                store.add(bookData);
-            });
-            console.log('✅ Libro guardado en biblioteca local');
-            return true;
-        } catch (error) {
-            console.error('❌ Error al guardar libro:', error);
-            return false;
-        }
-    }
-
-    // Obtener libros de un usuario
-    async getUserBooks(userId) {
-        return new Promise((resolve, reject) => {
-            if (!this.db) {
-                reject(new Error('Base de datos no inicializada'));
-                return;
-            }
-            
-            const transaction = this.db.transaction(['biblioteca'], 'readonly');
-            const store = transaction.objectStore('biblioteca');
-            const index = store.index('usuarioId');
-            const request = index.getAll(userId);
-            
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-            
-            request.onerror = () => {
-                reject(request.error);
-            };
-        });
-    }
-
-    // 🔹 NUEVAS FUNCIONES PARA EXPORTACIÓN/IMPORTACIÓN
-
-    // Exportar toda la base de datos a un objeto JSON
-    async exportDatabase() {
-        try {
-            showLoading("Exportando base de datos...");
-            
-            const exportData = {
-                metadata: {
-                    exportDate: new Date().toISOString(),
-                    version: this.dbVersion,
-                    databaseName: this.dbName,
-                    totalRecords: 0
-                },
-                data: {}
-            };
-
-            // Obtener todos los datos de cada almacén
-            const storeNames = ['usuarios', 'sesiones', 'biblioteca', 'configuraciones'];
-            
-            for (const storeName of storeNames) {
-                try {
-                    const data = await this.getAllData(storeName);
-                    exportData.data[storeName] = data;
-                    exportData.metadata.totalRecords += data.length;
-                } catch (error) {
-                    console.warn(`⚠️ No se pudo exportar ${storeName}:`, error);
-                    exportData.data[storeName] = [];
-                }
-            }
-
-            hideLoading();
-            console.log('✅ Base de datos exportada correctamente');
-            return exportData;
-        } catch (error) {
-            hideLoading();
-            console.error('❌ Error al exportar base de datos:', error);
-            throw error;
-        }
-    }
-
-    // Importar datos desde un objeto JSON
-    async importDatabase(importData, merge = true) {
-        try {
-            showLoading("Importando base de datos...");
-            
-            if (!importData || !importData.data) {
-                throw new Error('Formato de archivo inválido');
-            }
-
-            let importedRecords = 0;
-            const storeNames = ['usuarios', 'sesiones', 'biblioteca', 'configuraciones'];
-
-            for (const storeName of storeNames) {
-                if (importData.data[storeName]) {
-                    console.log(`🔄 Importando ${storeName}...`);
-                    
-                    // Limpiar el almacén si no estamos haciendo merge
-                    if (!merge) {
-                        await this.clearStore(storeName);
-                    }
-
-                    // Importar datos
-                    for (const record of importData.data[storeName]) {
-                        try {
-                            await this.execute(storeName, 'readwrite', (store) => {
-                                store.add(record);
-                            });
-                            importedRecords++;
-                        } catch (error) {
-                            console.warn(`⚠️ No se pudo importar registro en ${storeName}:`, error);
-                        }
-                    }
-                }
-            }
-
-            hideLoading();
-            console.log(`✅ Base de datos importada: ${importedRecords} registros`);
-            return importedRecords;
-        } catch (error) {
-            hideLoading();
-            console.error('❌ Error al importar base de datos:', error);
-            throw error;
-        }
-    }
-
-    // Limpiar un almacén específico
-    async clearStore(storeName) {
-        try {
-            await this.execute(storeName, 'readwrite', (store) => {
-                store.clear();
-            });
-            console.log(`✅ Almacén ${storeName} limpiado`);
-            return true;
-        } catch (error) {
-            console.error(`❌ Error al limpiar ${storeName}:`, error);
-            return false;
-        }
-    }
-
-    // Obtener estadísticas de la base de datos
-    async getDatabaseStats() {
-        const stats = {};
-        const storeNames = ['usuarios', 'sesiones', 'biblioteca', 'configuraciones'];
-        
-        for (const storeName of storeNames) {
-            try {
-                const data = await this.getAllData(storeName);
-                stats[storeName] = data.length;
-            } catch (error) {
-                stats[storeName] = 0;
-            }
-        }
-        
-        return stats;
-    }
-}
-
-// 🔹 INICIALIZAR BASE DE DATOS
-const localDB = new LocalDatabase();
-
-// 🔹 ELEMENTOS DEL DOM
+// Elementos del DOM
 const categoriaSelect = document.getElementById("categoria");
-const messageContainer = document.getElementById("messageContainer");
-const loadingElement = document.getElementById("loading");
-const loadingText = document.getElementById("loadingText");
-const btnExport = document.getElementById("btnExport");
-const btnImport = document.getElementById("btnImport");
-const fileInput = document.getElementById("fileInput");
-const fileLabel = document.getElementById("fileLabel");
-
+const messageDiv = document.getElementById("message");
 const forms = {
-    profesional: document.getElementById("formProfesional"),
-    universitario: document.getElementById("formUniversitario"),
-    secundaria: document.getElementById("formSecundaria"),
-    general: document.getElementById("formGeneral")
+  profesional: document.getElementById("formProfesional"),
+  universitario: document.getElementById("formUniversitario"),
+  secundaria: document.getElementById("formSecundaria"),
+  general: document.getElementById("formGeneral")
 };
 
-// 🔹 FUNCIONES DE UTILIDAD
-function showLoading(text = "Procesando...") {
-    loadingText.textContent = text;
-    loadingElement.style.display = 'flex';
+// Mostrar mensajes
+function showMessage(text, type) {
+  messageDiv.textContent = text;
+  messageDiv.className = `message ${type}`;
+  messageDiv.classList.remove("hidden");
+  setTimeout(() => {
+    messageDiv.classList.add("hidden");
+  }, 5000);
 }
 
-function hideLoading() {
-    loadingElement.style.display = 'none';
-}
-
-function showMessage(message, type = 'error') {
-    messageContainer.innerHTML = `<div class="${type === 'error' ? 'error-message' : 'success-message'}">${message}</div>`;
-    setTimeout(() => {
-        messageContainer.innerHTML = '';
-    }, 5000);
-}
-
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function generateUserId() {
-    return 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-}
-
-// 🔹 FUNCIONES DE EXPORTACIÓN/IMPORTACIÓN
-
-// Exportar base de datos a archivo JSON
-async function exportDatabase() {
-    try {
-        showLoading("Preparando exportación...");
-        
-        // Obtener estadísticas antes de exportar
-        const stats = await localDB.getDatabaseStats();
-        const totalRecords = Object.values(stats).reduce((a, b) => a + b, 0);
-        
-        if (totalRecords === 0) {
-            hideLoading();
-            showMessage("ℹ️ No hay datos para exportar");
-            return;
-        }
-
-        // Exportar datos
-        const exportData = await localDB.exportDatabase();
-        
-        // Crear y descargar archivo
-        const dataStr = JSON.stringify(exportData, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        
-        const url = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        
-        // Nombre del archivo con fecha
-        const date = new Date().toISOString().split('T')[0];
-        link.download = `neostudy_backup_${date}.json`;
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        hideLoading();
-        showMessage(`✅ Base de datos exportada correctamente (${totalRecords} registros)`, 'success');
-        
-    } catch (error) {
-        hideLoading();
-        console.error('❌ Error en exportación:', error);
-        showMessage('❌ Error al exportar base de datos: ' + error.message);
+// Mostrar/ocultar loading
+function setLoading(loading) {
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach(button => {
+    if (loading) {
+      button.disabled = true;
+      button.textContent = 'Procesando...';
+    } else {
+      button.disabled = false;
+      button.textContent = button.getAttribute('data-original-text') || 'Crear Cuenta';
     }
+  });
 }
 
-// Importar base de datos desde archivo JSON
-async function importDatabase(file) {
-    try {
-        if (!file) {
-            showMessage("❌ Por favor selecciona un archivo");
-            return;
-        }
-
-        if (!file.name.endsWith('.json')) {
-            showMessage("❌ El archivo debe ser un JSON válido");
-            return;
-        }
-
-        showLoading("Leyendo archivo...");
-        
-        const reader = new FileReader();
-        
-        reader.onload = async (e) => {
-            try {
-                const importData = JSON.parse(e.target.result);
-                
-                // Validar formato del archivo
-                if (!importData.metadata || !importData.data) {
-                    throw new Error('Formato de archivo inválido');
-                }
-                
-                // Mostrar confirmación
-                const totalRecords = Object.values(importData.data).flat().length;
-                const confirmMessage = `¿Estás seguro de importar ${totalRecords} registros?\n\nEsta acción no se puede deshacer.`;
-                
-                if (!confirm(confirmMessage)) {
-                    hideLoading();
-                    return;
-                }
-                
-                // Importar datos (sin merge para evitar duplicados)
-                const importedCount = await localDB.importDatabase(importData, false);
-                
-                hideLoading();
-                showMessage(`✅ Base de datos importada correctamente (${importedCount} registros)`, 'success');
-                
-                // Limpiar input de archivo
-                fileInput.value = '';
-                
-            } catch (error) {
-                hideLoading();
-                console.error('❌ Error al procesar archivo:', error);
-                showMessage('❌ Error al importar: ' + error.message);
-            }
-        };
-        
-        reader.onerror = () => {
-            hideLoading();
-            showMessage('❌ Error al leer el archivo');
-        };
-        
-        reader.readAsText(file);
-        
-    } catch (error) {
-        hideLoading();
-        console.error('❌ Error en importación:', error);
-        showMessage('❌ Error al importar base de datos: ' + error.message);
-    }
-}
-
-// 🔹 EVENT LISTENERS PARA EXPORTACIÓN/IMPORTACIÓN
-btnExport.addEventListener('click', exportDatabase);
-
-btnImport.addEventListener('click', () => {
-    fileInput.click();
-});
-
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        fileLabel.textContent = `Archivo seleccionado: ${file.name}`;
-        importDatabase(file);
-    }
-});
-
-// 🔹 INICIALIZAR DATOS DE USUARIO
-function initializeUserData(userData) {
-    console.log("🔄 Inicializando datos del usuario...");
-    
-    // Crear estructura inicial de datos del usuario
-    const userStructure = {
-        id: generateUserId(),
-        // Perfil del usuario
-        perfil: {
-            nombre: userData.nombre,
-            email: userData.email,
-            categoria: userData.categoria,
-            fechaNacimiento: userData.fechaNacimiento,
-            fechaRegistro: new Date().toISOString(),
-            fotoPerfil: "", // URL de la foto de perfil
-            tema: "claro" // Preferencia de tema
-        },
-        
-        // Libros comprados
-        biblioteca: {
-            librosComprados: [],
-            favoritos: [],
-            ultimaLectura: null,
-            progresoGlobal: 0
-        },
-        
-        // Configuraciones
-        configuraciones: {
-            notificaciones: true,
-            sincronizacionAuto: true,
-            idioma: "es",
-            modoOffline: false
-        },
-        
-        // Datos de aprendizaje
-        progreso: {
-            cursosCompletados: 0,
-            horasEstudiadas: 0,
-            logros: [],
-            puntos: 0
-        },
-        
-        // Dispositivos conectados
-        dispositivos: [{
-            tipo: navigator.userAgent.includes('Mobile') ? 'movil' : 'escritorio',
-            ultimaConexion: new Date().toISOString(),
-            id: generateDeviceId()
-        }]
-    };
-
-    // Agregar campos específicos por categoría
-    if (userData.categoria === 'profesional') {
-        userStructure.perfil.profesion = userData.profesion;
-        userStructure.perfil.carrera = userData.carrera;
-    } else if (userData.categoria === 'universitario') {
-        userStructure.perfil.universidad = userData.universidad;
-        userStructure.perfil.carrera = userData.carrera;
-        userStructure.perfil.ciclo = userData.ciclo;
-    } else if (userData.categoria === 'secundaria') {
-        userStructure.perfil.colegio = userData.colegio;
-        userStructure.perfil.grado = userData.grado;
-    }
-
-    console.log("✅ Datos de usuario inicializados correctamente");
-    return userStructure;
-}
-
-// Generar ID único para el dispositivo
-function generateDeviceId() {
-    return 'device_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-}
-
-// 🔹 MOSTRAR FORMULARIOS SEGÚN CATEGORÍA
+// Botón "Crear cuenta"
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
-    categoriaSelect.scrollIntoView({ behavior: 'smooth' });
-    categoriaSelect.focus();
-    showMessage("Por favor selecciona tu categoría para crear tu cuenta", 'success');
+  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
+  categoriaSelect.focus();
+  showMessage("Por favor selecciona tu categoría para crear tu cuenta", "success");
 });
 
+// Mostrar formulario según categoría
 categoriaSelect.addEventListener("change", () => {
-    const value = categoriaSelect.value;
-    Object.values(forms).forEach(f => f.classList.add("hidden"));
-    if(value && forms[value]) forms[value].classList.remove("hidden");
+  const value = categoriaSelect.value;
+  Object.values(forms).forEach(f => f.classList.add("hidden"));
+  if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
-// 🔹 CREAR CUENTA CON BASE DE DATOS LOCAL
-async function saveUser(form, category) {
-    try {
-        showLoading("Creando tu cuenta...");
-        
-        const inputs = form.querySelectorAll('input');
-        let email = '';
-        let password = '';
-        let userData = { 
-            categoria: category,
-            fechaRegistro: new Date().toISOString()
-        };
+// Función para crear usuario en Supabase
+async function createUserInSupabase(userData) {
+  try {
+    // Insertar usuario en la tabla 'users'
+    const { data, error } = await supabase
+      .from('users')
+      .insert([userData])
+      .select();
 
-        // Recoger todos los datos del formulario
-        inputs.forEach(input => {
-            if (input.type !== 'submit') {
-                userData[input.id] = input.value;
-                
-                if (input.type === 'email') {
-                    email = input.value.trim().toLowerCase();
-                }
-                if (input.type === 'password') {
-                    password = input.value;
-                }
-                if (input.type === 'date') {
-                    userData.fechaNacimiento = input.value;
-                }
-            }
-        });
-
-        // Validaciones
-        if (!email || !password) {
-            hideLoading();
-            showMessage("Por favor ingresa un correo y contraseña válidos");
-            return;
-        }
-
-        if (!isValidEmail(email)) {
-            hideLoading();
-            showMessage("Por favor ingresa un correo electrónico válido");
-            return;
-        }
-
-        if (password.length < 6) {
-            hideLoading();
-            showMessage("La contraseña debe tener al menos 6 caracteres");
-            return;
-        }
-
-        console.log("📝 Intentando crear usuario:", email);
-
-        // Verificar si el usuario ya existe
-        const existingUser = await localDB.getUserByEmail(email);
-        if (existingUser) {
-            hideLoading();
-            showMessage("❌ Este correo ya está registrado. Por favor inicia sesión.");
-            return;
-        }
-
-        // PREPARAR DATOS PARA INICIALIZACIÓN
-        const userProfile = {
-            nombre: userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre,
-            email: email,
-            categoria: category,
-            fechaNacimiento: userData.fechaNacimiento,
-            password: password // En un caso real, esto debería estar hasheado
-        };
-
-        // Agregar campos específicos por categoría
-        if (category === 'profesional') {
-            userProfile.profesion = userData.prof_profesion;
-            userProfile.carrera = userData.prof_carrera;
-        } else if (category === 'universitario') {
-            userProfile.universidad = userData.uni_universidad;
-            userProfile.carrera = userData.uni_carrera;
-            userProfile.ciclo = userData.uni_ciclo;
-        } else if (category === 'secundaria') {
-            userProfile.colegio = userData.sec_colegio;
-            userProfile.grado = userData.sec_grado;
-        }
-
-        // INICIALIZAR DATOS EN LA BASE DE DATOS LOCAL
-        showLoading("Configurando tu perfil...");
-        const userStructure = initializeUserData(userProfile);
-        
-        // Guardar usuario en la base de datos
-        await localDB.saveUser(userStructure);
-
-        // Crear sesión automáticamente
-        await localDB.saveSession({
-            id: 'current',
-            userId: userStructure.id,
-            email: email,
-            loginTime: new Date().toISOString(),
-            isActive: true
-        });
-
-        hideLoading();
-        showMessage("✅ Cuenta creada con éxito. Tus datos se guardarán en tu dispositivo!", 'success');
-        
-        // Limpiar formulario
-        form.reset();
-        
-        // Redirigir después de 2 segundos
-        setTimeout(() => {
-            window.location.href = "modulo2_iniciodecesión.html";
-        }, 2000);
-
-    } catch (error) {
-        hideLoading();
-        console.error("❌ Error completo:", error);
-        showMessage("❌ Error al crear cuenta: " + error.message);
+    if (error) {
+      throw error;
     }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error creando usuario:', error);
+    return { success: false, error: error.message };
+  }
 }
 
-// 🔹 INICIAR SESIÓN CON BASE DE DATOS LOCAL
-document.getElementById("btnLogin").addEventListener("click", async () => {
-    const email = document.getElementById("login_email").value.trim().toLowerCase();
-    const password = document.getElementById("login_password").value;
+// Función para buscar usuario por contacto
+async function findUserByContact(contacto) {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .or(`prof_contacto.eq.${contacto},uni_contacto.eq.${contacto},sec_contacto.eq.${contacto},gen_contacto.eq.${contacto}`)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 es "no encontrado"
+      throw error;
+    }
+
+    return { success: true, user: data };
+  } catch (error) {
+    console.error('Error buscando usuario:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Crear cuenta
+async function saveUser(form, category) {
+  setLoading(true);
+  
+  const data = { 
+    categoria: category,
+    fecha_creacion: new Date().toISOString()
+  };
+  
+  // Recopilar datos del formulario
+  Array.from(form.elements).forEach(input => {
+    if(input.type !== "submit" && input.value) {
+      data[input.id] = input.value;
+      
+      if (input.id.includes("nacimiento")) {
+        data.fechaNacimiento = input.value;
+      }
+    }
+  });
+  
+  // Guardar también un campo único para login
+  data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
+  data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+  
+  // Asegurar que la fecha de nacimiento esté guardada
+  if (!data.fechaNacimiento) {
+    data.fechaNacimiento = data.prof_nacimiento || data.uni_nacimiento || data.sec_nacimiento || data.gen_nacimiento;
+  }
+
+  try {
+    // Verificar si el usuario ya existe
+    const userCheck = await findUserByContact(data.contacto);
     
-    if (!email || !password) {
-        showMessage("Por favor completa todos los campos");
-        return;
+    if (userCheck.user) {
+      showMessage("❌ Ya existe una cuenta con este contacto", "error");
+      setLoading(false);
+      return;
     }
 
-    if (!isValidEmail(email)) {
-        showMessage("Por favor ingresa un correo electrónico válido");
-        return;
+    // Crear usuario en Supabase
+    const result = await createUserInSupabase(data);
+    
+    if (result.success) {
+      // Guardar también en localStorage para compatibilidad
+      localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
+      localStorage.setItem("supabase_user_id", result.data[0].id);
+      
+      showMessage("✅ Cuenta creada con éxito en NeoStudy", "success");
+      
+      setTimeout(() => {
+        window.location.href = "modulo2_iniciodecesión.html";
+      }, 1500);
+    } else {
+      showMessage("❌ Error al crear cuenta: " + result.error, "error");
+    }
+  } catch (error) {
+    showMessage("❌ Error inesperado: " + error.message, "error");
+  } finally {
+    setLoading(false);
+  }
+}
+
+// Iniciar sesión
+async function loginUser(emailOrPhone, password) {
+  setLoading(true);
+  
+  try {
+    // Buscar usuario por contacto
+    const userResult = await findUserByContact(emailOrPhone);
+    
+    if (!userResult.user) {
+      showMessage("❌ Usuario no encontrado", "error");
+      setLoading(false);
+      return;
     }
 
-    try {
-        showLoading("Iniciando sesión...");
-        console.log("🔐 Intentando iniciar sesión:", email);
-        
-        // Buscar usuario por email
-        const user = await localDB.getUserByEmail(email);
-        
-        if (!user) {
-            hideLoading();
-            showMessage("❌ No existe una cuenta con este correo. Por favor crea una cuenta primero.");
-            return;
-        }
+    const user = userResult.user;
+    
+    // Verificar contraseña (en un caso real, esto debería ser con hash)
+    const passwordGuardado = user.password || 
+                            user.prof_password || 
+                            user.uni_password || 
+                            user.sec_password || 
+                            user.gen_password;
 
-        // Verificar contraseña (en un caso real, esto debería ser con hash)
-        if (user.perfil.password !== password) {
-            hideLoading();
-            showMessage("❌ Contraseña incorrecta. Intenta nuevamente.");
-            return;
-        }
-
-        console.log("✅ Sesión iniciada para:", user.perfil.email);
-
-        // ACTUALIZAR DISPOSITIVO EN LA BASE DE DATOS
-        showLoading("Cargando tus datos...");
-        const deviceInfo = {
-            tipo: navigator.userAgent.includes('Mobile') ? 'movil' : 'escritorio',
-            ultimaConexion: new Date().toISOString(),
-            id: generateDeviceId()
-        };
-
-        // Actualizar dispositivo (en una implementación real, esto actualizaría el usuario)
-        user.dispositivos.push(deviceInfo);
-        await localDB.saveUser(user);
-
-        // Crear sesión
-        await localDB.saveSession({
-            id: 'current',
-            userId: user.id,
-            email: email,
-            loginTime: new Date().toISOString(),
-            isActive: true
-        });
-
-        hideLoading();
-        showMessage("✅ Inicio de sesión exitoso. Cargando tus datos...", 'success');
-        
-        // Limpiar campos de login
-        document.getElementById('login_email').value = '';
-        document.getElementById('login_password').value = '';
-        
-        // Redirigir después de 1 segundo
-        setTimeout(() => {
-            window.location.href = "modulo2_iniciodecesión.html";
-        }, 1000);
-
-    } catch (error) {
-        hideLoading();
-        console.error("❌ Error de login:", error);
-        showMessage("❌ Error al iniciar sesión: " + error.message);
+    if (passwordGuardado === password) {
+      // Guardar en localStorage
+      localStorage.setItem("usuarioNeoStudy", JSON.stringify(user));
+      localStorage.setItem("supabase_user_id", user.id);
+      
+      showMessage("✅ Inicio de sesión exitoso", "success");
+      
+      setTimeout(() => {
+        window.location.href = "modulo2_iniciodecesión.html";
+      }, 1500);
+    } else {
+      showMessage("❌ Contraseña incorrecta", "error");
     }
-});
+  } catch (error) {
+    showMessage("❌ Error al iniciar sesión: " + error.message, "error");
+  } finally {
+    setLoading(false);
+  }
+}
 
-// 🔹 ASIGNAR EVENTOS A LOS FORMULARIOS
+// Event listeners para formularios
 Object.keys(forms).forEach(cat => {
-    forms[cat].addEventListener("submit", async (e) => {
-        e.preventDefault();
-        await saveUser(forms[cat], cat);
-    });
+  forms[cat].addEventListener("submit", async e => {
+    e.preventDefault();
+    await saveUser(forms[cat], cat);
+  });
 });
 
-// 🔹 VERIFICAR SI HAY UNA SESIÓN ACTIVA AL CARGAR LA PÁGINA
+// Event listener para login
+document.getElementById("btnLogin").addEventListener("click", async () => {
+  const emailOrPhone = document.getElementById("login_contacto").value;
+  const password = document.getElementById("login_password").value;
+  
+  if (!emailOrPhone || !password) {
+    showMessage("⚠️ Por favor completa todos los campos", "error");
+    return;
+  }
+
+  await loginUser(emailOrPhone, password);
+});
+
+// Mejora adicional: Formatear fecha para mostrar en el perfil
+function formatearFecha(fechaISO) {
+  if (!fechaISO) return "";
+  
+  const fecha = new Date(fechaISO);
+  const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+  return fecha.toLocaleDateString('es-ES', opciones);
+}
+
+// Verificar si ya hay una sesión activa al cargar la página
 window.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const activeSession = await localDB.getActiveSession();
-        if (activeSession && activeSession.isActive) {
-            console.log("👤 Sesión activa encontrada:", activeSession.email);
-            // Opcional: redirigir automáticamente si ya está logueado
-            // window.location.href = "modulo2_iniciodecesión.html";
-        } else {
-            console.log("🔒 No hay sesión activa");
-        }
-    } catch (error) {
-        console.log("🔒 No hay sesión activa o error al verificar:", error);
-    }
+  const storedUserId = localStorage.getItem("supabase_user_id");
+  if (storedUserId) {
+    // Opcional: Verificar si la sesión sigue siendo válida
+    showMessage("🔍 Sesión activa detectada", "success");
+  }
 });
-
-// 🔹 FUNCIONES PARA LA BIBLIOTECA (para usar en otros módulos)
-window.guardarLibroComprado = async function(libroData) {
-    try {
-        const activeSession = await localDB.getActiveSession();
-        if (!activeSession) return false;
-
-        const bookWithUser = {
-            ...libroData,
-            usuarioId: activeSession.userId,
-            fechaCompra: new Date().toISOString()
-        };
-
-        await localDB.saveBook(bookWithUser);
-        
-        console.log("✅ Libro guardado en la biblioteca local:", libroData.titulo);
-        return true;
-    } catch (error) {
-        console.error("❌ Error al guardar libro:", error);
-        return false;
-    }
-};
-
-window.guardarFotoPerfil = async function(fotoUrl) {
-    try {
-        const activeSession = await localDB.getActiveSession();
-        if (!activeSession) return false;
-
-        const user = await localDB.getUserByEmail(activeSession.email);
-        if (!user) return false;
-
-        user.perfil.fotoPerfil = fotoUrl;
-        await localDB.saveUser(user);
-        
-        console.log("✅ Foto de perfil guardada en la base de datos local");
-        return true;
-    } catch (error) {
-        console.error("❌ Error al guardar foto:", error);
-        return false;
-    }
-};
-
-window.cargarDatosUsuario = async function() {
-    try {
-        const activeSession = await localDB.getActiveSession();
-        if (!activeSession) return null;
-
-        const user = await localDB.getUserByEmail(activeSession.email);
-        if (user) {
-            console.log("✅ Datos cargados desde la base de datos local");
-            return user;
-        }
-        return null;
-    } catch (error) {
-        console.error("❌ Error al cargar datos:", error);
-        return null;
-    }
-};
-
-window.cerrarSesion = async function() {
-    try {
-        await localDB.logout();
-        console.log("✅ Sesión cerrada correctamente");
-        return true;
-    } catch (error) {
-        console.error("❌ Error al cerrar sesión:", error);
-        return false;
-    }
-};
-
-window.obtenerLibrosUsuario = async function() {
-    try {
-        const activeSession = await localDB.getActiveSession();
-        if (!activeSession) return [];
-
-        const books = await localDB.getUserBooks(activeSession.userId);
-        console.log("✅ Libros cargados desde la biblioteca local");
-        return books;
-    } catch (error) {
-        console.error("❌ Error al cargar libros:", error);
-        return [];
-    }
-};
-
-// 🔹 NUEVAS FUNCIONES GLOBALES PARA EXPORTACIÓN/IMPORTACIÓN
-window.exportarBaseDatos = exportDatabase;
-window.importarBaseDatos = importDatabase;
-window.obtenerEstadisticasBD = async function() {
-    return await localDB.getDatabaseStats();
-};
-
-console.log("💾 Sistema de base de datos local + exportación activado");
-console.log("📤 Puedes exportar e importar tu base de datos entre computadoras");
 </script>
 </body>
 </html>
