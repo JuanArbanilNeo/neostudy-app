@@ -333,36 +333,45 @@ async function findUserByContact(contacto) {
   }
 }
 
-// Crear cuenta
+// Crear cuenta - VERSIÓN CORREGIDA
 async function saveUser(form, category) {
   setLoading(true);
   
-  const data = { 
-    categoria: category,
-    fecha_creacion: new Date().toISOString()
-  };
-  
-  // Recopilar datos del formulario
-  Array.from(form.elements).forEach(input => {
-    if(input.type !== "submit" && input.value) {
-      data[input.id] = input.value;
-      
-      if (input.id.includes("nacimiento")) {
-        data.fechaNacimiento = input.value;
+  try {
+    const data = { 
+      categoria: category,
+      fecha_creacion: new Date().toISOString()
+    };
+    
+    // Recopilar datos del formulario de forma segura
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach(input => {
+      if (input.type !== 'submit' && input.value) {
+        data[input.id] = input.value;
+      }
+    });
+    
+    // Validar campos requeridos
+    const requiredFields = form.querySelectorAll('[required]');
+    for (let field of requiredFields) {
+      if (!field.value.trim()) {
+        showMessage(`❌ Por favor completa el campo: ${field.placeholder}`, "error");
+        setLoading(false);
+        return;
       }
     }
-  });
-  
-  // Guardar también un campo único para login
-  data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
-  data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
-  
-  // Asegurar que la fecha de nacimiento esté guardada
-  if (!data.fechaNacimiento) {
-    data.fechaNacimiento = data.prof_nacimiento || data.uni_nacimiento || data.sec_nacimiento || data.gen_nacimiento;
-  }
+    
+    // Guardar campos para login
+    data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
+    data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
 
-  try {
+    // Validar que tenemos contacto y contraseña
+    if (!data.contacto || !data.password) {
+      showMessage("❌ Contacto y contraseña son requeridos", "error");
+      setLoading(false);
+      return;
+    }
+
     // Verificar si el usuario ya existe
     const userCheck = await findUserByContact(data.contacto);
     
@@ -376,7 +385,7 @@ async function saveUser(form, category) {
     const result = await createUserInSupabase(data);
     
     if (result.success) {
-      // Guardar también en localStorage para compatibilidad
+      // Guardar en localStorage para compatibilidad
       localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
       localStorage.setItem("supabase_user_id", result.data[0].id);
       
