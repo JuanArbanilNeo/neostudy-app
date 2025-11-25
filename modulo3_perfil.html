@@ -1126,7 +1126,7 @@
             }
 
             /* Ocultar texto del botón de modo en móviles */
-            .mobile-controls .btn-primary span {
+            .mobile-controls .btn-primary .btn-text {
                 display: none;
             }
             
@@ -1184,7 +1184,7 @@
             </nav>
             <div class="user-menu">
                 <button class="btn btn-primary" onclick="toggleThemeMode()">
-                    <i class="fas fa-moon"></i> <span>Modo Normal</span>
+                    <i class="fas fa-moon"></i> <span class="btn-text">Modo Normal</span>
                 </button>
                 <div class="avatar" id="userAvatar" onclick="toggleAvatarDropdown()">JM</div>
                 <div class="avatar-dropdown" id="avatarDropdown">
@@ -1214,7 +1214,7 @@
             </div>
             <div class="mobile-controls">
                 <button class="btn btn-primary" onclick="toggleThemeMode()">
-                    <i class="fas fa-moon"></i> <span>Modo Normal</span>
+                    <i class="fas fa-moon"></i> <span class="btn-text">Modo Normal</span>
                 </button>
                 <div class="avatar" id="mobileUserAvatar">JM</div>
             </div>
@@ -1626,11 +1626,12 @@
         function updateThemeButton() {
             const themeButtons = document.querySelectorAll('.btn-primary');
             themeButtons.forEach(button => {
-                if (button.textContent.includes('Modo Normal') || button.querySelector('.fa-moon')) {
+                const btnText = button.querySelector('.btn-text');
+                if (btnText) {
                     if (isDarkMode) {
-                        button.innerHTML = '<i class="fas fa-sun"></i> <span>Modo Claro</span>';
+                        button.innerHTML = '<i class="fas fa-sun"></i> <span class="btn-text">Modo Claro</span>';
                     } else {
-                        button.innerHTML = '<i class="fas fa-moon"></i> <span>Modo Oscuro</span>';
+                        button.innerHTML = '<i class="fas fa-moon"></i> <span class="btn-text">Modo Oscuro</span>';
                     }
                 }
             });
