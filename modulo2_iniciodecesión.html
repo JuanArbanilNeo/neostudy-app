@@ -6,7 +6,6 @@
     <title>Neo Study - Plataforma Educativa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* TODOS TUS ESTILOS CSS ORIGINALES SE MANTIENEN IGUAL */
         * {
             margin: 0;
             padding: 0;
@@ -1497,7 +1496,7 @@
                 </a>
             </nav>
             <div class="user-menu">
-                <div class="avatar" id="userAvatar" onclick="goToProfile()">JM</div>
+                <div class="avatar" id="userAvatar" onclick="goToProfile()">U</div>
                 <button class="btn btn-danger" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </button>
@@ -1559,10 +1558,10 @@
         <!-- Perfil del Usuario en el Menú Lateral -->
         <div class="sidebar-links">
             <div class="post-input-container" style="margin-bottom: 1.2rem;">
-                <div class="post-avatar" id="mobileUserAvatar">JM</div>
+                <div class="post-avatar" id="mobileUserAvatar">U</div>
                 <div>
-                    <h4 id="mobileFullName">Usuario NeoStudy</h4>
-                    <p class="post-time" id="mobileUserTitle">Estudiante</p>
+                    <h4 id="mobileFullName">Cargando...</h4>
+                    <p class="post-time" id="mobileUserTitle">Cargando...</p>
                 </div>
             </div>
             
@@ -1585,87 +1584,41 @@
             <h2><i class="fas fa-chart-line"></i> Mi Progreso</h2>
             <div class="mobile-progress-grid">
                 <div class="mobile-progress-card">
-                    <div class="stat-number">128</div>
+                    <div class="stat-number" id="mobileStudyHours">0</div>
                     <div class="stat-label">Horas de Estudio</div>
                 </div>
                 <div class="mobile-progress-card">
-                    <div class="stat-number">12</div>
+                    <div class="stat-number" id="mobileCompletedGoals">0</div>
                     <div class="stat-label">Metas Completadas</div>
                 </div>
                 <div class="mobile-progress-card">
-                    <div class="stat-number">8</div>
+                    <div class="stat-number" id="mobileCoursesTaken">0</div>
                     <div class="stat-label">Cursos Tomados</div>
                 </div>
                 <div class="mobile-progress-card">
-                    <div class="stat-number">15</div>
+                    <div class="stat-number" id="mobileAchievements">0</div>
                     <div class="stat-label">Logros Obtenidos</div>
                 </div>
             </div>
             <div class="sidebar-title">
                 <i class="fas fa-trending-up"></i> Progreso Semanal
             </div>
-            <p>Tu progreso esta semana ha sido excelente. Has completado 5 horas más que la semana anterior.</p>
+            <p id="mobileProgressText">Cargando tu progreso...</p>
         </div>
 
         <!-- Sección Mis Metas -->
         <div class="mobile-section" id="mobileGoals">
             <h2><i class="fas fa-bullseye"></i> Mis Metas</h2>
-            <div class="mobile-goal-item">
-                <h4>Matemáticas Básicas</h4>
-                <p>Completar curso de álgebra</p>
-                <div class="goal-progress">
-                    <div class="goal-progress-bar" style="width: 75%"></div>
-                </div>
-                <small>75% completado</small>
-            </div>
-            <div class="mobile-goal-item">
-                <h4>Química General</h4>
-                <p>Terminar módulo de estequiometría</p>
-                <div class="goal-progress">
-                    <div class="goal-progress-bar" style="width: 40%"></div>
-                </div>
-                <small>40% completado</small>
-            </div>
-            <div class="mobile-goal-item">
-                <h4>Inglés Intermedio</h4>
-                <p>Completar nivel B1</p>
-                <div class="goal-progress">
-                    <div class="goal-progress-bar" style="width: 60%"></div>
-                </div>
-                <small>60% completado</small>
+            <div id="mobileGoalsList">
+                <p>Cargando tus metas...</p>
             </div>
         </div>
 
         <!-- Sección Mis Logros -->
         <div class="mobile-section" id="mobileAchievements">
             <h2><i class="fas fa-trophy"></i> Mis Logros</h2>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">🏆</div>
-                <div>
-                    <h4>Estrella Naciente</h4>
-                    <p>Primera semana de estudio completada</p>
-                </div>
-            </div>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">📚</div>
-                <div>
-                    <h4>Voraz Lector</h4>
-                    <p>50 horas de lectura completadas</p>
-                </div>
-            </div>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">⚡</div>
-                <div>
-                    <h4>Rápido Aprendiz</h4>
-                    <p>5 cursos completados en 1 mes</p>
-                </div>
-            </div>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">🎯</div>
-                <div>
-                    <h4>Disciplinado</h4>
-                    <p>30 días seguidos de estudio</p>
-                </div>
+            <div id="mobileAchievementsList">
+                <p>Cargando tus logros...</p>
             </div>
         </div>
     </div>
@@ -1729,10 +1682,10 @@
             <!-- Perfil de Usuario -->
             <div class="user-profile">
                 <div class="post-input-container">
-                    <div class="post-avatar" id="mainAvatar" onclick="goToProfile()">JM</div>
+                    <div class="post-avatar" id="mainAvatar" onclick="goToProfile()">U</div>
                     <div>
-                        <h4 id="userName">Juan Manuel</h4>
-                        <p class="post-time" id="userTitle">Estudiante Universitario</p>
+                        <h4 id="userName">Cargando...</h4>
+                        <p class="post-time" id="userTitle">Cargando...</p>
                     </div>
                 </div>
             </div>
@@ -1743,19 +1696,19 @@
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number" id="studyHours">128</div>
+                    <div class="stat-number" id="studyHours">0</div>
                     <div class="stat-label">Horas Est.</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="completedGoals">12</div>
+                    <div class="stat-number" id="completedGoals">0</div>
                     <div class="stat-label">Metas Cumpl.</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="coursesTaken">8</div>
+                    <div class="stat-number" id="coursesTaken">0</div>
                     <div class="stat-label">Cursos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="achievements">15</div>
+                    <div class="stat-number" id="achievements">0</div>
                     <div class="stat-label">Logros</div>
                 </div>
             </div>
@@ -1764,40 +1717,8 @@
             <div class="sidebar-title">
                 <i class="fas fa-bullseye"></i> Mis Metas
             </div>
-            <div class="goals-list">
-                <div class="goal-item">
-                    <div class="goal-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="goal-info">
-                        <div class="goal-title">Matemáticas Básicas</div>
-                        <div class="goal-progress">
-                            <div class="goal-progress-bar" style="width: 75%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="goal-item">
-                    <div class="goal-icon">
-                        <i class="fas fa-flask"></i>
-                    </div>
-                    <div class="goal-info">
-                        <div class="goal-title">Química General</div>
-                        <div class="goal-progress">
-                            <div class="goal-progress-bar" style="width: 40%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="goal-item">
-                    <div class="goal-icon">
-                        <i class="fas fa-language"></i>
-                    </div>
-                    <div class="goal-info">
-                        <div class="goal-title">Inglés Intermedio</div>
-                        <div class="goal-progress">
-                            <div class="goal-progress-bar" style="width: 60%"></div>
-                        </div>
-                    </div>
-                </div>
+            <div class="goals-list" id="desktopGoalsList">
+                <p>Cargando tus metas...</p>
             </div>
         </aside>
 
@@ -1805,17 +1726,17 @@
         <main class="feed" id="mainFeed">
             <!-- Perfil Móvil (SOLO MÓVIL) - MEJORADO Y COMPLETO -->
             <div class="mobile-profile fade-in">
-                <div class="mobile-profile-avatar" id="mobileProfileAvatar">JM</div>
+                <div class="mobile-profile-avatar" id="mobileProfileAvatar">U</div>
                 <div class="mobile-profile-info">
-                    <div class="mobile-profile-name" id="mobileProfileName">Usuario NeoStudy</div>
-                    <div class="mobile-profile-title" id="mobileProfileTitle">Estudiante</div>
+                    <div class="mobile-profile-name" id="mobileProfileName">Cargando...</div>
+                    <div class="mobile-profile-title" id="mobileProfileTitle">Cargando...</div>
                 </div>
             </div>
 
             <!-- Crear Publicación MEJORADA Y CENTRADA - COMPLETA EN MÓVIL -->
             <div class="create-post fade-in">
                 <div class="post-input-container">
-                    <div class="post-avatar" id="postAvatar">JM</div>
+                    <div class="post-avatar" id="postAvatar">U</div>
                     <div class="post-input-wrapper">
                         <div class="post-user-info">
                             <span class="post-user-name" id="postUserName">Usuario</span>
@@ -1911,27 +1832,8 @@
             <div class="sidebar-title">
                 <i class="fas fa-trophy"></i> Mis Logros
             </div>
-            <div class="achievements-grid">
-                <div class="achievement-card">
-                    <div class="achievement-icon">🏆</div>
-                    <div class="achievement-title">Estrella Naciente</div>
-                    <div class="achievement-desc">Primera semana de estudio</div>
-                </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">📚</div>
-                    <div class="achievement-title">Voraz Lector</div>
-                    <div class="achievement-desc">50 horas de lectura</div>
-                </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">⚡</div>
-                    <div class="achievement-title">Rápido Aprendiz</div>
-                    <div class="achievement-desc">5 cursos en 1 mes</div>
-                </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">🎯</div>
-                    <div class="achievement-title">Disciplinado</div>
-                    <div class="achievement-desc">30 días seguidos</div>
-                </div>
+            <div class="achievements-grid" id="desktopAchievementsGrid">
+                <p>Cargando tus logros...</p>
             </div>
 
             <!-- Clases en Vivo Programadas -->
@@ -1968,181 +1870,84 @@
         </aside>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
     <script>
-        // ===== CONFIGURACIÓN FIREBASE - AGREGADO AL INICIO DEL SCRIPT =====
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHB95PmLOai7HLaNPxVoe0lVwLKIwkgEw",
-            authDomain: "neostudy-6c7ad.firebaseapp.com",
-            projectId: "neostudy-6c7ad",
-            storageBucket: "neostudy-6c7ad.firebasestorage.app",
-            messagingSenderId: "764552186350",
-            appId: "1:764552186350:web:c744108415108889e826ff",
-            measurementId: "G-NB40VTEZB3"
-        };
-
-        // Inicializar Firebase
-        let auth, db;
-        try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            auth = firebase.auth();
-            db = firebase.firestore();
-            console.log("✅ Firebase inicializado en módulo 2");
-        } catch (error) {
-            console.error("❌ Error Firebase:", error);
-        }
-
         // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
         let welcomeNotificationShown = false;
 
-        // ===== SISTEMA MEJORADO DE CARGA DE USUARIO =====
-        async function loadUserData() {
-            try {
-                const user = auth.currentUser;
-                
-                if (!user) {
-                    console.log('No hay usuario autenticado en Firebase');
-                    window.location.href = 'modulo1_inicio.html';
-                    return;
-                }
+        // ===== DETECTOR DE CAMBIOS EN FOTO DE PERFIL =====
+        let lastProfilePhoto = null;
 
-                console.log('Usuario Firebase:', user.email);
+        // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
+        function checkSession() {
+            const userData = localStorage.getItem('usuarioNeoStudy');
+            
+            if (!userData) {
+                console.log('No hay usuario registrado, redirigiendo al login...');
+                showNotification('Por favor inicia sesión primero', 'danger');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 2000);
+                return false;
+            }
+            
+            console.log('Usuario encontrado en localStorage:', JSON.parse(userData));
+            return true;
+        }
+
+        // ===== SISTEMA DE CARGA DE USUARIO MEJORADO =====
+        function loadUserData() {
+            if (!checkSession()) return;
+            
+            try {
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 
-                // CARGAR DATOS DESDE FIRESTORE
-                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                console.log('Datos completos del usuario:', userData);
                 
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    console.log('Datos desde Firestore:', userData);
-                    
-                    // ✅ NUEVO: CARGAR FOTO DE PERFIL DESDE MÚLTIPLES FUENTES
-                    let profilePhoto = '';
-                    
-                    // 1. Buscar en perfil de Firestore
-                    if (userData.perfil && userData.perfil.fotoPerfil) {
-                        profilePhoto = userData.perfil.fotoPerfil;
-                        console.log("✅ Foto encontrada en Firestore perfil");
-                    }
-                    // 2. Buscar en datos locales (módulo3)
-                    else {
-                        const localProfileData = JSON.parse(localStorage.getItem('profileData')) || {};
-                        if (localProfileData.profilePhoto) {
-                            profilePhoto = localProfileData.profilePhoto;
-                            console.log("✅ Foto encontrada en localStorage profileData");
-                        }
-                        // 3. Buscar en usuarioNeoStudy (módulo3)
-                        const localUserData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
-                        if (localUserData.fotoPerfil) {
-                            profilePhoto = localUserData.fotoPerfil;
-                            console.log("✅ Foto encontrada en localStorage usuarioNeoStudy");
-                        }
-                    }
-                    
-                    // Extraer nombre según la categoría
+                if (userData && typeof userData === 'object') {
+                    // EXTRACCIÓN MEJORADA DE DATOS DEL USUARIO
                     let nombreCompleto = '';
                     let titulo = '';
-                    const categoria = userData.categoria || '';
+                    let categoria = userData.categoria || '';
                     
+                    // Extraer nombre según la categoría del modulo1 - VERSIÓN CORREGIDA
                     if (categoria === 'profesional') {
-                        nombreCompleto = userData.prof_nombre || 'Profesional';
-                        titulo = userData.prof_profesion || 'Profesional';
+                        nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
+                        titulo = userData.prof_profesion || userData.profesion || 'Profesional';
                     } 
                     else if (categoria === 'universitario') {
-                        nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
-                        titulo = userData.uni_carrera || 'Estudiante';
+                        nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
+                        titulo = userData.uni_carrera || userData.carrera || 'Estudiante';
                     }
                     else if (categoria === 'secundaria') {
-                        nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
-                        titulo = userData.sec_grado || 'Estudiante';
+                        nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
+                        titulo = userData.sec_grado || userData.grado || 'Estudiante';
                     }
                     else if (categoria === 'general') {
-                        nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
+                        nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
                         titulo = 'Usuario General';
                     }
                     else {
+                        // Fallback mejorado para cualquier caso
                         nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
-                                       userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
-                        titulo = 'Estudiante';
+                                       userData.sec_nombre || userData.gen_nombre || 
+                                       userData.nombre || 'Usuario NeoStudy';
+                        titulo = userData.prof_profesion || userData.uni_carrera || 
+                               userData.sec_grado || userData.titulo || 'Estudiante';
                     }
                     
                     console.log('Nombre detectado:', nombreCompleto);
                     console.log('Título detectado:', titulo);
-                    console.log('Foto de perfil encontrada:', profilePhoto ? 'SÍ' : 'NO');
+                    console.log('Categoría:', categoria);
                     
-                    // Actualizar interfaz con datos
-                    updateUserProfile(
-                        nombreCompleto,
-                        titulo,
-                        nombreCompleto.split(' ')[0] || 'Usuario',
-                        { profilePhoto: profilePhoto }
-                    );
+                    // ✅ PASAR userData A updateUserProfile
+                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], profileData, userData);
                     
                 } else {
-                    console.log('No se encontraron datos en Firestore, usando datos locales');
-                    loadFromLocalStorage();
-                }
-                
-            } catch (error) {
-                console.error('Error cargando datos desde Firebase:', error);
-                loadFromLocalStorage();
-            }
-        }
-
-        // ===== FUNCIÓN DE FALLBACK PARA DATOS LOCALES =====
-        function loadFromLocalStorage() {
-            try {
-                const userData = localStorage.getItem('usuarioNeoStudy');
-                const profileData = localStorage.getItem('profileData') || {};
-                
-                if (userData) {
-                    const parsedData = JSON.parse(userData);
-                    console.log('Usando datos locales:', parsedData);
-                    
-                    let nombreCompleto = '';
-                    let titulo = '';
-                    const categoria = parsedData.categoria || '';
-                    
-                    if (categoria === 'profesional') {
-                        nombreCompleto = parsedData.prof_nombre || 'Profesional';
-                        titulo = parsedData.prof_profesion || 'Profesional';
-                    } 
-                    else if (categoria === 'universitario') {
-                        nombreCompleto = parsedData.uni_nombre || 'Estudiante Universitario';
-                        titulo = parsedData.uni_carrera || 'Estudiante';
-                    }
-                    else if (categoria === 'secundaria') {
-                        nombreCompleto = parsedData.sec_nombre || 'Estudiante de Secundaria';
-                        titulo = parsedData.sec_grado || 'Estudiante';
-                    }
-                    else if (categoria === 'general') {
-                        nombreCompleto = parsedData.gen_nombre || 'Usuario NeoStudy';
-                        titulo = 'Usuario General';
-                    }
-                    else {
-                        nombreCompleto = 'Usuario NeoStudy';
-                        titulo = 'Estudiante';
-                    }
-                    
-                    // ✅ NUEVO: Buscar foto en múltiples fuentes locales
-                    let profilePhoto = '';
-                    if (profileData.profilePhoto) {
-                        profilePhoto = profileData.profilePhoto;
-                    } else if (parsedData.fotoPerfil) {
-                        profilePhoto = parsedData.fotoPerfil;
-                    }
-                    
-                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], { profilePhoto: profilePhoto });
-                } else {
-                    throw new Error('No hay datos locales');
+                    throw new Error('Formato de datos inválido');
                 }
             } catch (error) {
-                console.error('Error cargando datos locales:', error);
+                console.error('Error cargando datos:', error);
                 showNotification('Error al cargar los datos del usuario', 'danger');
                 setTimeout(() => {
                     window.location.href = 'modulo1_inicio.html';
@@ -2150,8 +1955,7 @@
             }
         }
 
-        // ===== FUNCIÓN MEJORADA PARA ACTUALIZAR PERFIL =====
-        function updateUserProfile(nombreCompleto, titulo, primerNombre, profileData) {
+        function updateUserProfile(nombreCompleto, titulo, primerNombre, profileData, userData) {
             // Actualizar escritorio
             const userNameElement = document.getElementById('userName');
             const userTitleElement = document.getElementById('userTitle');
@@ -2179,15 +1983,21 @@
             const postUserNameElement = document.getElementById('postUserName');
             if (postUserNameElement) postUserNameElement.textContent = primerNombre;
             
-            // ✅ NUEVO: ACTUALIZAR TODOS LOS AVATARES CON FOTO
-            updateAllAvatars(primerNombre, profileData);
+            // ✅ ACTUALIZAR AVATAR CON userData
+            updateProfilePhoto(primerNombre, profileData, userData);
             
-            // Actualizar placeholder del post con el nombre del usuario
+            // CORRECCIÓN MEJORADA: Actualizar placeholder del post con el nombre del usuario
             const nombreParaSaludo = primerNombre || 'Usuario';
             const postContentElement = document.getElementById('postContent');
             if (postContentElement) {
                 postContentElement.placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
             }
+            
+            // Actualizar estadísticas con datos del usuario
+            updateUserStats(userData);
+            
+            // Actualizar metas y logros
+            updateUserGoalsAndAchievements(userData);
             
             // MOSTRAR NOTIFICACIÓN SOLO UNA VEZ
             if (!welcomeNotificationShown) {
@@ -2196,34 +2006,240 @@
             }
         }
 
-        // ===== FUNCIÓN MEJORADA PARA ACTUALIZAR AVATARES =====
-        function updateAllAvatars(userName, profileData) {
-            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, #mobileUserAvatar, #mobileProfileAvatar, #mainAvatar, #userAvatar, #postAvatar');
+        // ===== FUNCIÓN PARA ACTUALIZAR FOTO - VERSIÓN MEJORADA =====
+        function updateProfilePhoto(userName, profileData, userData) {
+            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, #mobileUserAvatar, #mobileProfileAvatar');
             const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
             
-            console.log('Actualizando avatares con foto:', profileData.profilePhoto ? 'SÍ' : 'NO');
+            // ✅ BUSCAR FOTO EN TODAS LAS UBICACIONES POSIBLES
+            let profilePhoto = null;
             
+            // 1. Primero en la ubicación específica del módulo3
+            profilePhoto = localStorage.getItem('currentProfilePhoto');
+            
+            // 2. Luego en profileData
+            if (!profilePhoto && profileData && profileData.profilePhoto) {
+                profilePhoto = profileData.profilePhoto;
+            }
+            
+            // 3. Luego en userData (compatibilidad con módulo1)
+            if (!profilePhoto && userData && userData.profilePhoto) {
+                profilePhoto = userData.profilePhoto;
+            }
+            
+            // 4. Finalmente en fotoPerfil (backup)
+            if (!profilePhoto && userData && userData.fotoPerfil) {
+                profilePhoto = userData.fotoPerfil;
+            }
+
             avatares.forEach(avatar => {
-                if (profileData.profilePhoto && 
-                    profileData.profilePhoto !== "" && 
-                    profileData.profilePhoto !== "null" && 
-                    profileData.profilePhoto !== "undefined" &&
-                    profileData.profilePhoto.startsWith('data:image')) {
+                if (profilePhoto && 
+                    profilePhoto !== "" && 
+                    profilePhoto !== "null" && 
+                    profilePhoto !== "undefined" &&
+                    profilePhoto.startsWith('data:image')) {
                     
-                    // Usar foto de perfil
-                    avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
+                    avatar.style.backgroundImage = `url(${profilePhoto})`;
                     avatar.textContent = '';
                     avatar.style.backgroundSize = 'cover';
                     avatar.style.backgroundPosition = 'center';
-                    avatar.style.color = 'transparent';
+                    avatar.style.color = 'transparent'; // Ocultar texto
                 } else {
-                    // Usar iniciales
                     avatar.textContent = initials;
                     avatar.style.backgroundImage = 'none';
                     avatar.style.background = 'var(--bg-gradient)';
-                    avatar.style.color = 'var(--white)';
+                    avatar.style.color = 'var(--white)'; // Mostrar texto
                 }
             });
+        }
+
+        // ===== DETECTOR DE CAMBIOS EN FOTO DE PERFIL =====
+        function checkForPhotoUpdates() {
+            const currentPhoto = localStorage.getItem('currentProfilePhoto');
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            // Buscar foto actual en todas las ubicaciones
+            let newPhoto = currentPhoto || profileData.profilePhoto || userData.profilePhoto || userData.fotoPerfil;
+            
+            if (newPhoto !== lastProfilePhoto) {
+                console.log('📸 Foto de perfil actualizada detectada');
+                lastProfilePhoto = newPhoto;
+                
+                // Recargar datos del usuario para aplicar los cambios
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                
+                if (userData) {
+                    // Extraer nombre para las iniciales
+                    let nombreCompleto = '';
+                    const categoria = userData.categoria || '';
+                    
+                    if (categoria === 'profesional') {
+                        nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
+                    } 
+                    else if (categoria === 'universitario') {
+                        nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
+                    }
+                    else if (categoria === 'secundaria') {
+                        nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
+                    }
+                    else if (categoria === 'general') {
+                        nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
+                    }
+                    
+                    const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+                    updateProfilePhoto(primerNombre, profileData, userData);
+                }
+            }
+        }
+
+        // ===== FUNCIÓN PARA ACTUALIZAR ESTADÍSTICAS =====
+        function updateUserStats(userData) {
+            // Estadísticas personalizadas basadas en el usuario
+            const stats = {
+                studyHours: Math.floor(Math.random() * 200) + 50, // 50-250 horas
+                completedGoals: Math.floor(Math.random() * 20) + 5, // 5-25 metas
+                coursesTaken: Math.floor(Math.random() * 15) + 3, // 3-18 cursos
+                achievements: Math.floor(Math.random() * 25) + 5 // 5-30 logros
+            };
+            
+            // Actualizar escritorio
+            document.getElementById('studyHours').textContent = stats.studyHours;
+            document.getElementById('completedGoals').textContent = stats.completedGoals;
+            document.getElementById('coursesTaken').textContent = stats.coursesTaken;
+            document.getElementById('achievements').textContent = stats.achievements;
+            
+            // Actualizar móvil
+            document.getElementById('mobileStudyHours').textContent = stats.studyHours;
+            document.getElementById('mobileCompletedGoals').textContent = stats.completedGoals;
+            document.getElementById('mobileCoursesTaken').textContent = stats.coursesTaken;
+            document.getElementById('mobileAchievements').textContent = stats.achievements;
+            
+            // Actualizar texto de progreso
+            const progressText = document.getElementById('mobileProgressText');
+            if (progressText) {
+                if (stats.studyHours > 150) {
+                    progressText.textContent = '¡Tu progreso esta semana ha sido excelente! Has superado todas las expectativas.';
+                } else if (stats.studyHours > 100) {
+                    progressText.textContent = 'Tu progreso esta semana ha sido muy bueno. Has completado más horas que la semana anterior.';
+                } else {
+                    progressText.textContent = 'Sigue así, cada hora de estudio cuenta. Tu dedicación te llevará al éxito.';
+                }
+            }
+        }
+
+        // ===== FUNCIÓN PARA ACTUALIZAR METAS Y LOGROS =====
+        function updateUserGoalsAndAchievements(userData) {
+            // Metas personalizadas basadas en la categoría del usuario
+            const categoria = userData.categoria || 'general';
+            let metas = [];
+            let logros = [];
+            
+            if (categoria === 'profesional') {
+                metas = [
+                    { titulo: 'Especialización Profesional', progreso: 65 },
+                    { titulo: 'Certificación Avanzada', progreso: 40 },
+                    { titulo: 'Desarrollo de Habilidades', progreso: 80 }
+                ];
+                logros = [
+                    { icono: '🎯', titulo: 'Profesional Certificado', desc: 'Completaste tu primera certificación' },
+                    { icono: '📊', titulo: 'Experto en Área', desc: 'Dominio avanzado en tu especialidad' },
+                    { icono: '🚀', titulo: 'Líder en Desarrollo', desc: 'Liderazgo en proyectos profesionales' }
+                ];
+            } else if (categoria === 'universitario') {
+                metas = [
+                    { titulo: 'Matemáticas Avanzadas', progreso: 75 },
+                    { titulo: 'Programación', progreso: 60 },
+                    { titulo: 'Investigación Académica', progreso: 45 }
+                ];
+                logros = [
+                    { icono: '🏆', titulo: 'Estrella Naciente', desc: 'Primera semana de estudio completada' },
+                    { icono: '📚', titulo: 'Voraz Lector', desc: '50 horas de lectura completadas' },
+                    { icono: '⚡', titulo: 'Rápido Aprendiz', desc: '5 cursos completados en 1 mes' }
+                ];
+            } else if (categoria === 'secundaria') {
+                metas = [
+                    { titulo: 'Matemáticas Básicas', progreso: 85 },
+                    { titulo: 'Ciencias Naturales', progreso: 70 },
+                    { titulo: 'Historia Universal', progreso: 55 }
+                ];
+                logros = [
+                    { icono: '🌟', titulo: 'Futuro Prometedor', desc: 'Excelente desempeño académico' },
+                    { icono: '📖', titulo: 'Joven Estudiante', desc: 'Compromiso con el aprendizaje' },
+                    { icono: '🎓', titulo: 'Preparación Universitaria', desc: 'Preparación para educación superior' }
+                ];
+            } else {
+                // General
+                metas = [
+                    { titulo: 'Aprendizaje Continuo', progreso: 50 },
+                    { titulo: 'Desarrollo Personal', progreso: 65 },
+                    { titulo: 'Habilidades Digitales', progreso: 75 }
+                ];
+                logros = [
+                    { icono: '🎉', titulo: 'Iniciador', desc: 'Comienzo exitoso en NeoStudy' },
+                    { icono: '💡', titulo: 'Curioso Intelectual', desc: 'Exploración de múltiples temas' },
+                    { icono: '🌱', titulo: 'Crecimiento Constante', desc: 'Desarrollo continuo de habilidades' }
+                ];
+            }
+            
+            // Actualizar metas en escritorio
+            const desktopGoalsList = document.getElementById('desktopGoalsList');
+            if (desktopGoalsList) {
+                desktopGoalsList.innerHTML = metas.map(meta => `
+                    <div class="goal-item">
+                        <div class="goal-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="goal-info">
+                            <div class="goal-title">${meta.titulo}</div>
+                            <div class="goal-progress">
+                                <div class="goal-progress-bar" style="width: ${meta.progreso}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Actualizar metas en móvil
+            const mobileGoalsList = document.getElementById('mobileGoalsList');
+            if (mobileGoalsList) {
+                mobileGoalsList.innerHTML = metas.map(meta => `
+                    <div class="mobile-goal-item">
+                        <h4>${meta.titulo}</h4>
+                        <div class="goal-progress">
+                            <div class="goal-progress-bar" style="width: ${meta.progreso}%"></div>
+                        </div>
+                        <small>${meta.progreso}% completado</small>
+                    </div>
+                `).join('');
+            }
+            
+            // Actualizar logros en escritorio
+            const desktopAchievementsGrid = document.getElementById('desktopAchievementsGrid');
+            if (desktopAchievementsGrid) {
+                desktopAchievementsGrid.innerHTML = logros.map(logro => `
+                    <div class="achievement-card">
+                        <div class="achievement-icon">${logro.icono}</div>
+                        <div class="achievement-title">${logro.titulo}</div>
+                        <div class="achievement-desc">${logro.desc}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Actualizar logros en móvil
+            const mobileAchievementsList = document.getElementById('mobileAchievementsList');
+            if (mobileAchievementsList) {
+                mobileAchievementsList.innerHTML = logros.map(logro => `
+                    <div class="mobile-achievement-item">
+                        <div class="mobile-achievement-icon">${logro.icono}</div>
+                        <div>
+                            <h4>${logro.titulo}</h4>
+                            <p>${logro.desc}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
 
         // ===== SISTEMA DE NAVEGACIÓN MÓVIL =====
@@ -2269,7 +2285,7 @@
             }
         }
 
-        // ===== SISTEMA DE COMPARTIR =====
+        // ===== SISTEMA DE COMPARTIR - SIMPLIFICADO CON TU QR IMAGEN =====
         function openShareModal() {
             const modal = document.getElementById('shareModal');
             if (modal) {
@@ -2355,7 +2371,7 @@
             try {
                 const link = document.createElement('a');
                 link.download = 'neostudy-qr-code.png';
-                link.href = 'imagen-qrneostady.png';
+                link.href = 'imagen-qrneostady.png'; // Tu imagen QR
                 link.click();
                 showNotification('QR descargado exitosamente 📱', 'success');
             } catch (error) {
@@ -2369,24 +2385,13 @@
             window.location.href = 'modulo3_perfil.html';
         }
 
-        // ===== SISTEMA DE CERRAR SESIÓN MEJORADO CON FIREBASE =====
-        async function logout() {
+        // ===== SISTEMA DE CERRAR SESIÓN =====
+        function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                try {
-                    await auth.signOut();
-                    localStorage.removeItem('usuarioNeoStudy');
-                    localStorage.removeItem('profileData');
-                    showNotification('Sesión cerrada correctamente', 'info');
-                    setTimeout(() => {
-                        window.location.href = 'modulo1_inicio.html';
-                    }, 1500);
-                } catch (error) {
-                    console.error('Error cerrando sesión:', error);
-                    showNotification('Sesión cerrada correctamente', 'info');
-                    setTimeout(() => {
-                        window.location.href = 'modulo1_inicio.html';
-                    }, 1500);
-                }
+                showNotification('Sesión cerrada correctamente', 'info');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 1500);
             }
         }
 
@@ -2396,100 +2401,77 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        // ===== SISTEMA DE PUBLICACIONES MEJORADO =====
-        async function createPost() {
+        // ===== SISTEMA DE PUBLICACIONES =====
+        function createPost() {
             const content = document.getElementById('postContent').value;
             if (content.trim() === '') {
                 showNotification('Por favor escribe algo para publicar', 'warning');
                 return;
             }
 
-            try {
-                const user = auth.currentUser;
-                if (!user) {
-                    showNotification('Debes iniciar sesión para publicar', 'danger');
-                    return;
-                }
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            // Extraer nombre según categoría (igual que en loadUserData)
+            let nombreCompleto = 'Usuario';
+            const categoria = userData?.categoria || '';
+            
+            if (categoria === 'profesional') {
+                nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
+            } 
+            else if (categoria === 'universitario') {
+                nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
+            }
+            else if (categoria === 'secundaria') {
+                nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
+            }
+            else if (categoria === 'general') {
+                nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
+            }
+            
+            const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+            const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            let userAvatarHTML;
+            if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
+                userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
+            } else {
+                userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
+            }
 
-                const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                const userData = userDoc.exists ? userDoc.data() : {};
-                
-                // Extraer nombre según categoría
-                let nombreCompleto = 'Usuario';
-                const categoria = userData.categoria || '';
-                
-                if (categoria === 'profesional') {
-                    nombreCompleto = userData.prof_nombre || 'Profesional';
-                } 
-                else if (categoria === 'universitario') {
-                    nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
-                }
-                else if (categoria === 'secundaria') {
-                    nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
-                }
-                else if (categoria === 'general') {
-                    nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
-                }
-                
-                const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
-                const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
-                
-                // ✅ NUEVO: BUSCAR FOTO ACTUALIZADA PARA LA PUBLICACIÓN
-                let profilePhoto = '';
-                if (userData.perfil && userData.perfil.fotoPerfil) {
-                    profilePhoto = userData.perfil.fotoPerfil;
-                } else {
-                    const localProfileData = JSON.parse(localStorage.getItem('profileData')) || {};
-                    if (localProfileData.profilePhoto) {
-                        profilePhoto = localProfileData.profilePhoto;
-                    }
-                }
-                
-                let userAvatarHTML;
-                if (profilePhoto && profilePhoto.startsWith('data:image')) {
-                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profilePhoto}); background-size: cover; background-position: center;"></div>`;
-                } else {
-                    userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
-                }
-
-                const newPost = document.createElement('div');
-                newPost.className = 'post fade-in';
-                newPost.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-user">
-                            ${userAvatarHTML}
-                            <div class="post-user-info">
-                                <h4>${nombreCompleto}</h4>
-                                <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
-                            </div>
+            const newPost = document.createElement('div');
+            newPost.className = 'post fade-in';
+            newPost.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        ${userAvatarHTML}
+                        <div class="post-user-info">
+                            <h4>${nombreCompleto}</h4>
+                            <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
                         </div>
                     </div>
-                    <div class="post-content">${content}</div>
-                    <div class="post-stats">
-                        <span>0 reacciones</span>
-                        <span>0 comentarios</span>
-                    </div>
-                    <div class="post-actions-bar">
-                        <button class="post-action-btn" onclick="likePost(this)">
-                            <i class="fas fa-thumbs-up"></i> Me gusta
-                        </button>
-                        <button class="post-action-btn">
-                            <i class="fas fa-comment"></i> Comentar
-                        </button>
-                        <button class="post-action-btn">
-                            <i class="fas fa-share"></i> Compartir
-                        </button>
-                    </div>
-                `;
+                </div>
+                <div class="post-content">${content}</div>
+                <div class="post-stats">
+                    <span>0 reacciones</span>
+                    <span>0 comentarios</span>
+                </div>
+                <div class="post-actions-bar">
+                    <button class="post-action-btn" onclick="likePost(this)">
+                        <i class="fas fa-thumbs-up"></i> Me gusta
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-comment"></i> Comentar
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-share"></i> Compartir
+                    </button>
+                </div>
+            `;
 
-                document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
-                document.getElementById('postContent').value = '';
-                showNotification('¡Publicación creada exitosamente! 🎉', 'success');
-
-            } catch (error) {
-                console.error('Error creando publicación:', error);
-                showNotification('Error al crear la publicación', 'danger');
-            }
+            document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
+            document.getElementById('postContent').value = '';
+            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
         }
 
         function likePost(button) {
@@ -2583,8 +2565,8 @@
                 const hours = Math.floor(seconds / 3600);
                 const minutes = Math.floor((seconds % 3600) / 60);
                 
-                document.getElementById('studyHours').textContent = 128 + hours;
-                document.getElementById('completedGoals').textContent = 12 + Math.floor(hours / 2);
+                document.getElementById('studyHours').textContent = parseInt(document.getElementById('studyHours').textContent) + hours;
+                document.getElementById('mobileStudyHours').textContent = parseInt(document.getElementById('mobileStudyHours').textContent) + hours;
                 
             }, 1000);
         }
@@ -2613,16 +2595,20 @@
 
         // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
         function checkForProfileUpdates() {
-            // Esta función verifica si hay cambios en el perfil
-            const user = auth.currentUser;
-            if (user) {
-                loadUserData(); // Recargar datos para actualizar foto
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            
+            if (userData) {
+                loadUserData(); // Recargar datos completos
             }
         }
 
-        // ===== INICIALIZACIÓN MEJORADA CON FIREBASE =====
+        // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Configurar tema primero
+            // Cargar datos del usuario primero
+            loadUserData();
+            
+            // Configurar tema
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setThemeMode(savedTheme);
             
@@ -2639,19 +2625,15 @@
                 }
             });
 
-            // Verificar actualizaciones periódicamente (cada 5 segundos)
-            setInterval(checkForProfileUpdates, 5000);
-        });
+            // ✅ INICIALIZAR DETECTOR DE FOTOS
+            // Guardar foto actual al cargar
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            lastProfilePhoto = localStorage.getItem('currentProfilePhoto') || profileData.profilePhoto || userData.profilePhoto || userData.fotoPerfil;
 
-        // ===== AGREGADO AL FINAL: Verificar autenticación con Firebase =====
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                console.log("Usuario autenticado:", user.email);
-                loadUserData();
-            } else {
-                console.log("No autenticado, redirigiendo...");
-                window.location.href = 'modulo1_inicio.html';
-            }
+            // Verificar actualizaciones periódicamente
+            setInterval(checkForProfileUpdates, 3000);
+            setInterval(checkForPhotoUpdates, 2000); // ✅ Verificar fotos más frecuentemente
         });
     </script>
 </body>
