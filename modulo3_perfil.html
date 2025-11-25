@@ -1077,6 +1077,21 @@
             100% { background: linear-gradient(135deg, #ff6b6b, gold); }
         }
 
+        /* ===== ESTILOS CORREGIDOS PARA BOTÓN DE MODO ===== */
+        .theme-toggle {
+            padding: 0.6rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             /* Ocultar header de escritorio en móviles */
@@ -1125,16 +1140,16 @@
                 right: 10px;
             }
 
-            /* Ocultar texto del botón de modo en móviles */
-            .mobile-controls .btn-primary .btn-text {
-                display: none;
-            }
-            
-            .mobile-controls .btn-primary {
+            /* CORREGIDO: Botón de modo en móviles solo con icono */
+            .mobile-controls .theme-toggle {
                 padding: 0.6rem;
                 width: 40px;
                 height: 40px;
                 justify-content: center;
+            }
+            
+            .mobile-controls .theme-toggle i {
+                font-size: 1.1rem;
             }
         }
 
@@ -1157,21 +1172,6 @@
             .cover-options {
                 width: 160px;
             }
-        }
-
-        /* ===== ESTILOS CORREGIDOS PARA BOTÓN DE MODO ===== */
-        .theme-toggle {
-            padding: 0.6rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle i {
-            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -2374,9 +2374,5 @@
             }
         }
     </script>
-    
-    <!-- Archivo JavaScript para el sistema de temas -->
-    <script src="theme-system.js"></script>
 </body>
-</html>
-
+                        </html>
