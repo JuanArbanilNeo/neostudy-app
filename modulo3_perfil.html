@@ -31,33 +31,6 @@
             --border-color: #e9ecef;
         }
 
-        /* Modo Oscuro */
-        .dark-mode {
-            --bg-color: #1a1a1a;
-            --text-color: #f8f9fa;
-            --card-bg: #2d2d2d;
-            --border-color: #404040;
-            --light: #2d2d2d;
-            --secondary: #adb5bd;
-        }
-
-        /* Modo Estudio */
-        .study-mode {
-            --bg-color: #f0f8ff;
-            --text-color: #2c3e50;
-            --card-bg: #ffffff;
-            --border-color: #d1ecf1;
-            --primary: #3498db;
-            --light: #e8f4fc;
-        }
-
-        body {
-            background: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-            transition: all 0.3s ease;
-        }
-
         /* ===== HEADER PARA ESCRITORIO ===== */
         .desktop-header {
             background: var(--bg-gradient);
@@ -196,6 +169,23 @@
 
         .mobile-nav-item i {
             font-size: 1.2rem;
+        }
+
+        /* Modo Oscuro */
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #f8f9fa;
+            --card-bg: #2d2d2d;
+            --border-color: #404040;
+            --light: #2d2d2d;
+            --secondary: #adb5bd;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
         }
 
         /* Perfil Container */
@@ -1130,40 +1120,9 @@
                 grid-template-columns: 1fr;
             }
 
-            /* Menú de portada optimizado para móviles */
             .cover-options {
                 width: 180px;
                 right: 10px;
-                bottom: 50px;
-            }
-
-            /* Botones de tema en móviles - solo iconos */
-            .mobile-controls .btn-primary {
-                padding: 8px;
-                width: 40px;
-                height: 40px;
-                justify-content: center;
-            }
-
-            .mobile-controls .btn-primary span {
-                display: none;
-            }
-
-            /* Menú de portada vertical en móviles */
-            .cover-options {
-                display: flex;
-                flex-direction: column;
-                width: auto;
-                max-width: 90vw;
-                right: 10px;
-                left: 10px;
-                bottom: 50px;
-            }
-
-            .cover-options .dropdown-item {
-                padding: 12px 15px;
-                text-align: center;
-                justify-content: center;
             }
         }
 
@@ -1184,16 +1143,7 @@
             }
 
             .cover-options {
-                width: auto;
-                max-width: 90vw;
-                right: 10px;
-                left: 10px;
-            }
-
-            .mobile-controls .btn-primary {
-                padding: 6px;
-                width: 36px;
-                height: 36px;
+                width: 160px;
             }
         }
     </style>
@@ -1222,7 +1172,7 @@
             </nav>
             <div class="user-menu">
                 <button class="btn btn-primary" onclick="toggleThemeMode()">
-                    <i class="fas fa-moon"></i> <span class="theme-text">Modo Normal</span>
+                    <i class="fas fa-moon"></i> Modo Normal
                 </button>
                 <div class="avatar" id="userAvatar" onclick="toggleAvatarDropdown()">JM</div>
                 <div class="avatar-dropdown" id="avatarDropdown">
@@ -1252,7 +1202,7 @@
             </div>
             <div class="mobile-controls">
                 <button class="btn btn-primary" onclick="toggleThemeMode()">
-                    <i class="fas fa-moon"></i> <span class="theme-text">Modo</span>
+                    <i class="fas fa-moon"></i>
                 </button>
                 <div class="avatar" id="mobileUserAvatar">JM</div>
             </div>
@@ -1624,7 +1574,6 @@
         let currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
         let currentEditorImage = null;
         let isDarkMode = false;
-        let isStudyMode = false;
         let lastProfilePhoto = null;
 
         // ===== INICIALIZACIÓN MEJORADA =====
@@ -1646,58 +1595,30 @@
             setInterval(checkForPhotoUpdates, 2000);
         });
 
-        // ===== SISTEMA DE TEMAS MEJORADO =====
+        // ===== MODO OSCURO =====
         function toggleThemeMode() {
-            if (!isDarkMode && !isStudyMode) {
-                // Cambiar a modo oscuro
-                isDarkMode = true;
-                document.body.classList.add('dark-mode');
-                document.body.classList.remove('study-mode');
-            } else if (isDarkMode && !isStudyMode) {
-                // Cambiar a modo estudio
-                isDarkMode = false;
-                isStudyMode = true;
-                document.body.classList.remove('dark-mode');
-                document.body.classList.add('study-mode');
-            } else {
-                // Volver a modo normal
-                isDarkMode = false;
-                isStudyMode = false;
-                document.body.classList.remove('dark-mode');
-                document.body.classList.remove('study-mode');
-            }
-            
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
             localStorage.setItem('darkMode', isDarkMode);
-            localStorage.setItem('studyMode', isStudyMode);
             updateThemeButton();
         }
 
         function checkDarkModePreference() {
-            const savedDarkMode = localStorage.getItem('darkMode');
-            const savedStudyMode = localStorage.getItem('studyMode');
-            
-            if (savedDarkMode === 'true') {
+            const savedMode = localStorage.getItem('darkMode');
+            if (savedMode === 'true') {
                 isDarkMode = true;
                 document.body.classList.add('dark-mode');
-            }
-            
-            if (savedStudyMode === 'true') {
-                isStudyMode = true;
-                document.body.classList.add('study-mode');
             }
         }
 
         function updateThemeButton() {
             const themeButtons = document.querySelectorAll('.btn-primary');
             themeButtons.forEach(button => {
-                const themeText = button.querySelector('.theme-text');
-                if (themeText) {
+                if (button.textContent.includes('Modo Normal') || button.querySelector('.fa-moon')) {
                     if (isDarkMode) {
-                        button.innerHTML = '<i class="fas fa-moon"></i> <span class="theme-text">Modo Oscuro</span>';
-                    } else if (isStudyMode) {
-                        button.innerHTML = '<i class="fas fa-book"></i> <span class="theme-text">Modo Estudio</span>';
+                        button.innerHTML = '<i class="fas fa-sun"></i> Modo Claro';
                     } else {
-                        button.innerHTML = '<i class="fas fa-sun"></i> <span class="theme-text">Modo Normal</span>';
+                        button.innerHTML = '<i class="fas fa-moon"></i> Modo Oscuro';
                     }
                 }
             });
@@ -2428,5 +2349,8 @@
             }
         }
     </script>
+    
+    <!-- Archivo JavaScript para el sistema de temas -->
+    <script src="theme-system.js"></script>
 </body>
 </html>
