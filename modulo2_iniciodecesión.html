@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neo Study - Plataforma Educativa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -1871,6 +1872,168 @@
     </div>
 
     <script>
+        // ===== CONFIGURACIÓN DE SUPABASE =====
+        const supabaseUrl = 'https://ghayqhfhfzxgtyvjezhu.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoYXlxaGZoZnp4Z3R5dmplemh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NDQzNDAsImV4cCI6MjA3OTQyMDM0MH0.wOKcksN2Dm_CO8pRMTuBPQ7Mx_49njcOj9m8jpMn4HE';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // ===== FUNCIONES PARA SUPABASE =====
+
+        // Función para obtener el ID del usuario actual
+        function getCurrentUserId() {
+            return localStorage.getItem("supabase_user_id");
+        }
+
+        // Función para guardar una publicación en Supabase
+        async function savePostToSupabase(postData) {
+            try {
+                const userId = getCurrentUserId();
+                if (!userId) {
+                    console.error('No hay usuario logueado');
+                    return { success: false, error: 'Usuario no autenticado' };
+                }
+
+                const postToSave = {
+                    user_id: userId,
+                    content: postData.content,
+                    media_type: postData.mediaType || null,
+                    created_at: new Date().toISOString(),
+                    likes_count: 0,
+                    comments_count: 0
+                };
+
+                const { data, error } = await supabase
+                    .from('posts')
+                    .insert([postToSave])
+                    .select();
+
+                if (error) throw error;
+
+                return { success: true, data: data[0] };
+            } catch (error) {
+                console.error('Error guardando publicación:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Función para guardar estadísticas del usuario
+        async function saveUserStatsToSupabase(statsData) {
+            try {
+                const userId = getCurrentUserId();
+                if (!userId) return { success: false, error: 'Usuario no autenticado' };
+
+                const { data, error } = await supabase
+                    .from('user_stats')
+                    .upsert({
+                        user_id: userId,
+                        study_hours: statsData.studyHours,
+                        completed_goals: statsData.completedGoals,
+                        courses_taken: statsData.coursesTaken,
+                        achievements: statsData.achievements,
+                        last_updated: new Date().toISOString()
+                    }, {
+                        onConflict: 'user_id'
+                    })
+                    .select();
+
+                if (error) throw error;
+
+                return { success: true, data };
+            } catch (error) {
+                console.error('Error guardando estadísticas:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Función para guardar metas del usuario
+        async function saveUserGoalsToSupabase(goalsData) {
+            try {
+                const userId = getCurrentUserId();
+                if (!userId) return { success: false, error: 'Usuario no autenticado' };
+
+                // Primero eliminar metas existentes
+                const { error: deleteError } = await supabase
+                    .from('user_goals')
+                    .delete()
+                    .eq('user_id', userId);
+
+                if (deleteError) throw deleteError;
+
+                // Insertar nuevas metas
+                const goalsToInsert = goalsData.map(goal => ({
+                    user_id: userId,
+                    title: goal.titulo,
+                    progress: goal.progreso,
+                    created_at: new Date().toISOString()
+                }));
+
+                const { data, error } = await supabase
+                    .from('user_goals')
+                    .insert(goalsToInsert)
+                    .select();
+
+                if (error) throw error;
+
+                return { success: true, data };
+            } catch (error) {
+                console.error('Error guardando metas:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Función para guardar logros del usuario
+        async function saveUserAchievementsToSupabase(achievementsData) {
+            try {
+                const userId = getCurrentUserId();
+                if (!userId) return { success: false, error: 'Usuario no autenticado' };
+
+                const achievementsToInsert = achievementsData.map(achievement => ({
+                    user_id: userId,
+                    title: achievement.titulo,
+                    description: achievement.desc,
+                    icon: achievement.icono,
+                    earned_at: new Date().toISOString()
+                }));
+
+                const { data, error } = await supabase
+                    .from('user_achievements')
+                    .insert(achievementsToInsert)
+                    .select();
+
+                if (error) throw error;
+
+                return { success: true, data };
+            } catch (error) {
+                console.error('Error guardando logros:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Función para actualizar el perfil del usuario
+        async function updateUserProfileInSupabase(profileData) {
+            try {
+                const userId = getCurrentUserId();
+                if (!userId) return { success: false, error: 'Usuario no autenticado' };
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .update({
+                        display_name: profileData.displayName,
+                        title: profileData.title,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', userId)
+                    .select();
+
+                if (error) throw error;
+
+                return { success: true, data };
+            } catch (error) {
+                console.error('Error actualizando perfil:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
         // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
         let welcomeNotificationShown = false;
 
@@ -2095,7 +2258,7 @@
         }
 
         // ===== FUNCIÓN PARA ACTUALIZAR ESTADÍSTICAS =====
-        function updateUserStats(userData) {
+        async function updateUserStats(userData) {
             // Estadísticas personalizadas basadas en el usuario
             const stats = {
                 studyHours: Math.floor(Math.random() * 200) + 50, // 50-250 horas
@@ -2104,7 +2267,14 @@
                 achievements: Math.floor(Math.random() * 25) + 5 // 5-30 logros
             };
             
-            // Actualizar escritorio
+            // Guardar en Supabase
+            try {
+                await saveUserStatsToSupabase(stats);
+            } catch (error) {
+                console.error('Error guardando estadísticas en Supabase:', error);
+            }
+            
+            // Actualizar interfaz
             document.getElementById('studyHours').textContent = stats.studyHours;
             document.getElementById('completedGoals').textContent = stats.completedGoals;
             document.getElementById('coursesTaken').textContent = stats.coursesTaken;
@@ -2130,8 +2300,7 @@
         }
 
         // ===== FUNCIÓN PARA ACTUALIZAR METAS Y LOGROS =====
-        function updateUserGoalsAndAchievements(userData) {
-            // Metas personalizadas basadas en la categoría del usuario
+        async function updateUserGoalsAndAchievements(userData) {
             const categoria = userData.categoria || 'general';
             let metas = [];
             let logros = [];
@@ -2170,7 +2339,6 @@
                     { icono: '🎓', titulo: 'Preparación Universitaria', desc: 'Preparación para educación superior' }
                 ];
             } else {
-                // General
                 metas = [
                     { titulo: 'Aprendizaje Continuo', progreso: 50 },
                     { titulo: 'Desarrollo Personal', progreso: 65 },
@@ -2183,7 +2351,15 @@
                 ];
             }
             
-            // Actualizar metas en escritorio
+            // Guardar en Supabase
+            try {
+                await saveUserGoalsToSupabase(metas);
+                await saveUserAchievementsToSupabase(logros);
+            } catch (error) {
+                console.error('Error guardando metas/logros en Supabase:', error);
+            }
+            
+            // Actualizar interfaz
             const desktopGoalsList = document.getElementById('desktopGoalsList');
             if (desktopGoalsList) {
                 desktopGoalsList.innerHTML = metas.map(meta => `
@@ -2402,79 +2578,155 @@
         }
 
         // ===== SISTEMA DE PUBLICACIONES =====
-        function createPost() {
+        async function createPost() {
             const content = document.getElementById('postContent').value;
             if (content.trim() === '') {
                 showNotification('Por favor escribe algo para publicar', 'warning');
                 return;
             }
 
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            
-            // Extraer nombre según categoría (igual que en loadUserData)
-            let nombreCompleto = 'Usuario';
-            const categoria = userData?.categoria || '';
-            
-            if (categoria === 'profesional') {
-                nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
-            } 
-            else if (categoria === 'universitario') {
-                nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
-            }
-            else if (categoria === 'secundaria') {
-                nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
-            }
-            else if (categoria === 'general') {
-                nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
-            }
-            
-            const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
-            const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
-            
-            let userAvatarHTML;
-            if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
-                userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
-            } else {
-                userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
-            }
+            try {
+                // Guardar en Supabase primero
+                const postResult = await savePostToSupabase({
+                    content: content,
+                    mediaType: null
+                });
 
-            const newPost = document.createElement('div');
-            newPost.className = 'post fade-in';
-            newPost.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        ${userAvatarHTML}
-                        <div class="post-user-info">
-                            <h4>${nombreCompleto}</h4>
-                            <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                if (!postResult.success) {
+                    throw new Error(postResult.error);
+                }
+
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                
+                // Extraer nombre según categoría
+                let nombreCompleto = 'Usuario';
+                const categoria = userData?.categoria || '';
+                
+                if (categoria === 'profesional') {
+                    nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
+                } 
+                else if (categoria === 'universitario') {
+                    nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
+                }
+                else if (categoria === 'secundaria') {
+                    nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
+                }
+                else if (categoria === 'general') {
+                    nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
+                }
+                
+                const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+                const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                let userAvatarHTML;
+                if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
+                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
+                } else {
+                    userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
+                }
+
+                const newPost = document.createElement('div');
+                newPost.className = 'post fade-in';
+                newPost.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-user">
+                            ${userAvatarHTML}
+                            <div class="post-user-info">
+                                <h4>${nombreCompleto}</h4>
+                                <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="post-content">${content}</div>
-                <div class="post-stats">
-                    <span>0 reacciones</span>
-                    <span>0 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="likePost(this)">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            `;
+                    <div class="post-content">${content}</div>
+                    <div class="post-stats">
+                        <span>0 reacciones</span>
+                        <span>0 comentarios</span>
+                    </div>
+                    <div class="post-actions-bar">
+                        <button class="post-action-btn" onclick="likePost(this, '${postResult.data.id}')">
+                            <i class="fas fa-thumbs-up"></i> Me gusta
+                        </button>
+                        <button class="post-action-btn">
+                            <i class="fas fa-comment"></i> Comentar
+                        </button>
+                        <button class="post-action-btn">
+                            <i class="fas fa-share"></i> Compartir
+                        </button>
+                    </div>
+                `;
 
-            document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
-            document.getElementById('postContent').value = '';
-            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
+                // Agregar el ID de Supabase como atributo data
+                newPost.setAttribute('data-post-id', postResult.data.id);
+
+                document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
+                document.getElementById('postContent').value = '';
+                showNotification('¡Publicación creada exitosamente! 🎉', 'success');
+
+            } catch (error) {
+                console.error('Error creando publicación:', error);
+                showNotification('Error al crear la publicación', 'danger');
+            }
         }
 
-        function likePost(button) {
+        // Función para dar like a una publicación
+        async function likePost(button, postId) {
+            try {
+                const userId = getCurrentUserId();
+                if (!userId) {
+                    showNotification('Debes iniciar sesión para dar like', 'warning');
+                    return;
+                }
+
+                const { data, error } = await supabase
+                    .from('post_likes')
+                    .insert([
+                        { 
+                            user_id: userId, 
+                            post_id: postId,
+                            created_at: new Date().toISOString()
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                const post = button.closest('.post');
+                const stats = post.querySelector('.post-stats span:first-child');
+                const currentLikes = parseInt(stats.textContent) || 0;
+                stats.textContent = `${currentLikes + 1} reacciones`;
+                
+                button.style.color = 'var(--primary)';
+                button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
+                
+                showNotification('¡Like agregado! 👍', 'success');
+            } catch (error) {
+                console.error('Error dando like:', error);
+                showNotification('Error al dar like', 'danger');
+            }
+        }
+
+        // Función para cargar publicaciones existentes
+        async function loadExistingPosts() {
+            try {
+                const userId = getCurrentUserId();
+                if (!userId) return;
+
+                const { data: posts, error } = await supabase
+                    .from('posts')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                // Aquí puedes cargar las publicaciones en la interfaz
+                console.log('Publicaciones cargadas:', posts);
+            } catch (error) {
+                console.error('Error cargando publicaciones:', error);
+            }
+        }
+
+        function likePostOriginal(button) {
             const post = button.closest('.post');
             const stats = post.querySelector('.post-stats span:first-child');
             const currentLikes = parseInt(stats.textContent) || 0;
@@ -2607,6 +2859,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar datos del usuario primero
             loadUserData();
+            
+            // Cargar publicaciones existentes
+            loadExistingPosts();
             
             // Configurar tema
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
