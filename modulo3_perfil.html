@@ -1736,9 +1736,9 @@
         </div>
     </div>
 
-    <!-- Inputs ocultos para fotos - CORREGIDOS -->
-    <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(event)">
-    <input type="file" id="coverPhotoInput" accept="image/*" style="display: none;" onchange="handleCoverPhotoUpload(event)">
+    <!-- Inputs ocultos para fotos - COMPLETAMENTE CORREGIDOS -->
+    <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
+    <input type="file" id="coverPhotoInput" accept="image/*" style="display: none;">
 
     <script>
         // ===== VARIABLES GLOBALES =====
@@ -1765,10 +1765,33 @@
                               userData.profilePhoto || 
                               userData.fotoPerfil;
 
+            // ✅ CONFIGURAR EVENT LISTENERS PARA SUBIDA DE FOTOS
+            setupPhotoUploadListeners();
+
             // ✅ VERIFICAR ACTUALIZACIONES PERIÓDICAMENTE
             setInterval(checkForPhotoUpdates, 2000);
-            setInterval(checkThemeMode, 1000); // Verificar cambios de tema cada segundo
+            setInterval(checkThemeMode, 1000);
         });
+
+        // ===== CONFIGURACIÓN DE EVENT LISTENERS PARA FOTOS =====
+        function setupPhotoUploadListeners() {
+            const profileInput = document.getElementById('profilePhotoInput');
+            const coverInput = document.getElementById('coverPhotoInput');
+            
+            if (profileInput) {
+                profileInput.addEventListener('change', function(event) {
+                    console.log('📸 Evento change detectado en input de perfil');
+                    handlePhotoUpload(event.target.files[0], 'profilePhoto');
+                });
+            }
+            
+            if (coverInput) {
+                coverInput.addEventListener('change', function(event) {
+                    console.log('🖼️ Evento change detectado en input de portada');
+                    handlePhotoUpload(event.target.files[0], 'coverPhoto');
+                });
+            }
+        }
 
         // ===== SISTEMA DE TEMAS SINCRONIZADO =====
         function checkThemeMode() {
@@ -1890,30 +1913,14 @@
             document.getElementById('coverOptions').classList.remove('show');
         }
 
-        // ✅ FUNCIONES CORREGIDAS PARA SUBIR FOTOS
-        function handleProfilePhotoUpload(event) {
-            console.log('📸 Procesando foto de perfil...');
-            const file = event.target.files[0];
-            if (file) {
-                handlePhotoUpload(file, 'profilePhoto');
-            } else {
-                console.log('❌ No se seleccionó archivo');
-            }
-        }
-
-        function handleCoverPhotoUpload(event) {
-            console.log('🖼️ Procesando foto de portada...');
-            const file = event.target.files[0];
-            if (file) {
-                handlePhotoUpload(file, 'coverPhoto');
-            } else {
-                console.log('❌ No se seleccionó archivo');
-            }
-        }
-
         function handlePhotoUpload(file, type) {
-            console.log(`📁 Subiendo archivo: ${file.name}, Tipo: ${file.type}, Tamaño: ${file.size} bytes`);
+            console.log(`📁 Procesando archivo: ${file ? file.name : 'NO_FILE'}, Tipo: ${type}`);
             
+            if (!file) {
+                console.log('❌ No se seleccionó archivo');
+                return;
+            }
+
             if (!file.type.startsWith('image/')) {
                 alert('❌ Por favor selecciona solo archivos de imagen (JPG, PNG, etc.)');
                 return;
@@ -1973,17 +1980,20 @@
                 cover: []
             };
             
-            profilePhotosHistory.unshift(photoData);
-            if (profilePhotosHistory.length > 20) {
-                profilePhotosHistory = profilePhotosHistory.slice(0, 20);
+            // Evitar duplicados
+            if (!profilePhotosHistory.includes(photoData)) {
+                profilePhotosHistory.unshift(photoData);
+                if (profilePhotosHistory.length > 20) {
+                    profilePhotosHistory = profilePhotosHistory.slice(0, 20);
+                }
+                photosHistory.profile = profilePhotosHistory;
+                localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
             }
-            photosHistory.profile = profilePhotosHistory;
-            localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
             
             // ✅ ACTUALIZAR LA VISTA INMEDIATAMENTE
             updateProfilePhotoView(photoData);
             
-            alert('¡Foto de perfil actualizada correctamente! ✅');
+            showNotification('¡Foto de perfil actualizada correctamente! ✅', 'success');
             console.log('✅ Foto de perfil guardada exitosamente');
         }
 
@@ -2003,11 +2013,13 @@
             userAvatar.style.backgroundSize = 'cover';
             userAvatar.style.backgroundPosition = 'center';
             userAvatar.textContent = '';
+            userAvatar.style.color = 'transparent';
             
             mobileUserAvatar.style.backgroundImage = `url(${photoData})`;
             mobileUserAvatar.style.backgroundSize = 'cover';
             mobileUserAvatar.style.backgroundPosition = 'center';
             mobileUserAvatar.textContent = '';
+            mobileUserAvatar.style.color = 'transparent';
         }
 
         // ===== SISTEMA DE CUMPLEAÑOS MEJORADO =====
@@ -2187,7 +2199,14 @@
                     avatarElement.style.background = 'var(--bg-gradient)';
                     
                     document.getElementById('userAvatar').textContent = initials;
+                    document.getElementById('userAvatar').style.backgroundImage = 'none';
+                    document.getElementById('userAvatar').style.background = 'var(--white)';
+                    document.getElementById('userAvatar').style.color = 'var(--primary)';
+                    
                     document.getElementById('mobileUserAvatar').textContent = initials;
+                    document.getElementById('mobileUserAvatar').style.backgroundImage = 'none';
+                    document.getElementById('mobileUserAvatar').style.background = 'var(--white)';
+                    document.getElementById('mobileUserAvatar').style.color = 'var(--primary)';
                 }
 
                 // ✅ FRASE MOTIVACIONAL Y BIOGRAFÍA
@@ -2321,7 +2340,7 @@
             
             closeCoverEditor();
             loadGallery();
-            alert('¡Portada guardada correctamente! ✅');
+            showNotification('¡Portada guardada correctamente! ✅', 'success');
         }
 
         // ===== ELIMINAR FOTOS MEJORADO =====
@@ -2350,17 +2369,19 @@
                 document.getElementById('userAvatar').textContent = initials;
                 document.getElementById('userAvatar').style.backgroundImage = 'none';
                 document.getElementById('userAvatar').style.background = 'var(--white)';
+                document.getElementById('userAvatar').style.color = 'var(--primary)';
                 
                 document.getElementById('mobileUserAvatar').textContent = initials;
                 document.getElementById('mobileUserAvatar').style.backgroundImage = 'none';
                 document.getElementById('mobileUserAvatar').style.background = 'var(--white)';
+                document.getElementById('mobileUserAvatar').style.color = 'var(--primary)';
                 
                 // Cerrar menús
                 document.getElementById('avatarOptions').classList.remove('show');
                 document.getElementById('avatarDropdown').classList.remove('show');
                 document.getElementById('mobileAvatarDropdown').classList.remove('show');
                 
-                alert('Foto de perfil eliminada ✅');
+                showNotification('Foto de perfil eliminada ✅', 'success');
             }
         }
 
@@ -2379,7 +2400,7 @@
                 // Cerrar menú
                 document.getElementById('coverOptions').classList.remove('show');
                 
-                alert('Foto de portada eliminada ✅');
+                showNotification('Foto de portada eliminada ✅', 'success');
             }
         }
 
@@ -2540,7 +2561,7 @@
                 // Recargar galería
                 closeGalleryModal();
                 loadGallery();
-                alert('Foto eliminada ✅');
+                showNotification('Foto eliminada ✅', 'success');
             }
         }
 
@@ -2613,7 +2634,7 @@
             document.getElementById('infoUbicacion').textContent = profileData.ubicacion || 'Lima, Perú';
             
             closeEditModal();
-            alert('¡Perfil actualizado correctamente! ✅');
+            showNotification('¡Perfil actualizado correctamente! ✅', 'success');
         }
 
         // ===== SISTEMA DE NOTIFICACIONES =====
