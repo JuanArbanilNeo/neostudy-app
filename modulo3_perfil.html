@@ -1842,18 +1842,21 @@
                         .eq('user_id', currentUserId);
                 } else {
                     // Insertar nuevo perfil
+                    const supabaseData = {
+                        user_id: currentUserId,
+                        profile_data: profileData,
+                        photos_history: {
+                            profile: profilePhotosHistory,
+                            cover: coverPhotosHistory
+                        },
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    };
+                    
                     result = await supabase
                         .from('user_profiles')
-                        .insert({
-                            user_id: currentUserId,
-                            profile_data: profileData,
-                            photos_history: {
-                                profile: profilePhotosHistory,
-                                cover: coverPhotosHistory
-                            },
-                            created_at: new Date().toISOString(),
-                            updated_at: new Date().toISOString()
-                        });
+                        .upsert(supabaseData)
+                        .select();
                 }
 
                 if (result.error) throw result.error;
@@ -1947,7 +1950,7 @@
 
                 const { data, error } = await supabase
                     .from('user_profiles')
-                    .insert([initialProfile])
+                    .upsert(initialProfile)
                     .select();
 
                 if (error) throw error;
