@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil - NeoStudy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluir Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -1741,6 +1743,11 @@
     <input type="file" id="coverPhotoInput" accept="image/*" style="display: none;">
 
     <script>
+        // ===== CONFIGURACIÓN SUPABASE =====
+        const supabaseUrl = 'https://ghayqhfhfzxgtyvjezhu.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoYXlxaGZoZnp4Z3R5dmplemh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NDQzNDAsImV4cCI6MjA3OTQyMDM0MH0.wOKcksN2Dm_CO8pRMTuBPQ7Mx_49njcOj9m8jpMn4HE';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
         // ===== VARIABLES GLOBALES =====
         let profilePhotosHistory = [];
         let coverPhotosHistory = [];
@@ -1749,10 +1756,11 @@
         let currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
         let currentEditorImage = null;
         let lastProfilePhoto = null;
+        let currentUserId = null;
 
         // ===== INICIALIZACIÓN MEJORADA =====
-        document.addEventListener('DOMContentLoaded', function() {
-            loadProfileData();
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadProfileData();
             checkBirthday();
             updateThemeButton();
             checkThemeMode();
@@ -1772,6 +1780,238 @@
             setInterval(checkForPhotoUpdates, 2000);
             setInterval(checkThemeMode, 1000);
         });
+
+        // ===== FUNCIONES PARA MANEJAR FOTOS EN SUPABASE =====
+        async function loadPhotosFromSupabase() {
+            if (!currentUserId) return;
+
+            try {
+                const { data: profileData, error } = await supabase
+                    .from('user_profiles')
+                    .select('photos_history')
+                    .eq('user_id', currentUserId)
+                    .single();
+
+                if (error) throw error;
+
+                if (profileData && profileData.photos_history) {
+                    profilePhotosHistory = profileData.photos_history.profile || [];
+                    coverPhotosHistory = profileData.photos_history.cover || [];
+                }
+            } catch (error) {
+                console.error('Error cargando fotos:', error);
+            }
+        }
+
+        async function saveProfileToSupabase(profileData) {
+            if (!currentUserId) {
+                // Guardar solo en localStorage si no hay usuario
+                localStorage.setItem('profileData', JSON.stringify(profileData));
+                return true;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('user_profiles')
+                    .upsert({
+                        user_id: currentUserId,
+                        profile_data: profileData,
+                        photos_history: {
+                            profile: profilePhotosHistory,
+                            cover: coverPhotosHistory
+                        },
+                        updated_at: new Date().toISOString()
+                    });
+
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Error guardando en Supabase:', error);
+                // Fallback a localStorage
+                localStorage.setItem('profileData', JSON.stringify(profileData));
+                showNotification('Error guardando en la nube, usando almacenamiento local', 'warning');
+                return false;
+            }
+        }
+
+        // ===== SISTEMA DE CARGA DE PERFIL MEJORADO =====
+        async function loadProfileData() {
+            try {
+                // Obtener ID del usuario desde localStorage
+                currentUserId = localStorage.getItem("supabase_user_id");
+                const localUserData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+                
+                if (!currentUserId) {
+                    console.log("No hay usuario logueado, usando datos locales");
+                    loadLocalProfileData(localUserData);
+                    return;
+                }
+
+                // Cargar datos del perfil desde Supabase
+                const { data: profileData, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('user_id', currentUserId)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error cargando perfil:', error);
+                    showNotification('Error cargando perfil, usando datos locales', 'error');
+                    loadLocalProfileData(localUserData);
+                    return;
+                }
+
+                // Si no existe perfil en Supabase, crear uno
+                if (!profileData) {
+                    await createInitialProfile(localUserData);
+                    return;
+                }
+
+                // Combinar datos locales con datos de Supabase
+                const combinedData = {
+                    ...localUserData,
+                    ...profileData.profile_data
+                };
+
+                // Actualizar la interfaz con los datos
+                updateProfileUI(combinedData, profileData);
+
+                // Cargar fotos desde Supabase
+                await loadPhotosFromSupabase();
+
+            } catch (error) {
+                console.error('Error en loadProfileData:', error);
+                loadLocalProfileData(JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {});
+            }
+        }
+
+        async function createInitialProfile(userData) {
+            try {
+                const initialProfile = {
+                    user_id: currentUserId,
+                    profile_data: {
+                        motivationalText: '"El éxito es la suma de pequeños esfuerzos repetidos día tras día"',
+                        bio: "Apasionado por el aprendizaje y el crecimiento académico. Siempre buscando nuevos desafíos educativos.",
+                        institucion: '',
+                        carrera: '',
+                        ubicacion: 'Lima, Perú',
+                        coverPhoto: null,
+                        coverAdjustments: { x: 0, y: 0, zoom: 1 },
+                        profilePhoto: null
+                    },
+                    photos_history: {
+                        profile: [],
+                        cover: []
+                    },
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+
+                const { data, error } = await supabase
+                    .from('user_profiles')
+                    .insert([initialProfile])
+                    .select();
+
+                if (error) throw error;
+
+                showNotification('Perfil creado en la nube ✅', 'success');
+                loadLocalProfileData(userData);
+
+            } catch (error) {
+                console.error('Error creando perfil inicial:', error);
+                loadLocalProfileData(userData);
+            }
+        }
+
+        function loadLocalProfileData(userData) {
+            const localProfileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const photosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
+                profile: [],
+                cover: []
+            };
+            
+            profilePhotosHistory = photosHistory.profile || [];
+            coverPhotosHistory = photosHistory.cover || [];
+            
+            updateProfileUI(userData, { profile_data: localProfileData });
+        }
+
+        function updateProfileUI(userData, profileData) {
+            // Tu código existente para actualizar la UI...
+            // (mantén todo el código que ya tienes para actualizar los elementos del DOM)
+            
+            // Solo actualiza con los datos combinados
+            const combinedData = {
+                ...userData,
+                ...profileData.profile_data
+            };
+
+            // Actualizar nombre
+            document.getElementById('profileName').textContent = 
+                combinedData.prof_nombre || combinedData.uni_nombre || 
+                combinedData.sec_nombre || combinedData.gen_nombre || 
+                combinedData.nombre || 'Usuario NeoStudy';
+
+            // Actualizar título
+            document.getElementById('profileTitle').textContent = 
+                combinedData.prof_profesion || combinedData.uni_carrera || 
+                combinedData.sec_grado || 'Estudiante';
+
+            // Actualizar información académica
+            document.getElementById('infoCategoria').textContent = 
+                combinedData.prof_profesion || combinedData.uni_carrera || 
+                combinedData.sec_grado || 'Estudiante';
+            
+            document.getElementById('infoInstitucion').textContent = 
+                combinedData.prof_institucion || combinedData.uni_universidad || 
+                combinedData.sec_colegio || combinedData.institucion || 'No especificado';
+            
+            document.getElementById('infoCarrera').textContent = 
+                combinedData.prof_carrera || combinedData.uni_carrera || 
+                combinedData.carrera || 'No especificado';
+
+            // Actualizar información personal
+            const fechaNacimiento = combinedData.prof_nacimiento || combinedData.uni_nacimiento || 
+                                combinedData.sec_nacimiento || combinedData.gen_nacimiento;
+            
+            if (fechaNacimiento) {
+                const [año, mes, dia] = fechaNacimiento.split('-');
+                const nacimiento = new Date(año, mes - 1, dia);
+                document.getElementById('infoNacimiento').textContent = nacimiento.toLocaleDateString('es-ES', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+
+            document.getElementById('infoContacto').textContent = 
+                combinedData.prof_contacto || combinedData.uni_contacto || 
+                combinedData.sec_contacto || combinedData.gen_contacto || 'No especificado';
+            
+            document.getElementById('infoUbicacion').textContent = combinedData.ubicacion || 'Lima, Perú';
+
+            // Actualizar foto de perfil
+            if (combinedData.profilePhoto) {
+                updateProfilePhotoView(combinedData.profilePhoto);
+            }
+
+            // Actualizar frase motivacional y biografía
+            document.getElementById('motivationalText').textContent = 
+                combinedData.motivationalText || 
+                '"El éxito es la suma de pequeños esfuerzos repetidos día tras día"';
+            
+            document.getElementById('profileBio').textContent = 
+                combinedData.bio || 
+                "Apasionado por el aprendizaje y el crecimiento académico. Siempre buscando nuevos desafíos educativos.";
+
+            // Actualizar portada
+            if (combinedData.coverPhoto) {
+                applyCoverPhoto(combinedData.coverPhoto, combinedData.coverAdjustments);
+            }
+
+            // Cargar galería
+            loadGallery();
+        }
 
         // ===== CONFIGURACIÓN DE EVENT LISTENERS PARA FOTOS =====
         function setupPhotoUploadListeners() {
@@ -1957,7 +2197,7 @@
             reader.readAsDataURL(file);
         }
 
-        function saveProfilePhoto(photoData) {
+        async function saveProfilePhoto(photoData) {
             console.log('💾 Guardando foto de perfil...');
             
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
@@ -1975,23 +2215,18 @@
             localStorage.setItem('currentProfilePhoto', photoData);
 
             // Agregar a la historia
-            const photosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
-                profile: [],
-                cover: []
-            };
-            
-            // Evitar duplicados
             if (!profilePhotosHistory.includes(photoData)) {
                 profilePhotosHistory.unshift(photoData);
                 if (profilePhotosHistory.length > 20) {
                     profilePhotosHistory = profilePhotosHistory.slice(0, 20);
                 }
-                photosHistory.profile = profilePhotosHistory;
-                localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
             }
-            
+
             // ✅ ACTUALIZAR LA VISTA INMEDIATAMENTE
             updateProfilePhotoView(photoData);
+            
+            // ✅ GUARDAR EN SUPABASE
+            await saveProfileToSupabase(profileData);
             
             showNotification('¡Foto de perfil actualizada correctamente! ✅', 'success');
             console.log('✅ Foto de perfil guardada exitosamente');
@@ -2093,142 +2328,6 @@
             }
         }
 
-        // ===== SISTEMA MEJORADO DE CARGA DE DATOS =====
-        function loadProfileData() {
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            const photosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
-                profile: [],
-                cover: []
-            };
-            
-            profilePhotosHistory = photosHistory.profile || [];
-            coverPhotosHistory = photosHistory.cover || [];
-
-            if (userData) {
-                // ✅ EXTRACCIÓN MEJORADA DE DATOS DEL USUARIO
-                let nombreCompleto = '';
-                let titulo = '';
-                let categoria = userData.categoria || '';
-                
-                // Extraer nombre según la categoría del modulo1
-                if (categoria === 'profesional') {
-                    nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
-                    titulo = userData.prof_profesion || userData.profesion || 'Profesional';
-                } 
-                else if (categoria === 'universitario') {
-                    nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
-                    titulo = userData.uni_carrera || userData.carrera || 'Estudiante';
-                }
-                else if (categoria === 'secundaria') {
-                    nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
-                    titulo = userData.sec_grado || userData.grado || 'Estudiante';
-                }
-                else if (categoria === 'general') {
-                    nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
-                    titulo = 'Usuario General';
-                }
-                else {
-                    // Fallback mejorado para cualquier caso
-                    nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
-                                   userData.sec_nombre || userData.gen_nombre || 
-                                   userData.nombre || 'Usuario NeoStudy';
-                    titulo = userData.prof_profesion || userData.uni_carrera || 
-                           userData.sec_grado || userData.titulo || 'Estudiante';
-                }
-                
-                console.log('Datos cargados del usuario:', { nombreCompleto, titulo, categoria });
-                
-                // ✅ ACTUALIZAR TODOS LOS ELEMENTOS CON LOS DATOS
-                document.getElementById('profileName').textContent = nombreCompleto;
-                document.getElementById('profileTitle').textContent = titulo;
-                
-                // ✅ ACTUALIZAR INFORMACIÓN ACADÉMICA
-                document.getElementById('infoCategoria').textContent = titulo;
-                document.getElementById('infoInstitucion').textContent = 
-                    userData.prof_institucion || userData.uni_universidad || 
-                    userData.sec_colegio || profileData.institucion || 'No especificado';
-                document.getElementById('infoCarrera').textContent = 
-                    userData.prof_carrera || userData.uni_carrera || 
-                    profileData.carrera || 'No especificado';
-
-                // ✅ ACTUALIZAR INFORMACIÓN PERSONAL
-                // Fecha de nacimiento - CORREGIDO PARA EVITAR PROBLEMAS DE ZONA HORARIA
-                const fechaNacimiento = userData.prof_nacimiento || userData.uni_nacimiento || 
-                                       userData.sec_nacimiento || userData.gen_nacimiento;
-                
-                if (fechaNacimiento) {
-                    // Forma CORRECTA: Dividir la fecha y crear Date sin problemas de zona horaria
-                    const [año, mes, dia] = fechaNacimiento.split('-');
-                    const nacimiento = new Date(año, mes - 1, dia); // mes - 1 porque Date usa 0-11
-                    
-                    document.getElementById('infoNacimiento').textContent = nacimiento.toLocaleDateString('es-ES', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                    });
-                } else {
-                    document.getElementById('infoNacimiento').textContent = 'No especificado';
-                }
-                
-                document.getElementById('infoContacto').textContent = 
-                    userData.prof_contacto || userData.uni_contacto || 
-                    userData.sec_contacto || userData.gen_contacto || 'No especificado';
-                document.getElementById('infoUbicacion').textContent = profileData.ubicacion || 'Lima, Perú';
-
-                // ✅ AVATAR CON INICIALES O FOTO
-                const initials = nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase();
-                const avatarElement = document.getElementById('profileAvatar');
-                
-                // ✅ BUSCAR FOTO EN TODAS LAS UBICACIONES POSIBLES (COMPATIBILIDAD CON MÓDULO 2)
-                let profilePhoto = localStorage.getItem('currentProfilePhoto') || 
-                                  profileData.profilePhoto || 
-                                  userData.profilePhoto || 
-                                  userData.fotoPerfil;
-                
-                if (profilePhoto && 
-                    profilePhoto !== "" && 
-                    profilePhoto !== "null" && 
-                    profilePhoto !== "undefined" &&
-                    profilePhoto.startsWith('data:image')) {
-                    
-                    updateProfilePhotoView(profilePhoto);
-                } else {
-                    avatarElement.innerHTML = initials;
-                    avatarElement.style.backgroundImage = 'none';
-                    avatarElement.style.background = 'var(--bg-gradient)';
-                    
-                    document.getElementById('userAvatar').textContent = initials;
-                    document.getElementById('userAvatar').style.backgroundImage = 'none';
-                    document.getElementById('userAvatar').style.background = 'var(--white)';
-                    document.getElementById('userAvatar').style.color = 'var(--primary)';
-                    
-                    document.getElementById('mobileUserAvatar').textContent = initials;
-                    document.getElementById('mobileUserAvatar').style.backgroundImage = 'none';
-                    document.getElementById('mobileUserAvatar').style.background = 'var(--white)';
-                    document.getElementById('mobileUserAvatar').style.color = 'var(--primary)';
-                }
-
-                // ✅ FRASE MOTIVACIONAL Y BIOGRAFÍA
-                document.getElementById('motivationalText').textContent = profileData.motivationalText || 
-                    '"El éxito es la suma de pequeños esfuerzos repetidos día tras día"';
-                document.getElementById('profileBio').textContent = profileData.bio || 
-                    "Apasionado por el aprendizaje y el crecimiento académico. Siempre buscando nuevos desafíos educativos.";
-
-                // ✅ CARGAR FOTO DE PORTADA CON AJUSTES
-                if (profileData.coverPhoto) {
-                    applyCoverPhoto(profileData.coverPhoto, profileData.coverAdjustments);
-                }
-
-                // ✅ CARGAR GALERÍA
-                loadGallery();
-
-            } else {
-                alert('No hay datos de usuario. Por favor regístrate primero.');
-                window.location.href = 'modulo1_inicio.html';
-            }
-        }
-
         // ===== DETECTOR DE CAMBIOS EN FOTO DE PERFIL =====
         function checkForPhotoUpdates() {
             const currentPhoto = localStorage.getItem('currentProfilePhoto');
@@ -2314,11 +2413,12 @@
         document.getElementById('posY').addEventListener('input', updateEditorPreview);
         document.getElementById('zoomLevel').addEventListener('input', updateEditorPreview);
 
-        function saveCoverImage() {
+        async function saveCoverImage() {
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             profileData.coverPhoto = currentEditorImage;
             profileData.coverAdjustments = currentCoverAdjustments;
             
+            // Guardar localmente
             localStorage.setItem('profileData', JSON.stringify(profileData));
             
             // Aplicar a la vista
@@ -2330,13 +2430,10 @@
                 if (coverPhotosHistory.length > 20) {
                     coverPhotosHistory = coverPhotosHistory.slice(0, 20);
                 }
-                const photosHistory = JSON.parse(localStorage.getItem('photosHistory')) || {
-                    profile: [],
-                    cover: []
-                };
-                photosHistory.cover = coverPhotosHistory;
-                localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
             }
+            
+            // ✅ GUARDAR EN SUPABASE
+            await saveProfileToSupabase(profileData);
             
             closeCoverEditor();
             loadGallery();
@@ -2344,7 +2441,7 @@
         }
 
         // ===== ELIMINAR FOTOS MEJORADO =====
-        function deleteProfilePhoto() {
+        async function deleteProfilePhoto() {
             if (confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
                 const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
@@ -2376,6 +2473,9 @@
                 document.getElementById('mobileUserAvatar').style.background = 'var(--white)';
                 document.getElementById('mobileUserAvatar').style.color = 'var(--primary)';
                 
+                // ✅ GUARDAR EN SUPABASE
+                await saveProfileToSupabase(profileData);
+                
                 // Cerrar menús
                 document.getElementById('avatarOptions').classList.remove('show');
                 document.getElementById('avatarDropdown').classList.remove('show');
@@ -2385,10 +2485,11 @@
             }
         }
 
-        function deleteCoverPhoto() {
+        async function deleteCoverPhoto() {
             if (confirm('¿Estás seguro de que quieres eliminar tu foto de portada?')) {
                 const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 
+                // Eliminar localmente
                 delete profileData.coverPhoto;
                 delete profileData.coverAdjustments;
                 localStorage.setItem('profileData', JSON.stringify(profileData));
@@ -2396,6 +2497,9 @@
                 // Restaurar gradiente
                 document.getElementById('coverPhoto').innerHTML = '';
                 currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
+                
+                // ✅ GUARDAR EN SUPABASE
+                await saveProfileToSupabase(profileData);
                 
                 // Cerrar menú
                 document.getElementById('coverOptions').classList.remove('show');
@@ -2523,7 +2627,7 @@
             document.getElementById('galleryModal').style.display = 'flex';
         }
 
-        function deleteGalleryPhoto(type, index) {
+        async function deleteGalleryPhoto(type, index) {
             if (confirm('¿Estás seguro de que quieres eliminar esta foto?')) {
                 if (type === 'profile') {
                     profilePhotosHistory.splice(index, 1);
@@ -2551,12 +2655,9 @@
                     }
                 }
                 
-                // Guardar cambios
-                const photosHistory = {
-                    profile: profilePhotosHistory,
-                    cover: coverPhotosHistory
-                };
-                localStorage.setItem('photosHistory', JSON.stringify(photosHistory));
+                // ✅ GUARDAR CAMBIOS EN SUPABASE
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                await saveProfileToSupabase(profileData);
                 
                 // Recargar galería
                 closeGalleryModal();
@@ -2593,7 +2694,7 @@
             document.getElementById('editMotivationalText').focus();
         }
 
-        function saveProfile() {
+        async function saveProfile() {
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
             
@@ -2603,6 +2704,7 @@
             profileData.carrera = document.getElementById('editCarrera').value;
             profileData.ubicacion = document.getElementById('editUbicacion').value;
             
+            // Guardar localmente
             localStorage.setItem('profileData', JSON.stringify(profileData));
             
             // ✅ ACTUALIZAR DATOS EN usuarioNeoStudy TAMBIÉN
@@ -2626,6 +2728,9 @@
             
             localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
             
+            // ✅ GUARDAR EN SUPABASE
+            const success = await saveProfileToSupabase(profileData);
+            
             // ✅ ACTUALIZAR LA VISTA
             document.getElementById('motivationalText').textContent = profileData.motivationalText;
             document.getElementById('profileBio').textContent = profileData.bio;
@@ -2634,7 +2739,12 @@
             document.getElementById('infoUbicacion').textContent = profileData.ubicacion || 'Lima, Perú';
             
             closeEditModal();
-            showNotification('¡Perfil actualizado correctamente! ✅', 'success');
+            
+            if (success) {
+                showNotification('¡Perfil actualizado correctamente en la nube! ✅', 'success');
+            } else {
+                showNotification('¡Perfil actualizado (almacenamiento local)! ✅', 'success');
+            }
         }
 
         // ===== SISTEMA DE NOTIFICACIONES =====
