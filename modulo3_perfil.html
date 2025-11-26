@@ -1792,11 +1792,18 @@
                     .eq('user_id', currentUserId)
                     .single();
 
-                if (error) throw error;
+                if (error) {
+                    console.log('No hay fotos guardadas aún:', error.message);
+                    return;
+                }
 
                 if (profileData && profileData.photos_history) {
                     profilePhotosHistory = profileData.photos_history.profile || [];
                     coverPhotosHistory = profileData.photos_history.cover || [];
+                    console.log('Fotos cargadas de Supabase:', { 
+                        profile: profilePhotosHistory.length, 
+                        cover: coverPhotosHistory.length 
+                    });
                 }
             } catch (error) {
                 console.error('Error cargando fotos:', error);
@@ -1805,25 +1812,53 @@
 
         async function saveProfileToSupabase(profileData) {
             if (!currentUserId) {
-                // Guardar solo en localStorage si no hay usuario
+                console.log('No hay user_id, guardando solo en localStorage');
                 localStorage.setItem('profileData', JSON.stringify(profileData));
                 return true;
             }
 
             try {
-                const { error } = await supabase
+                // Primero verificar si ya existe un perfil
+                const { data: existingProfile, error: checkError } = await supabase
                     .from('user_profiles')
-                    .upsert({
-                        user_id: currentUserId,
-                        profile_data: profileData,
-                        photos_history: {
-                            profile: profilePhotosHistory,
-                            cover: coverPhotosHistory
-                        },
-                        updated_at: new Date().toISOString()
-                    });
+                    .select('id')
+                    .eq('user_id', currentUserId)
+                    .single();
 
-                if (error) throw error;
+                let result;
+                
+                if (existingProfile) {
+                    // Actualizar perfil existente
+                    result = await supabase
+                        .from('user_profiles')
+                        .update({
+                            profile_data: profileData,
+                            photos_history: {
+                                profile: profilePhotosHistory,
+                                cover: coverPhotosHistory
+                            },
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('user_id', currentUserId);
+                } else {
+                    // Insertar nuevo perfil
+                    result = await supabase
+                        .from('user_profiles')
+                        .insert({
+                            user_id: currentUserId,
+                            profile_data: profileData,
+                            photos_history: {
+                                profile: profilePhotosHistory,
+                                cover: coverPhotosHistory
+                            },
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        });
+                }
+
+                if (result.error) throw result.error;
+                
+                console.log('Perfil guardado en Supabase exitosamente');
                 return true;
             } catch (error) {
                 console.error('Error guardando en Supabase:', error);
@@ -1841,8 +1876,10 @@
                 currentUserId = localStorage.getItem("supabase_user_id");
                 const localUserData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
                 
+                console.log('🔍 Cargando perfil...', { currentUserId });
+
                 if (!currentUserId) {
-                    console.log("No hay usuario logueado, usando datos locales");
+                    console.log("❌ No hay usuario logueado, usando datos locales");
                     loadLocalProfileData(localUserData);
                     return;
                 }
@@ -1854,23 +1891,24 @@
                     .eq('user_id', currentUserId)
                     .single();
 
-                if (error && error.code !== 'PGRST116') {
-                    console.error('Error cargando perfil:', error);
-                    showNotification('Error cargando perfil, usando datos locales', 'error');
-                    loadLocalProfileData(localUserData);
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        console.log('📝 No existe perfil en Supabase, creando uno nuevo...');
+                        await createInitialProfile(localUserData);
+                    } else {
+                        console.error('❌ Error cargando perfil:', error);
+                        showNotification('Error cargando perfil, usando datos locales', 'error');
+                        loadLocalProfileData(localUserData);
+                    }
                     return;
                 }
 
-                // Si no existe perfil en Supabase, crear uno
-                if (!profileData) {
-                    await createInitialProfile(localUserData);
-                    return;
-                }
+                console.log('✅ Perfil cargado de Supabase:', profileData);
 
                 // Combinar datos locales con datos de Supabase
                 const combinedData = {
                     ...localUserData,
-                    ...profileData.profile_data
+                    ...(profileData.profile_data || {})
                 };
 
                 // Actualizar la interfaz con los datos
@@ -1880,7 +1918,7 @@
                 await loadPhotosFromSupabase();
 
             } catch (error) {
-                console.error('Error en loadProfileData:', error);
+                console.error('❌ Error en loadProfileData:', error);
                 loadLocalProfileData(JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {});
             }
         }
@@ -1914,11 +1952,14 @@
 
                 if (error) throw error;
 
+                console.log('✅ Perfil inicial creado en Supabase');
                 showNotification('Perfil creado en la nube ✅', 'success');
-                loadLocalProfileData(userData);
+                
+                // Actualizar la UI con el perfil inicial
+                updateProfileUI(userData, { profile_data: initialProfile.profile_data });
 
             } catch (error) {
-                console.error('Error creando perfil inicial:', error);
+                console.error('❌ Error creando perfil inicial:', error);
                 loadLocalProfileData(userData);
             }
         }
@@ -2775,6 +2816,34 @@
                 notification.remove();
             }, 3000);
         }
+
+        // ===== FUNCIÓN DE DEBUG =====
+        async function debugSupabase() {
+            console.log('=== DEBUG SUPABASE ===');
+            console.log('User ID:', currentUserId);
+            
+            if (!currentUserId) {
+                console.log('❌ No hay user_id');
+                return;
+            }
+            
+            try {
+                // Verificar conexión
+                const { data, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('user_id', currentUserId);
+                    
+                console.log('Conexión Supabase:', error ? '❌ Error: ' + error.message : '✅ OK');
+                console.log('Datos en user_profiles:', data);
+                
+            } catch (error) {
+                console.error('❌ Error en debug:', error);
+            }
+        }
+
+        // Llama a esta función en la consola del navegador para debug
+        window.debugSupabase = debugSupabase;
 
         // ===== NAVEGACIÓN =====
         function goToFeed() {
