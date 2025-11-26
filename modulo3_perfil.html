@@ -1102,6 +1102,25 @@
             font-size: 1.1rem;
         }
 
+        /* ===== MENÚ DESPLEGABLE PARA MÓVILES ===== */
+        .mobile-avatar-dropdown {
+            position: fixed;
+            top: 120px;
+            right: 15px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            width: 200px;
+            z-index: 1001;
+            display: none;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .mobile-avatar-dropdown.show {
+            display: block;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             /* Ocultar header de escritorio en móviles */
@@ -1161,6 +1180,50 @@
             .mobile-controls .theme-toggle i {
                 font-size: 1.1rem;
             }
+
+            /* MEJORAS ESPECÍFICAS PARA MÓVIL - CORRECCIONES CRÍTICAS */
+            .mobile-controls {
+                position: relative;
+            }
+
+            .mobile-avatar-dropdown {
+                position: fixed;
+                top: 70px;
+                right: 10px;
+                width: 180px;
+                z-index: 1002;
+            }
+
+            .cover-options {
+                position: fixed;
+                bottom: auto;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 280px;
+                z-index: 1002;
+            }
+
+            .editor-container {
+                padding: 1rem;
+            }
+
+            .editor-preview-container {
+                height: 200px;
+            }
+
+            .gallery-tabs {
+                flex-wrap: wrap;
+            }
+
+            .gallery-tab {
+                flex: 1;
+                min-width: 80px;
+                text-align: center;
+                font-size: 0.8rem;
+                padding: 6px 8px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1181,6 +1244,21 @@
 
             .cover-options {
                 width: 160px;
+            }
+
+            .mobile-avatar-dropdown {
+                width: 170px;
+                right: 8px;
+            }
+
+            .gallery-tab {
+                font-size: 0.75rem;
+                padding: 5px 6px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 6px;
             }
         }
     </style>
@@ -1241,7 +1319,22 @@
                 <button class="btn btn-primary theme-toggle" onclick="toggleThemeMode()">
                     <i class="fas fa-moon"></i>
                 </button>
-                <div class="avatar" id="mobileUserAvatar">JM</div>
+                <div class="avatar" id="mobileUserAvatar" onclick="toggleMobileAvatarDropdown()">JM</div>
+                <!-- Menú desplegable para móviles -->
+                <div class="mobile-avatar-dropdown" id="mobileAvatarDropdown">
+                    <a href="#" class="dropdown-item" onclick="changeProfilePhoto()">
+                        <i class="fas fa-camera"></i> Cambiar foto de perfil
+                    </a>
+                    <a href="#" class="dropdown-item" onclick="viewProfilePhotos()">
+                        <i class="fas fa-images"></i> Ver mis fotos de perfil
+                    </a>
+                    <a href="#" class="dropdown-item delete" onclick="deleteProfilePhoto()">
+                        <i class="fas fa-trash"></i> Eliminar foto de perfil
+                    </a>
+                    <a href="#" class="dropdown-item" onclick="goToFeed()">
+                        <i class="fas fa-user"></i> Mi perfil
+                    </a>
+                </div>
             </div>
         </div>
         <div class="mobile-nav-bottom">
@@ -1690,6 +1783,53 @@
             });
         }
 
+        // ===== CORRECCIONES ESPECÍFICAS PARA MÓVILES =====
+        function toggleMobileAvatarDropdown() {
+            const dropdown = document.getElementById('mobileAvatarDropdown');
+            dropdown.classList.toggle('show');
+            
+            // Cerrar otros menús abiertos
+            document.getElementById('coverOptions').classList.remove('show');
+            document.getElementById('avatarOptions').classList.remove('show');
+        }
+
+        function toggleCoverOptions() {
+            const options = document.getElementById('coverOptions');
+            options.classList.toggle('show');
+            
+            // Cerrar otros menús abiertos
+            document.getElementById('mobileAvatarDropdown').classList.remove('show');
+            document.getElementById('avatarOptions').classList.remove('show');
+        }
+
+        function toggleAvatarOptions() {
+            const options = document.getElementById('avatarOptions');
+            options.classList.toggle('show');
+            
+            // Cerrar otros menús abiertos
+            document.getElementById('mobileAvatarDropdown').classList.remove('show');
+            document.getElementById('coverOptions').classList.remove('show');
+        }
+
+        // Cerrar menús al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            // Para escritorio
+            if (!event.target.closest('.user-menu')) {
+                document.getElementById('avatarDropdown').classList.remove('show');
+            }
+            if (!event.target.closest('.profile-avatar-container')) {
+                document.getElementById('avatarOptions').classList.remove('show');
+            }
+            if (!event.target.closest('.cover-section')) {
+                document.getElementById('coverOptions').classList.remove('show');
+            }
+            
+            // Para móviles
+            if (!event.target.closest('.mobile-controls')) {
+                document.getElementById('mobileAvatarDropdown').classList.remove('show');
+            }
+        });
+
         // ===== SISTEMA DE CUMPLEAÑOS MEJORADO =====
         function checkBirthday() {
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
@@ -1926,11 +2066,6 @@
             ">`;
         }
 
-        function toggleCoverOptions() {
-            const options = document.getElementById('coverOptions');
-            options.classList.toggle('show');
-        }
-
         function editCurrentCover() {
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             
@@ -2039,6 +2174,7 @@
                 // Cerrar menús
                 document.getElementById('avatarOptions').classList.remove('show');
                 document.getElementById('avatarDropdown').classList.remove('show');
+                document.getElementById('mobileAvatarDropdown').classList.remove('show');
                 
                 alert('Foto de perfil eliminada ✅');
             }
@@ -2126,13 +2262,9 @@
             dropdown.classList.toggle('show');
         }
 
-        function toggleAvatarOptions() {
-            const options = document.getElementById('avatarOptions');
-            options.classList.toggle('show');
-        }
-
         // Cerrar menús al hacer clic fuera
         document.addEventListener('click', function(event) {
+            // Para escritorio
             if (!event.target.closest('.user-menu')) {
                 document.getElementById('avatarDropdown').classList.remove('show');
             }
@@ -2142,6 +2274,11 @@
             if (!event.target.closest('.cover-section')) {
                 document.getElementById('coverOptions').classList.remove('show');
             }
+            
+            // Para móviles
+            if (!event.target.closest('.mobile-controls')) {
+                document.getElementById('mobileAvatarDropdown').classList.remove('show');
+            }
         });
 
         // ===== SISTEMA DE SUBIDA DE FOTOS MEJORADO =====
@@ -2149,6 +2286,7 @@
             document.getElementById('profilePhotoInput').click();
             document.getElementById('avatarOptions').classList.remove('show');
             document.getElementById('avatarDropdown').classList.remove('show');
+            document.getElementById('mobileAvatarDropdown').classList.remove('show');
         }
 
         function changeCoverPhoto() {
@@ -2222,6 +2360,7 @@
             currentGalleryType = 'profile';
             openGalleryModal('profile', 0);
             document.getElementById('avatarDropdown').classList.remove('show');
+            document.getElementById('mobileAvatarDropdown').classList.remove('show');
         }
 
         function viewCoverPhotos() {
