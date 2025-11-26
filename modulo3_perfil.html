@@ -181,6 +181,16 @@
             --secondary: #adb5bd;
         }
 
+        /* Modo Estudio */
+        .study-mode {
+            --bg-color: #1a1a2e;
+            --text-color: #f0f0f0;
+            --card-bg: #16213e;
+            --border-color: #0f3460;
+            --light: #16213e;
+            --secondary: #b8b8b8;
+        }
+
         body {
             background: var(--bg-color);
             color: var(--text-color);
@@ -1600,15 +1610,14 @@
         let currentGalleryType = 'profile';
         let currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
         let currentEditorImage = null;
-        let isDarkMode = false;
         let lastProfilePhoto = null;
 
         // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', function() {
             loadProfileData();
-            checkDarkModePreference();
             checkBirthday();
             updateThemeButton();
+            checkThemeMode();
             
             // ✅ INICIALIZAR DETECTOR DE FOTOS
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
@@ -1620,32 +1629,64 @@
 
             // ✅ VERIFICAR ACTUALIZACIONES PERIÓDICAMENTE
             setInterval(checkForPhotoUpdates, 2000);
+            setInterval(checkThemeMode, 1000); // Verificar cambios de tema cada segundo
         });
 
-        // ===== MODO OSCURO =====
-        function toggleThemeMode() {
-            isDarkMode = !isDarkMode;
-            document.body.classList.toggle('dark-mode', isDarkMode);
-            localStorage.setItem('darkMode', isDarkMode);
+        // ===== SISTEMA DE TEMAS SINCRONIZADO =====
+        function checkThemeMode() {
+            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            applyThemeMode(savedTheme);
+        }
+
+        function applyThemeMode(theme) {
+            document.body.classList.remove('dark-mode', 'study-mode');
+            
+            if (theme === 'oscuro') {
+                document.body.classList.add('dark-mode');
+            } else if (theme === 'estudio') {
+                document.body.classList.add('study-mode');
+            }
+            
             updateThemeButton();
         }
 
-        function checkDarkModePreference() {
-            const savedMode = localStorage.getItem('darkMode');
-            if (savedMode === 'true') {
-                isDarkMode = true;
-                document.body.classList.add('dark-mode');
+        function toggleThemeMode() {
+            const currentTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            let newTheme;
+            
+            if (currentTheme === 'normal') {
+                newTheme = 'oscuro';
+            } else if (currentTheme === 'oscuro') {
+                newTheme = 'estudio';
+            } else {
+                newTheme = 'normal';
             }
+            
+            localStorage.setItem('neoStudyTheme', newTheme);
+            applyThemeMode(newTheme);
+            
+            // Mostrar notificación del tema
+            const themeNames = {
+                'normal': 'Modo Normal',
+                'oscuro': 'Modo Oscuro', 
+                'estudio': 'Modo Estudio'
+            };
+            
+            showNotification(`${themeNames[newTheme]} activado`, 'info');
         }
 
         function updateThemeButton() {
             const themeButtons = document.querySelectorAll('.theme-toggle');
+            const currentTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            
+            const icons = {
+                'normal': 'fas fa-moon',
+                'oscuro': 'fas fa-sun', 
+                'estudio': 'fas fa-graduation-cap'
+            };
+            
             themeButtons.forEach(button => {
-                if (isDarkMode) {
-                    button.innerHTML = '<i class="fas fa-sun"></i>';
-                } else {
-                    button.innerHTML = '<i class="fas fa-moon"></i>';
-                }
+                button.innerHTML = `<i class="${icons[currentTheme]}"></i>`;
             });
         }
 
@@ -2345,6 +2386,35 @@
             alert('¡Perfil actualizado correctamente! ✅');
         }
 
+        // ===== SISTEMA DE NOTIFICACIONES =====
+        function showNotification(message, type = 'info') {
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : 
+                           type === 'warning' ? 'var(--warning)' : 
+                           type === 'danger' ? 'var(--danger)' : 'var(--info)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
         // ===== NAVEGACIÓN =====
         function goToFeed() {
             window.location.href = 'modulo2_iniciodecesión.html';
@@ -2375,4 +2445,4 @@
         }
     </script>
 </body>
-                        </html>
+</html>
