@@ -2669,7 +2669,7 @@
             }
         }
 
-        // Función para dar like a una publicación
+        // Función para dar like a una publicación - VERSIÓN MEJORADA
         async function likePost(button, postId) {
             try {
                 const userId = getCurrentUserId();
@@ -2678,7 +2678,25 @@
                     return;
                 }
 
-                const { data, error } = await supabase
+                // Verificar si ya dio like
+                const { data: existingLike, error: checkError } = await supabase
+                    .from('post_likes')
+                    .select('id')
+                    .eq('user_id', userId)
+                    .eq('post_id', postId)
+                    .single();
+
+                if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no encontrado
+                    throw checkError;
+                }
+
+                if (existingLike) {
+                    showNotification('Ya diste like a esta publicación', 'info');
+                    return;
+                }
+
+                // Agregar like
+                const { error } = await supabase
                     .from('post_likes')
                     .insert([
                         { 
@@ -2690,6 +2708,15 @@
 
                 if (error) throw error;
 
+                // Actualizar contador de likes en la publicación
+                const { error: updateError } = await supabase
+                    .from('posts')
+                    .update({ likes_count: (button.closest('.post').querySelector('.post-stats span:first-child').textContent.split(' ')[0] || 0) + 1 })
+                    .eq('id', postId);
+
+                if (updateError) throw updateError;
+
+                // Actualizar interfaz
                 const post = button.closest('.post');
                 const stats = post.querySelector('.post-stats span:first-child');
                 const currentLikes = parseInt(stats.textContent) || 0;
@@ -2705,7 +2732,7 @@
             }
         }
 
-        // Función para cargar publicaciones existentes
+        // Función para cargar publicaciones existentes - VERSIÓN CORREGIDA
         async function loadExistingPosts() {
             try {
                 const userId = getCurrentUserId();
@@ -2719,8 +2746,112 @@
 
                 if (error) throw error;
 
-                // Aquí puedes cargar las publicaciones en la interfaz
                 console.log('Publicaciones cargadas:', posts);
+
+                // Obtener el feed principal
+                const feed = document.querySelector('.feed');
+                if (!feed) return;
+
+                // Obtener el elemento después del cual insertar las publicaciones (después del create-post)
+                const createPostElement = document.querySelector('.create-post');
+                
+                // Limpiar publicaciones existentes (excepto el create-post y el perfil móvil)
+                const existingPosts = feed.querySelectorAll('.post');
+                existingPosts.forEach(post => {
+                    if (!post.classList.contains('create-post') && !post.classList.contains('mobile-profile')) {
+                        post.remove();
+                    }
+                });
+
+                // Cargar datos del usuario para mostrar en las publicaciones
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                
+                // Extraer información del usuario
+                let nombreCompleto = 'Usuario';
+                const categoria = userData?.categoria || '';
+                
+                if (categoria === 'profesional') {
+                    nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
+                } 
+                else if (categoria === 'universitario') {
+                    nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
+                }
+                else if (categoria === 'secundaria') {
+                    nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
+                }
+                else if (categoria === 'general') {
+                    nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
+                }
+                
+                const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+                const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
+
+                // Crear avatar HTML
+                let userAvatarHTML;
+                if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
+                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
+                } else {
+                    userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
+                }
+
+                // Insertar cada publicación en el feed
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'post fade-in';
+                    postElement.setAttribute('data-post-id', post.id);
+                    
+                    // Formatear la fecha
+                    const postDate = new Date(post.created_at);
+                    const now = new Date();
+                    const diffTime = Math.abs(now - postDate);
+                    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+                    
+                    let timeText = 'Ahora mismo';
+                    if (diffHours > 0) {
+                        timeText = `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+                    }
+
+                    postElement.innerHTML = `
+                        <div class="post-header">
+                            <div class="post-user">
+                                ${userAvatarHTML}
+                                <div class="post-user-info">
+                                    <h4>${nombreCompleto}</h4>
+                                    <p class="post-time">${timeText} · <i class="fas fa-user-graduate"></i></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        <div class="post-stats">
+                            <span>${post.likes_count || 0} reacciones</span>
+                            <span>${post.comments_count || 0} comentarios</span>
+                        </div>
+                        <div class="post-actions-bar">
+                            <button class="post-action-btn" onclick="likePost(this, '${post.id}')">
+                                <i class="fas fa-thumbs-up"></i> Me gusta
+                            </button>
+                            <button class="post-action-btn">
+                                <i class="fas fa-comment"></i> Comentar
+                            </button>
+                            <button class="post-action-btn">
+                                <i class="fas fa-share"></i> Compartir
+                            </button>
+                        </div>
+                    `;
+
+                    // Insertar después del create-post
+                    if (createPostElement && createPostElement.nextSibling) {
+                        feed.insertBefore(postElement, createPostElement.nextSibling);
+                    } else {
+                        feed.appendChild(postElement);
+                    }
+                });
+
+                if (posts.length === 0) {
+                    console.log('No hay publicaciones para mostrar');
+                }
+
             } catch (error) {
                 console.error('Error cargando publicaciones:', error);
             }
@@ -2860,9 +2991,6 @@
             // Cargar datos del usuario primero
             loadUserData();
             
-            // Cargar publicaciones existentes
-            loadExistingPosts();
-            
             // Configurar tema
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
             setThemeMode(savedTheme);
@@ -2881,14 +3009,18 @@
             });
 
             // ✅ INICIALIZAR DETECTOR DE FOTOS
-            // Guardar foto actual al cargar
             const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             lastProfilePhoto = localStorage.getItem('currentProfilePhoto') || profileData.profilePhoto || userData.profilePhoto || userData.fotoPerfil;
 
+            // ✅ CARGAR PUBLICACIONES EXISTENTES DESPUÉS DE UN PEQUEÑO RETRASO
+            setTimeout(() => {
+                loadExistingPosts();
+            }, 1000);
+
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 3000);
-            setInterval(checkForPhotoUpdates, 2000); // ✅ Verificar fotos más frecuentemente
+            setInterval(checkForPhotoUpdates, 2000);
         });
     </script>
 </body>
