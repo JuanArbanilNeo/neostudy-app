@@ -1748,6 +1748,193 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoYXlxaGZoZnp4Z3R5dmplemh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NDQzNDAsImV4cCI6MjA3OTQyMDM0MH0.wOKcksN2Dm_CO8pRMTuBPQ7Mx_49njcOj9m8jpMn4HE';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+        // ===== FUNCIONES PARA SUPABASE STORAGE =====
+
+        // Función para subir imagen a Supabase Storage
+        async function uploadImageToSupabase(file, type) {
+            try {
+                const user = await supabase.auth.getUser();
+                if (!user.data.user) {
+                    throw new Error('Usuario no autenticado');
+                }
+
+                const userId = user.data.user.id;
+                const fileExt = file.name.split('.').pop();
+                const timestamp = Date.now();
+                
+                let fileName;
+                if (type === 'profile') {
+                    fileName = `${userId}/profile/${timestamp}.${fileExt}`;
+                } else if (type === 'cover') {
+                    fileName = `${userId}/cover/${timestamp}.${fileExt}`;
+                } else {
+                    fileName = `${userId}/gallery/${timestamp}.${fileExt}`;
+                }
+
+                console.log(`Subiendo imagen: ${fileName}`);
+
+                // Subir archivo a Supabase Storage
+                const { data, error } = await supabase.storage
+                    .from('profiles')
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+
+                if (error) throw error;
+
+                // Obtener URL pública
+                const { data: { publicUrl } } = supabase.storage
+                    .from('profiles')
+                    .getPublicUrl(fileName);
+
+                console.log('Imagen subida exitosamente:', publicUrl);
+                return publicUrl;
+
+            } catch (error) {
+                console.error('Error subiendo imagen a Supabase:', error);
+                throw error;
+            }
+        }
+
+        // Función para cargar imágenes desde Supabase Storage
+        async function loadImagesFromSupabase() {
+            try {
+                const user = await supabase.auth.getUser();
+                if (!user.data.user) return { profile: null, cover: null };
+
+                const userId = user.data.user.id;
+
+                // Cargar foto de perfil
+                const { data: profileFiles } = await supabase.storage
+                    .from('profiles')
+                    .list(`${userId}/profile`);
+
+                let profileUrl = null;
+                if (profileFiles && profileFiles.length > 0) {
+                    // Obtener la foto más reciente
+                    const latestProfile = profileFiles.sort((a, b) => 
+                        new Date(b.created_at) - new Date(a.created_at)
+                    )[0];
+                    
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('profiles')
+                        .getPublicUrl(`${userId}/profile/${latestProfile.name}`);
+                    
+                    profileUrl = publicUrl;
+                }
+
+                // Cargar foto de portada
+                const { data: coverFiles } = await supabase.storage
+                    .from('profiles')
+                    .list(`${userId}/cover`);
+
+                let coverUrl = null;
+                if (coverFiles && coverFiles.length > 0) {
+                    // Obtener la portada más reciente
+                    const latestCover = coverFiles.sort((a, b) => 
+                        new Date(b.created_at) - new Date(a.created_at)
+                    )[0];
+                    
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('profiles')
+                        .getPublicUrl(`${userId}/cover/${latestCover.name}`);
+                    
+                    coverUrl = publicUrl;
+                }
+
+                return { profile: profileUrl, cover: coverUrl };
+
+            } catch (error) {
+                console.error('Error cargando imágenes desde Supabase:', error);
+                return { profile: null, cover: null };
+            }
+        }
+
+        // Función para guardar URLs de imágenes en la base de datos
+        async function saveImageUrlsToDatabase(profileUrl, coverUrl) {
+            try {
+                const user = await supabase.auth.getUser();
+                if (!user.data.user) return false;
+
+                const userId = user.data.user.id;
+                
+                // Buscar perfil existente
+                const { data: existingProfile } = await supabase
+                    .from('user_profiles')
+                    .select('id, profile_data')
+                    .eq('user_id', userId)
+                    .single();
+
+                const profileData = existingProfile?.profile_data || {};
+                
+                // Actualizar URLs
+                if (profileUrl) {
+                    profileData.profilePhoto = profileUrl;
+                }
+                if (coverUrl) {
+                    profileData.coverPhoto = coverUrl;
+                }
+
+                // Guardar en la base de datos
+                if (existingProfile) {
+                    await supabase
+                        .from('user_profiles')
+                        .update({ 
+                            profile_data: profileData,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('user_id', userId);
+                } else {
+                    await supabase
+                        .from('user_profiles')
+                        .insert([{
+                            user_id: userId,
+                            profile_data: profileData,
+                            photos_history: { profile: [], cover: [] },
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        }]);
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Error guardando URLs en base de datos:', error);
+                return false;
+            }
+        }
+
+        // Función para eliminar imágenes de Supabase:
+        async function deleteImageFromSupabase(type) {
+            try {
+                const user = await supabase.auth.getUser();
+                if (!user.data.user) return false;
+
+                const userId = user.data.user.id;
+                const folderPath = `${userId}/${type}`;
+
+                // Listar archivos en la carpeta
+                const { data: files } = await supabase.storage
+                    .from('profiles')
+                    .list(folderPath);
+
+                if (files && files.length > 0) {
+                    // Eliminar todos los archivos
+                    const filePaths = files.map(file => `${folderPath}/${file.name}`);
+                    const { error } = await supabase.storage
+                        .from('profiles')
+                        .remove(filePaths);
+
+                    if (error) throw error;
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Error eliminando imagen de Supabase:', error);
+                return false;
+            }
+        }
+
         // ===== VARIABLES GLOBALES =====
         let profilePhotosHistory = [];
         let coverPhotosHistory = [];
@@ -1887,6 +2074,10 @@
                     return;
                 }
 
+                // ✅ CARGAR IMÁGENES DESDE SUPABASE STORAGE
+                const { profile: profileUrl, cover: coverUrl } = await loadImagesFromSupabase();
+                console.log('🖼️ Imágenes cargadas desde Supabase:', { profileUrl, coverUrl });
+
                 // Cargar datos del perfil desde Supabase
                 const { data: profileData, error } = await supabase
                     .from('user_profiles')
@@ -1913,6 +2104,14 @@
                     ...localUserData,
                     ...(profileData.profile_data || {})
                 };
+
+                // ✅ USAR IMÁGENES DE SUPABASE SI ESTÁN DISPONIBLES
+                if (profileUrl) {
+                    combinedData.profilePhoto = profileUrl;
+                }
+                if (coverUrl) {
+                    combinedData.coverPhoto = coverUrl;
+                }
 
                 // Actualizar la interfaz con los datos
                 updateProfileUI(combinedData, profileData);
@@ -2077,6 +2276,180 @@
             }
         }
 
+        // ===== SISTEMA DE SUBIDA DE FOTOS - COMPLETAMENTE CORREGIDO =====
+        async function handlePhotoUpload(file, type) {
+            console.log(`📁 Procesando archivo: ${file ? file.name : 'NO_FILE'}, Tipo: ${type}`);
+            
+            if (!file) {
+                console.log('❌ No se seleccionó archivo');
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Por favor selecciona solo archivos de imagen (JPG, PNG, etc.)');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) { // 5MB límite
+                alert('❌ La imagen es demasiado grande. Por favor selecciona una imagen menor a 5MB.');
+                return;
+            }
+
+            try {
+                showNotification('Subiendo imagen a la nube... ☁️', 'info');
+
+                // ✅ PRIMERO SUBIR A SUPABASE STORAGE
+                const storageType = type === 'profilePhoto' ? 'profile' : 'cover';
+                const imageUrl = await uploadImageToSupabase(file, storageType);
+                
+                console.log('✅ Imagen subida a Supabase Storage:', imageUrl);
+
+                // ✅ GUARDAR URL EN LA BASE DE DATOS
+                const profileUrl = type === 'profilePhoto' ? imageUrl : null;
+                const coverUrl = type === 'coverPhoto' ? imageUrl : null;
+                
+                await saveImageUrlsToDatabase(profileUrl, coverUrl);
+
+                // ✅ PROCESAR LOCALMENTE PARA RENDIMIENTO
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    console.log('✅ Archivo leído correctamente');
+                    
+                    const photoData = e.target.result;
+                    const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                    const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+                    
+                    if (type === 'profilePhoto') {
+                        // Guardar localmente para rendimiento
+                        profileData.profilePhoto = photoData;
+                        localStorage.setItem('profileData', JSON.stringify(profileData));
+                        
+                        // También guardar en usuarioNeoStudy para compatibilidad
+                        userData.fotoPerfil = photoData;
+                        localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
+                        localStorage.setItem('currentProfilePhoto', photoData);
+
+                        // Actualizar vista
+                        updateProfilePhotoView(photoData);
+                        
+                        // Agregar a historia local
+                        if (!profilePhotosHistory.includes(photoData)) {
+                            profilePhotosHistory.unshift(photoData);
+                            if (profilePhotosHistory.length > 20) {
+                                profilePhotosHistory = profilePhotosHistory.slice(0, 20);
+                            }
+                        }
+                        
+                    } else {
+                        // Para foto de portada, abrir el editor
+                        currentEditorImage = photoData;
+                        document.getElementById('editorPreview').src = currentEditorImage;
+                        resetEditor();
+                        document.getElementById('coverEditor').classList.add('show');
+                    }
+                    
+                    // Actualizar galería
+                    loadGallery();
+                    
+                    showNotification('¡Foto guardada en la nube correctamente! ✅', 'success');
+                };
+                
+                reader.onerror = function(error) {
+                    console.error('❌ Error leyendo archivo:', error);
+                    alert('❌ Error al leer el archivo. Por favor intenta con otra imagen.');
+                };
+                
+                reader.readAsDataURL(file);
+
+            } catch (error) {
+                console.error('❌ Error subiendo imagen:', error);
+                showNotification('Error subiendo imagen a la nube. Usando almacenamiento local.', 'warning');
+                
+                // Fallback: procesar solo localmente
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (type === 'profilePhoto') {
+                        saveProfilePhoto(e.target.result);
+                    } else {
+                        currentEditorImage = e.target.result;
+                        document.getElementById('editorPreview').src = currentEditorImage;
+                        resetEditor();
+                        document.getElementById('coverEditor').classList.add('show');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function saveProfilePhoto(photoData) {
+            console.log('💾 Guardando foto de perfil...');
+            
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            
+            // ✅ GUARDAR EN MÚLTIPLES UBICACIONES PARA COMPATIBILIDAD
+            profileData.profilePhoto = photoData;
+            localStorage.setItem('profileData', JSON.stringify(profileData));
+            
+            // ✅ GUARDAR EN usuarioNeoStudy para que módulo2 lo encuentre
+            userData.fotoPerfil = photoData;
+            localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
+            
+            // ✅ GUARDAR EN currentProfilePhoto para detección inmediata
+            localStorage.setItem('currentProfilePhoto', photoData);
+
+            // Agregar a la historia
+            if (!profilePhotosHistory.includes(photoData)) {
+                profilePhotosHistory.unshift(photoData);
+                if (profilePhotosHistory.length > 20) {
+                    profilePhotosHistory = profilePhotosHistory.slice(0, 20);
+                }
+            }
+
+            // ✅ ACTUALIZAR LA VISTA INMEDIATAMENTE
+            updateProfilePhotoView(photoData);
+            
+            // ✅ GUARDAR EN SUPABASE
+            await saveProfileToSupabase(profileData);
+            
+            showNotification('¡Foto de perfil actualizada correctamente! ✅', 'success');
+            console.log('✅ Foto de perfil guardada exitosamente');
+        }
+
+        function updateProfilePhotoView(photoData) {
+            const avatarElement = document.getElementById('profileAvatar');
+            const userAvatar = document.getElementById('userAvatar');
+            const mobileUserAvatar = document.getElementById('mobileUserAvatar');
+            
+            // Verificar si es una URL remota o data URL local
+            const isRemoteUrl = photoData && photoData.startsWith('http');
+            
+            // Actualizar avatar principal
+            if (isRemoteUrl) {
+                avatarElement.innerHTML = `<img src="${photoData}" alt="Foto de perfil" onerror="this.style.display='none'">`;
+                avatarElement.style.backgroundImage = `url(${photoData})`;
+            } else {
+                avatarElement.innerHTML = `<img src="${photoData}" alt="Foto de perfil">`;
+                avatarElement.style.backgroundImage = `url(${photoData})`;
+            }
+            
+            avatarElement.style.backgroundSize = 'cover';
+            avatarElement.style.backgroundPosition = 'center';
+            
+            // Actualizar avatares del header
+            userAvatar.style.backgroundImage = `url(${photoData})`;
+            userAvatar.style.backgroundSize = 'cover';
+            userAvatar.style.backgroundPosition = 'center';
+            userAvatar.textContent = '';
+            userAvatar.style.color = 'transparent';
+            
+            mobileUserAvatar.style.backgroundImage = `url(${photoData})`;
+            mobileUserAvatar.style.backgroundSize = 'cover';
+            mobileUserAvatar.style.backgroundPosition = 'center';
+            mobileUserAvatar.textContent = '';
+            mobileUserAvatar.style.color = 'transparent';
+        }
+
         // ===== SISTEMA DE TEMAS SINCRONIZADO =====
         function checkThemeMode() {
             const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
@@ -2182,7 +2555,6 @@
             }
         });
 
-        // ===== SISTEMA DE SUBIDA DE FOTOS - COMPLETAMENTE CORREGIDO =====
         function changeProfilePhoto() {
             console.log('📸 Iniciando subida de foto de perfil...');
             document.getElementById('profilePhotoInput').click();
@@ -2195,110 +2567,6 @@
             console.log('🖼️ Iniciando subida de foto de portada...');
             document.getElementById('coverPhotoInput').click();
             document.getElementById('coverOptions').classList.remove('show');
-        }
-
-        function handlePhotoUpload(file, type) {
-            console.log(`📁 Procesando archivo: ${file ? file.name : 'NO_FILE'}, Tipo: ${type}`);
-            
-            if (!file) {
-                console.log('❌ No se seleccionó archivo');
-                return;
-            }
-
-            if (!file.type.startsWith('image/')) {
-                alert('❌ Por favor selecciona solo archivos de imagen (JPG, PNG, etc.)');
-                return;
-            }
-
-            if (file.size > 5 * 1024 * 1024) { // 5MB límite
-                alert('❌ La imagen es demasiado grande. Por favor selecciona una imagen menor a 5MB.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                console.log('✅ Archivo leído correctamente');
-                
-                if (type === 'profilePhoto') {
-                    saveProfilePhoto(e.target.result);
-                } else {
-                    // Para foto de portada, abrir el editor
-                    currentEditorImage = e.target.result;
-                    document.getElementById('editorPreview').src = currentEditorImage;
-                    resetEditor();
-                    document.getElementById('coverEditor').classList.add('show');
-                }
-                
-                // Actualizar galería
-                loadGallery();
-            };
-            
-            reader.onerror = function(error) {
-                console.error('❌ Error leyendo archivo:', error);
-                alert('❌ Error al leer el archivo. Por favor intenta con otra imagen.');
-            };
-            
-            reader.readAsDataURL(file);
-        }
-
-        async function saveProfilePhoto(photoData) {
-            console.log('💾 Guardando foto de perfil...');
-            
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
-            
-            // ✅ GUARDAR EN MÚLTIPLES UBICACIONES PARA COMPATIBILIDAD
-            profileData.profilePhoto = photoData;
-            localStorage.setItem('profileData', JSON.stringify(profileData));
-            
-            // ✅ GUARDAR EN usuarioNeoStudy para que módulo2 lo encuentre
-            userData.fotoPerfil = photoData;
-            localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
-            
-            // ✅ GUARDAR EN currentProfilePhoto para detección inmediata
-            localStorage.setItem('currentProfilePhoto', photoData);
-
-            // Agregar a la historia
-            if (!profilePhotosHistory.includes(photoData)) {
-                profilePhotosHistory.unshift(photoData);
-                if (profilePhotosHistory.length > 20) {
-                    profilePhotosHistory = profilePhotosHistory.slice(0, 20);
-                }
-            }
-
-            // ✅ ACTUALIZAR LA VISTA INMEDIATAMENTE
-            updateProfilePhotoView(photoData);
-            
-            // ✅ GUARDAR EN SUPABASE
-            await saveProfileToSupabase(profileData);
-            
-            showNotification('¡Foto de perfil actualizada correctamente! ✅', 'success');
-            console.log('✅ Foto de perfil guardada exitosamente');
-        }
-
-        function updateProfilePhotoView(photoData) {
-            const avatarElement = document.getElementById('profileAvatar');
-            const userAvatar = document.getElementById('userAvatar');
-            const mobileUserAvatar = document.getElementById('mobileUserAvatar');
-            
-            // Actualizar avatar principal
-            avatarElement.innerHTML = `<img src="${photoData}" alt="Foto de perfil">`;
-            avatarElement.style.backgroundImage = `url(${photoData})`;
-            avatarElement.style.backgroundSize = 'cover';
-            avatarElement.style.backgroundPosition = 'center';
-            
-            // Actualizar avatares del header
-            userAvatar.style.backgroundImage = `url(${photoData})`;
-            userAvatar.style.backgroundSize = 'cover';
-            userAvatar.style.backgroundPosition = 'center';
-            userAvatar.textContent = '';
-            userAvatar.style.color = 'transparent';
-            
-            mobileUserAvatar.style.backgroundImage = `url(${photoData})`;
-            mobileUserAvatar.style.backgroundSize = 'cover';
-            mobileUserAvatar.style.backgroundPosition = 'center';
-            mobileUserAvatar.textContent = '';
-            mobileUserAvatar.style.color = 'transparent';
         }
 
         // ===== SISTEMA DE CUMPLEAÑOS MEJORADO =====
@@ -2487,68 +2755,86 @@
         // ===== ELIMINAR FOTOS MEJORADO =====
         async function deleteProfilePhoto() {
             if (confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
-                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
-                
-                // ✅ ELIMINAR DE TODAS LAS UBICACIONES
-                delete profileData.profilePhoto;
-                localStorage.setItem('profileData', JSON.stringify(profileData));
-                
-                delete userData.fotoPerfil;
-                localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
-                
-                localStorage.removeItem('currentProfilePhoto');
-                
-                // Restaurar iniciales
-                const userName = userData.nombre || 'Usuario NeoStudy';
-                const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
-                
-                document.getElementById('profileAvatar').innerHTML = initials;
-                document.getElementById('profileAvatar').style.backgroundImage = 'none';
-                document.getElementById('profileAvatar').style.background = 'var(--bg-gradient)';
-                
-                document.getElementById('userAvatar').textContent = initials;
-                document.getElementById('userAvatar').style.backgroundImage = 'none';
-                document.getElementById('userAvatar').style.background = 'var(--white)';
-                document.getElementById('userAvatar').style.color = 'var(--primary)';
-                
-                document.getElementById('mobileUserAvatar').textContent = initials;
-                document.getElementById('mobileUserAvatar').style.backgroundImage = 'none';
-                document.getElementById('mobileUserAvatar').style.background = 'var(--white)';
-                document.getElementById('mobileUserAvatar').style.color = 'var(--primary)';
-                
-                // ✅ GUARDAR EN SUPABASE
-                await saveProfileToSupabase(profileData);
-                
-                // Cerrar menús
-                document.getElementById('avatarOptions').classList.remove('show');
-                document.getElementById('avatarDropdown').classList.remove('show');
-                document.getElementById('mobileAvatarDropdown').classList.remove('show');
-                
-                showNotification('Foto de perfil eliminada ✅', 'success');
+                try {
+                    // ✅ ELIMINAR DE SUPABASE STORAGE
+                    await deleteImageFromSupabase('profile');
+                    
+                    // Resto del código de eliminación local...
+                    const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                    const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+                    
+                    delete profileData.profilePhoto;
+                    localStorage.setItem('profileData', JSON.stringify(profileData));
+                    
+                    delete userData.fotoPerfil;
+                    localStorage.setItem('usuarioNeoStudy', JSON.stringify(userData));
+                    
+                    localStorage.removeItem('currentProfilePhoto');
+                    
+                    // Restaurar iniciales
+                    const userName = userData.nombre || 'Usuario NeoStudy';
+                    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    
+                    document.getElementById('profileAvatar').innerHTML = initials;
+                    document.getElementById('profileAvatar').style.backgroundImage = 'none';
+                    document.getElementById('profileAvatar').style.background = 'var(--bg-gradient)';
+                    
+                    document.getElementById('userAvatar').textContent = initials;
+                    document.getElementById('userAvatar').style.backgroundImage = 'none';
+                    document.getElementById('userAvatar').style.background = 'var(--white)';
+                    document.getElementById('userAvatar').style.color = 'var(--primary)';
+                    
+                    document.getElementById('mobileUserAvatar').textContent = initials;
+                    document.getElementById('mobileUserAvatar').style.backgroundImage = 'none';
+                    document.getElementById('mobileUserAvatar').style.background = 'var(--white)';
+                    document.getElementById('mobileUserAvatar').style.color = 'var(--primary)';
+                    
+                    // ✅ ACTUALIZAR BASE DE DATOS
+                    await saveImageUrlsToDatabase(null, null);
+                    
+                    // Cerrar menús
+                    document.getElementById('avatarOptions').classList.remove('show');
+                    document.getElementById('avatarDropdown').classList.remove('show');
+                    document.getElementById('mobileAvatarDropdown').classList.remove('show');
+                    
+                    showNotification('Foto de perfil eliminada ✅', 'success');
+                    
+                } catch (error) {
+                    console.error('Error eliminando foto:', error);
+                    showNotification('Error eliminando foto de la nube', 'error');
+                }
             }
         }
 
         async function deleteCoverPhoto() {
             if (confirm('¿Estás seguro de que quieres eliminar tu foto de portada?')) {
-                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-                
-                // Eliminar localmente
-                delete profileData.coverPhoto;
-                delete profileData.coverAdjustments;
-                localStorage.setItem('profileData', JSON.stringify(profileData));
-                
-                // Restaurar gradiente
-                document.getElementById('coverPhoto').innerHTML = '';
-                currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
-                
-                // ✅ GUARDAR EN SUPABASE
-                await saveProfileToSupabase(profileData);
-                
-                // Cerrar menú
-                document.getElementById('coverOptions').classList.remove('show');
-                
-                showNotification('Foto de portada eliminada ✅', 'success');
+                try {
+                    // ✅ ELIMINAR DE SUPABASE STORAGE
+                    await deleteImageFromSupabase('cover');
+                    
+                    const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                    
+                    // Eliminar localmente
+                    delete profileData.coverPhoto;
+                    delete profileData.coverAdjustments;
+                    localStorage.setItem('profileData', JSON.stringify(profileData));
+                    
+                    // Restaurar gradiente
+                    document.getElementById('coverPhoto').innerHTML = '';
+                    currentCoverAdjustments = { x: 0, y: 0, zoom: 1 };
+                    
+                    // ✅ ACTUALIZAR BASE DE DATOS
+                    await saveImageUrlsToDatabase(null, null);
+                    
+                    // Cerrar menú
+                    document.getElementById('coverOptions').classList.remove('show');
+                    
+                    showNotification('Foto de portada eliminada ✅', 'success');
+                    
+                } catch (error) {
+                    console.error('Error eliminando portada:', error);
+                    showNotification('Error eliminando portada de la nube', 'error');
+                }
             }
         }
 
