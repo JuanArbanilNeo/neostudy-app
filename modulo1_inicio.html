@@ -293,47 +293,66 @@ categoriaSelect.addEventListener("change", () => {
   if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
-// Función para crear usuario en Supabase
+// FUNCIÓN CORREGIDA: Buscar usuario por contacto
+async function findUserByContact(contacto) {
+  try {
+    console.log('🔍 Buscando usuario con contacto:', contacto);
+    
+    // Consulta CORREGIDA - usar ilike para búsqueda case-insensitive
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .or(`prof_contacto.ilike.%${contacto}%,uni_contacto.ilike.%${contacto}%,sec_contacto.ilike.%${contacto}%,gen_contacto.ilike.%${contacto}%`);
+
+    if (error) {
+      console.error('❌ Error en consulta Supabase:', error);
+      throw error;
+    }
+
+    console.log('📊 Resultados encontrados:', data);
+    
+    // Devolver el primer usuario encontrado (si existe)
+    return { 
+      success: true, 
+      user: data && data.length > 0 ? data[0] : null 
+    };
+  } catch (error) {
+    console.error('❌ Error buscando usuario:', error);
+    return { 
+      success: false, 
+      error: error.message,
+      user: null 
+    };
+  }
+}
+
+// FUNCIÓN CORREGIDA: Crear usuario en Supabase
 async function createUserInSupabase(userData) {
   try {
-    // Insertar usuario en la tabla 'users'
+    console.log('💾 Guardando usuario:', userData);
+    
     const { data, error } = await supabase
       .from('users')
       .insert([userData])
       .select();
 
     if (error) {
+      console.error('❌ Error insertando en Supabase:', error);
       throw error;
     }
 
+    console.log('✅ Usuario creado exitosamente:', data);
     return { success: true, data };
   } catch (error) {
-    console.error('Error creando usuario:', error);
-    return { success: false, error: error.message };
+    console.error('❌ Error creando usuario:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
   }
 }
 
-// Función para buscar usuario por contacto
-async function findUserByContact(contacto) {
-  try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .or(`prof_contacto.eq.${contacto},uni_contacto.eq.${contacto},sec_contacto.eq.${contacto},gen_contacto.eq.${contacto}`)
-      .single();
-
-    if (error && error.code !== 'PGRST116') { // PGRST116 es "no encontrado"
-      throw error;
-    }
-
-    return { success: true, user: data };
-  } catch (error) {
-    console.error('Error buscando usuario:', error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Crear cuenta - VERSIÓN CORREGIDA
+// FUNCIÓN CORREGIDA: Guardar usuario
 async function saveUser(form, category) {
   setLoading(true);
   
@@ -361,19 +380,36 @@ async function saveUser(form, category) {
       }
     }
     
-    // Guardar campos para login
-    data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
-    data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+    // Obtener contacto y password según categoría
+    let contacto, password;
+    switch(category) {
+      case 'profesional':
+        contacto = data.prof_contacto;
+        password = data.prof_password;
+        break;
+      case 'universitario':
+        contacto = data.uni_contacto;
+        password = data.uni_password;
+        break;
+      case 'secundaria':
+        contacto = data.sec_contacto;
+        password = data.sec_password;
+        break;
+      case 'general':
+        contacto = data.gen_contacto;
+        password = data.gen_password;
+        break;
+    }
 
     // Validar que tenemos contacto y contraseña
-    if (!data.contacto || !data.password) {
+    if (!contacto || !password) {
       showMessage("❌ Contacto y contraseña son requeridos", "error");
       setLoading(false);
       return;
     }
 
-    // Verificar si el usuario ya existe
-    const userCheck = await findUserByContact(data.contacto);
+    // Verificar si el usuario ya existe - CORREGIDO
+    const userCheck = await findUserByContact(contacto);
     
     if (userCheck.user) {
       showMessage("❌ Ya existe una cuenta con este contacto", "error");
@@ -398,34 +434,43 @@ async function saveUser(form, category) {
       showMessage("❌ Error al crear cuenta: " + result.error, "error");
     }
   } catch (error) {
+    console.error('❌ Error inesperado:', error);
     showMessage("❌ Error inesperado: " + error.message, "error");
   } finally {
     setLoading(false);
   }
 }
 
-// Iniciar sesión
+// FUNCIÓN CORREGIDA: Iniciar sesión
 async function loginUser(emailOrPhone, password) {
   setLoading(true);
   
   try {
-    // Buscar usuario por contacto
+    console.log('🔐 Intentando login con:', emailOrPhone);
+    
+    // Buscar usuario por contacto - CORREGIDO
     const userResult = await findUserByContact(emailOrPhone);
     
+    console.log('📋 Resultado de búsqueda:', userResult);
+    
     if (!userResult.user) {
-      showMessage("❌ Usuario no encontrado", "error");
+      showMessage("❌ Usuario no encontrado. Verifica tu correo/teléfono.", "error");
       setLoading(false);
       return;
     }
 
     const user = userResult.user;
+    console.log('👤 Usuario encontrado:', user);
     
-    // Verificar contraseña (en un caso real, esto debería ser con hash)
+    // Verificar contraseña - buscar en todos los campos posibles
     const passwordGuardado = user.password || 
                             user.prof_password || 
                             user.uni_password || 
                             user.sec_password || 
                             user.gen_password;
+
+    console.log('🔑 Contraseña ingresada:', password);
+    console.log('🔑 Contraseña guardada:', passwordGuardado);
 
     if (passwordGuardado === password) {
       // Guardar en localStorage
@@ -441,6 +486,7 @@ async function loginUser(emailOrPhone, password) {
       showMessage("❌ Contraseña incorrecta", "error");
     }
   } catch (error) {
+    console.error('❌ Error en login:', error);
     showMessage("❌ Error al iniciar sesión: " + error.message, "error");
   } finally {
     setLoading(false);
@@ -457,7 +503,7 @@ Object.keys(forms).forEach(cat => {
 
 // Event listener para login
 document.getElementById("btnLogin").addEventListener("click", async () => {
-  const emailOrPhone = document.getElementById("login_contacto").value;
+  const emailOrPhone = document.getElementById("login_contacto").value.trim();
   const password = document.getElementById("login_password").value;
   
   if (!emailOrPhone || !password) {
@@ -468,6 +514,37 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
   await loginUser(emailOrPhone, password);
 });
 
+// Función para probar conexión con Supabase
+async function testSupabaseConnection() {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('count')
+      .limit(1);
+    
+    if (error) {
+      console.error('❌ Error de conexión a Supabase:', error);
+      showMessage("❌ Error de conexión con la base de datos", "error");
+    } else {
+      console.log('✅ Conexión a Supabase exitosa');
+    }
+  } catch (error) {
+    console.error('❌ Error general de conexión:', error);
+  }
+}
+
+// Verificar si ya hay una sesión activa al cargar la página
+window.addEventListener('DOMContentLoaded', async () => {
+  // Probar conexión con Supabase
+  await testSupabaseConnection();
+  
+  const storedUserId = localStorage.getItem("supabase_user_id");
+  if (storedUserId) {
+    console.log('🔍 Sesión activa detectada:', storedUserId);
+    showMessage("🔍 Sesión activa detectada", "success");
+  }
+});
+
 // Mejora adicional: Formatear fecha para mostrar en el perfil
 function formatearFecha(fechaISO) {
   if (!fechaISO) return "";
@@ -476,15 +553,6 @@ function formatearFecha(fechaISO) {
   const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
   return fecha.toLocaleDateString('es-ES', opciones);
 }
-
-// Verificar si ya hay una sesión activa al cargar la página
-window.addEventListener('DOMContentLoaded', async () => {
-  const storedUserId = localStorage.getItem("supabase_user_id");
-  if (storedUserId) {
-    // Opcional: Verificar si la sesión sigue siendo válida
-    showMessage("🔍 Sesión activa detectada", "success");
-  }
-});
 </script>
 </body>
 </html>
