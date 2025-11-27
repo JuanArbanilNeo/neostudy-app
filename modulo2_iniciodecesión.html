@@ -2515,15 +2515,19 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        // ===== SISTEMA DE PUBLICACIONES =====
+        // ===== SISTEMA DE PUBLICACIONES - CORREGIDO =====
         async function createPost() {
-            const content = document.getElementById('postContent').value;
-            if (content.trim() === '') {
+            const contentInput = document.getElementById('postContent');
+            const content = contentInput.value.trim();
+            
+            if (content === '') {
                 showNotification('Por favor escribe algo para publicar', 'warning');
                 return;
             }
 
             try {
+                showNotification('Creando publicación...', 'info');
+
                 // Guardar en Supabase primero
                 const postResult = await savePostToSupabase({
                     content: content,
@@ -2531,84 +2535,22 @@
                 });
 
                 if (!postResult.success) {
-                    throw new Error(postResult.error);
+                    throw new Error(postResult.error || 'Error desconocido al guardar la publicación');
                 }
 
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-                
-                // Extraer nombre según categoría
-                let nombreCompleto = 'Usuario';
-                const categoria = userData?.categoria || '';
-                
-                if (categoria === 'profesional') {
-                    nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
-                } 
-                else if (categoria === 'universitario') {
-                    nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
-                }
-                else if (categoria === 'secundaria') {
-                    nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
-                }
-                else if (categoria === 'general') {
-                    nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
-                }
-                
-                const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
-                const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
-                
-                let userAvatarHTML;
-                if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
-                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
-                } else {
-                    userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
-                }
+                console.log('✅ Publicación guardada en Supabase:', postResult.data);
 
-                const newPost = document.createElement('div');
-                newPost.className = 'post fade-in';
-                newPost.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-user">
-                            ${userAvatarHTML}
-                            <div class="post-user-info">
-                                <h4>${nombreCompleto}</h4>
-                                <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="post-content">${content}</div>
-                    <div class="post-stats">
-                        <span>0 reacciones</span>
-                        <span>0 comentarios</span>
-                    </div>
-                    <div class="post-actions-bar">
-                        <button class="post-action-btn" onclick="likePost(this, '${postResult.data.id}')">
-                            <i class="fas fa-thumbs-up"></i> Me gusta
-                        </button>
-                        <button class="post-action-btn">
-                            <i class="fas fa-comment"></i> Comentar
-                        </button>
-                        <button class="post-action-btn">
-                            <i class="fas fa-share"></i> Compartir
-                        </button>
-                    </div>
-                `;
-
-                // Agregar el ID de Supabase como atributo data
-                newPost.setAttribute('data-post-id', postResult.data.id);
-
-                document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
-                document.getElementById('postContent').value = '';
+                // Limpiar el campo de texto
+                contentInput.value = '';
+                
+                // Recargar TODAS las publicaciones para mostrar la nueva
+                await loadCommunityPosts();
+                
                 showNotification('¡Publicación creada exitosamente! 🎉', 'success');
 
-                // Recargar todas las publicaciones para mantener consistencia
-                setTimeout(() => {
-                    loadCommunityPosts();
-                }, 500);
-
             } catch (error) {
-                console.error('Error creando publicación:', error);
-                showNotification('Error al crear la publicación', 'danger');
+                console.error('❌ Error creando publicación:', error);
+                showNotification('Error al crear la publicación: ' + error.message, 'danger');
             }
         }
 
@@ -2700,13 +2642,12 @@
             }
         }
 
-        // Función para cargar TODAS las publicaciones de la comunidad
+        // Función para cargar TODAS las publicaciones de la comunidad - CORREGIDA
         async function loadCommunityPosts() {
             try {
-                const userId = getCurrentUserId();
-                if (!userId) return;
-
-                // Cargar TODAS las publicaciones, no solo las del usuario actual
+                console.log('🔍 Cargando publicaciones de la comunidad...');
+                
+                // Cargar TODAS las publicaciones públicas
                 const { data: posts, error } = await supabase
                     .from('posts')
                     .select(`
@@ -2723,19 +2664,30 @@
                             categoria
                         )
                     `)
+                    .eq('is_public', true) // Solo publicaciones públicas
                     .order('created_at', { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    console.error('❌ Error en consulta Supabase:', error);
+                    throw error;
+                }
 
-                console.log('Publicaciones de la comunidad:', posts);
+                console.log(`📝 Se encontraron ${posts ? posts.length : 0} publicaciones`);
 
                 // Obtener el feed principal
                 const feed = document.querySelector('.feed');
-                if (!feed) return;
+                if (!feed) {
+                    console.error('❌ No se encontró el elemento .feed');
+                    return;
+                }
 
                 // Obtener el elemento después del cual insertar las publicaciones
                 const createPostElement = document.querySelector('.create-post');
-                
+                if (!createPostElement) {
+                    console.error('❌ No se encontró el elemento .create-post');
+                    return;
+                }
+
                 // Limpiar publicaciones existentes (excepto el create-post y el perfil móvil)
                 const existingPosts = feed.querySelectorAll('.post');
                 existingPosts.forEach(post => {
@@ -2745,108 +2697,126 @@
                 });
 
                 // Insertar cada publicación en el feed
-                posts.forEach(post => {
-                    const postElement = createPostElement(post);
-                    if (createPostElement && createPostElement.nextSibling) {
-                        feed.insertBefore(postElement, createPostElement.nextSibling);
-                    } else {
-                        feed.appendChild(postElement);
-                    }
-                });
-
-                if (posts.length === 0) {
-                    console.log('No hay publicaciones en la comunidad');
+                if (posts && posts.length > 0) {
+                    posts.forEach(post => {
+                        const postElement = createPostElementHTML(post);
+                        if (postElement) {
+                            feed.insertBefore(postElement, createPostElement.nextSibling);
+                        }
+                    });
+                    console.log('✅ Publicaciones cargadas correctamente');
+                } else {
+                    console.log('ℹ️ No hay publicaciones en la comunidad');
+                    // Mostrar mensaje cuando no hay publicaciones
+                    const noPostsMsg = document.createElement('div');
+                    noPostsMsg.className = 'post fade-in';
+                    noPostsMsg.innerHTML = `
+                        <div class="post-content" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-comments" style="font-size: 3rem; color: var(--secondary); margin-bottom: 1rem;"></i>
+                            <h3>¡Sé el primero en publicar!</h3>
+                            <p>Comparte lo que estás aprendiendo con la comunidad.</p>
+                        </div>
+                    `;
+                    feed.insertBefore(noPostsMsg, createPostElement.nextSibling);
                 }
 
             } catch (error) {
-                console.error('Error cargando publicaciones de la comunidad:', error);
+                console.error('❌ Error cargando publicaciones de la comunidad:', error);
+                showNotification('Error al cargar las publicaciones', 'danger');
             }
         }
 
-        // Función auxiliar para crear elemento de publicación
-        function createPostElement(post) {
-            const postElement = document.createElement('div');
-            postElement.className = 'post fade-in';
-            postElement.setAttribute('data-post-id', post.id);
-            
-            // Extraer información del usuario que creó la publicación
-            const userInfo = post.users;
-            let nombreCompleto = 'Usuario NeoStudy';
-            let titulo = 'Estudiante';
-            
-            if (userInfo) {
-                const categoria = userInfo.categoria || '';
+        // Función auxiliar para crear elemento de publicación - COMPLETA Y CORREGIDA
+        function createPostElementHTML(post) {
+            try {
+                const postElement = document.createElement('div');
+                postElement.className = 'post fade-in';
+                postElement.setAttribute('data-post-id', post.id);
                 
-                if (categoria === 'profesional') {
-                    nombreCompleto = userInfo.prof_nombre || 'Profesional';
-                    titulo = userInfo.prof_profesion || 'Profesional';
-                } 
-                else if (categoria === 'universitario') {
-                    nombreCompleto = userInfo.uni_nombre || 'Estudiante Universitario';
-                    titulo = userInfo.uni_carrera || 'Estudiante';
+                // Extraer información del usuario que creó la publicación
+                const userInfo = post.users;
+                let nombreCompleto = 'Usuario NeoStudy';
+                let titulo = 'Estudiante';
+                
+                if (userInfo) {
+                    const categoria = userInfo.categoria || '';
+                    
+                    if (categoria === 'profesional') {
+                        nombreCompleto = userInfo.prof_nombre || 'Profesional';
+                        titulo = userInfo.prof_profesion || 'Profesional';
+                    } 
+                    else if (categoria === 'universitario') {
+                        nombreCompleto = userInfo.uni_nombre || 'Estudiante Universitario';
+                        titulo = userInfo.uni_carrera || 'Estudiante';
+                    }
+                    else if (categoria === 'secundaria') {
+                        nombreCompleto = userInfo.sec_nombre || 'Estudiante de Secundaria';
+                        titulo = userInfo.sec_grado || 'Estudiante';
+                    }
+                    else if (categoria === 'general') {
+                        nombreCompleto = userInfo.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Usuario General';
+                    }
                 }
-                else if (categoria === 'secundaria') {
-                    nombreCompleto = userInfo.sec_nombre || 'Estudiante de Secundaria';
-                    titulo = userInfo.sec_grado || 'Estudiante';
+                
+                // Crear avatar con iniciales
+                const initials = nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                const userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
+                
+                // Formatear la fecha
+                const postDate = new Date(post.created_at);
+                const now = new Date();
+                const diffTime = Math.abs(now - postDate);
+                const diffMinutes = Math.floor(diffTime / (1000 * 60));
+                const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                
+                let timeText = 'Ahora mismo';
+                if (diffDays > 0) {
+                    timeText = `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+                } else if (diffHours > 0) {
+                    timeText = `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+                } else if (diffMinutes > 0) {
+                    timeText = `Hace ${diffMinutes} minuto${diffMinutes > 1 ? 's' : ''}`;
                 }
-                else if (categoria === 'general') {
-                    nombreCompleto = userInfo.gen_nombre || 'Usuario NeoStudy';
-                    titulo = 'Usuario General';
-                }
-            }
-            
-            // Crear avatar con iniciales
-            const initials = nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            const userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
-            
-            // Formatear la fecha
-            const postDate = new Date(post.created_at);
-            const now = new Date();
-            const diffTime = Math.abs(now - postDate);
-            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            let timeText = 'Ahora mismo';
-            if (diffDays > 0) {
-                timeText = `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
-            } else if (diffHours > 0) {
-                timeText = `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
-            }
 
-            // Verificar si el usuario actual ya dio like a esta publicación
-            const currentUserId = getCurrentUserId();
-            const userLiked = post.likes_count > 0; // En una implementación real, verificarías en post_likes
+                // Contadores de likes y comentarios
+                const likesCount = post.likes_count || 0;
+                const commentsCount = post.comments_count || 0;
 
-            postElement.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        ${userAvatarHTML}
-                        <div class="post-user-info">
-                            <h4>${nombreCompleto}</h4>
-                            <p class="post-time">${timeText} · <i class="fas fa-graduation-cap"></i> ${titulo}</p>
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-user">
+                            ${userAvatarHTML}
+                            <div class="post-user-info">
+                                <h4>${nombreCompleto}</h4>
+                                <p class="post-time">${timeText} · <i class="fas fa-graduation-cap"></i> ${titulo}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="post-content">${post.content}</div>
-                <div class="post-stats">
-                    <span>${post.likes_count || 0} reacciones</span>
-                    <span>${post.comments_count || 0} comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="likePost(this, '${post.id}')" 
-                            style="${userLiked ? 'color: var(--primary);' : ''}">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            `;
+                    <div class="post-content">${post.content}</div>
+                    <div class="post-stats">
+                        <span>${likesCount} reacción${likesCount !== 1 ? 'es' : ''}</span>
+                        <span>${commentsCount} comentario${commentsCount !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="post-actions-bar">
+                        <button class="post-action-btn" onclick="likePost(this, '${post.id}')">
+                            <i class="fas fa-thumbs-up"></i> Me gusta
+                        </button>
+                        <button class="post-action-btn" onclick="commentOnPost('${post.id}')">
+                            <i class="fas fa-comment"></i> Comentar
+                        </button>
+                        <button class="post-action-btn" onclick="sharePost('${post.id}')">
+                            <i class="fas fa-share"></i> Compartir
+                        </button>
+                    </div>
+                `;
 
-            return postElement;
+                return postElement;
+            } catch (error) {
+                console.error('Error creando elemento de publicación:', error);
+                return null;
+            }
         }
 
         // Función para cargar publicaciones existentes - AHORA CARGA TODAS
@@ -2854,14 +2824,13 @@
             await loadCommunityPosts();
         }
 
-        function likePostOriginal(button) {
-            const post = button.closest('.post');
-            const stats = post.querySelector('.post-stats span:first-child');
-            const currentLikes = parseInt(stats.textContent) || 0;
-            stats.textContent = `${currentLikes + 1} reacciones`;
-            
-            button.style.color = 'var(--primary)';
-            button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
+        // ===== FUNCIONES AUXILIARES PARA ACCIONES DE POSTS =====
+        function commentOnPost(postId) {
+            showNotification('Función de comentarios en desarrollo', 'info');
+        }
+
+        function sharePost(postId) {
+            showNotification('Función de compartir en desarrollo', 'info');
         }
 
         // ===== SISTEMA DE MEDIOS =====
@@ -3010,14 +2979,18 @@
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             lastProfilePhoto = localStorage.getItem('currentProfilePhoto') || profileData.profilePhoto || userData.profilePhoto || userData.fotoPerfil;
 
-            // ✅ CARGAR PUBLICACIONES DE LA COMUNIDAD DESPUÉS DE UN PEQUEÑO RETRASO
+            // ✅ CARGAR PUBLICACIONES DE LA COMUNIDAD - CORREGIDO
             setTimeout(() => {
-                loadCommunityPosts(); // ← CAMBIAR A ESTA FUNCIÓN
-            }, 1000);
+                console.log('🔄 Iniciando carga de publicaciones...');
+                loadCommunityPosts();
+            }, 1500);
 
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 3000);
             setInterval(checkForPhotoUpdates, 2000);
+            
+            // Recargar publicaciones cada 30 segundos para ver nuevas publicaciones
+            setInterval(loadCommunityPosts, 30000);
         });
     </script>
 </body>
