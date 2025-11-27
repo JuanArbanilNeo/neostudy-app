@@ -1761,70 +1761,7 @@
                 </div>
             </div>
 
-            <!-- Publicaciones -->
-            <div class="post fade-in">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar">AM</div>
-                        <div class="post-user-info">
-                            <h4>Ana Martínez</h4>
-                            <p class="post-time">Hace 2 horas · <i class="fas fa-graduation-cap"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    ¡Acabo de completar el curso de Álgebra Lineal! 🎉 Los eigenvalores ya no son un misterio para mí. #Matemáticas #Progreso
-                </div>
-                <div class="post-stats">
-                    <span>125 reacciones</span>
-                    <span>28 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
-
-            <div class="post fade-in">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar">CP</div>
-                        <div class="post-user-info">
-                            <h4>Carlos Pérez - Tutor</h4>
-                            <p class="post-time">Ayer · <i class="fas fa-chalkboard-teacher"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    📚 Clase en vivo este sábado: "Resolución de problemas de Física - Movimiento Parabólico". 
-                    ¡No se lo pierdan! Traigan sus dudas y ejercicios.
-                </div>
-                <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                    CLASE EN VIVO - SÁBADO 3 PM
-                </div>
-                <div class="post-stats">
-                    <span>89 interesados</span>
-                    <span>15 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me interesa
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-calendar-plus"></i> Recordar
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
+            <!-- Publicaciones se cargarán dinámicamente aquí -->
         </main>
 
         <!-- Sidebar Derecha - Logros y Clases (SOLO ESCRITORIO) -->
@@ -1884,7 +1821,7 @@
             return localStorage.getItem("supabase_user_id");
         }
 
-        // Función para guardar una publicación en Supabase
+        // Función para guardar una publicación en Supabase - VERSIÓN PÚBLICA
         async function savePostToSupabase(postData) {
             try {
                 const userId = getCurrentUserId();
@@ -1899,7 +1836,8 @@
                     media_type: postData.mediaType || null,
                     created_at: new Date().toISOString(),
                     likes_count: 0,
-                    comments_count: 0
+                    comments_count: 0,
+                    is_public: true // ← AÑADIR ESTE CAMPO
                 };
 
                 const { data, error } = await supabase
@@ -2663,13 +2601,18 @@
                 document.getElementById('postContent').value = '';
                 showNotification('¡Publicación creada exitosamente! 🎉', 'success');
 
+                // Recargar todas las publicaciones para mantener consistencia
+                setTimeout(() => {
+                    loadCommunityPosts();
+                }, 500);
+
             } catch (error) {
                 console.error('Error creando publicación:', error);
                 showNotification('Error al crear la publicación', 'danger');
             }
         }
 
-        // Función para dar like a una publicación - VERSIÓN MEJORADA
+        // Función para dar like a una publicación - VERSIÓN CORREGIDA
         async function likePost(button, postId) {
             try {
                 const userId = getCurrentUserId();
@@ -2691,68 +2634,106 @@
                 }
 
                 if (existingLike) {
-                    showNotification('Ya diste like a esta publicación', 'info');
-                    return;
+                    // Si ya existe, quitar el like
+                    const { error: deleteError } = await supabase
+                        .from('post_likes')
+                        .delete()
+                        .eq('user_id', userId)
+                        .eq('post_id', postId);
+
+                    if (deleteError) throw deleteError;
+
+                    // Actualizar contador en posts
+                    const post = button.closest('.post');
+                    const stats = post.querySelector('.post-stats span:first-child');
+                    const currentLikes = parseInt(stats.textContent) || 0;
+                    const newLikes = Math.max(0, currentLikes - 1);
+                    
+                    const { error: updateError } = await supabase
+                        .from('posts')
+                        .update({ likes_count: newLikes })
+                        .eq('id', postId);
+
+                    if (updateError) throw updateError;
+
+                    stats.textContent = `${newLikes} reacciones`;
+                    button.style.color = 'var(--secondary)';
+                    button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
+                    
+                    showNotification('Like removido', 'info');
+                } else {
+                    // Agregar like
+                    const { error } = await supabase
+                        .from('post_likes')
+                        .insert([
+                            { 
+                                user_id: userId, 
+                                post_id: postId,
+                                created_at: new Date().toISOString()
+                            }
+                        ]);
+
+                    if (error) throw error;
+
+                    // Actualizar contador en posts
+                    const post = button.closest('.post');
+                    const stats = post.querySelector('.post-stats span:first-child');
+                    const currentLikes = parseInt(stats.textContent) || 0;
+                    const newLikes = currentLikes + 1;
+                    
+                    const { error: updateError } = await supabase
+                        .from('posts')
+                        .update({ likes_count: newLikes })
+                        .eq('id', postId);
+
+                    if (updateError) throw updateError;
+
+                    stats.textContent = `${newLikes} reacciones`;
+                    button.style.color = 'var(--primary)';
+                    button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
+                    
+                    showNotification('¡Like agregado! 👍', 'success');
                 }
-
-                // Agregar like
-                const { error } = await supabase
-                    .from('post_likes')
-                    .insert([
-                        { 
-                            user_id: userId, 
-                            post_id: postId,
-                            created_at: new Date().toISOString()
-                        }
-                    ]);
-
-                if (error) throw error;
-
-                // Actualizar contador de likes en la publicación
-                const { error: updateError } = await supabase
-                    .from('posts')
-                    .update({ likes_count: (button.closest('.post').querySelector('.post-stats span:first-child').textContent.split(' ')[0] || 0) + 1 })
-                    .eq('id', postId);
-
-                if (updateError) throw updateError;
-
-                // Actualizar interfaz
-                const post = button.closest('.post');
-                const stats = post.querySelector('.post-stats span:first-child');
-                const currentLikes = parseInt(stats.textContent) || 0;
-                stats.textContent = `${currentLikes + 1} reacciones`;
-                
-                button.style.color = 'var(--primary)';
-                button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
-                
-                showNotification('¡Like agregado! 👍', 'success');
             } catch (error) {
-                console.error('Error dando like:', error);
-                showNotification('Error al dar like', 'danger');
+                console.error('Error gestionando like:', error);
+                showNotification('Error al gestionar like', 'danger');
             }
         }
 
-        // Función para cargar publicaciones existentes - VERSIÓN CORREGIDA
-        async function loadExistingPosts() {
+        // Función para cargar TODAS las publicaciones de la comunidad
+        async function loadCommunityPosts() {
             try {
                 const userId = getCurrentUserId();
                 if (!userId) return;
 
+                // Cargar TODAS las publicaciones, no solo las del usuario actual
                 const { data: posts, error } = await supabase
                     .from('posts')
-                    .select('*')
-                    .eq('user_id', userId)
+                    .select(`
+                        *,
+                        users:user_id (
+                            id,
+                            prof_nombre,
+                            uni_nombre, 
+                            sec_nombre,
+                            gen_nombre,
+                            prof_profesion,
+                            uni_carrera,
+                            sec_grado,
+                            categoria
+                        )
+                    `)
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
 
-                console.log('Publicaciones cargadas:', posts);
+                console.log('Publicaciones de la comunidad:', posts);
 
                 // Obtener el feed principal
                 const feed = document.querySelector('.feed');
                 if (!feed) return;
 
-                // Obtener el elemento después del cual insertar las publicaciones (después del create-post)
+                // Obtener el elemento después del cual insertar las publicaciones
                 const createPostElement = document.querySelector('.create-post');
                 
                 // Limpiar publicaciones existentes (excepto el create-post y el perfil móvil)
@@ -2763,84 +2744,9 @@
                     }
                 });
 
-                // Cargar datos del usuario para mostrar en las publicaciones
-                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-                
-                // Extraer información del usuario
-                let nombreCompleto = 'Usuario';
-                const categoria = userData?.categoria || '';
-                
-                if (categoria === 'profesional') {
-                    nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
-                } 
-                else if (categoria === 'universitario') {
-                    nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
-                }
-                else if (categoria === 'secundaria') {
-                    nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
-                }
-                else if (categoria === 'general') {
-                    nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
-                }
-                
-                const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
-                const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
-
-                // Crear avatar HTML
-                let userAvatarHTML;
-                if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
-                    userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
-                } else {
-                    userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
-                }
-
                 // Insertar cada publicación en el feed
                 posts.forEach(post => {
-                    const postElement = document.createElement('div');
-                    postElement.className = 'post fade-in';
-                    postElement.setAttribute('data-post-id', post.id);
-                    
-                    // Formatear la fecha
-                    const postDate = new Date(post.created_at);
-                    const now = new Date();
-                    const diffTime = Math.abs(now - postDate);
-                    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
-                    
-                    let timeText = 'Ahora mismo';
-                    if (diffHours > 0) {
-                        timeText = `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
-                    }
-
-                    postElement.innerHTML = `
-                        <div class="post-header">
-                            <div class="post-user">
-                                ${userAvatarHTML}
-                                <div class="post-user-info">
-                                    <h4>${nombreCompleto}</h4>
-                                    <p class="post-time">${timeText} · <i class="fas fa-user-graduate"></i></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-content">${post.content}</div>
-                        <div class="post-stats">
-                            <span>${post.likes_count || 0} reacciones</span>
-                            <span>${post.comments_count || 0} comentarios</span>
-                        </div>
-                        <div class="post-actions-bar">
-                            <button class="post-action-btn" onclick="likePost(this, '${post.id}')">
-                                <i class="fas fa-thumbs-up"></i> Me gusta
-                            </button>
-                            <button class="post-action-btn">
-                                <i class="fas fa-comment"></i> Comentar
-                            </button>
-                            <button class="post-action-btn">
-                                <i class="fas fa-share"></i> Compartir
-                            </button>
-                        </div>
-                    `;
-
-                    // Insertar después del create-post
+                    const postElement = createPostElement(post);
                     if (createPostElement && createPostElement.nextSibling) {
                         feed.insertBefore(postElement, createPostElement.nextSibling);
                     } else {
@@ -2849,12 +2755,103 @@
                 });
 
                 if (posts.length === 0) {
-                    console.log('No hay publicaciones para mostrar');
+                    console.log('No hay publicaciones en la comunidad');
                 }
 
             } catch (error) {
-                console.error('Error cargando publicaciones:', error);
+                console.error('Error cargando publicaciones de la comunidad:', error);
             }
+        }
+
+        // Función auxiliar para crear elemento de publicación
+        function createPostElement(post) {
+            const postElement = document.createElement('div');
+            postElement.className = 'post fade-in';
+            postElement.setAttribute('data-post-id', post.id);
+            
+            // Extraer información del usuario que creó la publicación
+            const userInfo = post.users;
+            let nombreCompleto = 'Usuario NeoStudy';
+            let titulo = 'Estudiante';
+            
+            if (userInfo) {
+                const categoria = userInfo.categoria || '';
+                
+                if (categoria === 'profesional') {
+                    nombreCompleto = userInfo.prof_nombre || 'Profesional';
+                    titulo = userInfo.prof_profesion || 'Profesional';
+                } 
+                else if (categoria === 'universitario') {
+                    nombreCompleto = userInfo.uni_nombre || 'Estudiante Universitario';
+                    titulo = userInfo.uni_carrera || 'Estudiante';
+                }
+                else if (categoria === 'secundaria') {
+                    nombreCompleto = userInfo.sec_nombre || 'Estudiante de Secundaria';
+                    titulo = userInfo.sec_grado || 'Estudiante';
+                }
+                else if (categoria === 'general') {
+                    nombreCompleto = userInfo.gen_nombre || 'Usuario NeoStudy';
+                    titulo = 'Usuario General';
+                }
+            }
+            
+            // Crear avatar con iniciales
+            const initials = nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            const userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
+            
+            // Formatear la fecha
+            const postDate = new Date(post.created_at);
+            const now = new Date();
+            const diffTime = Math.abs(now - postDate);
+            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            let timeText = 'Ahora mismo';
+            if (diffDays > 0) {
+                timeText = `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+            } else if (diffHours > 0) {
+                timeText = `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+            }
+
+            // Verificar si el usuario actual ya dio like a esta publicación
+            const currentUserId = getCurrentUserId();
+            const userLiked = post.likes_count > 0; // En una implementación real, verificarías en post_likes
+
+            postElement.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        ${userAvatarHTML}
+                        <div class="post-user-info">
+                            <h4>${nombreCompleto}</h4>
+                            <p class="post-time">${timeText} · <i class="fas fa-graduation-cap"></i> ${titulo}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">${post.content}</div>
+                <div class="post-stats">
+                    <span>${post.likes_count || 0} reacciones</span>
+                    <span>${post.comments_count || 0} comentarios</span>
+                </div>
+                <div class="post-actions-bar">
+                    <button class="post-action-btn" onclick="likePost(this, '${post.id}')" 
+                            style="${userLiked ? 'color: var(--primary);' : ''}">
+                        <i class="fas fa-thumbs-up"></i> Me gusta
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-comment"></i> Comentar
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-share"></i> Compartir
+                    </button>
+                </div>
+            `;
+
+            return postElement;
+        }
+
+        // Función para cargar publicaciones existentes - AHORA CARGA TODAS
+        async function loadExistingPosts() {
+            await loadCommunityPosts();
         }
 
         function likePostOriginal(button) {
@@ -3013,9 +3010,9 @@
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             lastProfilePhoto = localStorage.getItem('currentProfilePhoto') || profileData.profilePhoto || userData.profilePhoto || userData.fotoPerfil;
 
-            // ✅ CARGAR PUBLICACIONES EXISTENTES DESPUÉS DE UN PEQUEÑO RETRASO
+            // ✅ CARGAR PUBLICACIONES DE LA COMUNIDAD DESPUÉS DE UN PEQUEÑO RETRASO
             setTimeout(() => {
-                loadExistingPosts();
+                loadCommunityPosts(); // ← CAMBIAR A ESTA FUNCIÓN
             }, 1000);
 
             // Verificar actualizaciones periódicamente
