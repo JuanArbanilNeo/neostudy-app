@@ -293,36 +293,78 @@ categoriaSelect.addEventListener("change", () => {
   if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
-// Función para crear usuario en Supabase
+// Función para crear usuario en Supabase CORREGIDA
 async function createUserInSupabase(userData) {
   try {
-    // Insertar usuario en la tabla 'users'
+    // Preparar el email (si es teléfono, convertirlo a email)
+    const userEmail = userData.contacto.includes('@') 
+      ? userData.contacto 
+      : `${userData.contacto}@neostudy.com`;
+
+    // 1. Crear usuario en el sistema de autenticación de Supabase
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: userEmail,
+      password: userData.password,
+      options: {
+        data: {
+          full_name: userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre,
+          category: userData.categoria
+        }
+      }
+    });
+
+    if (authError) throw authError;
+
+    // 2. Preparar datos para la tabla users
+    const userRecord = {
+      id: authData.user.id, // ¡IMPORTANTE! Usar el ID de auth
+      categoria: userData.categoria,
+      email: userEmail,
+      fecha_creacion: new Date().toISOString(),
+      // Copiar todos los campos del formulario
+      ...userData
+    };
+
+    // Remover campos temporales
+    delete userRecord.password;
+
+    // 3. Insertar en tu tabla users
     const { data, error } = await supabase
       .from('users')
-      .insert([userData])
+      .insert([userRecord])
       .select();
 
     if (error) {
+      // Si hay error, revertir el usuario de auth
+      await supabase.auth.admin.deleteUser(authData.user.id);
       throw error;
     }
 
-    return { success: true, data };
+    return { success: true, data: authData };
+
   } catch (error) {
     console.error('Error creando usuario:', error);
     return { success: false, error: error.message };
   }
 }
 
-// Función para buscar usuario por contacto
+// Función mejorada para buscar usuario
 async function findUserByContact(contacto) {
   try {
+    const emailToSearch = contacto.includes('@') 
+      ? contacto 
+      : `${contacto}@neostudy.com`;
+
     const { data, error } = await supabase
       .from('users')
       .select('*')
-      .or(`prof_contacto.eq.${contacto},uni_contacto.eq.${contacto},sec_contacto.eq.${contacto},gen_contacto.eq.${contacto}`)
+      .eq('email', emailToSearch)
       .single();
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 es "no encontrado"
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return { success: true, user: null }; // No encontrado
+      }
       throw error;
     }
 
@@ -387,7 +429,8 @@ async function saveUser(form, category) {
     if (result.success) {
       // Guardar en localStorage para compatibilidad
       localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
-      localStorage.setItem("supabase_user_id", result.data[0].id);
+      localStorage.setItem("supabase_user_id", result.data.user.id);
+      localStorage.setItem("supabase_session", JSON.stringify(result.data.session));
       
       showMessage("✅ Cuenta creada con éxito en NeoStudy", "success");
       
@@ -404,44 +447,58 @@ async function saveUser(form, category) {
   }
 }
 
-// Iniciar sesión
-async function loginUser(emailOrPhone, password) {
+// Función para iniciar sesión CORREGIDA
+async function loginUser(contacto, password) {
   setLoading(true);
   
   try {
-    // Buscar usuario por contacto
-    const userResult = await findUserByContact(emailOrPhone);
-    
-    if (!userResult.user) {
-      showMessage("❌ Usuario no encontrado", "error");
-      setLoading(false);
-      return;
-    }
+    // Determinar si es email o teléfono
+    const loginEmail = contacto.includes('@') 
+      ? contacto 
+      : `${contacto}@neostudy.com`;
 
-    const user = userResult.user;
-    
-    // Verificar contraseña (en un caso real, esto debería ser con hash)
-    const passwordGuardado = user.password || 
-                            user.prof_password || 
-                            user.uni_password || 
-                            user.sec_password || 
-                            user.gen_password;
+    // Usar autenticación de Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: password
+    });
 
-    if (passwordGuardado === password) {
-      // Guardar en localStorage
-      localStorage.setItem("usuarioNeoStudy", JSON.stringify(user));
-      localStorage.setItem("supabase_user_id", user.id);
+    if (error) throw error;
+
+    // Login exitoso
+    if (data.user) {
+      // Obtener datos adicionales del usuario desde tu tabla
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+
+      if (!userError && userData) {
+        localStorage.setItem("usuarioNeoStudy", JSON.stringify(userData));
+      }
+
+      localStorage.setItem("supabase_user_id", data.user.id);
+      localStorage.setItem("supabase_session", JSON.stringify(data.session));
       
       showMessage("✅ Inicio de sesión exitoso", "success");
       
       setTimeout(() => {
         window.location.href = "modulo2_iniciodecesión.html";
       }, 1500);
-    } else {
-      showMessage("❌ Contraseña incorrecta", "error");
     }
+
   } catch (error) {
-    showMessage("❌ Error al iniciar sesión: " + error.message, "error");
+    console.error('Error login:', error);
+    
+    // Mensajes de error específicos
+    if (error.message.includes('Invalid login credentials')) {
+      showMessage("❌ Credenciales incorrectas", "error");
+    } else if (error.message.includes('Email not confirmed')) {
+      showMessage("📧 Confirma tu email antes de iniciar sesión", "error");
+    } else {
+      showMessage("❌ Error: " + error.message, "error");
+    }
   } finally {
     setLoading(false);
   }
