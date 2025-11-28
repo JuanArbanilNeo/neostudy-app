@@ -279,7 +279,7 @@ function setLoading(loading) {
   });
 }
 
-// FUNCIÓN PARA RESETEAR FORMULARIOS - NUEVA
+// FUNCIÓN PARA RESETEAR FORMULARIOS
 function resetForms() {
   categoriaSelect.value = "";
   Object.values(forms).forEach(form => {
@@ -304,22 +304,23 @@ categoriaSelect.addEventListener("change", () => {
   if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
-// Función para crear usuario en Supabase CORREGIDA
+// VERSIÓN SIMPLIFICADA Y SEGURA - SOLO AUTH PRIMERO
 async function createUserInSupabase(userData) {
   try {
-    // Preparar el email (si es teléfono, convertirlo a email)
     const userEmail = userData.contacto.includes('@') 
       ? userData.contacto 
       : `${userData.contacto}@neostudy.com`;
 
-    // 1. Crear usuario en el sistema de autenticación de Supabase
+    // SOLO crear usuario en auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: userEmail,
       password: userData.password,
       options: {
         data: {
           full_name: userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre,
-          category: userData.categoria
+          category: userData.categoria,
+          // Guardar datos temporales en metadata
+          temp_data: JSON.stringify(userData)
         }
       }
     });
@@ -331,37 +332,47 @@ async function createUserInSupabase(userData) {
       throw authError;
     }
 
-    // 2. Preparar datos para la tabla users
-    const userRecord = {
-      id: authData.user.id, // ¡IMPORTANTE! Usar el ID de auth
-      categoria: userData.categoria,
-      email: userEmail,
-      fecha_creacion: new Date().toISOString(),
-      // Copiar todos los campos del formulario
-      ...userData
+    return { 
+      success: true, 
+      data: authData,
+      message: '✅ Cuenta creada. Por favor revisa tu email para confirmar.'
     };
-
-    // Remover campos temporales
-    delete userRecord.password;
-
-    // 3. Insertar en tu tabla users
-    const { data, error } = await supabase
-      .from('users')
-      .insert([userRecord])
-      .select();
-
-    if (error) {
-      // Si hay error, revertir el usuario de auth
-      await supabase.auth.admin.deleteUser(authData.user.id);
-      throw error;
-    }
-
-    return { success: true, data: authData };
 
   } catch (error) {
     console.error('Error creando usuario:', error);
     return { success: false, error: error.message };
   }
+}
+
+// Función para sincronizar usuario después de confirmación
+async function syncUserAfterConfirmation(userData) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
+      const userRecord = {
+        id: user.id,
+        categoria: userData.categoria,
+        email: user.email,
+        fecha_creacion: new Date().toISOString(),
+        ...userData
+      };
+
+      delete userRecord.password;
+
+      const { error } = await supabase
+        .from('users')
+        .insert([userRecord]);
+
+      if (!error) {
+        console.log('Usuario sincronizado en tabla users');
+        return true;
+      }
+    }
+  } catch (error) {
+    console.error('Error sincronizando usuario:', error);
+  }
+  return false;
 }
 
 // Función mejorada para buscar usuario
@@ -391,7 +402,7 @@ async function findUserByContact(contacto) {
   }
 }
 
-// Crear cuenta - VERSIÓN CORREGIDA
+// Crear cuenta - VERSIÓN MEJORADA
 async function saveUser(form, category) {
   setLoading(true);
   
@@ -439,27 +450,25 @@ async function saveUser(form, category) {
       return;
     }
 
-    // Crear usuario en Supabase
+    // Crear usuario en Supabase (SOLO AUTH)
     const result = await createUserInSupabase(data);
     
     if (result.success) {
-      // Guardar en localStorage para compatibilidad
-      localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
+      // Guardar datos temporalmente en localStorage para sincronización posterior
+      localStorage.setItem("usuarioNeoStudy_temp", JSON.stringify(data));
       
-      // MANEJO SEGURO DEL USER ID - CORREGIDO
-      if (result.data && result.data.user) {
-        localStorage.setItem("supabase_user_id", result.data.user.id);
-        localStorage.setItem("supabase_session", JSON.stringify(result.data.session));
-      }
-      
-      // RESETEAR FORMULARIOS DESPUÉS DE CREAR CUENTA - NUEVO
+      // RESETEAR FORMULARIOS DESPUÉS DE CREAR CUENTA
       resetForms();
       
-      showMessage("✅ Cuenta creada con éxito en NeoStudy", "success");
+      // Mostrar mensaje específico de confirmación de email
+      showMessage(result.message || "✅ Cuenta creada con éxito en NeoStudy", "success");
       
+      // No redirigir inmediatamente - esperar confirmación de email
       setTimeout(() => {
-        window.location.href = "modulo2_iniciodecesión.html";
-      }, 1500);
+        // Opcional: redirigir a página de "revisa tu email"
+        // window.location.href = "verifica-email.html";
+      }, 3000);
+      
     } else {
       showMessage("❌ Error al crear cuenta: " + result.error, "error");
     }
@@ -490,6 +499,25 @@ async function loginUser(contacto, password) {
 
     // Login exitoso
     if (data.user) {
+      // Verificar si el usuario está confirmado
+      if (!data.user.email_confirmed_at) {
+        showMessage("📧 Por favor confirma tu email antes de iniciar sesión", "error");
+        setLoading(false);
+        return;
+      }
+
+      // Intentar sincronizar con la tabla users si no existe
+      const userCheck = await findUserByContact(contacto);
+      if (!userCheck.user) {
+        // Recuperar datos temporales y sincronizar
+        const tempData = localStorage.getItem("usuarioNeoStudy_temp");
+        if (tempData) {
+          const userData = JSON.parse(tempData);
+          await syncUserAfterConfirmation(userData);
+          localStorage.removeItem("usuarioNeoStudy_temp");
+        }
+      }
+
       // Obtener datos adicionales del usuario desde tu tabla
       const { data: userData, error: userError } = await supabase
         .from('users')
