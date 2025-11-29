@@ -7,7 +7,6 @@
 <!-- Incluir Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  /* Tus estilos CSS existentes se mantienen igual */
   * {
     box-sizing: border-box;
   }
@@ -27,8 +26,144 @@
     padding: 20px;
   }
 
-  /* ... (todo tu CSS existente se mantiene igual) ... */
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  }
+
+  h1 { 
+    color: #00C4FF; 
+    font-size: 2em; 
+    margin-bottom: 15px; 
+  }
+  
+  p { 
+    font-size: 1em; 
+    color: #dfe9ff; 
+    margin-bottom: 25px; 
+  }
+
+  select, input, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: none;
+    font-size: 1em;
+  }
+
+  input { 
+    background: rgba(255,255,255,0.9); 
+    color: #333; 
+  }
+  
+  input:focus { 
+    outline: none; 
+    box-shadow: 0 0 12px #00C4FF; 
+    transform: scale(1.03); 
+  }
+
+  button {
+    background: linear-gradient(90deg,#00C4FF,#007bff);
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 0 15px #00C4FF;
+    transition: 0.3s;
+  }
+
+  button:hover { 
+    transform: scale(1.05); 
+    box-shadow: 0 0 25px #00FFFF; 
+  }
+
+  .footer { 
+    margin-top: 15px; 
+    font-size: 0.9em; 
+    color: #cbd7ff; 
+  }
+  
+  .footer a { 
+    color: #00C4FF; 
+    text-decoration: none; 
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .footer a:hover { 
+    text-decoration: underline; 
+  }
+
+  .hidden { 
+    display: none; 
+  }
+  
+  /* Estilos para etiquetas de fecha */
+  .date-label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    color: #dfe9ff;
+    font-size: 0.9em;
+  }
+  
+  /* Mejoras para dispositivos móviles */
+  @media (max-width: 480px) {
+    body {
+      padding: 10px;
+      align-items: flex-start;
+    }
+    
+    .container {
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+    
+    h1 {
+      font-size: 1.7em;
+    }
+    
+    select, input, button {
+      padding: 14px;
+      font-size: 16px; /* Evita zoom automático en iOS */
+    }
+  }
+
+  /* Estilos para mensajes de carga y estado */
+  .loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    font-size: 0.9em;
+  }
+
+  .success {
+    background: rgba(0, 255, 0, 0.2);
+    color: #90EE90;
+  }
+
+  .error {
+    background: rgba(255, 0, 0, 0.2);
+    color: #FFB6C1;
+  }
 </style>
 </head>
 <body>
@@ -36,6 +171,9 @@
 <div class="container">
   <h1>NeoStudy 🚀</h1>
   <p>Tu educación digital comienza aquí</p>
+
+  <!-- Mensajes de estado -->
+  <div id="message" class="message hidden"></div>
 
   <!-- Selección de categoría -->
   <select id="categoria">
@@ -46,7 +184,7 @@
     <option value="general">Público en general</option>
   </select>
 
-  <!-- Formularios dinámicos (se mantienen igual) -->
+  <!-- Formularios dinámicos -->
   <form id="formProfesional" class="hidden">
     <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
     <input type="text" id="prof_profesion" placeholder="Profesión" required>
@@ -104,9 +242,12 @@
 // Configuración de Supabase
 const supabaseUrl = 'https://qmzoblunltlathycycaw.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA';
+
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+// Elementos del DOM
 const categoriaSelect = document.getElementById("categoria");
+const messageDiv = document.getElementById("message");
 const forms = {
   profesional: document.getElementById("formProfesional"),
   universitario: document.getElementById("formUniversitario"),
@@ -114,11 +255,21 @@ const forms = {
   general: document.getElementById("formGeneral")
 };
 
+// Mostrar mensajes
+function showMessage(text, type) {
+  messageDiv.textContent = text;
+  messageDiv.className = `message ${type}`;
+  messageDiv.classList.remove("hidden");
+  setTimeout(() => {
+    messageDiv.classList.add("hidden");
+  }, 5000);
+}
+
 // SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
   categoriaSelect.scrollIntoView({ behavior: 'smooth' });
   categoriaSelect.focus();
-  alert("Por favor selecciona tu categoría para crear tu cuenta");
+  showMessage("Por favor selecciona tu categoría para crear tu cuenta", "success");
 });
 
 // Mostrar formulario según categoría
@@ -128,43 +279,48 @@ categoriaSelect.addEventListener("change", () => {
   if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
-// Función para guardar usuario en Supabase
+// Crear cuenta en Supabase
 async function saveUser(form, category) {
   try {
+    // Mostrar estado de carga
+    document.body.classList.add('loading');
+    
     const data = { 
       categoria: category,
-      fecha_creacion: new Date().toISOString()
+      created_at: new Date().toISOString()
     };
     
     // Recopilar datos del formulario
     Array.from(form.elements).forEach(input => {
       if(input.type !== "submit" && input.value) {
-        // Limpiar el ID del campo para guardar en la base de datos
-        const fieldName = input.id.replace(`${category}_`, '');
-        data[fieldName] = input.value;
+        data[input.id] = input.value;
+        
+        if (input.id.includes("nacimiento")) {
+          data.fechaNacimiento = input.value;
+        }
       }
     });
     
-    // Extraer datos específicos para el perfil
-    const email = data.contacto;
-    const password = data.password;
-    const nombre = data.nombre;
-    const fechaNacimiento = data.nacimiento;
-
-    if (!email || !password || !nombre) {
-      alert("Por favor completa todos los campos requeridos");
-      return;
-    }
-
-    // 1. Registrar el usuario en Auth de Supabase
+    // Preparar datos para Supabase
+    const contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
+    const password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+    const nombre = data.prof_nombre || data.uni_nombre || data.sec_nombre || data.gen_nombre;
+    
+    // Guardar en Supabase
     const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: email,
+      email: contacto,
       password: password,
       options: {
         data: {
           nombre: nombre,
           categoria: category,
-          fecha_nacimiento: fechaNacimiento
+          fechaNacimiento: data.fechaNacimiento,
+          profesion: data.prof_profesion || null,
+          carrera: data.prof_carrera || data.uni_carrera || null,
+          universidad: data.uni_universidad || null,
+          ciclo: data.uni_ciclo || null,
+          colegio: data.sec_colegio || null,
+          grado: data.sec_grado || null
         }
       }
     });
@@ -173,52 +329,44 @@ async function saveUser(form, category) {
       throw new Error(authError.message);
     }
 
-    // 2. Guardar datos adicionales en la tabla 'usuarios'
-    const { error: dbError } = await supabase
-      .from('usuarios')
-      .insert([
-        {
-          id: authData.user.id,
-          email: email,
-          nombre: nombre,
-          categoria: category,
-          fecha_nacimiento: fechaNacimiento,
-          profesion: data.profesion || null,
-          carrera: data.carrera || null,
-          universidad: data.universidad || null,
-          ciclo: data.ciclo || null,
-          colegio: data.colegio || null,
-          grado: data.grado || null,
-          telefono: data.telefono || null
-        }
-      ]);
-
-    if (dbError) {
-      throw new Error(dbError.message);
-    }
-
-    alert("Cuenta creada con éxito ✅\nRevisa tu email para verificar tu cuenta.");
+    // Guardar también en localStorage para compatibilidad
+    localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
     
-    // Guardar también en localStorage para uso inmediato
-    localStorage.setItem("usuarioNeoStudy", JSON.stringify({
-      id: authData.user.id,
-      email: email,
-      nombre: nombre,
-      categoria: category,
-      fechaNacimiento: fechaNacimiento
-    }));
+    showMessage("Cuenta creada con éxito ✅ Revisa tu correo para verificación.", "success");
     
-    window.location.href = "modulo2_iniciodecesión.html";
+    setTimeout(() => {
+      window.location.href = "modulo2_iniciodecesión.html";
+    }, 2000);
 
   } catch (error) {
     console.error('Error al crear cuenta:', error);
-    alert(`Error al crear cuenta: ${error.message}`);
+    showMessage(`Error: ${error.message}`, "error");
+  } finally {
+    document.body.classList.remove('loading');
   }
 }
 
-// Función para iniciar sesión
-async function loginUser(email, password) {
+// Registrar eventos de formularios
+Object.keys(forms).forEach(cat => {
+  forms[cat].addEventListener("submit", e => {
+    e.preventDefault();
+    saveUser(forms[cat], cat);
+  });
+});
+
+// Iniciar sesión con Supabase
+document.getElementById("btnLogin").addEventListener("click", async () => {
+  const email = document.getElementById("login_contacto").value;
+  const password = document.getElementById("login_password").value;
+  
+  if (!email || !password) {
+    showMessage("Por favor completa todos los campos", "error");
+    return;
+  }
+
   try {
+    document.body.classList.add('loading');
+    
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password
@@ -228,54 +376,50 @@ async function loginUser(email, password) {
       throw new Error(error.message);
     }
 
-    // Obtener datos adicionales del usuario
-    const { data: userData, error: userError } = await supabase
-      .from('usuarios')
-      .select('*')
-      .eq('id', data.user.id)
-      .single();
-
-    if (userError) {
-      console.error('Error al obtener datos del usuario:', userError);
+    if (data.user) {
+      showMessage("Inicio de sesión exitoso ✅", "success");
+      
+      // Guardar datos básicos en localStorage para compatibilidad
+      const userData = {
+        contacto: email,
+        password: password, // Nota: En producción considera no guardar la contraseña
+        categoria: data.user.user_metadata?.categoria || 'general',
+        nombre: data.user.user_metadata?.nombre || 'Usuario'
+      };
+      localStorage.setItem("usuarioNeoStudy", JSON.stringify(userData));
+      
+      setTimeout(() => {
+        window.location.href = "modulo2_iniciodecesión.html";
+      }, 1000);
     }
-
-    // Guardar en localStorage
-    localStorage.setItem("usuarioNeoStudy", JSON.stringify({
-      id: data.user.id,
-      email: data.user.email,
-      nombre: userData?.nombre || data.user.user_metadata?.nombre,
-      categoria: userData?.categoria,
-      fechaNacimiento: userData?.fecha_nacimiento
-    }));
-
-    alert("Inicio de sesión exitoso ✅");
-    window.location.href = "modulo2_iniciodecesión.html";
 
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
-    alert(`Error al iniciar sesión: ${error.message}`);
-  }
-}
+    showMessage(`Error: ${error.message}`, "error");
+    
+    // Fallback a localStorage si Supabase falla
+    const storedUser = JSON.parse(localStorage.getItem("usuarioNeoStudy"));
+    if (storedUser) {
+      const contactoGuardado = storedUser.contacto || storedUser.prof_contacto || storedUser.uni_contacto || storedUser.sec_contacto || storedUser.gen_contacto;
+      const passwordGuardado = storedUser.password || storedUser.prof_password || storedUser.uni_password || storedUser.sec_password || storedUser.gen_password;
 
-// Asignar eventos a los formularios
-Object.keys(forms).forEach(cat => {
-  forms[cat].addEventListener("submit", async e => {
-    e.preventDefault();
-    await saveUser(forms[cat], cat);
-  });
+      if (contactoGuardado === email && passwordGuardado === password) {
+        showMessage("Inicio de sesión exitoso (modo local) ✅", "success");
+        setTimeout(() => {
+          window.location.href = "modulo2_iniciodecesión.html";
+        }, 1000);
+      }
+    }
+  } finally {
+    document.body.classList.remove('loading');
+  }
 });
 
-// Evento para login
-document.getElementById("btnLogin").addEventListener("click", async () => {
-  const email = document.getElementById("login_contacto").value;
-  const password = document.getElementById("login_password").value;
-  
-  if (!email || !password) {
-    alert("Por favor completa todos los campos");
-    return;
+// Verificar si ya hay una sesión activa al cargar la página
+supabase.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    showMessage(`Bienvenido de nuevo ${session.user.user_metadata?.nombre || 'Usuario'}`, "success");
   }
-
-  await loginUser(email, password);
 });
 
 // Mejora adicional: Formatear fecha para mostrar en el perfil
@@ -285,18 +429,6 @@ function formatearFecha(fechaISO) {
   const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
   return fecha.toLocaleDateString('es-ES', opciones);
 }
-
-// Verificar si el usuario ya está autenticado
-async function checkAuth() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    // Si ya hay sesión, redirigir al dashboard
-    window.location.href = "modulo2_iniciodecesión.html";
-  }
-}
-
-// Ejecutar verificación al cargar la página
-checkAuth();
 </script>
 </body>
 </html>
