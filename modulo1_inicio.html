@@ -108,7 +108,6 @@
     display: none; 
   }
   
-  /* Estilos para etiquetas de fecha */
   .date-label {
     display: block;
     text-align: left;
@@ -117,7 +116,6 @@
     font-size: 0.9em;
   }
 
-  /* Mensaje de instrucción */
   .instruction {
     color: #00C4FF;
     font-size: 0.9em;
@@ -125,7 +123,6 @@
     font-style: italic;
   }
 
-  /* Tipo de contacto */
   .contact-type {
     display: flex;
     gap: 10px;
@@ -139,6 +136,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;
+    text-align: center;
   }
 
   .contact-option.selected {
@@ -150,7 +148,6 @@
     display: none;
   }
   
-  /* Mejoras para dispositivos móviles */
   @media (max-width: 480px) {
     body {
       padding: 10px;
@@ -180,7 +177,6 @@
   <h1>NeoStudy 🚀</h1>
   <p>Tu educación digital comienza aquí</p>
 
-  <!-- Selección de categoría -->
   <select id="categoria">
     <option value="">Selecciona tu categoría</option>
     <option value="profesional">Profesional</option>
@@ -189,12 +185,10 @@
     <option value="general">Público en general</option>
   </select>
 
-  <!-- Mensaje de instrucción -->
   <div id="instructionMessage" class="instruction hidden">
     Por favor completa todos los campos del formulario
   </div>
 
-  <!-- Formularios dinámicos -->
   <form id="formProfesional" class="hidden">
     <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
     <input type="text" id="prof_profesion" placeholder="Profesión" required>
@@ -309,24 +303,20 @@
   </div>
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ============================================
 // CONFIGURACIÓN DE SUPABASE - REEMPLAZA ESTOS VALORES
 // ============================================
 
-const SUPABASE_URL = "https://qmzoblunltlathycycaw.supabase.co";
+const SUPABASE_URL = "https://qmzoblunltlathycycaw.supabase.co"; 
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA"; 
-
 // ============================================
 // NO MODIFICAR NADA DEBAJO DE ESTA LÍNEA
 // ============================================
 
-// Inicializar Supabase
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Elementos del DOM
 const categoriaSelect = document.getElementById("categoria");
 const instructionMessage = document.getElementById("instructionMessage");
 const forms = {
@@ -336,9 +326,7 @@ const forms = {
   general: document.getElementById("formGeneral")
 };
 
-// Configurar opciones de contacto
 function setupContactOptions() {
-  // Para formularios de registro
   const contactOptions = [
     { email: 'prof_email_option', phone: 'prof_phone_option', input: 'prof_contacto' },
     { email: 'uni_email_option', phone: 'uni_phone_option', input: 'uni_contacto' },
@@ -365,13 +353,10 @@ function setupContactOptions() {
         input.placeholder = "Número de Teléfono";
         input.type = "tel";
       });
-
-      // Establecer estado inicial
       emailOpt.classList.add('selected');
     }
   });
 
-  // Para login
   const loginEmail = document.getElementById('login_email_option');
   const loginPhone = document.getElementById('login_phone_option');
   const loginInput = document.getElementById('login_contacto');
@@ -390,19 +375,16 @@ function setupContactOptions() {
       loginInput.placeholder = "Número de Teléfono";
       loginInput.type = "tel";
     });
-
     loginEmail.classList.add('selected');
   }
 }
 
-// SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
   categoriaSelect.scrollIntoView({ behavior: 'smooth' });
   categoriaSelect.focus();
   alert("Por favor selecciona tu categoría para crear tu cuenta");
 });
 
-// Mostrar formulario según categoría
 categoriaSelect.addEventListener("change", () => {
   const value = categoriaSelect.value;
   
@@ -420,7 +402,6 @@ categoriaSelect.addEventListener("change", () => {
   }
 });
 
-// Función para validar contacto
 function validarContacto(contacto, tipo) {
   if (tipo === 'email') {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -432,30 +413,25 @@ function validarContacto(contacto, tipo) {
   return false;
 }
 
-// Crear cuenta con Supabase - CORREGIDO
+// FUNCIÓN CORREGIDA PARA EVITAR ERROR RLS
 async function saveUser(form, category) {
   try {
-    // Obtener datos del formulario
     const formData = new FormData(form);
     const data = { categoria: category };
     
-    // Recopilar datos del formulario
     Array.from(form.elements).forEach(input => {
       if(input.type !== "submit" && input.name !== "contact_type") {
         data[input.id] = input.value;
-        
         if (input.id.includes("nacimiento")) {
           data.fechaNacimiento = input.value;
         }
       }
     });
     
-    // Determinar tipo de contacto
     const contactType = form.querySelector('input[name$="contact_type"]:checked').value;
     const contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
     const password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
     
-    // Validar contacto
     if (!validarContacto(contacto, contactType)) {
       alert(contactType === 'email' 
         ? "Por favor ingresa un correo electrónico válido" 
@@ -463,68 +439,62 @@ async function saveUser(form, category) {
       return;
     }
     
-    // Validar contraseña
     if (!password || password.length < 6) {
       alert("La contraseña debe tener al menos 6 caracteres");
       return;
     }
     
-    // Asegurar fecha de nacimiento
     if (!data.fechaNacimiento) {
       data.fechaNacimiento = data.prof_nacimiento || data.uni_nacimiento || data.sec_nacimiento || data.gen_nacimiento;
     }
     
-    // CORRECCIÓN: Crear usuario en Supabase Auth
+    // REGISTRO CON EMAIL (CORREGIDO)
     let userId;
+    let userEmail = contacto;
     
-    if (contactType === 'email') {
-      // Registro con email
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: contacto,
-        password: password,
-      });
-      
-      if (authError) throw new Error(authError.message);
-      if (!authData.user) throw new Error("No se pudo crear el usuario");
-      
-      userId = authData.user.id;
-    } else {
-      // Para teléfono, usamos un sistema alternativo
-      // Generamos un email temporal basado en el teléfono
-      const tempEmail = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
-      
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: tempEmail,
-        password: password,
-      });
-      
-      if (authError) throw new Error(authError.message);
-      if (!authData.user) throw new Error("No se pudo crear el usuario");
-      
-      userId = authData.user.id;
+    if (contactType === 'phone') {
+      userEmail = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
     }
+
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: userEmail,
+      password: password,
+    });
     
-    // Guardar perfil en la base de datos
+    if (authError) throw new Error(authError.message);
+    if (!authData.user) throw new Error("No se pudo crear el usuario");
+    
+    userId = authData.user.id;
+
+    // PREPARAR DATOS DEL PERFIL - INCLUYENDO EL ID DEL USUARIO
+    const profileData = {
+      id: userId,  // ← ESTE ES EL CAMPO CLAVE QUE FALTABA
+      nombre: data.prof_nombre || data.uni_nombre || data.sec_nombre || data.gen_nombre,
+      categoria: category,
+      fecha_nacimiento: data.fechaNacimiento,
+      tipo_contacto: contactType,
+      profesion: data.prof_profesion || null,
+      carrera: data.prof_carrera || data.uni_carrera || null,
+      universidad: data.uni_universidad || null,
+      ciclo: data.uni_ciclo || null,
+      colegio: data.sec_colegio || null,
+      grado: data.sec_grado || null,
+      created_at: new Date()
+    };
+
+    // Asignar contacto según el tipo
+    if (contactType === 'email') {
+      profileData.email = contacto;
+      profileData.telefono = null;
+    } else {
+      profileData.telefono = contacto;
+      profileData.email = null;
+    }
+
+    // INSERTAR PERFIL CON EL ID CORRECTO
     const { error: profileError } = await supabase
       .from('profiles')
-      .insert([
-        { 
-          id: userId,
-          email: contactType === 'email' ? contacto : null,
-          telefono: contactType === 'phone' ? contacto : null,
-          tipo_contacto: contactType,
-          nombre: data.prof_nombre || data.uni_nombre || data.sec_nombre || data.gen_nombre,
-          categoria: category,
-          fecha_nacimiento: data.fechaNacimiento,
-          profesion: data.prof_profesion || null,
-          carrera: data.prof_carrera || data.uni_carrera || null,
-          universidad: data.uni_universidad || null,
-          ciclo: data.uni_ciclo || null,
-          colegio: data.sec_colegio || null,
-          grado: data.sec_grado || null,
-          created_at: new Date()
-        }
-      ]);
+      .insert([profileData]);
     
     if (profileError) throw new Error(profileError.message);
     
@@ -537,7 +507,6 @@ async function saveUser(form, category) {
   }
 }
 
-// Registrar eventos de envío de formularios
 Object.keys(forms).forEach(cat => {
   forms[cat].addEventListener("submit", e => {
     e.preventDefault();
@@ -545,7 +514,6 @@ Object.keys(forms).forEach(cat => {
   });
 });
 
-// Login con Supabase - MEJORADO
 document.getElementById("btnLogin").addEventListener("click", async () => {
   try {
     const contactType = document.querySelector('input[name="login_contact_type"]:checked').value;
@@ -557,7 +525,6 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
       return;
     }
 
-    // Validar contacto
     if (!validarContacto(contacto, contactType)) {
       alert(contactType === 'email' 
         ? "Por favor ingresa un correo electrónico válido" 
@@ -566,13 +533,10 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     }
 
     let userEmail = contacto;
-    
-    // Si es teléfono, buscar el email temporal
     if (contactType === 'phone') {
       userEmail = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
     }
 
-    // Iniciar sesión
     const { data, error } = await supabase.auth.signInWithPassword({
       email: userEmail,
       password: password
@@ -591,12 +555,10 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
   }
 });
 
-// Inicializar opciones de contacto cuando cargue la página
 document.addEventListener('DOMContentLoaded', function() {
   setupContactOptions();
 });
 
-// Mejora adicional: Formatear fecha
 function formatearFecha(fechaISO) {
   if (!fechaISO) return "";
   const fecha = new Date(fechaISO);
