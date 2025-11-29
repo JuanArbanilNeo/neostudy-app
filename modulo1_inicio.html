@@ -124,6 +124,31 @@
     margin: 10px 0;
     font-style: italic;
   }
+
+  /* Tipo de contacto */
+  .contact-type {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .contact-option {
+    flex: 1;
+    padding: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .contact-option.selected {
+    background: #00C4FF;
+    color: white;
+  }
+
+  .contact-option input {
+    display: none;
+  }
   
   /* Mejoras para dispositivos móviles */
   @media (max-width: 480px) {
@@ -144,7 +169,7 @@
     
     select, input, button {
       padding: 14px;
-      font-size: 16px; /* Evita zoom automático en iOS */
+      font-size: 16px;
     }
   }
 </style>
@@ -176,7 +201,19 @@
     <input type="text" id="prof_carrera" placeholder="Carrera" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="prof_nacimiento" required>
-    <input type="email" id="prof_contacto" placeholder="Correo Electrónico" required>
+    
+    <label class="date-label">Tipo de contacto:</label>
+    <div class="contact-type">
+      <label class="contact-option" id="prof_email_option">
+        <input type="radio" name="prof_contact_type" value="email" checked> 
+        Correo Electrónico
+      </label>
+      <label class="contact-option" id="prof_phone_option">
+        <input type="radio" name="prof_contact_type" value="phone">
+        Teléfono
+      </label>
+    </div>
+    <input type="text" id="prof_contacto" placeholder="Correo Electrónico" required>
     <input type="password" id="prof_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
@@ -188,7 +225,19 @@
     <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="uni_nacimiento" required>
-    <input type="email" id="uni_contacto" placeholder="Correo Electrónico" required>
+    
+    <label class="date-label">Tipo de contacto:</label>
+    <div class="contact-type">
+      <label class="contact-option" id="uni_email_option">
+        <input type="radio" name="uni_contact_type" value="email" checked> 
+        Correo Electrónico
+      </label>
+      <label class="contact-option" id="uni_phone_option">
+        <input type="radio" name="uni_contact_type" value="phone">
+        Teléfono
+      </label>
+    </div>
+    <input type="text" id="uni_contacto" placeholder="Correo Electrónico" required>
     <input type="password" id="uni_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
@@ -199,7 +248,19 @@
     <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="sec_nacimiento" required>
-    <input type="email" id="sec_contacto" placeholder="Correo Electrónico" required>
+    
+    <label class="date-label">Tipo de contacto:</label>
+    <div class="contact-type">
+      <label class="contact-option" id="sec_email_option">
+        <input type="radio" name="sec_contact_type" value="email" checked> 
+        Correo Electrónico
+      </label>
+      <label class="contact-option" id="sec_phone_option">
+        <input type="radio" name="sec_contact_type" value="phone">
+        Teléfono
+      </label>
+    </div>
+    <input type="text" id="sec_contacto" placeholder="Correo Electrónico" required>
     <input type="password" id="sec_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
@@ -208,13 +269,38 @@
     <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="gen_nacimiento" required>
-    <input type="email" id="gen_contacto" placeholder="Correo Electrónico" required>
+    
+    <label class="date-label">Tipo de contacto:</label>
+    <div class="contact-type">
+      <label class="contact-option" id="gen_email_option">
+        <input type="radio" name="gen_contact_type" value="email" checked> 
+        Correo Electrónico
+      </label>
+      <label class="contact-option" id="gen_phone_option">
+        <input type="radio" name="gen_contact_type" value="phone">
+        Teléfono
+      </label>
+    </div>
+    <input type="text" id="gen_contacto" placeholder="Correo Electrónico" required>
     <input type="password" id="gen_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
 
   <h3>O Inicia Sesión</h3>
-  <input type="email" id="login_contacto" placeholder="Correo Electrónico">
+  
+  <label class="date-label">Tipo de contacto:</label>
+  <div class="contact-type">
+    <label class="contact-option" id="login_email_option">
+      <input type="radio" name="login_contact_type" value="email" checked> 
+      Correo Electrónico
+    </label>
+    <label class="contact-option" id="login_phone_option">
+      <input type="radio" name="login_contact_type" value="phone">
+      Teléfono
+    </label>
+  </div>
+  
+  <input type="text" id="login_contacto" placeholder="Correo Electrónico">
   <input type="password" id="login_password" placeholder="Contraseña">
   <button id="btnLogin">Iniciar Sesión</button>
 
@@ -223,14 +309,15 @@
   </div>
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ============================================
 // CONFIGURACIÓN DE SUPABASE - REEMPLAZA ESTOS VALORES
 // ============================================
 
-const SUPABASE_URL = "https://qmzoblunltlathycycaw.supabase.co";  // ← REEMPLAZA CON TU URL
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA";  
+const SUPABASE_URL = "https://qmzoblunltlathycycaw.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA"; 
 
 // ============================================
 // NO MODIFICAR NADA DEBAJO DE ESTA LÍNEA
@@ -249,9 +336,67 @@ const forms = {
   general: document.getElementById("formGeneral")
 };
 
+// Configurar opciones de contacto
+function setupContactOptions() {
+  // Para formularios de registro
+  const contactOptions = [
+    { email: 'prof_email_option', phone: 'prof_phone_option', input: 'prof_contacto' },
+    { email: 'uni_email_option', phone: 'uni_phone_option', input: 'uni_contacto' },
+    { email: 'sec_email_option', phone: 'sec_phone_option', input: 'sec_contacto' },
+    { email: 'gen_email_option', phone: 'gen_phone_option', input: 'gen_contacto' }
+  ];
+
+  contactOptions.forEach(option => {
+    const emailOpt = document.getElementById(option.email);
+    const phoneOpt = document.getElementById(option.phone);
+    const input = document.getElementById(option.input);
+
+    if (emailOpt && phoneOpt && input) {
+      emailOpt.addEventListener('click', () => {
+        emailOpt.classList.add('selected');
+        phoneOpt.classList.remove('selected');
+        input.placeholder = "Correo Electrónico";
+        input.type = "email";
+      });
+
+      phoneOpt.addEventListener('click', () => {
+        phoneOpt.classList.add('selected');
+        emailOpt.classList.remove('selected');
+        input.placeholder = "Número de Teléfono";
+        input.type = "tel";
+      });
+
+      // Establecer estado inicial
+      emailOpt.classList.add('selected');
+    }
+  });
+
+  // Para login
+  const loginEmail = document.getElementById('login_email_option');
+  const loginPhone = document.getElementById('login_phone_option');
+  const loginInput = document.getElementById('login_contacto');
+
+  if (loginEmail && loginPhone && loginInput) {
+    loginEmail.addEventListener('click', () => {
+      loginEmail.classList.add('selected');
+      loginPhone.classList.remove('selected');
+      loginInput.placeholder = "Correo Electrónico";
+      loginInput.type = "email";
+    });
+
+    loginPhone.addEventListener('click', () => {
+      loginPhone.classList.add('selected');
+      loginEmail.classList.remove('selected');
+      loginInput.placeholder = "Número de Teléfono";
+      loginInput.type = "tel";
+    });
+
+    loginEmail.classList.add('selected');
+  }
+}
+
 // SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
-  // Enfocar y mostrar la selección de categoría
   categoriaSelect.scrollIntoView({ behavior: 'smooth' });
   categoriaSelect.focus();
   alert("Por favor selecciona tu categoría para crear tu cuenta");
@@ -261,16 +406,13 @@ document.getElementById("btnCrearCuenta").addEventListener("click", function() {
 categoriaSelect.addEventListener("change", () => {
   const value = categoriaSelect.value;
   
-  // Ocultar todos los formularios
   Object.values(forms).forEach(f => f.classList.add("hidden"));
   instructionMessage.classList.add("hidden");
   
-  // Mostrar el formulario correspondiente
   if(value && forms[value]) {
     forms[value].classList.remove("hidden");
     instructionMessage.classList.remove("hidden");
     
-    // Enfocar el primer campo del formulario
     const firstInput = forms[value].querySelector('input');
     if (firstInput) {
       setTimeout(() => firstInput.focus(), 300);
@@ -278,29 +420,46 @@ categoriaSelect.addEventListener("change", () => {
   }
 });
 
-// Crear cuenta con Supabase
+// Función para validar contacto
+function validarContacto(contacto, tipo) {
+  if (tipo === 'email') {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(contacto);
+  } else if (tipo === 'phone') {
+    const phoneRegex = /^[0-9]{9,15}$/;
+    return phoneRegex.test(contacto.replace(/\D/g, ''));
+  }
+  return false;
+}
+
+// Crear cuenta con Supabase - CORREGIDO
 async function saveUser(form, category) {
   try {
     // Obtener datos del formulario
+    const formData = new FormData(form);
     const data = { categoria: category };
+    
+    // Recopilar datos del formulario
     Array.from(form.elements).forEach(input => {
-      if(input.type !== "submit") {
+      if(input.type !== "submit" && input.name !== "contact_type") {
         data[input.id] = input.value;
         
-        // Guardar específicamente la fecha de nacimiento para el perfil
         if (input.id.includes("nacimiento")) {
           data.fechaNacimiento = input.value;
         }
       }
     });
     
-    // Obtener email y contraseña
-    const email = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
+    // Determinar tipo de contacto
+    const contactType = form.querySelector('input[name$="contact_type"]:checked').value;
+    const contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
     const password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
     
-    // Validar que el email sea válido
-    if (!email || !email.includes('@')) {
-      alert("Por favor ingresa un correo electrónico válido");
+    // Validar contacto
+    if (!validarContacto(contacto, contactType)) {
+      alert(contactType === 'email' 
+        ? "Por favor ingresa un correo electrónico válido" 
+        : "Por favor ingresa un número de teléfono válido (9-15 dígitos)");
       return;
     }
     
@@ -310,28 +469,50 @@ async function saveUser(form, category) {
       return;
     }
     
-    // Asegurar que la fecha de nacimiento esté guardada
+    // Asegurar fecha de nacimiento
     if (!data.fechaNacimiento) {
       data.fechaNacimiento = data.prof_nacimiento || data.uni_nacimiento || data.sec_nacimiento || data.gen_nacimiento;
     }
     
-    // Crear usuario en Supabase Auth
-    const { user, error: authError } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
+    // CORRECCIÓN: Crear usuario en Supabase Auth
+    let userId;
     
-    if (authError) {
-      throw new Error(authError.message);
+    if (contactType === 'email') {
+      // Registro con email
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: contacto,
+        password: password,
+      });
+      
+      if (authError) throw new Error(authError.message);
+      if (!authData.user) throw new Error("No se pudo crear el usuario");
+      
+      userId = authData.user.id;
+    } else {
+      // Para teléfono, usamos un sistema alternativo
+      // Generamos un email temporal basado en el teléfono
+      const tempEmail = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
+      
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: tempEmail,
+        password: password,
+      });
+      
+      if (authError) throw new Error(authError.message);
+      if (!authData.user) throw new Error("No se pudo crear el usuario");
+      
+      userId = authData.user.id;
     }
     
-    // Guardar datos adicionales del perfil en la tabla 'profiles'
+    // Guardar perfil en la base de datos
     const { error: profileError } = await supabase
       .from('profiles')
       .insert([
         { 
-          id: user.id,
-          email: email,
+          id: userId,
+          email: contactType === 'email' ? contacto : null,
+          telefono: contactType === 'phone' ? contacto : null,
+          tipo_contacto: contactType,
           nombre: data.prof_nombre || data.uni_nombre || data.sec_nombre || data.gen_nombre,
           categoria: category,
           fecha_nacimiento: data.fechaNacimiento,
@@ -345,13 +526,9 @@ async function saveUser(form, category) {
         }
       ]);
     
-    if (profileError) {
-      throw new Error(profileError.message);
-    }
+    if (profileError) throw new Error(profileError.message);
     
     alert("Cuenta creada con éxito ✅");
-    
-    // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
     window.location.href = "modulo2_iniciodecesión.html";
     
   } catch (error) {
@@ -368,31 +545,43 @@ Object.keys(forms).forEach(cat => {
   });
 });
 
-// SOLUCIÓN PROBLEMA 2: Login con Supabase
+// Login con Supabase - MEJORADO
 document.getElementById("btnLogin").addEventListener("click", async () => {
   try {
-    const email = document.getElementById("login_contacto").value;
+    const contactType = document.querySelector('input[name="login_contact_type"]:checked').value;
+    const contacto = document.getElementById("login_contacto").value;
     const password = document.getElementById("login_password").value;
     
-    if (!email || !password) {
+    if (!contacto || !password) {
       alert("Por favor completa todos los campos");
       return;
     }
 
-    // Iniciar sesión con Supabase
-    const { user, error } = await supabase.auth.signInWithPassword({
-      email: email,
+    // Validar contacto
+    if (!validarContacto(contacto, contactType)) {
+      alert(contactType === 'email' 
+        ? "Por favor ingresa un correo electrónico válido" 
+        : "Por favor ingresa un número de teléfono válido");
+      return;
+    }
+
+    let userEmail = contacto;
+    
+    // Si es teléfono, buscar el email temporal
+    if (contactType === 'phone') {
+      userEmail = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
+    }
+
+    // Iniciar sesión
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userEmail,
       password: password
     });
 
-    if (error) {
-      throw new Error(error.message);
-    }
+    if (error) throw new Error(error.message);
 
-    if (user) {
+    if (data.user) {
       alert("Inicio de sesión exitoso ✅");
-      
-      // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
       window.location.href = "modulo2_iniciodecesión.html";
     }
     
@@ -402,10 +591,14 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
   }
 });
 
-// Mejora adicional: Formatear fecha para mostrar en el perfil
+// Inicializar opciones de contacto cuando cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+  setupContactOptions();
+});
+
+// Mejora adicional: Formatear fecha
 function formatearFecha(fechaISO) {
   if (!fechaISO) return "";
-  
   const fecha = new Date(fechaISO);
   const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
   return fecha.toLocaleDateString('es-ES', opciones);
