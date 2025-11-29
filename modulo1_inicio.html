@@ -116,6 +116,14 @@
     color: #dfe9ff;
     font-size: 0.9em;
   }
+
+  /* Mensaje de instrucción */
+  .instruction {
+    color: #00C4FF;
+    font-size: 0.9em;
+    margin: 10px 0;
+    font-style: italic;
+  }
   
   /* Mejoras para dispositivos móviles */
   @media (max-width: 480px) {
@@ -155,6 +163,11 @@
     <option value="secundaria">Alumno de Secundaria</option>
     <option value="general">Público en general</option>
   </select>
+
+  <!-- Mensaje de instrucción -->
+  <div id="instructionMessage" class="instruction hidden">
+    Por favor completa todos los campos del formulario
+  </div>
 
   <!-- Formularios dinámicos -->
   <form id="formProfesional" class="hidden">
@@ -210,23 +223,25 @@
   </div>
 </div>
 
-<!-- Incluir la biblioteca de Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 // ============================================
-// CONFIGURACIÓN DE SUPABASE
+// CONFIGURACIÓN DE SUPABASE - REEMPLAZA ESTOS VALORES
 // ============================================
-// REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO SUPABASE
 
-const SUPABASE_URL = https://qmzoblunltlathycycaw.supabase.co; 
-const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA;  
+const SUPABASE_URL = "https://qmzoblunltlathycycaw.supabase.co";  // ← REEMPLAZA CON TU URL
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA";  
+
+// ============================================
+// NO MODIFICAR NADA DEBAJO DE ESTA LÍNEA
+// ============================================
 
 // Inicializar Supabase
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Elementos del DOM
 const categoriaSelect = document.getElementById("categoria");
+const instructionMessage = document.getElementById("instructionMessage");
 const forms = {
   profesional: document.getElementById("formProfesional"),
   universitario: document.getElementById("formUniversitario"),
@@ -245,8 +260,22 @@ document.getElementById("btnCrearCuenta").addEventListener("click", function() {
 // Mostrar formulario según categoría
 categoriaSelect.addEventListener("change", () => {
   const value = categoriaSelect.value;
+  
+  // Ocultar todos los formularios
   Object.values(forms).forEach(f => f.classList.add("hidden"));
-  if(value && forms[value]) forms[value].classList.remove("hidden");
+  instructionMessage.classList.add("hidden");
+  
+  // Mostrar el formulario correspondiente
+  if(value && forms[value]) {
+    forms[value].classList.remove("hidden");
+    instructionMessage.classList.remove("hidden");
+    
+    // Enfocar el primer campo del formulario
+    const firstInput = forms[value].querySelector('input');
+    if (firstInput) {
+      setTimeout(() => firstInput.focus(), 300);
+    }
+  }
 });
 
 // Crear cuenta con Supabase
@@ -268,6 +297,18 @@ async function saveUser(form, category) {
     // Obtener email y contraseña
     const email = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
     const password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+    
+    // Validar que el email sea válido
+    if (!email || !email.includes('@')) {
+      alert("Por favor ingresa un correo electrónico válido");
+      return;
+    }
+    
+    // Validar contraseña
+    if (!password || password.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
     
     // Asegurar que la fecha de nacimiento esté guardada
     if (!data.fechaNacimiento) {
