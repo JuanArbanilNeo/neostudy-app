@@ -421,7 +421,6 @@ function validarEmail(email) {
 // Crear cuenta en Supabase
 async function saveUser(form, category) {
   try {
-    // Mostrar estado de carga
     document.body.classList.add('loading');
     
     const data = { 
@@ -467,12 +466,13 @@ async function saveUser(form, category) {
       throw new Error("Por favor completa todos los campos requeridos");
     }
 
+    let authData;
+    
     // Para teléfono, usamos un sistema híbrido
     if (tipoContacto === 'telefono') {
-      // Crear un email temporal basado en el teléfono para Supabase
       const emailTemporal = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
       
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { data: authResult, error: authError } = await supabase.auth.signUp({
         email: emailTemporal,
         password: password,
         options: {
@@ -481,23 +481,17 @@ async function saveUser(form, category) {
             categoria: category,
             fechaNacimiento: data.fechaNacimiento,
             telefono: contacto,
-            tipoContacto: 'telefono',
-            profesion: data.prof_profesion || null,
-            carrera: data.prof_carrera || data.uni_carrera || null,
-            universidad: data.uni_universidad || null,
-            ciclo: data.uni_ciclo || null,
-            colegio: data.sec_colegio || null,
-            grado: data.sec_grado || null
+            tipoContacto: 'telefono'
           }
         }
       });
 
-      if (authError) {
-        throw new Error(authError.message);
-      }
+      if (authError) throw new Error(authError.message);
+      authData = authResult;
+      
     } else {
       // Para email, proceso normal
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { data: authResult, error: authError } = await supabase.auth.signUp({
         email: contacto,
         password: password,
         options: {
@@ -505,19 +499,40 @@ async function saveUser(form, category) {
             nombre: nombre,
             categoria: category,
             fechaNacimiento: data.fechaNacimiento,
-            tipoContacto: 'email',
-            profesion: data.prof_profesion || null,
-            carrera: data.prof_carrera || data.uni_carrera || null,
-            universidad: data.uni_universidad || null,
-            ciclo: data.uni_ciclo || null,
-            colegio: data.sec_colegio || null,
-            grado: data.sec_grado || null
+            tipoContacto: 'email'
           }
         }
       });
 
-      if (authError) {
-        throw new Error(authError.message);
+      if (authError) throw new Error(authError.message);
+      authData = authResult;
+    }
+
+    // GUARDAR EN LA TABLA USUARIOS
+    if (authData.user) {
+      const userData = {
+        auth_id: authData.user.id,
+        nombre_completo: nombre,
+        categoria: category,
+        fecha_nacimiento: data.fechaNacimiento,
+        tipo_contacto: tipoContacto,
+        email: tipoContacto === 'email' ? contacto : null,
+        telefono: tipoContacto === 'telefono' ? contacto : null,
+        profesion: data.prof_profesion || null,
+        carrera: data.prof_carrera || data.uni_carrera || null,
+        universidad: data.uni_universidad || null,
+        ciclo_anio: data.uni_ciclo || null,
+        colegio: data.sec_colegio || null,
+        grado_seccion: data.sec_grado || null
+      };
+
+      const { error: dbError } = await supabase
+        .from('usuarios')
+        .insert([userData]);
+
+      if (dbError) {
+        console.error('Error al guardar en base de datos:', dbError);
+        // No lanzamos error aquí para no interrumpir el flujo de registro
       }
     }
 
