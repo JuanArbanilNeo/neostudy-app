@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
-<!-- Incluir Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  /* Tus estilos CSS permanecen iguales */
+  /* TUS ESTILOS ACTUALES SE MANTIENEN IGUAL */
   * {
     box-sizing: border-box;
   }
@@ -116,7 +115,6 @@
     pointer-events: none;
   }
   
-  /* Estilos para etiquetas de fecha */
   .date-label {
     display: block;
     text-align: left;
@@ -125,7 +123,6 @@
     font-size: 0.9em;
   }
   
-  /* Mejoras para dispositivos móviles */
   @media (max-width: 480px) {
     body {
       padding: 10px;
@@ -155,7 +152,6 @@
   <h1>NeoStudy 🚀</h1>
   <p>Tu educación digital comienza aquí</p>
 
-  <!-- Selección de categoría -->
   <select id="categoria">
     <option value="">Selecciona tu categoría</option>
     <option value="profesional">Profesional</option>
@@ -164,18 +160,20 @@
     <option value="general">Público en general</option>
   </select>
 
-  <!-- Formularios dinámicos -->
+  <!-- FORMULARIO PROFESIONAL CON CELULAR -->
   <form id="formProfesional" class="hidden">
     <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
     <input type="text" id="prof_profesion" placeholder="Profesión" required>
     <input type="text" id="prof_carrera" placeholder="Carrera" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="prof_nacimiento" required>
-    <input type="email" id="prof_contacto" placeholder="Correo Electrónico" required>
+    <input type="email" id="prof_email" placeholder="Correo Electrónico" required>
+    <input type="tel" id="prof_celular" placeholder="Número de Celular" required>
     <input type="password" id="prof_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
 
+  <!-- FORMULARIO UNIVERSITARIO CON CELULAR -->
   <form id="formUniversitario" class="hidden">
     <input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
     <input type="text" id="uni_universidad" placeholder="Universidad" required>
@@ -183,33 +181,38 @@
     <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="uni_nacimiento" required>
-    <input type="email" id="uni_contacto" placeholder="Correo Electrónico" required>
+    <input type="email" id="uni_email" placeholder="Correo Electrónico" required>
+    <input type="tel" id="uni_celular" placeholder="Número de Celular" required>
     <input type="password" id="uni_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
 
+  <!-- FORMULARIO SECUNDARIA CON CELULAR -->
   <form id="formSecundaria" class="hidden">
     <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
     <input type="text" id="sec_colegio" placeholder="Colegio" required>
     <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="sec_nacimiento" required>
-    <input type="email" id="sec_contacto" placeholder="Correo Electrónico" required>
+    <input type="email" id="sec_email" placeholder="Correo Electrónico" required>
+    <input type="tel" id="sec_celular" placeholder="Número de Celular" required>
     <input type="password" id="sec_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
 
+  <!-- FORMULARIO GENERAL CON CELULAR -->
   <form id="formGeneral" class="hidden">
     <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="gen_nacimiento" required>
-    <input type="email" id="gen_contacto" placeholder="Correo Electrónico" required>
+    <input type="email" id="gen_email" placeholder="Correo Electrónico" required>
+    <input type="tel" id="gen_celular" placeholder="Número de Celular" required>
     <input type="password" id="gen_password" placeholder="Contraseña" required>
     <button type="submit">Crear Cuenta</button>
   </form>
 
   <h3>O Inicia Sesión</h3>
-  <input type="email" id="login_contacto" placeholder="Correo Electrónico">
+  <input type="email" id="login_email" placeholder="Correo Electrónico">
   <input type="password" id="login_password" placeholder="Contraseña">
   <button id="btnLogin">Iniciar Sesión</button>
 
@@ -219,10 +222,10 @@
 </div>
 
 <script>
-// CONFIGURACIÓN SUPABASE - REEMPLAZA CON TUS DATOS
+// CONFIGURACIÓN SUPABASE
 const SUPABASE_URL = 'https://qmzoblunltlathycycaw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA'; 
-// Inicializar Supabase
+
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const categoriaSelect = document.getElementById("categoria");
@@ -247,17 +250,13 @@ categoriaSelect.addEventListener("change", () => {
   if(value && forms[value]) forms[value].classList.remove("hidden");
 });
 
-// Función para guardar usuario en Supabase
+// Función para guardar usuario en Supabase (CORREGIDA)
 async function saveUser(form, category) {
   try {
     document.body.classList.add('loading');
     
-    const formData = new FormData(form);
-    const data = {
-      categoria: category,
-      created_at: new Date().toISOString()
-    };
-
+    const data = { categoria: category };
+    
     // Recoger datos del formulario
     Array.from(form.elements).forEach(input => {
       if(input.type !== "submit" && input.value) {
@@ -271,8 +270,9 @@ async function saveUser(form, category) {
     // Preparar datos para Supabase
     const userData = {
       nombre_completo: data.prof_nombre || data.uni_nombre || data.sec_nombre || data.gen_nombre,
-      email: data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto,
+      email: data.prof_email || data.uni_email || data.sec_email || data.gen_email,
       password: data.prof_password || data.uni_password || data.sec_password || data.gen_password,
+      celular: data.prof_celular || data.uni_celular || data.sec_celular || data.gen_celular,
       categoria: category,
       fecha_nacimiento: data.fecha_nacimiento,
       profesion: data.prof_profesion || null,
@@ -280,27 +280,26 @@ async function saveUser(form, category) {
       universidad: data.uni_universidad || null,
       ciclo: data.uni_ciclo || null,
       colegio: data.sec_colegio || null,
-      grado: data.sec_grado || null,
-      created_at: new Date().toISOString()
+      grado: data.sec_grado || null
     };
 
-    // Insertar en Supabase
+    // SOLUCIÓN: Insertar sin usar .select() primero
     const { data: result, error } = await supabase
       .from('usuarios')
-      .insert([userData])
-      .select();
+      .insert([userData]);
 
-    if (error) throw error;
-
-    if (result && result.length > 0) {
-      localStorage.setItem("usuarioNeoStudy", JSON.stringify({
-        ...userData,
-        id: result[0].id
-      }));
-      
-      alert("Cuenta creada con éxito ✅");
-      window.location.href = "modulo2_iniciodecesión.html";
+    if (error) {
+      // Manejar error específico de rate limit
+      if (error.message.includes('rate limit')) {
+        throw new Error('Demasiados intentos. Espera unos minutos e intenta nuevamente.');
+      }
+      throw error;
     }
+
+    // Si llegamos aquí, el usuario se creó correctamente
+    localStorage.setItem("usuarioNeoStudy", JSON.stringify(userData));
+    alert("Cuenta creada con éxito ✅");
+    window.location.href = "modulo2_iniciodecesión.html";
     
   } catch (error) {
     console.error('Error creando cuenta:', error);
@@ -310,7 +309,7 @@ async function saveUser(form, category) {
   }
 }
 
-// Función para login
+// Función para login (también corregida)
 async function loginUser(email, password) {
   try {
     document.body.classList.add('loading');
@@ -349,7 +348,7 @@ Object.keys(forms).forEach(cat => {
 });
 
 document.getElementById("btnLogin").addEventListener("click", () => {
-  const email = document.getElementById("login_contacto").value;
+  const email = document.getElementById("login_email").value;
   const password = document.getElementById("login_password").value;
   
   if (!email || !password) {
@@ -359,13 +358,6 @@ document.getElementById("btnLogin").addEventListener("click", () => {
 
   loginUser(email, password);
 });
-
-function formatearFecha(fechaISO) {
-  if (!fechaISO) return "";
-  const fecha = new Date(fechaISO);
-  const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-  return fecha.toLocaleDateString('es-ES', opciones);
-}
 </script>
 </body>
 </html>
