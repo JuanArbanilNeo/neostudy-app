@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    overflow-x: hidden;
+    background: linear-gradient(120deg, #001F3F, #003366, #00C4FF);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    padding: 20px;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  }
+
+  h1 { 
+    color: #00C4FF; 
+    font-size: 2em; 
+    margin-bottom: 15px; 
+  }
+  
+  p { 
+    font-size: 1em; 
+    color: #dfe9ff; 
+    margin-bottom: 25px; 
+  }
+
+  select, input, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: none;
+    font-size: 1em;
+  }
+
+  input { 
+    background: rgba(255,255,255,0.9); 
+    color: #333; 
+  }
+  
+  input:focus { 
+    outline: none; 
+    box-shadow: 0 0 12px #00C4FF; 
+    transform: scale(1.03); 
+  }
+
+  button {
+    background: linear-gradient(90deg,#00C4FF,#007bff);
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 0 15px #00C4FF;
+    transition: 0.3s;
+  }
+
+  button:hover { 
+    transform: scale(1.05); 
+    box-shadow: 0 0 25px #00FFFF; 
+  }
+
+  .footer { 
+    margin-top: 15px; 
+    font-size: 0.9em; 
+    color: #cbd7ff; 
+  }
+  
+  .footer a { 
+    color: #00C4FF; 
+    text-decoration: none; 
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .footer a:hover { 
+    text-decoration: underline; 
+  }
+
+  .hidden { 
+    display: none; 
+  }
+  
+  /* Estilos para etiquetas de fecha */
+  .date-label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    color: #dfe9ff;
+    font-size: 0.9em;
+  }
+  
+  /* Mejoras para dispositivos móviles */
+  @media (max-width: 480px) {
+    body {
+      padding: 10px;
+      align-items: flex-start;
+    }
+    
+    .container {
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+    
+    h1 {
+      font-size: 1.7em;
+    }
+    
+    select, input, button {
+      padding: 14px;
+      font-size: 16px; /* Evita zoom automático en iOS */
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>NeoStudy 🚀</h1>
+  <p>Tu educación digital comienza aquí</p>
+
+  <!-- Selección de categoría -->
+  <select id="categoria">
+    <option value="">Selecciona tu categoría</option>
+    <option value="profesional">Profesional</option>
+    <option value="universitario">Estudiante Universitario</option>
+    <option value="secundaria">Alumno de Secundaria</option>
+    <option value="general">Público en general</option>
+  </select>
+
+  <!-- Formularios dinámicos -->
+  <form id="formProfesional" class="hidden">
+    <input type="text" id="prof_nombre" placeholder="Nombre y Apellido" required>
+    <input type="text" id="prof_profesion" placeholder="Profesión" required>
+    <input type="text" id="prof_carrera" placeholder="Carrera" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="prof_nacimiento" required>
+    <input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="prof_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
+
+  <form id="formUniversitario" class="hidden">
+    <input type="text" id="uni_nombre" placeholder="Nombre y Apellido" required>
+    <input type="text" id="uni_universidad" placeholder="Universidad" required>
+    <input type="text" id="uni_carrera" placeholder="Carrera" required>
+    <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="uni_nacimiento" required>
+    <input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="uni_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
+
+  <form id="formSecundaria" class="hidden">
+    <input type="text" id="sec_nombre" placeholder="Nombre y Apellido" required>
+    <input type="text" id="sec_colegio" placeholder="Colegio" required>
+    <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="sec_nacimiento" required>
+    <input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="sec_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
+
+  <form id="formGeneral" class="hidden">
+    <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
+    <label class="date-label">Fecha de nacimiento</label>
+    <input type="date" id="gen_nacimiento" required>
+    <input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="gen_password" placeholder="Contraseña" required>
+    <button type="submit">Crear Cuenta</button>
+  </form>
+
+  <h3>O Inicia Sesión</h3>
+  <input type="text" id="login_contacto" placeholder="Teléfono o Correo Electrónico">
+  <input type="password" id="login_password" placeholder="Contraseña">
+  <button id="btnLogin">Iniciar Sesión</button>
+
+  <div class="footer">
+    ¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
+  </div>
+</div>
+
+<script>
+const categoriaSelect = document.getElementById("categoria");
+const forms = {
+  profesional: document.getElementById("formProfesional"),
+  universitario: document.getElementById("formUniversitario"),
+  secundaria: document.getElementById("formSecundaria"),
+  general: document.getElementById("formGeneral")
+};
+
+// SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
+document.getElementById("btnCrearCuenta").addEventListener("click", function() {
+  // Enfocar y mostrar la selección de categoría
+  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
+  categoriaSelect.focus();
+  alert("Por favor selecciona tu categoría para crear tu cuenta");
+});
+
+// Mostrar formulario según categoría
+categoriaSelect.addEventListener("change", () => {
+  const value = categoriaSelect.value;
+  Object.values(forms).forEach(f => f.classList.add("hidden"));
+  if(value && forms[value]) forms[value].classList.remove("hidden");
+});
+
+// Crear cuenta
+function saveUser(form, category) {
+  const data = { categoria: category };
+  Array.from(form.elements).forEach(input => {
+    if(input.type !== "submit") {
+      data[input.id] = input.value;
+      
+      // Guardar específicamente la fecha de nacimiento para el perfil
+      if (input.id.includes("nacimiento")) {
+        data.fechaNacimiento = input.value;
+      }
+    }
+  });
+  
+  // Guardar también un campo único para login
+  data.contacto = data.prof_contacto || data.uni_contacto || data.sec_contacto || data.gen_contacto;
+  data.password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
+  
+  // Asegurar que la fecha de nacimiento esté guardada
+  if (!data.fechaNacimiento) {
+    data.fechaNacimiento = data.prof_nacimiento || data.uni_nacimiento || data.sec_nacimiento || data.gen_nacimiento;
+  }
+  
+  localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
+  alert("Cuenta creada con éxito ✅");
+  
+  // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
+  window.location.href = "modulo2_iniciodecesión.html";
+}
+
+Object.keys(forms).forEach(cat => {
+  forms[cat].addEventListener("submit", e => {
+    e.preventDefault();
+    saveUser(forms[cat], cat);
+  });
+});
+
+// SOLUCIÓN PROBLEMA 2: Login simplificado y funcional
+document.getElementById("btnLogin").addEventListener("click", () => {
+  const emailOrPhone = document.getElementById("login_contacto").value;
+  const password = document.getElementById("login_password").value;
+  
+  if (!emailOrPhone || !password) {
+    alert("Por favor completa todos los campos");
+    return;
+  }
+
+  const storedUser = JSON.parse(localStorage.getItem("usuarioNeoStudy"));
+
+  if (storedUser) {
+    // Verificación SIMPLIFICADA y CORRECTA
+    const contactoGuardado = storedUser.contacto || 
+                            storedUser.prof_contacto || 
+                            storedUser.uni_contacto || 
+                            storedUser.sec_contacto || 
+                            storedUser.gen_contacto;
+    
+    const passwordGuardado = storedUser.password || 
+                            storedUser.prof_password || 
+                            storedUser.uni_password || 
+                            storedUser.sec_password || 
+                            storedUser.gen_password;
+
+    if (contactoGuardado === emailOrPhone && passwordGuardado === password) {
+      alert("Inicio de sesión exitoso ✅");
+      
+      // ✅✅✅ CORRECCIÓN: CON tilde en "decesión" ✅✅✅
+      window.location.href = "modulo2_iniciodecesión.html";
+    } else {
+      alert("Usuario o contraseña incorrectos ❌");
+    }
+  } else {
+    alert("No hay cuenta registrada. Por favor crea una cuenta primero.");
+  }
+});
+
+// Mejora adicional: Formatear fecha para mostrar en el perfil
+function formatearFecha(fechaISO) {
+  if (!fechaISO) return "";
+  
+  const fecha = new Date(fechaISO);
+  const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+  return fecha.toLocaleDateString('es-ES', opciones);
+}
+</script>
+</body>
+</html>
