@@ -4,8 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NeoStudy - Crear Cuenta / Iniciar Sesión</title>
-<!-- Incluir Supabase -->
+<!-- Incluir Supabase JS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Configuración de Supabase CORREGIDA -->
+<script>
+// Configuración de Supabase
+const SUPABASE_URL = 'https://kaxzmgypqchklxxyjrpw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtheHptZ3lwcWNoa2x4eHlqcnB3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3ODc1MTgsImV4cCI6MjA4MDM2MzUxOH0.lTmPM0tJcMYFRtdhJQozllHNA3iLQTNJK-j_06XqakE';
+
+// Variable global para Supabase
+let supabaseClient = null;
+
+// Inicializar Supabase cuando cargue la biblioteca
+function initSupabase() {
+    try {
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log("✅ Supabase inicializado correctamente");
+            window.supabaseClient = supabaseClient;
+            return supabaseClient;
+        } else {
+            console.error("❌ Supabase no se cargó correctamente");
+            return null;
+        }
+    } catch (error) {
+        console.error("❌ Error al inicializar Supabase:", error);
+        return null;
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Intentar inicializar inmediatamente
+    initSupabase();
+    
+    // También verificar después de un breve retraso
+    setTimeout(function() {
+        if (!window.supabaseClient) {
+            console.log("Reintentando inicialización de Supabase...");
+            initSupabase();
+        }
+    }, 1000);
+});
+</script>
 <style>
   * {
     box-sizing: border-box;
@@ -119,6 +160,59 @@
     font-size: 0.9em;
   }
   
+  /* Separador */
+  .separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: #dfe9ff;
+  }
+  
+  .separator::before,
+  .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+  
+  .separator:not(:empty)::before {
+    margin-right: 15px;
+  }
+  
+  .separator:not(:empty)::after {
+    margin-left: 15px;
+  }
+  
+  /* Indicador de carga */
+  .loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #00C4FF;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Mensajes de estado */
+  .status-message {
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    text-align: left;
+    font-size: 0.9em;
+  }
+  
+  .success { background: rgba(76, 175, 80, 0.2); border-left: 4px solid #4CAF50; }
+  .error { background: rgba(244, 67, 54, 0.2); border-left: 4px solid #F44336; }
+  .info { background: rgba(33, 150, 243, 0.2); border-left: 4px solid #2196F3; }
+  
   /* Mejoras para dispositivos móviles */
   @media (max-width: 480px) {
     body {
@@ -141,52 +235,6 @@
       font-size: 16px; /* Evita zoom automático en iOS */
     }
   }
-
-  /* Estilos para mensajes de carga y estado */
-  .loading {
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .message {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-    font-size: 0.9em;
-  }
-
-  .success {
-    background: rgba(0, 255, 0, 0.2);
-    color: #90EE90;
-  }
-
-  .error {
-    background: rgba(255, 0, 0, 0.2);
-    color: #FFB6C1;
-  }
-
-  .contacto-option {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .contacto-btn {
-    flex: 1;
-    padding: 10px;
-    background: rgba(255,255,255,0.2);
-    border: 2px solid transparent;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .contacto-btn.active {
-    background: rgba(0, 196, 255, 0.3);
-    border-color: #00C4FF;
-    box-shadow: 0 0 10px #00C4FF;
-  }
 </style>
 </head>
 <body>
@@ -195,8 +243,8 @@
   <h1>NeoStudy 🚀</h1>
   <p>Tu educación digital comienza aquí</p>
 
-  <!-- Mensajes de estado -->
-  <div id="message" class="message hidden"></div>
+  <!-- Mensajes de estado dinámicos -->
+  <div id="statusMessage" class="status-message hidden"></div>
 
   <!-- Selección de categoría -->
   <select id="categoria">
@@ -214,17 +262,11 @@
     <input type="text" id="prof_carrera" placeholder="Carrera" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="prof_nacimiento" required>
-    
-    <!-- Selector de tipo de contacto -->
-    <div class="contacto-option">
-      <button type="button" class="contacto-btn active" data-type="email">Email</button>
-      <button type="button" class="contacto-btn" data-type="telefono">Teléfono</button>
-    </div>
-    
-    <input type="email" id="prof_email" placeholder="Correo Electrónico" required>
-    <input type="tel" id="prof_telefono" placeholder="Teléfono" class="hidden">
-    <input type="password" id="prof_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
+    <input type="text" id="prof_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="prof_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+    <button type="submit" id="btnSubmitProfesional">
+      <span class="btn-text">Crear Cuenta</span>
+    </button>
   </form>
 
   <form id="formUniversitario" class="hidden">
@@ -234,17 +276,11 @@
     <input type="text" id="uni_ciclo" placeholder="Ciclo/Año" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="uni_nacimiento" required>
-    
-    <!-- Selector de tipo de contacto -->
-    <div class="contacto-option">
-      <button type="button" class="contacto-btn active" data-type="email">Email</button>
-      <button type="button" class="contacto-btn" data-type="telefono">Teléfono</button>
-    </div>
-    
-    <input type="email" id="uni_email" placeholder="Correo Electrónico" required>
-    <input type="tel" id="uni_telefono" placeholder="Teléfono" class="hidden">
-    <input type="password" id="uni_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
+    <input type="text" id="uni_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="uni_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+    <button type="submit" id="btnSubmitUniversitario">
+      <span class="btn-text">Crear Cuenta</span>
+    </button>
   </form>
 
   <form id="formSecundaria" class="hidden">
@@ -253,48 +289,36 @@
     <input type="text" id="sec_grado" placeholder="Grado/Sección" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="sec_nacimiento" required>
-    
-    <!-- Selector de tipo de contacto -->
-    <div class="contacto-option">
-      <button type="button" class="contacto-btn active" data-type="email">Email</button>
-      <button type="button" class="contacto-btn" data-type="telefono">Teléfono</button>
-    </div>
-    
-    <input type="email" id="sec_email" placeholder="Correo Electrónico" required>
-    <input type="tel" id="sec_telefono" placeholder="Teléfono" class="hidden">
-    <input type="password" id="sec_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
+    <input type="text" id="sec_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="sec_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+    <button type="submit" id="btnSubmitSecundaria">
+      <span class="btn-text">Crear Cuenta</span>
+    </button>
   </form>
 
   <form id="formGeneral" class="hidden">
     <input type="text" id="gen_nombre" placeholder="Nombre y Apellido" required>
     <label class="date-label">Fecha de nacimiento</label>
     <input type="date" id="gen_nacimiento" required>
-    
-    <!-- Selector de tipo de contacto -->
-    <div class="contacto-option">
-      <button type="button" class="contacto-btn active" data-type="email">Email</button>
-      <button type="button" class="contacto-btn" data-type="telefono">Teléfono</button>
-    </div>
-    
-    <input type="email" id="gen_email" placeholder="Correo Electrónico" required>
-    <input type="tel" id="gen_telefono" placeholder="Teléfono" class="hidden">
-    <input type="password" id="gen_password" placeholder="Contraseña" required>
-    <button type="submit">Crear Cuenta</button>
+    <input type="text" id="gen_contacto" placeholder="Teléfono o Correo Electrónico" required>
+    <input type="password" id="gen_password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+    <button type="submit" id="btnSubmitGeneral">
+      <span class="btn-text">Crear Cuenta</span>
+    </button>
   </form>
 
-  <h3>O Inicia Sesión</h3>
+  <div class="separator">O</div>
   
-  <!-- Selector de tipo de contacto para login -->
-  <div class="contacto-option">
-    <button type="button" class="contacto-btn active" data-type="login-email">Email</button>
-    <button type="button" class="contacto-btn" data-type="login-telefono">Teléfono</button>
-  </div>
+  <h3>Iniciar Sesión</h3>
+  <input type="text" id="login_contacto" placeholder="Teléfono o Correo Electrónico">
+  <input type="password" id="login_password" placeholder="Contraseña">
+  <button id="btnLogin">
+    <span class="btn-text">Iniciar Sesión</span>
+  </button>
   
-  <input type="email" id="login_email" placeholder="Correo Electrónico" required>
-  <input type="tel" id="login_telefono" placeholder="Teléfono" class="hidden">
-  <input type="password" id="login_password" placeholder="Contraseña" required>
-  <button id="btnLogin">Iniciar Sesión</button>
+  <button id="btnGoogleLogin" style="background: linear-gradient(90deg, #DB4437, #EA4335); margin-top: 15px;">
+    <span class="btn-text">Iniciar con Google</span>
+  </button>
 
   <div class="footer">
     ¿No tienes cuenta? <a id="btnCrearCuenta">Crea tu cuenta</a>
@@ -302,15 +326,8 @@
 </div>
 
 <script>
-// Configuración de Supabase
-const supabaseUrl = 'https://qmzoblunltlathycycaw.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtem9ibHVubHRsYXRoeWN5Y2F3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMzM4MDcsImV4cCI6MjA3OTkwOTgwN30.1n3A41f5HPg2QfNBOESH1xLgAl-MNX7-_R97M8NsRnA';
-
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-// Elementos del DOM
+// Inicialización de variables
 const categoriaSelect = document.getElementById("categoria");
-const messageDiv = document.getElementById("message");
 const forms = {
   profesional: document.getElementById("formProfesional"),
   universitario: document.getElementById("formUniversitario"),
@@ -318,78 +335,83 @@ const forms = {
   general: document.getElementById("formGeneral")
 };
 
-// Mostrar mensajes
-function showMessage(text, type) {
-  messageDiv.textContent = text;
-  messageDiv.className = `message ${type}`;
-  messageDiv.classList.remove("hidden");
-  setTimeout(() => {
-    messageDiv.classList.add("hidden");
-  }, 5000);
+// Función para mostrar mensajes de estado
+function showStatus(message, type = 'info') {
+  const statusEl = document.getElementById('statusMessage');
+  statusEl.textContent = message;
+  statusEl.className = `status-message ${type}`;
+  statusEl.classList.remove('hidden');
+  
+  // Auto-ocultar mensajes informativos después de 5 segundos
+  if (type === 'info') {
+    setTimeout(() => {
+      statusEl.classList.add('hidden');
+    }, 5000);
+  }
 }
 
-// Manejar cambio entre email y teléfono
-function setupContactoButtons() {
-  document.querySelectorAll('.contacto-option').forEach(container => {
-    const buttons = container.querySelectorAll('.contacto-btn');
-    const form = container.closest('form') || document.body;
+// Función para mostrar/ocultar loader en botones
+function setButtonLoading(buttonId, isLoading) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+  
+  const btnText = button.querySelector('.btn-text');
+  if (isLoading) {
+    btnText.innerHTML = `<span class="loader"></span>Procesando...`;
+    button.disabled = true;
+  } else {
+    // Restaurar texto original según el botón
+    if (buttonId === 'btnLogin') {
+      btnText.textContent = 'Iniciar Sesión';
+    } else if (buttonId.includes('Submit')) {
+      btnText.textContent = 'Crear Cuenta';
+    } else {
+      btnText.textContent = button.getAttribute('data-original-text') || 'Continuar';
+    }
+    button.disabled = false;
+  }
+}
+
+// Verificar si ya existe sesión activa - VERSIÓN CORREGIDA
+async function checkExistingSession() {
+  try {
+    // Esperar a que Supabase se inicialice
+    if (!window.supabaseClient) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (!window.supabaseClient) {
+        console.warn("Supabase no se inicializó, reintentando...");
+        initSupabase();
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+    }
     
-    buttons.forEach(btn => {
-      btn.addEventListener('click', function() {
-        // Activar botón clickeado y desactivar los demás
-        buttons.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        
-        const type = this.dataset.type;
-        
-        // Mostrar/ocultar campos según el tipo
-        if (form.id && form.id !== '') {
-          // Para formularios de registro
-          const emailInput = form.querySelector('input[type="email"]');
-          const telefonoInput = form.querySelector('input[type="tel"]');
-          
-          if (type === 'email') {
-            emailInput.classList.remove('hidden');
-            emailInput.required = true;
-            telefonoInput.classList.add('hidden');
-            telefonoInput.required = false;
-            telefonoInput.value = '';
-          } else {
-            emailInput.classList.add('hidden');
-            emailInput.required = false;
-            emailInput.value = '';
-            telefonoInput.classList.remove('hidden');
-            telefonoInput.required = true;
-          }
-        } else {
-          // Para login
-          const loginEmail = document.getElementById('login_email');
-          const loginTelefono = document.getElementById('login_telefono');
-          
-          if (type === 'login-email') {
-            loginEmail.classList.remove('hidden');
-            loginEmail.required = true;
-            loginTelefono.classList.add('hidden');
-            loginTelefono.required = false;
-            loginTelefono.value = '';
-          } else {
-            loginEmail.classList.add('hidden');
-            loginEmail.required = false;
-            loginEmail.value = '';
-            loginTelefono.classList.remove('hidden');
-            loginTelefono.required = true;
-          }
-        }
-      });
-    });
-  });
+    if (window.supabaseClient) {
+      const { data: { session } } = await window.supabaseClient.auth.getSession();
+      if (session) {
+        // Usuario ya tiene sesión activa, redirigir al dashboard
+        console.log("✅ Sesión activa encontrada, redirigiendo...");
+        showStatus("Ya tienes una sesión activa. Redirigiendo...", "info");
+        setTimeout(() => {
+          window.location.href = "modulo2_iniciodecisión.html";
+        }, 1500);
+      }
+    }
+  } catch (error) {
+    console.error("Error verificando sesión:", error);
+  }
 }
 
-// SOLUCIÓN PROBLEMA 1: Botón "Crear cuenta" funcional
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  // Verificar sesión después de un breve retraso
+  setTimeout(checkExistingSession, 1000);
+});
+
+// Botón "Crear cuenta" funcional
 document.getElementById("btnCrearCuenta").addEventListener("click", function() {
   categoriaSelect.scrollIntoView({ behavior: 'smooth' });
   categoriaSelect.focus();
-  showMessage("Por favor selecciona tu categoría para crear tu cuenta", "success");
+  showStatus("Por favor selecciona tu categoría para crear tu cuenta", "info");
 });
 
 // Mostrar formulario según categoría
@@ -398,294 +420,415 @@ categoriaSelect.addEventListener("change", () => {
   Object.values(forms).forEach(f => f.classList.add("hidden"));
   if(value && forms[value]) {
     forms[value].classList.remove("hidden");
-    // Resetear a email por defecto cuando se cambia de formulario
-    const contactoOption = forms[value].querySelector('.contacto-option');
-    if (contactoOption) {
-      contactoOption.querySelector('[data-type="email"]').click();
+    // Enfocar el primer campo del formulario
+    const firstInput = forms[value].querySelector('input');
+    if (firstInput) {
+      setTimeout(() => firstInput.focus(), 100);
     }
   }
 });
 
-// Función para validar teléfono
-function validarTelefono(telefono) {
-  const telefonoRegex = /^[0-9+\-\s()]{10,15}$/;
-  return telefonoRegex.test(telefono);
-}
-
-// Función para validar email
-function validarEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-// Crear cuenta en Supabase
+// Función para crear cuenta con Supabase - VERSIÓN CORREGIDA
 async function saveUser(form, category) {
   try {
-    document.body.classList.add('loading');
+    // Obtener el cliente Supabase
+    const supabase = window.supabaseClient;
+    if (!supabase) {
+      showStatus("Error de conexión. Por favor recarga la página.", "error");
+      return;
+    }
     
     const data = { 
       categoria: category,
-      created_at: new Date().toISOString()
+      user_type: category 
     };
     
-    // Recopilar datos del formulario
+    let email = "";
+    let phone = "";
+    let password = "";
+    let fullName = "";
+    let birthDate = "";
+    
+    // Recoger datos del formulario
     Array.from(form.elements).forEach(input => {
-      if(input.type !== "submit" && input.value && !input.classList.contains('hidden')) {
+      if(input.type !== "submit") {
         data[input.id] = input.value;
         
+        // Identificar email/teléfono
+        if (input.id.includes("contacto")) {
+          const value = input.value.trim();
+          if (value.includes("@")) {
+            email = value;
+            data.email = email;
+          } else {
+            phone = value;
+            data.phone = phone;
+          }
+        }
+        
+        // Identificar contraseña
+        if (input.type === "password") {
+          password = input.value;
+        }
+        
+        // Guardar fecha de nacimiento
         if (input.id.includes("nacimiento")) {
-          data.fechaNacimiento = input.value;
+          birthDate = input.value;
+          data.fecha_nacimiento = birthDate;
+        }
+        
+        // Guardar nombre
+        if (input.id.includes("nombre")) {
+          fullName = input.value.trim();
+          data.nombre_completo = fullName;
         }
       }
     });
     
-    // Determinar tipo de contacto
-    const contactoBtn = form.querySelector('.contacto-btn.active');
-    const tipoContacto = contactoBtn ? contactoBtn.dataset.type : 'email';
-    
-    let contacto, contactoValue;
-    
-    if (tipoContacto === 'email') {
-      contacto = data.prof_email || data.uni_email || data.sec_email || data.gen_email;
-      contactoValue = contacto;
-      if (!validarEmail(contacto)) {
-        throw new Error("Por favor ingresa un email válido");
-      }
-    } else {
-      contacto = data.prof_telefono || data.uni_telefono || data.sec_telefono || data.gen_telefono;
-      contactoValue = contacto;
-      if (!validarTelefono(contacto)) {
-        throw new Error("Por favor ingresa un número de teléfono válido");
-      }
+    // Validaciones
+    if (!email && !phone) {
+      showStatus("Por favor ingresa un correo electrónico o teléfono válido", "error");
+      return;
     }
     
-    const password = data.prof_password || data.uni_password || data.sec_password || data.gen_password;
-    const nombre = data.prof_nombre || data.uni_nombre || data.sec_nombre || data.gen_nombre;
-    
-    if (!contacto || !password || !nombre) {
-      throw new Error("Por favor completa todos los campos requeridos");
+    if (!password || password.length < 6) {
+      showStatus("La contraseña debe tener al menos 6 caracteres", "error");
+      return;
     }
-
-    let authData;
     
-    // Para teléfono, usamos un sistema híbrido
-    if (tipoContacto === 'telefono') {
-      const emailTemporal = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
+    if (!fullName || fullName.length < 3) {
+      showStatus("Por favor ingresa tu nombre completo (mínimo 3 caracteres)", "error");
+      return;
+    }
+    
+    // Validar fecha de nacimiento
+    if (birthDate) {
+      const birthDateObj = new Date(birthDate);
+      const today = new Date();
+      const age = today.getFullYear() - birthDateObj.getFullYear();
       
-      const { data: authResult, error: authError } = await supabase.auth.signUp({
-        email: emailTemporal,
-        password: password,
-        options: {
-          data: {
-            nombre: nombre,
-            categoria: category,
-            fechaNacimiento: data.fechaNacimiento,
-            telefono: contacto,
-            tipoContacto: 'telefono'
-          }
-        }
-      });
-
-      if (authError) throw new Error(authError.message);
-      authData = authResult;
-      
-    } else {
-      // Para email, proceso normal
-      const { data: authResult, error: authError } = await supabase.auth.signUp({
-        email: contacto,
-        password: password,
-        options: {
-          data: {
-            nombre: nombre,
-            categoria: category,
-            fechaNacimiento: data.fechaNacimiento,
-            tipoContacto: 'email'
-          }
-        }
-      });
-
-      if (authError) throw new Error(authError.message);
-      authData = authResult;
-    }
-
-    // GUARDAR EN LA TABLA USUARIOS
-    if (authData.user) {
-      const userData = {
-        auth_id: authData.user.id,
-        nombre_completo: nombre,
-        categoria: category,
-        fecha_nacimiento: data.fechaNacimiento,
-        tipo_contacto: tipoContacto,
-        email: tipoContacto === 'email' ? contacto : null,
-        telefono: tipoContacto === 'telefono' ? contacto : null,
-        profesion: data.prof_profesion || null,
-        carrera: data.prof_carrera || data.uni_carrera || null,
-        universidad: data.uni_universidad || null,
-        ciclo_anio: data.uni_ciclo || null,
-        colegio: data.sec_colegio || null,
-        grado_seccion: data.sec_grado || null
-      };
-
-      const { error: dbError } = await supabase
-        .from('usuarios')
-        .insert([userData]);
-
-      if (dbError) {
-        console.error('Error al guardar en base de datos:', dbError);
-        // No lanzamos error aquí para no interrumpir el flujo de registro
+      if (age < 13) {
+        showStatus("Debes tener al menos 13 años para registrarte", "error");
+        return;
       }
     }
-
-    // Guardar también en localStorage para compatibilidad
-    data.contacto = contacto;
-    data.tipoContacto = tipoContacto;
-    data.password = password;
-    localStorage.setItem("usuarioNeoStudy", JSON.stringify(data));
     
-    if (tipoContacto === 'email') {
-      showMessage("Cuenta creada con éxito ✅ Revisa tu correo para verificación.", "success");
-    } else {
-      showMessage("Cuenta creada con éxito ✅ Ya puedes iniciar sesión.", "success");
+    // Usar email o crear uno temporal con teléfono
+    const authEmail = email || `${phone}@neostudy.app`;
+    
+    // Mostrar carga
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const buttonId = submitBtn.id;
+    setButtonLoading(buttonId, true);
+    
+    // 1. Registrar usuario en Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: authEmail,
+      password: password,
+      options: {
+        data: {
+          full_name: fullName,
+          user_type: category,
+          phone: phone,
+          categoria: category,
+          fecha_nacimiento: birthDate
+        },
+        emailRedirectTo: window.location.origin + '/modulo2_iniciodecisión.html'
+      }
+    });
+    
+    if (authError) {
+      setButtonLoading(buttonId, false);
+      
+      if (authError.message.includes("already registered") || authError.message.includes("User already registered")) {
+        showStatus("Este correo o teléfono ya está registrado. Por favor inicia sesión.", "error");
+      } else if (authError.message.includes("Invalid email")) {
+        showStatus("Por favor ingresa un correo electrónico válido", "error");
+      } else {
+        showStatus("Error al crear cuenta: " + authError.message, "error");
+      }
+      return;
     }
     
-    setTimeout(() => {
-      window.location.href = "modulo2_iniciodecesión.html";
-    }, 2000);
-
+    // 2. Guardar datos adicionales en tabla 'usuarios'
+    const { error: dbError } = await supabase
+      .from('usuarios')
+      .insert([
+        {
+          id: authData.user.id,
+          email: authEmail,
+          phone: phone,
+          nombre_completo: fullName,
+          user_type: category,
+          categoria: category,
+          fecha_nacimiento: birthDate,
+          profesion: data.prof_profesion || null,
+          carrera: data.prof_carrera || data.uni_carrera || null,
+          universidad: data.uni_universidad || null,
+          colegio: data.sec_colegio || null,
+          grado: data.sec_grado || null,
+          ciclo: data.uni_ciclo || null,
+          created_at: new Date()
+        }
+      ]);
+    
+    // Restaurar botón
+    setButtonLoading(buttonId, false);
+    
+    if (dbError) {
+      console.warn("Nota: Datos adicionales no guardados. Error:", dbError.message);
+      // No mostramos error al usuario porque la cuenta de auth sí se creó
+    }
+    
+    if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
+      // Usuario ya existe
+      showStatus("✅ Este usuario ya existe. Por favor inicia sesión.", "success");
+    } else if (authData.user && !authData.user.email_confirmed_at) {
+      // Email necesita confirmación
+      showStatus("✅ ¡Cuenta creada con éxito! Por favor revisa tu correo para confirmar tu cuenta.", "success");
+    } else {
+      // Cuenta creada y confirmada
+      showStatus("✅ ¡Cuenta creada con éxito! Redirigiendo...", "success");
+    }
+    
+    // Limpiar formulario
+    form.reset();
+    categoriaSelect.value = "";
+    Object.values(forms).forEach(f => f.classList.add("hidden"));
+    
+    // Intentar inicio de sesión automático si ya está confirmado
+    if (authData.session) {
+      // Guardar información localmente
+      localStorage.setItem("neoStudyUser", JSON.stringify({
+        id: authData.user.id,
+        email: authData.user.email,
+        nombre: fullName,
+        categoria: category
+      }));
+      
+      // Redirigir después de 3 segundos
+      setTimeout(() => {
+        window.location.href = "modulo2_iniciodecisión.html";
+      }, 3000);
+    } else {
+      // Si no hay sesión, ofrecer ir al login
+      setTimeout(() => {
+        if (confirm("¿Deseas ir a la página de inicio de sesión?")) {
+          document.getElementById("login_contacto").value = email || phone;
+          document.getElementById("login_contacto").focus();
+        }
+      }, 2000);
+    }
+    
   } catch (error) {
-    console.error('Error al crear cuenta:', error);
-    showMessage(`Error: ${error.message}`, "error");
-  } finally {
-    document.body.classList.remove('loading');
+    console.error("Error completo:", error);
+    showStatus("Error al crear la cuenta. Por favor intenta nuevamente.", "error");
+    
+    // Restaurar botón en caso de error
+    const submitBtn = form.querySelector('button[type="submit"]');
+    setButtonLoading(submitBtn.id, false);
   }
 }
 
-// Registrar eventos de formularios
+// Asignar eventos a formularios
 Object.keys(forms).forEach(cat => {
-  forms[cat].addEventListener("submit", e => {
+  forms[cat].addEventListener("submit", async (e) => {
     e.preventDefault();
-    saveUser(forms[cat], cat);
+    await saveUser(forms[cat], cat);
   });
 });
 
-// Iniciar sesión
+// Login con Supabase - VERSIÓN CORREGIDA
 document.getElementById("btnLogin").addEventListener("click", async () => {
-  const loginBtn = document.querySelector('#btnLogin + .contacto-option') ? 
-                   document.querySelector('#btnLogin + .contacto-option .contacto-btn.active') :
-                   document.querySelector('.contacto-option .contacto-btn.active');
-  
-  const tipoContacto = loginBtn ? loginBtn.dataset.type.replace('login-', '') : 'email';
-  
-  let contacto, password;
-  
-  if (tipoContacto === 'email') {
-    contacto = document.getElementById("login_email").value;
-  } else {
-    contacto = document.getElementById("login_telefono").value;
-  }
-  
-  password = document.getElementById("login_password").value;
-  
-  if (!contacto || !password) {
-    showMessage("Por favor completa todos los campos", "error");
-    return;
-  }
-
   try {
-    document.body.classList.add('loading');
-    
-    let authResult;
-
-    if (tipoContacto === 'telefono') {
-      // Para teléfono, usamos el email temporal
-      const emailTemporal = `tel_${contacto.replace(/\D/g, '')}@neostudy.app`;
-      authResult = await supabase.auth.signInWithPassword({
-        email: emailTemporal,
-        password: password
-      });
-    } else {
-      // Para email, proceso normal
-      if (!validarEmail(contacto)) {
-        throw new Error("Por favor ingresa un email válido");
-      }
-      authResult = await supabase.auth.signInWithPassword({
-        email: contacto,
-        password: password
-      });
+    const supabase = window.supabaseClient;
+    if (!supabase) {
+      showStatus("Error de conexión. Por favor recarga la página.", "error");
+      return;
     }
-
-    const { data, error } = authResult;
-
+    
+    const emailOrPhone = document.getElementById("login_contacto").value.trim();
+    const password = document.getElementById("login_password").value;
+    
+    if (!emailOrPhone || !password) {
+      showStatus("Por favor completa todos los campos", "error");
+      return;
+    }
+    
+    // Mostrar carga
+    setButtonLoading('btnLogin', true);
+    
+    // Determinar si es email o teléfono
+    const loginEmail = emailOrPhone.includes("@") 
+      ? emailOrPhone 
+      : `${emailOrPhone}@neostudy.app`;
+    
+    // Iniciar sesión con Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: password
+    });
+    
+    // Restaurar botón
+    setButtonLoading('btnLogin', false);
+    
     if (error) {
-      throw new Error(error.message);
-    }
-
-    if (data.user) {
-      showMessage("Inicio de sesión exitoso ✅", "success");
-      
-      // Guardar datos básicos en localStorage para compatibilidad
-      const userData = {
-        contacto: contacto,
-        tipoContacto: tipoContacto,
-        password: password,
-        categoria: data.user.user_metadata?.categoria || 'general',
-        nombre: data.user.user_metadata?.nombre || 'Usuario'
-      };
-      localStorage.setItem("usuarioNeoStudy", JSON.stringify(userData));
-      
-      setTimeout(() => {
-        window.location.href = "modulo2_iniciodecesión.html";
-      }, 1000);
-    }
-
-  } catch (error) {
-    console.error('Error al iniciar sesión:', error);
-    showMessage(`Error: ${error.message}`, "error");
-    
-    // Fallback a localStorage si Supabase falla
-    const storedUser = JSON.parse(localStorage.getItem("usuarioNeoStudy"));
-    if (storedUser) {
-      const contactoGuardado = storedUser.contacto;
-      const passwordGuardado = storedUser.password;
-      const tipoContactoGuardado = storedUser.tipoContacto || 'email';
-
-      if (contactoGuardado === contacto && passwordGuardado === password) {
-        showMessage("Inicio de sesión exitoso (modo local) ✅", "success");
-        setTimeout(() => {
-          window.location.href = "modulo2_iniciodecesión.html";
-        }, 1000);
+      if (error.message.includes("Invalid login credentials")) {
+        showStatus("Credenciales incorrectas. Verifica tu email/teléfono y contraseña.", "error");
+      } else if (error.message.includes("Email not confirmed")) {
+        showStatus("Por favor confirma tu email antes de iniciar sesión.", "error");
+      } else if (error.message.includes("User not found")) {
+        showStatus("Usuario no encontrado. Por favor crea una cuenta primero.", "error");
+      } else {
+        showStatus("Error al iniciar sesión: " + error.message, "error");
       }
+      return;
     }
-  } finally {
-    document.body.classList.remove('loading');
+    
+    showStatus("✅ ¡Inicio de sesión exitoso! Redirigiendo...", "success");
+    
+    // Obtener datos adicionales del usuario
+    const { data: userData } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('id', data.user.id)
+      .single();
+    
+    // Guardar información localmente para uso inmediato
+    localStorage.setItem("neoStudyUser", JSON.stringify({
+      id: data.user.id,
+      email: data.user.email,
+      nombre: data.user.user_metadata?.full_name || userData?.nombre_completo || "Usuario",
+      categoria: data.user.user_metadata?.categoria || userData?.categoria || "general",
+      user_type: data.user.user_metadata?.user_type || userData?.user_type
+    }));
+    
+    // Redirigir al dashboard después de 1.5 segundos
+    setTimeout(() => {
+      window.location.href = "modulo2_iniciodecisión.html";
+    }, 1500);
+    
+  } catch (error) {
+    console.error("Login error:", error);
+    showStatus("Error al iniciar sesión. Por favor verifica tus credenciales.", "error");
+    
+    // Restaurar botón en caso de error
+    setButtonLoading('btnLogin', false);
   }
 });
 
-// Inicializar botones de contacto cuando se carga la página
-document.addEventListener('DOMContentLoaded', function() {
-  setupContactoButtons();
-  
-  // Configurar por defecto para login
-  const loginEmailBtn = document.querySelector('[data-type="login-email"]');
-  if (loginEmailBtn) {
-    loginEmailBtn.click();
+// Login con Google
+document.getElementById("btnGoogleLogin").addEventListener("click", async () => {
+  try {
+    const supabase = window.supabaseClient;
+    if (!supabase) {
+      showStatus("Error de conexión. Por favor recarga la página.", "error");
+      return;
+    }
+    
+    // Guardar texto original del botón
+    const btn = document.getElementById('btnGoogleLogin');
+    const btnText = btn.querySelector('.btn-text');
+    const originalText = btnText.textContent;
+    btnText.innerHTML = `<span class="loader"></span>Conectando...`;
+    btn.disabled = true;
+    
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/modulo2_iniciodecesión.html',
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
+    });
+    
+    // Restaurar botón
+    btnText.textContent = originalText;
+    btn.disabled = false;
+    
+    if (error) {
+      showStatus("Error al iniciar con Google: " + error.message, "error");
+    }
+  } catch (error) {
+    console.error("Google login error:", error);
+    showStatus("Error al iniciar sesión con Google.", "error");
+    
+    // Restaurar botón
+    const btn = document.getElementById('btnGoogleLogin');
+    const btnText = btn.querySelector('.btn-text');
+    btnText.textContent = 'Iniciar con Google';
+    btn.disabled = false;
   }
 });
 
-// Verificar si ya hay una sesión activa al cargar la página
-supabase.auth.getSession().then(({ data: { session } }) => {
-  if (session) {
-    showMessage(`Bienvenido de nuevo ${session.user.user_metadata?.nombre || 'Usuario'}`, "success");
+// Validación en tiempo real para contraseñas
+document.addEventListener('input', function(e) {
+  if (e.target.type === 'password') {
+    const password = e.target.value;
+    if (password.length > 0 && password.length < 6) {
+      e.target.style.border = '2px solid #FF6B6B';
+      e.target.style.boxShadow = '0 0 5px rgba(255, 107, 107, 0.5)';
+    } else if (password.length >= 6) {
+      e.target.style.border = '2px solid #4CAF50';
+      e.target.style.boxShadow = '0 0 5px rgba(76, 175, 80, 0.5)';
+    } else {
+      e.target.style.border = 'none';
+      e.target.style.boxShadow = 'none';
+    }
   }
 });
 
-// Mejora adicional: Formatear fecha para mostrar en el perfil
+// Validación de email/teléfono en tiempo real
+document.getElementById('login_contacto').addEventListener('input', function(e) {
+  const value = e.target.value.trim();
+  if (value.includes('@')) {
+    // Es un email, validar formato básico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(value)) {
+      e.target.style.border = '2px solid #4CAF50';
+    } else if (value.length > 0) {
+      e.target.style.border = '2px solid #FF6B6B';
+    }
+  } else if (value.length > 0) {
+    // Es un teléfono, validar que tenga al menos 8 dígitos
+    const digits = value.replace(/\D/g, '').length;
+    if (digits >= 8) {
+      e.target.style.border = '2px solid #4CAF50';
+    } else {
+      e.target.style.border = '2px solid #FF6B6B';
+    }
+  } else {
+    e.target.style.border = 'none';
+  }
+});
+
+// Función para formatear fecha
 function formatearFecha(fechaISO) {
   if (!fechaISO) return "";
   const fecha = new Date(fechaISO);
   const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
   return fecha.toLocaleDateString('es-ES', opciones);
 }
+
+// Permitir login con Enter en los campos
+document.getElementById('login_password').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    document.getElementById('btnLogin').click();
+  }
+});
+
+// Permitir crear cuenta con Enter en los formularios
+Object.values(forms).forEach(form => {
+  form.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && e.target.type !== 'submit') {
+      e.preventDefault();
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.click();
+    }
+  });
+});
 </script>
 </body>
 </html>
