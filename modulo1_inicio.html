@@ -533,7 +533,7 @@ async function saveUser(form, category) {
           categoria: category,
           fecha_nacimiento: birthDate
         },
-        emailRedirectTo: window.location.origin + '/modulo2_iniciodecisión.html'
+        emailRedirectTo: window.location.origin + '/modulo2_iniciodecesión.html'
       }
     });
     
@@ -608,7 +608,7 @@ async function saveUser(form, category) {
       
       // Redirigir después de 3 segundos
       setTimeout(() => {
-        window.location.href = "modulo2_iniciodecisión.html";
+        window.location.href = "modulo2_iniciodecesión.html";
       }, 3000);
     } else {
       // Si no hay sesión, ofrecer ir al login
@@ -705,7 +705,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     
     // Redirigir al dashboard después de 1.5 segundos
     setTimeout(() => {
-      window.location.href = "modulo2_iniciodecisión.html";
+      window.location.href = "modulo2_iniciodecesión.html";
     }, 1500);
     
   } catch (error) {
