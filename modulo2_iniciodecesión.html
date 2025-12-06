@@ -422,6 +422,145 @@
             gap: 1.2rem;
         }
 
+        /* ===== CREAR PUBLICACIÓN MEJORADA - MÁS ORDENADA Y CENTRADA ===== */
+        .create-post {
+            background: var(--white);
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .create-post:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .post-input-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            text-align: left;
+            width: 100%;
+        }
+
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .post-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .post-input-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .post-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .post-user-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .post-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--light);
+            border-radius: 12px;
+            background: var(--light);
+            resize: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-height: 100px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .post-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
+            background: var(--white);
+        }
+
+        /* Estilo específico para el placeholder en una línea */
+        .post-input::placeholder {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1rem;
+        }
+
+        .post-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            justify-items: center;
+            width: 100%;
+        }
+
+        .post-action {
+            background: none;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            width: 100%;
+            max-width: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-action:hover {
+            background: var(--light);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .post-action i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .post-action:hover i {
+            transform: scale(1.1);
+        }
+
         /* ===== PUBLICACIONES MEJORADAS - MÁS ORDENADAS Y VISUALES ===== */
         .post {
             background: var(--white);
@@ -664,12 +803,12 @@
             justify-content: center;
         }
 
-        /* ===== BOTÓN FLOTANTE PARA PUBLICAR ===== */
-        .floating-publish-btn {
+        /* ===== BOTÓN FLOTANTE PARA COMPARTIR ===== */
+        .floating-share-btn {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             width: 60px;
@@ -677,7 +816,7 @@
             border-radius: 50%;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 196, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
             z-index: 1000;
             transition: all 0.3s ease;
             display: flex;
@@ -685,9 +824,141 @@
             justify-content: center;
         }
 
-        .floating-publish-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(0, 196, 255, 0.6);
+        .floating-share-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        /* ===== MODAL PARA COMPARTIR ===== */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .share-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+            margin: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+            transition: color 0.3s ease;
+            z-index: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .share-modal h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .share-modal-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .share-modal-btn {
+            background: var(--light);
+            border: 2px solid var(--primary);
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .share-modal-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .qr-section {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .link-copy {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .link-copy input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
         }
 
         /* ===== MENÚ LATERAL PARA MÓVIL ===== */
@@ -850,12 +1121,28 @@
         }
 
         .study-mode .sidebar,
+        .study-mode .create-post,
         .study-mode .post,
         .study-mode .live-classes {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
             color: white;
             border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .study-mode .post-input {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .study-mode .post-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .study-mode .post-input:focus {
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
         }
 
         .study-mode .post-stats,
@@ -867,6 +1154,7 @@
         }
 
         .study-mode .goal-item:hover,
+        .study-mode .post-action:hover,
         .study-mode .post-action-btn:hover {
             background: rgba(255,255,255,0.15);
         }
@@ -882,6 +1170,7 @@
         }
 
         .dark-mode .sidebar,
+        .dark-mode .create-post,
         .dark-mode .post,
         .dark-mode .live-classes {
             background: #2d2d2d;
@@ -889,6 +1178,7 @@
             border: 1px solid #3d3d3d;
         }
 
+        .dark-mode .post-input,
         .dark-mode .stat-card,
         .dark-mode .achievement-card,
         .dark-mode .class-card {
@@ -897,7 +1187,14 @@
             border-color: #444;
         }
 
+        .dark-mode .post-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.2);
+            background: #454545;
+        }
+
         .dark-mode .goal-item:hover,
+        .dark-mode .post-action:hover,
         .dark-mode .post-action-btn:hover {
             background: #3d3d3d;
         }
@@ -940,6 +1237,10 @@
 
             .user-menu {
                 gap: 0.5rem;
+            }
+
+            .post-actions {
+                grid-template-columns: repeat(4, 1fr);
             }
 
             .stats-grid {
@@ -988,6 +1289,37 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .post-input-container {
+                flex-direction: column;
+                text-align: center;
+                width: 100%;
+            }
+
+            .post-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .post-action {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                max-width: none;
+            }
+
+            .share-modal-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .share-modal-content {
+                padding: 1.5rem;
+            }
+            
+            .qr-code {
+                width: 150px;
+                height: 150px;
+            }
+
             .mobile-progress-grid {
                 grid-template-columns: 1fr;
             }
@@ -1028,6 +1360,18 @@
             .mobile-profile-title {
                 font-size: 0.9rem;
                 padding: 0.4rem 0.8rem;
+            }
+
+            .create-post {
+                padding: 1.2rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .post-input {
+                min-height: 90px;
+                font-size: 1rem;
+                padding: 1rem;
             }
 
             .post {
@@ -1090,9 +1434,17 @@
                 text-align: center;
             }
 
-            .post {
-                width: 100%;
-                box-sizing: border-box;
+            .post-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .create-post {
+                padding: 1rem;
+            }
+
+            .post-input {
+                min-height: 80px;
+                font-size: 1rem;
             }
         }
 
@@ -1318,10 +1670,56 @@
     </div>
     <div class="overlay" id="overlay"></div>
 
-    <!-- ===== BOTÓN FLOTANTE PARA PUBLICAR ===== -->
-    <button class="floating-publish-btn" onclick="goToPublish()" title="Crear nueva publicación">
-        <i class="fas fa-plus"></i>
+    <!-- ===== BOTÓN FLOTANTE PARA COMPARTIR ===== -->
+    <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos a NeoStudy">
+        <i class="fas fa-share-alt"></i>
     </button>
+
+    <!-- ===== MODAL PARA COMPARTIR - CORREGIDO CON TU QR ===== -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-modal-content">
+            <span class="close-modal" onclick="closeShareModal()">&times;</span>
+            <h2>¡Invita a tus amigos a NeoStudy! 🚀</h2>
+            <p>Comparte nuestra plataforma y ayuda a más estudiantes a alcanzar sus metas</p>
+            
+            <div class="share-modal-buttons">
+                <button class="share-modal-btn" onclick="shareNative()">
+                    <i class="fas fa-share-alt"></i> Compartir Enlace
+                </button>
+                <button class="share-modal-btn" onclick="shareWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="share-modal-btn" onclick="shareFacebook()">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+                <button class="share-modal-btn" onclick="shareTelegram()">
+                    <i class="fab fa-telegram"></i> Telegram
+                </button>
+            </div>
+
+            <div class="qr-section">
+                <h3 style="margin-bottom: 1rem;">Código QR para compartir</h3>
+                <div class="qr-code" id="qrCode">
+                    <!-- TU QR IMAGEN INTEGRADA -->
+                    <img src="imagen-qrneostady.png" alt="QR Code NeoStudy" 
+                         style="width: 180px; height: 180px; border-radius: 8px;">
+                </div>
+                <p style="color: var(--secondary); margin: 1rem 0;">
+                    Escanea para acceder a NeoStudy
+                </p>
+                <button class="btn btn-primary" onclick="downloadQR()">
+                    <i class="fas fa-download"></i> Descargar QR
+                </button>
+            </div>
+
+            <div class="link-copy">
+                <input type="text" id="appLink" value="https://juanarbanilneo.github.io/neostudy-app/" readonly>
+                <button class="copy-btn" onclick="copyLink()">
+                    <i class="fas fa-copy"></i> Copiar Enlace
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <div class="main-container">
@@ -1410,6 +1808,33 @@
                 <div class="mobile-profile-info">
                     <div class="mobile-profile-name" id="mobileProfileName">Usuario NeoStudy</div>
                     <div class="mobile-profile-title" id="mobileProfileTitle">Estudiante</div>
+                </div>
+            </div>
+
+            <!-- Crear Publicación MEJORADA Y CENTRADA - COMPLETA EN MÓVIL -->
+            <div class="create-post fade-in">
+                <div class="post-input-container">
+                    <div class="post-avatar" id="postAvatar">JM</div>
+                    <div class="post-input-wrapper">
+                        <div class="post-user-info">
+                            <span class="post-user-name" id="postUserName">Usuario</span>
+                        </div>
+                        <textarea class="post-input" placeholder="¿Qué estás aprendiendo hoy?" id="postContent"></textarea>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <button class="post-action" onclick="addPostMedia('foto')">
+                        <i class="fas fa-image"></i> Foto
+                    </button>
+                    <button class="post-action" onclick="addPostMedia('video')">
+                        <i class="fas fa-video"></i> Video
+                    </button>
+                    <button class="post-action" onclick="addPostMedia('documento')">
+                        <i class="fas fa-file-alt"></i> Documento
+                    </button>
+                    <button class="post-action" onclick="createPost()" style="color: var(--primary);">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
                 </div>
             </div>
 
@@ -1646,12 +2071,23 @@
             if (mobileProfileNameElement) mobileProfileNameElement.textContent = nombreCompleto;
             if (mobileProfileTitleElement) mobileProfileTitleElement.textContent = titulo;
             
+            // Actualizar publicación - nombre del usuario
+            const postUserNameElement = document.getElementById('postUserName');
+            if (postUserNameElement) postUserNameElement.textContent = primerNombre;
+            
             // Actualizar avatar y foto de perfil
             updateProfilePhoto(primerNombre, profileData);
             
+            // CORRECCIÓN MEJORADA: Actualizar placeholder del post con el nombre del usuario
+            const nombreParaSaludo = primerNombre || 'Usuario';
+            const postContentElement = document.getElementById('postContent');
+            if (postContentElement) {
+                postContentElement.placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
+            }
+            
             // MOSTRAR NOTIFICACIÓN SOLO UNA VEZ
             if (!welcomeNotificationShown) {
-                showNotification(`¡Bienvenido de nuevo, ${primerNombre || 'Usuario'}! 🎓`, 'success');
+                showNotification(`¡Bienvenido de nuevo, ${nombreParaSaludo}! 🎓`, 'success');
                 welcomeNotificationShown = true;
             }
         }
@@ -1723,14 +2159,104 @@
             }
         }
 
+        // ===== SISTEMA DE COMPARTIR - SIMPLIFICADO CON TU QR IMAGEN =====
+        function openShareModal() {
+            const modal = document.getElementById('shareModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeShareModal() {
+            const modal = document.getElementById('shareModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('shareModal');
+            if (event.target === modal) {
+                closeShareModal();
+            }
+        };
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeShareModal();
+            }
+        });
+
+        function shareNative() {
+            const shareData = {
+                title: 'NeoStudy - Plataforma Educativa',
+                text: '¡Únete a NeoStudy! La mejor plataforma para estudiantes. Cursos, tutorías y comunidad educativa.',
+                url: 'https://juanarbanilneo.github.io/neostudy-app/'
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .then(() => showNotification('¡Compartido exitosamente! 🎉', 'success'))
+                    .catch(error => showNotification('Compartir cancelado', 'info'));
+            } else {
+                copyLink();
+            }
+            closeShareModal();
+        }
+
+        function shareWhatsApp() {
+            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa. 🎓\nhttps://juanarbanilneo.github.io/neostudy-app/');
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+            showNotification('Compartiendo en WhatsApp...', 'info');
+        }
+
+        function shareFacebook() {
+            const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            showNotification('Compartiendo en Facebook...', 'info');
+        }
+
+        function shareTelegram() {
+            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa 🎓');
+            const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
+            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+            showNotification('Compartiendo en Telegram...', 'info');
+        }
+
+        function copyLink() {
+            const linkInput = document.getElementById('appLink');
+            linkInput.value = 'https://juanarbanilneo.github.io/neostudy-app/';
+            
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(linkInput.value)
+                .then(() => showNotification('Enlace copiado al portapapeles 📋', 'success'))
+                .catch(err => {
+                    document.execCommand('copy');
+                    showNotification('Enlace copiado al portapapeles 📋', 'success');
+                });
+        }
+
+        // ===== FUNCIÓN DE DESCARGA SIMPLIFICADA CON TU QR =====
+        function downloadQR() {
+            try {
+                const link = document.createElement('a');
+                link.download = 'neostudy-qr-code.png';
+                link.href = 'imagen-qrneostady.png'; // Tu imagen QR
+                link.click();
+                showNotification('QR descargado exitosamente 📱', 'success');
+            } catch (error) {
+                console.error('Error descargando QR:', error);
+                showNotification('Error al descargar el QR', 'danger');
+            }
+        }
+
         // ===== NAVEGACIÓN AL PERFIL =====
         function goToProfile() {
             window.location.href = 'modulo3_perfil.html';
-        }
-
-        // ===== NAVEGACIÓN PARA PUBLICAR =====
-        function goToPublish() {
-            window.location.href = 'modulo2_publicaciones.html';
         }
 
         // ===== SISTEMA DE CERRAR SESIÓN =====
@@ -1749,7 +2275,79 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        // ===== SISTEMA DE LIKES =====
+        // ===== SISTEMA DE PUBLICACIONES =====
+        function createPost() {
+            const content = document.getElementById('postContent').value;
+            if (content.trim() === '') {
+                showNotification('Por favor escribe algo para publicar', 'warning');
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            // Extraer nombre según categoría (igual que en loadUserData)
+            let nombreCompleto = 'Usuario';
+            const categoria = userData?.categoria || '';
+            
+            if (categoria === 'profesional') {
+                nombreCompleto = userData.prof_nombre || 'Profesional';
+            } 
+            else if (categoria === 'universitario') {
+                nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+            }
+            else if (categoria === 'secundaria') {
+                nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+            }
+            else if (categoria === 'general') {
+                nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
+            }
+            
+            const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+            const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
+            
+            let userAvatarHTML;
+            if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
+                userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
+            } else {
+                userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
+            }
+
+            const newPost = document.createElement('div');
+            newPost.className = 'post fade-in';
+            newPost.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        ${userAvatarHTML}
+                        <div class="post-user-info">
+                            <h4>${nombreCompleto}</h4>
+                            <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">${content}</div>
+                <div class="post-stats">
+                    <span>0 reacciones</span>
+                    <span>0 comentarios</span>
+                </div>
+                <div class="post-actions-bar">
+                    <button class="post-action-btn" onclick="likePost(this)">
+                        <i class="fas fa-thumbs-up"></i> Me gusta
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-comment"></i> Comentar
+                    </button>
+                    <button class="post-action-btn">
+                        <i class="fas fa-share"></i> Compartir
+                    </button>
+                </div>
+            `;
+
+            document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
+            document.getElementById('postContent').value = '';
+            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
+        }
+
         function likePost(button) {
             const post = button.closest('.post');
             const stats = post.querySelector('.post-stats span:first-child');
@@ -1758,7 +2356,29 @@
             
             button.style.color = 'var(--primary)';
             button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
-            showNotification('¡Te gusta esta publicación!', 'success');
+        }
+
+        // ===== SISTEMA DE MEDIOS =====
+        function addPostMedia(type) {
+            const mediaTypes = {
+                'foto': '📷 Foto agregada',
+                'video': '🎥 Video agregado', 
+                'documento': '📄 Documento agregado'
+            };
+            
+            const input = document.getElementById('postContent');
+            if (input.value.includes(mediaTypes[type].split(' ')[1])) {
+                showNotification(`Ya agregaste un ${type} a esta publicación`, 'warning');
+                return;
+            }
+            
+            if (input.value.trim() === '') {
+                input.value = `${mediaTypes[type]} - `;
+            } else {
+                input.value += `\n${mediaTypes[type]}`;
+            }
+            
+            showNotification(`Preparado para subir ${type}...`, 'info');
         }
 
         // ===== SISTEMA DE 3 MODOS DE TEMA =====
@@ -1870,7 +2490,15 @@
             document.querySelector('.logo').onclick = goToFeed;
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
+            document.getElementById('postAvatar').onclick = goToProfile;
+            document.getElementById('mobileProfileAvatar').onclick = goToProfile;
             
+            document.getElementById('postContent').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    createPost();
+                }
+            });
+
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 5000);
         });
