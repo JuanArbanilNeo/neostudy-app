@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Publicación - Neo Study</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -36,21 +35,22 @@
             overflow-x: hidden;
             line-height: 1.5;
             transition: all 0.3s ease;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* ===== HEADER SIMPLIFICADO ===== */
-        .header {
+        /* ===== HEADER PARA ESCRITORIO ===== */
+        .desktop-header {
             background: var(--bg-gradient);
             color: var(--white);
-            padding: 1rem 0;
+            padding: 0.8rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header-container {
-            max-width: 800px;
+        .nav-container {
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -58,7 +58,7 @@
             padding: 0 1rem;
         }
 
-        .header-logo {
+        .logo {
             font-size: 1.5rem;
             font-weight: bold;
             display: flex;
@@ -67,75 +67,169 @@
             cursor: pointer;
         }
 
-        .header-actions {
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== HEADER PARA MÓVIL ===== */
+        .mobile-header {
+            display: none;
+            background: var(--bg-gradient);
+            color: var(--white);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+        }
+
+        .mobile-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-controls {
             display: flex;
             gap: 1rem;
             align-items: center;
         }
 
-        .btn {
-            padding: 0.7rem 1.2rem;
+        .hamburger-menu {
+            background: none;
             border: none;
-            border-radius: 25px;
-            font-weight: 600;
+            color: var(--white);
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
+        }
+
+        .mobile-nav-bottom {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            background: var(--bg-gradient);
+        }
+
+        .mobile-nav-item {
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-nav-item.active, .mobile-nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* ===== CONTENIDO PRINCIPAL PARA PUBLICACIÓN ===== */
+        .main-container {
+            max-width: 800px;
+            margin: 100px auto 40px;
+            padding: 0 1rem;
+        }
+
+        .publish-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background: var(--bg-gradient);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
-        }
-
-        .btn-secondary {
+        .back-btn:hover {
             background: var(--light);
-            color: var(--dark);
-            border: 1px solid #ddd;
-        }
-
-        .btn-secondary:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
-        }
-
-        /* ===== CONTENIDO PRINCIPAL ===== */
-        .main-content {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-            flex: 1;
         }
 
         /* ===== CREAR PUBLICACIÓN MEJORADA - COMPLETA ===== */
-        .create-post-container {
+        .create-post-full {
             background: var(--white);
             border-radius: var(--card-radius);
             padding: 2rem;
             box-shadow: var(--card-shadow);
             transition: all 0.3s ease;
             width: 100%;
+            margin-bottom: 2rem;
         }
 
-        .create-post-container h1 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+        .create-post-full:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
 
         .post-input-container {
@@ -180,28 +274,23 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
         }
 
         .post-user-name {
             font-weight: 600;
             color: var(--dark);
-            font-size: 1rem;
-        }
-
-        .post-user-title {
-            font-size: 0.9rem;
-            color: var(--secondary);
+            font-size: 1.1rem;
         }
 
         .post-input {
             width: 100%;
             padding: 1.2rem;
-            border: 2px solid var(--light);
+            border: 1px solid var(--light);
             border-radius: 12px;
             background: var(--light);
             resize: none;
-            font-size: 1rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             min-height: 150px;
             font-family: inherit;
@@ -216,17 +305,19 @@
         }
 
         .post-input::placeholder {
-            font-size: 1rem;
-            color: var(--secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1.1rem;
         }
 
         .post-actions {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 0.8rem;
+            gap: 0.5rem;
             justify-items: center;
             width: 100%;
-            margin: 1.5rem 0;
+            margin-bottom: 1.5rem;
         }
 
         .post-action {
@@ -241,10 +332,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.3rem;
             font-size: 0.9rem;
             font-weight: 500;
             width: 100%;
+            max-width: none;
             position: relative;
             overflow: hidden;
         }
@@ -256,7 +348,7 @@
         }
 
         .post-action i {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             transition: transform 0.3s ease;
         }
 
@@ -264,11 +356,99 @@
             transform: scale(1.1);
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            justify-content: center;
+        /* ===== MEDIA PREVIEW ===== */
+        .media-preview {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+            border: 2px dashed var(--primary);
+            display: none;
+        }
+
+        .media-preview.active {
+            display: block;
+        }
+
+        .media-preview img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .remove-media {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== BOTONES ===== */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+        }
+
+        .btn-primary {
+            background: var(--bg-gradient);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
         }
 
         .btn-block {
@@ -276,31 +456,86 @@
             justify-content: center;
         }
 
-        /* ===== PREVIEW DE PUBLICACIÓN ===== */
-        .post-preview {
-            background: var(--white);
-            border-radius: var(--card-radius);
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-            margin-top: 2rem;
-            border: 2px dashed var(--light);
-            display: none;
-        }
-
-        .post-preview h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
+        .action-buttons {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
-        .post-preview-content {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            min-height: 100px;
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            /* Ocultar header de escritorio en móviles */
+            .desktop-header {
+                display: none;
+            }
+
+            /* Mostrar header móvil */
+            .mobile-header {
+                display: block;
+            }
+
+            /* Ajustar margen superior del contenido principal */
+            .main-container {
+                margin: 120px auto 80px;
+                padding: 0 15px;
+            }
+
+            .create-post-full {
+                padding: 1.5rem;
+            }
+
+            .post-input-container {
+                flex-direction: column;
+                text-align: center;
+                width: 100%;
+            }
+
+            .post-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .post-action {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                max-width: none;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .post-input {
+                min-height: 120px;
+                font-size: 1rem;
+                padding: 1rem;
+            }
+
+            .post-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .create-post-full {
+                padding: 1rem;
+            }
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
         }
 
         /* ===== NOTIFICACIONES ===== */
@@ -316,97 +551,106 @@
             z-index: 10000;
             animation: fadeIn 0.3s ease;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            padding: 1.5rem;
-            color: var(--secondary);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--light);
-            margin-top: 2rem;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-
-            .create-post-container {
-                padding: 1.5rem;
-            }
-
-            .post-actions {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .post-input-container {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .post-avatar {
-                width: 80px;
-                height: 80px;
-            }
-
-            .post-user-info {
-                justify-content: center;
-            }
-
-            .post-actions {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- ===== HEADER SIMPLIFICADO ===== -->
-    <header class="header">
-        <div class="header-container">
-            <div class="header-logo" onclick="goToHome()">
+    <!-- ===== HEADER PARA ESCRITORIO ===== -->
+    <header class="desktop-header">
+        <div class="nav-container">
+            <div class="logo" onclick="goToFeed()">
                 <i class="fas fa-graduation-cap"></i>
                 Neo Study
             </div>
-            <div class="header-actions">
-                <button class="btn btn-secondary" onclick="goToHome()">
-                    <i class="fas fa-arrow-left"></i> Volver al Inicio
+            <nav class="nav-menu">
+                <a href="modulo2_iniciodecesión.html" class="nav-item">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a href="modulo4_cursos.html" class="nav-item">
+                    <i class="fas fa-book"></i> Cursos
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i> Comunidad
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-calendar"></i> Calendario
+                </a>
+            </nav>
+            <div class="user-menu">
+                <div class="avatar" id="userAvatar" onclick="goToProfile()">JM</div>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+                <button class="btn btn-primary" onclick="toggleThemeMode()">
+                    <i class="fas fa-moon"></i> Modo Normal
                 </button>
             </div>
         </div>
     </header>
 
+    <!-- ===== HEADER PARA MÓVIL ===== -->
+    <header class="mobile-header">
+        <div class="mobile-nav-top">
+            <div class="mobile-logo">
+                <i class="fas fa-graduation-cap"></i>
+                Neo Study
+            </div>
+            <div class="mobile-controls">
+                <button class="btn btn-primary" onclick="toggleThemeMode()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+        <div class="mobile-nav-bottom">
+            <a href="modulo2_iniciodecesión.html" class="mobile-nav-item">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="modulo4_cursos.html" class="mobile-nav-item">
+                <i class="fas fa-book"></i>
+                <span>Curso</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Comunidad</span>
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Calendario</span>
+            </a>
+        </div>
+    </header>
+
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
-    <div class="main-content">
-        <div class="create-post-container">
-            <h1><i class="fas fa-pen"></i> Crear Nueva Publicación</h1>
-            
+    <div class="main-container">
+        <div class="publish-header">
+            <button class="back-btn" onclick="goToFeed()">
+                <i class="fas fa-arrow-left"></i> Volver al Feed
+            </button>
+            <h1>Crear Publicación</h1>
+        </div>
+
+        <!-- Crear Publicación Completa -->
+        <div class="create-post-full fade-in">
             <div class="post-input-container">
-                <div class="post-avatar" id="postAvatar">U</div>
+                <div class="post-avatar" id="postAvatar">JM</div>
                 <div class="post-input-wrapper">
                     <div class="post-user-info">
                         <span class="post-user-name" id="postUserName">Usuario</span>
-                        <span class="post-user-title" id="postUserTitle">Estudiante</span>
                     </div>
-                    <textarea class="post-input" placeholder="¿Qué estás aprendiendo hoy?" id="postContent"></textarea>
+                    <textarea class="post-input" placeholder="¿Qué estás aprendiendo hoy? Comparte tus conocimientos con la comunidad..." id="postContent"></textarea>
                 </div>
             </div>
 
+            <!-- Vista Previa de Medios -->
+            <div class="media-preview" id="mediaPreview">
+                <div id="mediaContent"></div>
+                <button class="remove-media" onclick="removeMedia()">Eliminar</button>
+            </div>
+
+            <!-- Acciones de Publicación -->
             <div class="post-actions">
                 <button class="post-action" onclick="addPostMedia('foto')">
                     <i class="fas fa-image"></i> Foto
@@ -417,252 +661,389 @@
                 <button class="post-action" onclick="addPostMedia('documento')">
                     <i class="fas fa-file-alt"></i> Documento
                 </button>
-                <button class="post-action" onclick="togglePreview()">
-                    <i class="fas fa-eye"></i> Vista Previa
+                <button class="post-action" onclick="addPostMedia('ubicacion')">
+                    <i class="fas fa-map-marker-alt"></i> Ubicación
                 </button>
-            </div>
-
-            <div class="post-preview" id="postPreview">
-                <h3><i class="fas fa-eye"></i> Vista Previa de tu Publicación</h3>
-                <div class="post-preview-content" id="previewContent">
-                    Tu publicación aparecerá aquí...
-                </div>
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-secondary btn-block" onclick="goToHome()">
-                    <i class="fas fa-times"></i> Cancelar
+                <button class="btn btn-secondary" onclick="saveDraft()">
+                    <i class="fas fa-save"></i> Guardar Borrador
                 </button>
-                <button class="btn btn-primary btn-block" onclick="createPost()">
-                    <i class="fas fa-paper-plane"></i> Publicar
+                <button class="btn btn-primary" onclick="createPost()">
+                    <i class="fas fa-paper-plane"></i> Publicar Ahora
                 </button>
             </div>
         </div>
+
+        <!-- Consejos para Publicar -->
+        <div class="create-post-full fade-in" style="margin-top: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">
+                <i class="fas fa-lightbulb"></i> Consejos para una buena publicación
+            </h3>
+            <ul style="padding-left: 1.5rem; line-height: 1.8;">
+                <li>Comparte lo que estás aprendiendo o un logro reciente</li>
+                <li>Usa hashtags relevantes (#Matemáticas, #Programación, #Estudio)</li>
+                <li>Adjunta imágenes o documentos para ilustrar mejor tu contenido</li>
+                <li>Formula preguntas para generar discusión</li>
+                <li>Sé respetuoso y constructivo con la comunidad</li>
+            </ul>
+        </div>
     </div>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="footer">
-        <p>© 2024 Neo Study - Plataforma Educativa. Todos los derechos reservados.</p>
-    </footer>
-
     <script>
-        // ===== CONFIGURACIÓN DE SUPABASE =====
-        const supabaseUrl = 'https://ghayqhfhfzxgtyvjezhu.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoYXlxaGZoZnp4Z3R5dmplemh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4NDQzNDAsImV4cCI6MjA3OTQyMDM0MH0.wOKcksN2Dm_CO8pRMTuBPQ7Mx_49njcOj9m8jpMn4HE';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
+        let welcomeNotificationShown = false;
+        let currentMedia = null;
+        let mediaType = null;
 
-        // ===== FUNCIONES PARA SUPABASE =====
-
-        // Función para obtener el ID del usuario actual
-        function getCurrentUserId() {
-            return localStorage.getItem("supabase_user_id");
-        }
-
-        // Función para guardar una publicación en Supabase - VERSIÓN PÚBLICA
-        async function savePostToSupabase(postData) {
-            try {
-                const userId = getCurrentUserId();
-                if (!userId) {
-                    console.error('No hay usuario logueado');
-                    return { success: false, error: 'Usuario no autenticado' };
-                }
-
-                const postToSave = {
-                    user_id: userId,
-                    content: postData.content,
-                    media_type: postData.mediaType || null,
-                    created_at: new Date().toISOString(),
-                    likes_count: 0,
-                    comments_count: 0,
-                    is_public: true
-                };
-
-                const { data, error } = await supabase
-                    .from('posts')
-                    .insert([postToSave])
-                    .select();
-
-                if (error) throw error;
-
-                return { success: true, data: data[0] };
-            } catch (error) {
-                console.error('Error guardando publicación:', error);
-                return { success: false, error: error.message };
+        // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
+        function checkSession() {
+            const userData = localStorage.getItem('usuarioNeoStudy');
+            
+            if (!userData) {
+                console.log('No hay usuario registrado, redirigiendo al login...');
+                showNotification('Por favor inicia sesión primero', 'danger');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 2000);
+                return false;
             }
+            
+            console.log('Usuario encontrado en localStorage:', JSON.parse(userData));
+            return true;
         }
 
-        // ===== CARGA DE DATOS DEL USUARIO =====
+        // ===== SISTEMA DE CARGA DE USUARIO COMPATIBLE CON MODULO1 =====
         function loadUserData() {
+            if (!checkSession()) return;
+            
             try {
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
                 const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 
+                console.log('Datos completos del usuario:', userData);
+                
                 if (userData && typeof userData === 'object') {
+                    // DETECTAR TIPO DE USUARIO Y EXTRAER DATOS CORRECTAMENTE
                     let nombreCompleto = '';
                     let titulo = '';
                     let categoria = userData.categoria || '';
                     
-                    // Extraer nombre según la categoría
+                    // Extraer nombre según la categoría del modulo1
                     if (categoria === 'profesional') {
-                        nombreCompleto = userData.prof_nombre || userData.nombre || 'Profesional';
-                        titulo = userData.prof_profesion || userData.profesion || 'Profesional';
+                        nombreCompleto = userData.prof_nombre || 'Profesional';
+                        titulo = userData.prof_profesion || 'Profesional';
                     } 
                     else if (categoria === 'universitario') {
-                        nombreCompleto = userData.uni_nombre || userData.nombre || 'Estudiante Universitario';
-                        titulo = userData.uni_carrera || userData.carrera || 'Estudiante';
+                        nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+                        titulo = userData.uni_carrera || 'Estudiante';
                     }
                     else if (categoria === 'secundaria') {
-                        nombreCompleto = userData.sec_nombre || userData.nombre || 'Estudiante de Secundaria';
-                        titulo = userData.sec_grado || userData.grado || 'Estudiante';
+                        nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+                        titulo = userData.sec_grado || 'Estudiante';
                     }
                     else if (categoria === 'general') {
-                        nombreCompleto = userData.gen_nombre || userData.nombre || 'Usuario NeoStudy';
+                        nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Usuario General';
                     }
                     else {
+                        // Fallback por si no se detecta la categoría
                         nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
-                                       userData.sec_nombre || userData.gen_nombre || 
-                                       userData.nombre || 'Usuario NeoStudy';
-                        titulo = userData.prof_profesion || userData.uni_carrera || 
-                               userData.sec_grado || userData.titulo || 'Estudiante';
+                                       userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Estudiante';
                     }
                     
-                    // Actualizar interfaz
-                    document.getElementById('postUserName').textContent = nombreCompleto;
-                    document.getElementById('postUserTitle').textContent = titulo;
+                    console.log('Nombre detectado:', nombreCompleto);
+                    console.log('Título detectado:', titulo);
+                    console.log('Categoría:', categoria);
                     
-                    // Actualizar avatar
-                    updateProfilePhoto(nombreCompleto.split(' ')[0], profileData, userData);
+                    // Actualizar todos los lugares donde aparece el nombre
+                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], profileData);
                     
-                    // Actualizar placeholder
-                    const nombreParaSaludo = nombreCompleto.split(' ')[0] || 'Usuario';
-                    document.getElementById('postContent').placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
-                    
+                } else {
+                    throw new Error('Formato de datos inválido');
                 }
             } catch (error) {
                 console.error('Error cargando datos:', error);
+                showNotification('Error al cargar los datos del usuario', 'danger');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 2000);
+            }
+        }
+
+        function updateUserProfile(nombreCompleto, titulo, primerNombre, profileData) {
+            // Actualizar publicación - nombre del usuario
+            const postUserNameElement = document.getElementById('postUserName');
+            if (postUserNameElement) postUserNameElement.textContent = primerNombre;
+            
+            // Actualizar placeholder del post con el nombre del usuario
+            const nombreParaSaludo = primerNombre || 'Usuario';
+            const postContentElement = document.getElementById('postContent');
+            if (postContentElement) {
+                postContentElement.placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}? Comparte tus conocimientos con la comunidad...`;
+            }
+            
+            // Actualizar avatar y foto de perfil
+            updateProfilePhoto(primerNombre, profileData);
+            
+            // MOSTRAR NOTIFICACIÓN SOLO UNA VEZ
+            if (!welcomeNotificationShown) {
+                showNotification(`¡Listo para compartir, ${nombreParaSaludo}! ✍️`, 'success');
+                welcomeNotificationShown = true;
             }
         }
 
         // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
-        function updateProfilePhoto(userName, profileData, userData) {
-            const avatar = document.getElementById('postAvatar');
+        function updateProfilePhoto(userName, profileData) {
+            const avatares = document.querySelectorAll('.post-avatar, .avatar');
             const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
             
-            let profilePhoto = localStorage.getItem('currentProfilePhoto') || 
-                              (profileData && profileData.profilePhoto) || 
-                              (userData && userData.profilePhoto) || 
-                              (userData && userData.fotoPerfil);
-
-            if (profilePhoto && 
-                profilePhoto !== "" && 
-                profilePhoto !== "null" && 
-                profilePhoto !== "undefined" &&
-                profilePhoto.startsWith('data:image')) {
-                
-                avatar.style.backgroundImage = `url(${profilePhoto})`;
-                avatar.textContent = '';
-                avatar.style.backgroundSize = 'cover';
-                avatar.style.backgroundPosition = 'center';
-                avatar.style.color = 'transparent';
-            } else {
-                avatar.textContent = initials;
-                avatar.style.backgroundImage = 'none';
-                avatar.style.background = 'var(--bg-gradient)';
-                avatar.style.color = 'var(--white)';
-            }
+            avatares.forEach(avatar => {
+                if (profileData && profileData.profilePhoto && 
+                    profileData.profilePhoto !== "" && 
+                    profileData.profilePhoto !== "null" && 
+                    profileData.profilePhoto !== "undefined" &&
+                    profileData.profilePhoto.startsWith('data:image')) {
+                    
+                    avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
+                    avatar.textContent = '';
+                    avatar.style.backgroundSize = 'cover';
+                    avatar.style.backgroundPosition = 'center';
+                } else {
+                    avatar.textContent = initials;
+                    avatar.style.backgroundImage = 'none';
+                    avatar.style.background = 'var(--bg-gradient)';
+                }
+            });
         }
 
-        // ===== SISTEMA DE CREACIÓN DE PUBLICACIONES =====
-        async function createPost() {
-            const contentInput = document.getElementById('postContent');
-            const content = contentInput.value.trim();
-            
-            if (content === '') {
-                showNotification('Por favor escribe algo para publicar', 'warning');
-                return;
-            }
+        // ===== NAVEGACIÓN AL PERFIL =====
+        function goToProfile() {
+            window.location.href = 'modulo3_perfil.html';
+        }
 
-            try {
-                showNotification('Creando publicación...', 'info');
+        // ===== NAVEGACIÓN AL FEED =====
+        function goToFeed() {
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
 
-                // Guardar en Supabase primero
-                const postResult = await savePostToSupabase({
-                    content: content,
-                    mediaType: null
-                });
-
-                if (!postResult.success) {
-                    throw new Error(postResult.error || 'Error desconocido al guardar la publicación');
-                }
-
-                console.log('✅ Publicación guardada en Supabase:', postResult.data);
-
-                // Limpiar el campo de texto
-                contentInput.value = '';
-                
-                showNotification('¡Publicación creada exitosamente! 🎉', 'success');
-                
-                // Redirigir al inicio después de 1.5 segundos
+        // ===== SISTEMA DE CERRAR SESIÓN =====
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                showNotification('Sesión cerrada correctamente', 'info');
                 setTimeout(() => {
-                    window.location.href = 'modulo2_iniciodecesión.html';
+                    window.location.href = 'modulo1_inicio.html';
                 }, 1500);
-
-            } catch (error) {
-                console.error('❌ Error creando publicación:', error);
-                showNotification('Error al crear la publicación: ' + error.message, 'danger');
             }
         }
 
         // ===== SISTEMA DE MEDIOS =====
         function addPostMedia(type) {
             const mediaTypes = {
-                'foto': '📷 Foto agregada',
-                'video': '🎥 Video agregado', 
-                'documento': '📄 Documento agregado'
+                'foto': '📷 Foto',
+                'video': '🎥 Video', 
+                'documento': '📄 Documento',
+                'ubicacion': '📍 Ubicación'
             };
             
-            const input = document.getElementById('postContent');
-            if (input.value.includes(mediaTypes[type].split(' ')[1])) {
-                showNotification(`Ya agregaste un ${type} a esta publicación`, 'warning');
+            // Simular selección de archivo
+            const input = document.createElement('input');
+            input.type = 'file';
+            
+            if (type === 'foto') {
+                input.accept = 'image/*';
+            } else if (type === 'video') {
+                input.accept = 'video/*';
+            } else if (type === 'documento') {
+                input.accept = '.pdf,.doc,.docx,.txt';
+            }
+            
+            input.onchange = function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        currentMedia = event.target.result;
+                        mediaType = type;
+                        
+                        // Mostrar vista previa
+                        const mediaPreview = document.getElementById('mediaPreview');
+                        const mediaContent = document.getElementById('mediaContent');
+                        
+                        mediaPreview.classList.add('active');
+                        
+                        if (type === 'foto') {
+                            mediaContent.innerHTML = `<img src="${currentMedia}" alt="Vista previa de la imagen">`;
+                        } else if (type === 'video') {
+                            mediaContent.innerHTML = `
+                                <video controls style="width:100%; border-radius:8px;">
+                                    <source src="${currentMedia}" type="${file.type}">
+                                    Tu navegador no soporta video.
+                                </video>
+                            `;
+                        } else {
+                            mediaContent.innerHTML = `
+                                <div style="padding:1rem; background:white; border-radius:8px;">
+                                    <i class="fas fa-file" style="font-size:3rem; color:var(--primary);"></i>
+                                    <h4>${file.name}</h4>
+                                    <small>${(file.size / 1024).toFixed(2)} KB</small>
+                                </div>
+                            `;
+                        }
+                        
+                        // Agregar mención en el texto
+                        const textarea = document.getElementById('postContent');
+                        if (!textarea.value.includes(mediaTypes[type])) {
+                            if (textarea.value.trim() === '') {
+                                textarea.value = `${mediaTypes[type]} adjunta: ${file.name}\n\n`;
+                            } else {
+                                textarea.value += `\n\n${mediaTypes[type]} adjunta: ${file.name}`;
+                            }
+                        }
+                        
+                        showNotification(`${mediaTypes[type]} preparada para subir`, 'info');
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            };
+            
+            input.click();
+        }
+
+        function removeMedia() {
+            currentMedia = null;
+            mediaType = null;
+            document.getElementById('mediaPreview').classList.remove('active');
+            document.getElementById('mediaContent').innerHTML = '';
+            showNotification('Medio eliminado', 'warning');
+        }
+
+        // ===== SISTEMA DE PUBLICACIONES =====
+        function createPost() {
+            const content = document.getElementById('postContent').value;
+            if (content.trim() === '') {
+                showNotification('Por favor escribe algo para publicar', 'warning');
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            // Extraer nombre según categoría
+            let nombreCompleto = 'Usuario';
+            const categoria = userData?.categoria || '';
+            
+            if (categoria === 'profesional') {
+                nombreCompleto = userData.prof_nombre || 'Profesional';
+            } 
+            else if (categoria === 'universitario') {
+                nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+            }
+            else if (categoria === 'secundaria') {
+                nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+            }
+            else if (categoria === 'general') {
+                nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
+            }
+            
+            // Obtener publicaciones existentes
+            let posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            
+            // Crear nueva publicación
+            const newPost = {
+                id: Date.now(),
+                author: nombreCompleto,
+                content: content,
+                media: currentMedia,
+                mediaType: mediaType,
+                timestamp: new Date().toISOString(),
+                likes: 0,
+                comments: 0,
+                authorInitials: nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase(),
+                authorPhoto: profileData.profilePhoto || null
+            };
+            
+            // Agregar a la lista
+            posts.unshift(newPost);
+            
+            // Guardar en localStorage
+            localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
+            
+            // Mostrar notificación
+            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
+            
+            // Redirigir al feed principal después de 1.5 segundos
+            setTimeout(() => {
+                window.location.href = 'modulo2_iniciodecesión.html';
+            }, 1500);
+        }
+
+        function saveDraft() {
+            const content = document.getElementById('postContent').value;
+            
+            if (content.trim() === '') {
+                showNotification('No hay contenido para guardar', 'warning');
                 return;
             }
             
-            if (input.value.trim() === '') {
-                input.value = `${mediaTypes[type]} - `;
+            // Guardar borrador en localStorage
+            const draft = {
+                content: content,
+                media: currentMedia,
+                mediaType: mediaType,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('postDraft', JSON.stringify(draft));
+            showNotification('Borrador guardado exitosamente 💾', 'info');
+        }
+
+        // ===== SISTEMA DE 3 MODOS DE TEMA =====
+        let currentMode = 'normal';
+
+        function toggleThemeMode() {
+            if (currentMode === 'normal') {
+                setThemeMode('oscuro');
+            } else if (currentMode === 'oscuro') {
+                setThemeMode('estudio');
             } else {
-                input.value += `\n${mediaTypes[type]}`;
+                setThemeMode('normal');
+            }
+        }
+
+        function setThemeMode(mode) {
+            document.body.classList.remove('study-mode', 'dark-mode');
+            
+            if (mode === 'estudio') {
+                document.body.classList.add('study-mode');
+            } else if (mode === 'oscuro') {
+                document.body.classList.add('dark-mode');
             }
             
-            showNotification(`Preparado para subir ${type}...`, 'info');
-            updatePreview();
-        }
-
-        // ===== VISTA PREVIA =====
-        function togglePreview() {
-            const preview = document.getElementById('postPreview');
-            if (preview.style.display === 'none' || preview.style.display === '') {
-                updatePreview();
-                preview.style.display = 'block';
-            } else {
-                preview.style.display = 'none';
-            }
-        }
-
-        function updatePreview() {
-            const content = document.getElementById('postContent').value;
-            const previewContent = document.getElementById('previewContent');
+            currentMode = mode;
             
-            if (content.trim() === '') {
-                previewContent.textContent = 'Tu publicación aparecerá aquí...';
-            } else {
-                previewContent.textContent = content;
+            const btn = document.querySelector('.btn-primary');
+            const icons = {
+                'normal': 'fas fa-sun',
+                'oscuro': 'fas fa-moon', 
+                'estudio': 'fas fa-graduation-cap'
+            };
+            const texts = {
+                'normal': 'Modo Normal',
+                'oscuro': 'Modo Oscuro',
+                'estudio': 'Modo Estudio'
+            };
+            
+            if (btn) {
+                btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
             }
-        }
-
-        // ===== NAVEGACIÓN =====
-        function goToHome() {
-            window.location.href = 'modulo2_iniciodecesión.html';
+            
+            showNotification(`${texts[mode]} activado`, 'info');
+            localStorage.setItem('neoStudyTheme', mode);
         }
 
         // ===== SISTEMA DE NOTIFICACIONES =====
@@ -689,13 +1070,40 @@
 
         // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar datos del usuario
+            // Cargar datos del usuario primero
             loadUserData();
             
+            // Configurar tema
+            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            setThemeMode(savedTheme);
+            
             // Configurar eventos
-            document.getElementById('postContent').addEventListener('input', updatePreview);
-            document.getElementById('postContent').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && e.ctrlKey) {
+            document.querySelector('.logo').onclick = goToFeed;
+            document.getElementById('userAvatar').onclick = goToProfile;
+            document.getElementById('postAvatar').onclick = goToProfile;
+            
+            // Verificar si hay borrador guardado
+            const savedDraft = localStorage.getItem('postDraft');
+            if (savedDraft) {
+                const draft = JSON.parse(savedDraft);
+                document.getElementById('postContent').value = draft.content;
+                
+                if (draft.media) {
+                    currentMedia = draft.media;
+                    mediaType = draft.mediaType;
+                    document.getElementById('mediaPreview').classList.add('active');
+                    
+                    if (draft.mediaType === 'foto') {
+                        document.getElementById('mediaContent').innerHTML = `<img src="${draft.media}" alt="Vista previa de la imagen">`;
+                    }
+                }
+                
+                showNotification('Borrador cargado desde ' + new Date(draft.savedAt).toLocaleString(), 'info');
+            }
+            
+            // Atajo de teclado: Ctrl + Enter para publicar
+            document.getElementById('postContent').addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
                     createPost();
                 }
             });
