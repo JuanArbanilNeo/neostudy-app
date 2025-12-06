@@ -6,6 +6,7 @@
     <title>Crear Publicación - Neo Study</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* MANTENGO TODO EL CSS IGUAL PARA CONSISTENCIA */
         * {
             margin: 0;
             padding: 0;
@@ -462,6 +463,100 @@
             margin-top: 1.5rem;
         }
 
+        /* ===== ÁREA PARA PUBLICIDADES Y ANUNCIOS ===== */
+        .advertisements-section {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--white);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+        }
+
+        .advertisements-title {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .ad-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.2rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .ad-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .ad-card.premium {
+            border-left: 4px solid var(--warning);
+            background: linear-gradient(135deg, #fff8e1, #fff);
+        }
+
+        .ad-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ad-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .ad-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .ad-description {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+
+        .ad-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--secondary);
+            font-size: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .ad-tag {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             /* Ocultar header de escritorio en móviles */
@@ -509,6 +604,10 @@
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .ads-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -672,6 +771,79 @@
                 </button>
                 <button class="btn btn-primary" onclick="createPost()">
                     <i class="fas fa-paper-plane"></i> Publicar Ahora
+                </button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE ANUNCIOS Y PUBLICIDADES (AQUÍ PUEDES AGREGAR MÁS CONTENIDO) -->
+        <div class="advertisements-section fade-in">
+            <h2 class="advertisements-title">
+                <i class="fas fa-bullhorn"></i> Clases y Tutorías Disponibles
+            </h2>
+            <p style="color: var(--secondary); margin-bottom: 1.5rem;">
+                ¿Buscas mejorar tus habilidades? Conecta con los mejores profesores.
+            </p>
+
+            <div class="ads-grid">
+                <!-- Anuncio 1 -->
+                <div class="ad-card">
+                    <div class="ad-header">
+                        <div class="ad-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2);">MP</div>
+                        <div>
+                            <h3 class="ad-title">Matemáticas Avanzadas</h3>
+                            <span class="ad-tag">$25/hora</span>
+                        </div>
+                    </div>
+                    <p class="ad-description">
+                        Clases personalizadas de cálculo diferencial e integral. Prepárate para exámenes universitarios con métodos probados.
+                    </p>
+                    <div class="ad-meta">
+                        <span><i class="fas fa-user-graduate"></i> Prof. Martínez</span>
+                        <span><i class="fas fa-star" style="color: #ffc107;"></i> 4.9/5.0</span>
+                    </div>
+                </div>
+
+                <!-- Anuncio 2 -->
+                <div class="ad-card premium">
+                    <div class="ad-header">
+                        <div class="ad-avatar" style="background: linear-gradient(135deg, #f093fb, #f5576c);">LP</div>
+                        <div>
+                            <h3 class="ad-title">Inglés Conversacional</h3>
+                            <span class="ad-tag" style="background: var(--warning);">PREMIUM</span>
+                        </div>
+                    </div>
+                    <p class="ad-description">
+                        Mejora tu pronunciación y fluidez. Clases interactivas con nativos. Preparación para TOEFL y certificaciones internacionales.
+                    </p>
+                    <div class="ad-meta">
+                        <span><i class="fas fa-globe-americas"></i> Prof. Laura</span>
+                        <span><i class="fas fa-star" style="color: #ffc107;"></i> 5.0/5.0</span>
+                    </div>
+                </div>
+
+                <!-- Anuncio 3 -->
+                <div class="ad-card">
+                    <div class="ad-header">
+                        <div class="ad-avatar" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">CR</div>
+                        <div>
+                            <h3 class="ad-title">Programación Web</h3>
+                            <span class="ad-tag">$30/hora</span>
+                        </div>
+                    </div>
+                    <p class="ad-description">
+                        Aprende HTML, CSS, JavaScript desde cero. Desarrollo de proyectos reales. Preparación para el mercado laboral tech.
+                    </p>
+                    <div class="ad-meta">
+                        <span><i class="fas fa-code"></i> Ing. Carlos</span>
+                        <span><i class="fas fa-star" style="color: #ffc107;"></i> 4.8/5.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón para ver más anuncios -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="showMoreAds()">
+                    <i class="fas fa-search"></i> Ver Más Profesores
                 </button>
             </div>
         </div>
@@ -1044,6 +1216,15 @@
             
             showNotification(`${texts[mode]} activado`, 'info');
             localStorage.setItem('neoStudyTheme', mode);
+        }
+
+        // ===== FUNCIÓN PARA MOSTRAR MÁS ANUNCIOS =====
+        function showMoreAds() {
+            showNotification('Explorando más profesores disponibles...', 'info');
+            // Aquí puedes agregar lógica para cargar más anuncios
+            setTimeout(() => {
+                showNotification('¡Pronto tendrás más opciones de aprendizaje!', 'success');
+            }, 1000);
         }
 
         // ===== SISTEMA DE NOTIFICACIONES =====
