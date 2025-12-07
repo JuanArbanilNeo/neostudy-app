@@ -6,7 +6,6 @@
     <title>Crear Publicación - Neo Study</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* SOLO ESTILOS NECESARIOS PARA LA PÁGINA DE CREAR PUBLICACIÓN */
         * {
             margin: 0;
             padding: 0;
@@ -33,130 +32,90 @@
         body {
             background: var(--light);
             color: var(--dark);
+            overflow-x: hidden;
             line-height: 1.5;
+            transition: all 0.3s ease;
             min-height: 100vh;
         }
 
-        /* HEADER SIMPLIFICADO */
+        /* ===== HEADER SIMPLIFICADO ===== */
         .header {
             background: var(--bg-gradient);
             color: var(--white);
-            padding: 1rem 0;
+            padding: 1rem;
             position: sticky;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .header-logo {
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 1.2rem;
             font-weight: bold;
+        }
+
+        .back-button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 20px;
-            font-weight: 600;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
         }
 
-        .btn-primary {
-            background: var(--white);
-            color: var(--primary);
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255,255,255,0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--white);
-            border: 1px solid var(--white);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* CONTENIDO PRINCIPAL */
-        .container {
+        /* ===== CONTENIDO PRINCIPAL ===== */
+        .main-content {
             max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
-        /* CARD DE CREAR PUBLICACIÓN */
-        .create-post-card {
+        /* ===== FORMULARIO DE PUBLICACIÓN ===== */
+        .post-form-container {
             background: var(--white);
             border-radius: var(--card-radius);
             box-shadow: var(--card-shadow);
             overflow: hidden;
-            animation: fadeIn 0.5s ease;
+            margin-bottom: 2rem;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card-header {
+        .form-header {
             background: var(--bg-gradient);
-            color: var(--white);
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .card-header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-header p {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        .card-content {
+            color: white;
             padding: 1.5rem;
         }
 
-        /* FORMULARIO DE PUBLICACIÓN */
-        .post-form {
+        .form-header h2 {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .post-author {
+        .post-form {
+            padding: 1.5rem;
+        }
+
+        .author-info {
             display: flex;
             align-items: center;
             gap: 1rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--light);
         }
@@ -169,30 +128,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--white);
+            color: white;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             background-size: cover;
             background-position: center;
-            flex-shrink: 0;
         }
 
-        .author-info h3 {
-            margin-bottom: 0.3rem;
+        .author-details h3 {
+            margin-bottom: 0.25rem;
         }
 
-        .author-info p {
+        .author-details p {
             color: var(--secondary);
             font-size: 0.9rem;
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .form-group label {
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--dark);
             display: flex;
@@ -200,175 +158,300 @@
             gap: 0.5rem;
         }
 
-        .form-control {
+        .text-area {
             width: 100%;
+            min-height: 150px;
             padding: 1rem;
-            border: 1px solid var(--light);
+            border: 2px solid var(--light);
             border-radius: 10px;
-            background: var(--light);
             font-size: 1rem;
             font-family: inherit;
-            transition: all 0.3s ease;
             resize: vertical;
-            min-height: 150px;
+            transition: all 0.3s ease;
         }
 
-        .form-control:focus {
+        .text-area:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
-            background: var(--white);
         }
 
-        /* OPCIONES DE MEDIOS */
-        .media-options {
+        /* ===== SECCIÓN DE MEDIOS ===== */
+        .media-section {
             background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .media-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .media-option {
+            background: white;
+            border: 2px dashed var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .media-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .media-option i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .media-preview {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .preview-video {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .preview-document {
+            background: white;
             padding: 1rem;
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-top: 1rem;
         }
 
-        .media-title {
+        .preview-document i {
+            font-size: 2rem;
+            color: var(--danger);
+        }
+
+        .remove-media {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== SECCIÓN PARA ADMINISTRADOR ===== */
+        .admin-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .admin-toggle {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 1rem;
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .media-buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.8rem;
-        }
-
-        @media (max-width: 600px) {
-            .media-buttons {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .media-btn {
-            background: var(--white);
-            border: 2px dashed var(--light);
-            padding: 1rem;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
+            user-select: none;
         }
 
-        .media-btn:hover {
-            border-color: var(--primary);
-            background: rgba(0, 196, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .media-btn i {
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-
-        .media-btn span {
-            font-size: 0.8rem;
-            color: var(--secondary);
-        }
-
-        /* PREVIEW DE MEDIOS */
-        .media-preview {
-            margin-top: 1rem;
+        .admin-content {
             display: none;
         }
 
-        .media-preview.active {
+        .admin-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
         }
 
-        .preview-item {
-            background: var(--light);
-            padding: 1rem;
+        .post-type-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .type-option {
+            background: white;
+            border: 2px solid var(--light);
             border-radius: 8px;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .preview-info {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .preview-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+        .type-option.active {
+            border-color: var(--primary);
             background: var(--primary);
             color: white;
+        }
+
+        /* ===== BOTONES DE ACCIÓN ===== */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--bg-gradient);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        /* ===== EJEMPLOS DE PUBLICACIONES PARA ADMIN ===== */
+        .examples-section {
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .example-post {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-post:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .example-post h4 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .example-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            margin-left: 0.5rem;
+            background: var(--primary);
+            color: white;
+        }
+
+        .scholarship-badge {
+            background: linear-gradient(135deg, #4169E1, #00008B);
+        }
+
+        .ad-badge {
+            background: linear-gradient(135deg, #32CD32, #228B22);
+        }
+
+        .institution-badge {
+            background: linear-gradient(135deg, #FF69B4, #C71585);
+        }
+
+        /* ===== MODAL DE CONFIRMACIÓN ===== */
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
         }
 
-        .preview-details h4 {
-            margin-bottom: 0.2rem;
+        .confirmation-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: modalFadeIn 0.3s ease;
         }
 
-        .preview-details p {
-            font-size: 0.8rem;
-            color: var(--secondary);
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        .remove-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: background 0.3s ease;
-        }
-
-        .remove-btn:hover {
-            background: rgba(220, 53, 69, 0.1);
-        }
-
-        /* BOTONES DE ACCIÓN */
-        .action-buttons {
+        .confirmation-buttons {
             display: flex;
             gap: 1rem;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--light);
-        }
-
-        .action-buttons .btn {
-            flex: 1;
-            justify-content: center;
-            padding: 0.8rem;
+            margin-top: 1.5rem;
         }
 
         .btn-success {
             background: var(--success);
-            color: var(--white);
+            color: white;
         }
 
         .btn-success:hover {
             background: #218838;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
-        /* NOTIFICACIONES */
+        /* ===== NOTIFICACIONES ===== */
         .notification {
             position: fixed;
             top: 100px;
@@ -382,348 +465,625 @@
             animation: fadeIn 0.3s ease;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 600px) {
-            .header-container {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .media-options {
+                grid-template-columns: 1fr;
             }
             
-            .header-actions {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .post-author {
-                flex-direction: column;
-                text-align: center;
+            .post-type-options {
+                grid-template-columns: 1fr;
             }
             
             .action-buttons {
-                flex-direction: column;
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                margin: 1rem auto;
             }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER SIMPLIFICADO -->
-    <header class="header">
-        <div class="header-container">
-            <div class="header-logo" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i>
-                Neo Study
-            </div>
-            <div class="header-actions">
-                <button class="btn btn-secondary" onclick="saveDraft()">
-                    <i class="far fa-save"></i> Guardar Borrador
-                </button>
-                <button class="btn btn-primary" onclick="goBack()">
-                    <i class="fas fa-times"></i> Cancelar
-                </button>
-            </div>
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <button class="back-button" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="header-title">
+            <i class="fas fa-pen-square"></i>
+            Crear Publicación
         </div>
-    </header>
+        <div style="width: 40px;"></div> <!-- Espacio para alinear -->
+    </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div class="container">
-        <div class="create-post-card">
-            <div class="card-header">
-                <h1><i class="fas fa-edit"></i> Crear Nueva Publicación</h1>
-                <p>Comparte tus logros, preguntas o recursos educativos con la comunidad</p>
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
+    <div class="main-content">
+        <div class="post-form-container">
+            <div class="form-header">
+                <h2><i class="fas fa-feather-alt"></i> Comparte con la comunidad</h2>
+                <p>Publica tus logros, preguntas o contenido educativo</p>
             </div>
             
-            <div class="card-content">
-                <form class="post-form" id="postForm">
-                    <!-- Información del autor -->
-                    <div class="post-author">
-                        <div class="author-avatar" id="authorAvatar">JM</div>
-                        <div class="author-info">
-                            <h3 id="authorName">Cargando...</h3>
-                            <p id="authorTitle">Estudiante</p>
-                        </div>
+            <form class="post-form" id="postForm">
+                <!-- Información del autor -->
+                <div class="author-info">
+                    <div class="author-avatar" id="authorAvatar">U</div>
+                    <div class="author-details">
+                        <h3 id="authorName">Usuario</h3>
+                        <p id="authorTitle">Estudiante</p>
                     </div>
+                </div>
 
-                    <!-- Contenido de la publicación -->
-                    <div class="form-group">
-                        <label for="postContent">
-                            <i class="fas fa-pencil-alt"></i> ¿Qué quieres compartir?
-                        </label>
-                        <textarea 
-                            class="form-control" 
-                            id="postContent" 
-                            placeholder="Escribe aquí tu publicación... Ej: ¡Acabo de completar mi curso de Matemáticas! 🎉"
-                            required></textarea>
-                    </div>
+                <!-- Contenido de la publicación -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-edit"></i>
+                        ¿Qué quieres compartir?
+                    </label>
+                    <textarea class="text-area" id="postContent" 
+                              placeholder="Comparte tu progreso de estudio, preguntas, logros o cualquier contenido educativo que quieras mostrar a la comunidad..."
+                              required></textarea>
+                </div>
 
-                    <!-- Opciones de medios -->
+                <!-- Sección de medios -->
+                <div class="media-section">
+                    <label class="form-label">
+                        <i class="fas fa-paperclip"></i>
+                        Añadir medios (opcional)
+                    </label>
+                    <p style="color: var(--secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                        Puedes añadir imágenes, videos o documentos a tu publicación
+                    </p>
+                    
                     <div class="media-options">
-                        <div class="media-title">
-                            <i class="fas fa-paperclip"></i> Agregar archivos
+                        <div class="media-option" onclick="addMedia('image')">
+                            <i class="fas fa-image"></i>
+                            <span>Imagen</span>
                         </div>
-                        <div class="media-buttons">
-                            <div class="media-btn" onclick="addMedia('image')">
-                                <i class="fas fa-image"></i>
-                                <span>Imagen</span>
-                            </div>
-                            <div class="media-btn" onclick="addMedia('video')">
-                                <i class="fas fa-video"></i>
-                                <span>Video</span>
-                            </div>
-                            <div class="media-btn" onclick="addMedia('document')">
-                                <i class="fas fa-file-pdf"></i>
-                                <span>Documento</span>
-                            </div>
-                            <div class="media-btn" onclick="addMedia('link')">
-                                <i class="fas fa-link"></i>
-                                <span>Enlace</span>
-                            </div>
+                        <div class="media-option" onclick="addMedia('video')">
+                            <i class="fas fa-video"></i>
+                            <span>Video</span>
                         </div>
-                        
-                        <!-- Preview de archivos -->
-                        <div class="media-preview" id="mediaPreview"></div>
+                        <div class="media-option" onclick="addMedia('document')">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Documento</span>
+                        </div>
                     </div>
 
-                    <!-- Botones de acción -->
-                    <div class="action-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="goBack()">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-success">
-                            <i class="fas fa-paper-plane"></i> Publicar
-                        </button>
+                    <div class="media-preview" id="mediaPreview">
+                        <!-- Vista previa de medios aparecerá aquí -->
                     </div>
-                </form>
+                </div>
+
+                <!-- ===== SECCIÓN PARA ADMINISTRADOR ===== -->
+                <div class="admin-section">
+                    <div class="admin-toggle" onclick="toggleAdminSection()">
+                        <i class="fas fa-user-shield"></i>
+                        <strong>Modo Administrador (Solo para administradores de NeoStudy)</strong>
+                        <i class="fas fa-chevron-down" id="adminArrow"></i>
+                    </div>
+                    
+                    <div class="admin-content" id="adminContent">
+                        <p style="color: var(--secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                            Como administrador, puedes crear publicaciones especiales como anuncios de becas, publicidades educativas o comunicados oficiales.
+                        </p>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-tag"></i>
+                                Tipo de publicación
+                            </label>
+                            <div class="post-type-options">
+                                <div class="type-option" data-type="normal" onclick="selectPostType('normal')">
+                                    Normal
+                                </div>
+                                <div class="type-option" data-type="scholarship" onclick="selectPostType('scholarship')">
+                                    Beca
+                                </div>
+                                <div class="type-option" data-type="ad" onclick="selectPostType('ad')">
+                                    Publicidad
+                                </div>
+                                <div class="type-option" data-type="institution" onclick="selectPostType('institution')">
+                                    Institución
+                                </div>
+                                <div class="type-option" data-type="announcement" onclick="selectPostType('announcement')">
+                                    Anuncio
+                                </div>
+                                <div class="type-option" data-type="event" onclick="selectPostType('event')">
+                                    Evento
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user-tie"></i>
+                                Nombre del autor (para publicaciones oficiales)
+                            </label>
+                            <input type="text" class="text-area" id="adminAuthorName" 
+                                   placeholder="Ej: Neo Study - Sistema, Departamento de Becas, etc." 
+                                   style="min-height: auto; padding: 0.8rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="submitPost()">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ===== EJEMPLOS PARA ADMINISTRADOR ===== -->
+        <div class="examples-section" id="examplesSection" style="display: none;">
+            <h3><i class="fas fa-lightbulb"></i> Ejemplos de publicaciones institucionales</h3>
+            <p style="color: var(--secondary); margin-bottom: 1rem;">Haz clic en un ejemplo para usarlo como plantilla</p>
+            
+            <div class="example-post" onclick="useExample(1)">
+                <h4>Anuncio de Beca <span class="example-badge scholarship-badge">BECA</span></h4>
+                <p>¡Convocatoria abierta para becas de excelencia 2024! Neo Study otorgará 10 becas completas para estudiantes destacados. Requisitos: promedio mínimo de 4.5, carta de motivación...</p>
+            </div>
+            
+            <div class="example-post" onclick="useExample(2)">
+                <h4>Publicidad Educativa <span class="example-badge ad-badge">PUBLICIDAD</span></h4>
+                <p>¿Quieres mejorar tu inglés? ¡Tenemos una alianza especial con English Lab! 50% de descuento en todos sus cursos para estudiantes de NeoStudy. Usa el código: NEO50...</p>
+            </div>
+            
+            <div class="example-post" onclick="useExample(3)">
+                <h4>Anuncio Institucional <span class="example-badge institution-badge">INSTITUCIÓN</span></h4>
+                <p>¡Nueva funcionalidad en NeoStudy! Ahora puedes crear grupos de estudio y programar sesiones colaborativas. Únete a nuestra comunidad y maximiza tu aprendizaje...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DE CONFIRMACIÓN ===== -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="confirmation-content">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 1rem;"></i>
+            <h2>¡Publicación creada exitosamente! 🎉</h2>
+            <p>Tu publicación ha sido guardada y aparecerá en el feed principal.</p>
+            <div class="confirmation-buttons">
+                <button class="btn btn-secondary" onclick="closeConfirmation()">
+                    <i class="fas fa-edit"></i> Crear otra
+                </button>
+                <button class="btn btn-success" onclick="goToFeed()">
+                    <i class="fas fa-home"></i> Ver en el feed
+                </button>
             </div>
         </div>
     </div>
 
     <script>
         // ===== VARIABLES GLOBALES =====
-        let mediaFiles = [];
-        let userData = null;
-        let profileData = null;
+        let selectedMediaType = null;
+        let selectedMediaUrl = null;
+        let selectedPostType = 'normal';
+        let isAdminMode = false;
+        let adminAuthorName = '';
 
-        // ===== FUNCIONES DE NAVEGACIÓN =====
-        function goBack() {
-            if (document.getElementById('postContent').value.trim() !== '' || mediaFiles.length > 0) {
-                if (confirm('Tienes cambios sin guardar. ¿Seguro que quieres salir?')) {
-                    window.location.href = 'modulo2_iniciodecesión.html';
-                }
-            } else {
-                window.location.href = 'modulo2_iniciodecesión.html';
-            }
-        }
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            setupEventListeners();
+            checkAdminAccess();
+        });
 
         // ===== CARGAR DATOS DEL USUARIO =====
         function loadUserData() {
             try {
-                userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-                profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 
-                if (!userData) {
-                    showNotification('Por favor inicia sesión primero', 'danger');
-                    setTimeout(() => {
-                        window.location.href = 'modulo1_inicio.html';
-                    }, 2000);
-                    return;
-                }
-
-                // Extraer información del usuario según su categoría
-                let nombreCompleto = '';
-                let titulo = '';
-                let categoria = userData.categoria || '';
-                
-                if (categoria === 'profesional') {
-                    nombreCompleto = userData.prof_nombre || 'Profesional';
-                    titulo = userData.prof_profesion || 'Profesional';
-                } 
-                else if (categoria === 'universitario') {
-                    nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
-                    titulo = userData.uni_carrera || 'Estudiante';
-                }
-                else if (categoria === 'secundaria') {
-                    nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
-                    titulo = userData.sec_grado || 'Estudiante';
-                }
-                else if (categoria === 'general') {
-                    nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
-                    titulo = 'Usuario General';
-                }
-                else {
-                    nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
-                                   userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
-                    titulo = 'Estudiante';
-                }
-
-                // Actualizar UI
-                document.getElementById('authorName').textContent = nombreCompleto;
-                document.getElementById('authorTitle').textContent = titulo;
-                
-                // Actualizar avatar
-                const avatar = document.getElementById('authorAvatar');
-                if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
-                    avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
-                    avatar.textContent = '';
-                    avatar.style.backgroundSize = 'cover';
-                    avatar.style.backgroundPosition = 'center';
-                } else {
+                if (userData) {
+                    let nombreCompleto = '';
+                    let titulo = '';
+                    let categoria = userData.categoria || '';
+                    
+                    // Extraer nombre según la categoría
+                    if (categoria === 'profesional') {
+                        nombreCompleto = userData.prof_nombre || 'Profesional';
+                        titulo = userData.prof_profesion || 'Profesional';
+                    } 
+                    else if (categoria === 'universitario') {
+                        nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+                        titulo = userData.uni_carrera || 'Estudiante';
+                    }
+                    else if (categoria === 'secundaria') {
+                        nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+                        titulo = userData.sec_grado || 'Estudiante';
+                    }
+                    else if (categoria === 'general') {
+                        nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Usuario General';
+                    }
+                    else {
+                        nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
+                                       userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Estudiante';
+                    }
+                    
+                    // Actualizar interfaz
+                    document.getElementById('authorName').textContent = nombreCompleto;
+                    document.getElementById('authorTitle').textContent = titulo;
+                    
+                    // Actualizar avatar
+                    const avatar = document.getElementById('authorAvatar');
                     const initials = nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase();
-                    avatar.textContent = initials;
-                    avatar.style.backgroundImage = 'none';
-                    avatar.style.background = 'var(--bg-gradient)';
+                    
+                    if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
+                        avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
+                        avatar.textContent = '';
+                    } else {
+                        avatar.textContent = initials;
+                    }
                 }
-
             } catch (error) {
                 console.error('Error cargando datos:', error);
-                showNotification('Error al cargar datos del usuario', 'danger');
             }
         }
 
-        // ===== MANEJO DE MEDIOS =====
+        // ===== CONFIGURAR EVENT LISTENERS =====
+        function setupEventListeners() {
+            // Seleccionar tipo de publicación por defecto
+            selectPostType('normal');
+            
+            // Permitir Ctrl+Enter para publicar
+            document.getElementById('postContent').addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    submitPost();
+                }
+            });
+        }
+
+        // ===== VERIFICAR ACCESO DE ADMINISTRADOR =====
+        function checkAdminAccess() {
+            // Aquí puedes agregar lógica para verificar si el usuario es administrador
+            // Por ahora, mostramos la sección a todos para propósitos de demostración
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            
+            // Verificar si el usuario tiene privilegios de admin
+            // Esto es un ejemplo - en producción deberías tener un sistema más robusto
+            const isAdmin = userData.email === 'admin@neostudy.com' || 
+                           userData.isAdmin === true || 
+                           localStorage.getItem('isAdmin') === 'true';
+            
+            if (isAdmin) {
+                document.getElementById('examplesSection').style.display = 'block';
+                isAdminMode = true;
+            }
+        }
+
+        // ===== AGREGAR MEDIOS =====
         function addMedia(type) {
-            const mediaTypes = {
-                'image': { name: 'Imagen', icon: 'fas fa-image', color: '#00C4FF' },
-                'video': { name: 'Video', icon: 'fas fa-video', color: '#FF6B6B' },
-                'document': { name: 'Documento', icon: 'fas fa-file-pdf', color: '#4ECDC4' },
-                'link': { name: 'Enlace', icon: 'fas fa-link', color: '#FFD166' }
-            };
-
-            const mediaType = mediaTypes[type];
-            const fileName = `${mediaType.name}_${Date.now()}`;
+            selectedMediaType = type;
+            const preview = document.getElementById('mediaPreview');
             
-            // Simular archivo (en producción usarías un input file real)
-            const file = {
-                id: Date.now(),
-                name: fileName,
-                type: type,
-                icon: mediaType.icon,
-                color: mediaType.color,
-                size: type === 'image' ? '2.4 MB' : 
-                      type === 'video' ? '15.7 MB' : 
-                      type === 'document' ? '1.2 MB' : 'Enlace web'
-            };
-
-            mediaFiles.push(file);
-            updateMediaPreview();
-            showNotification(`${mediaType.name} agregado`, 'success');
-        }
-
-        function removeMedia(id) {
-            mediaFiles = mediaFiles.filter(file => file.id !== id);
-            updateMediaPreview();
-            showNotification('Archivo removido', 'info');
-        }
-
-        function updateMediaPreview() {
-            const previewContainer = document.getElementById('mediaPreview');
+            // Simulación de subida de archivo (en producción usarías un input file real)
+            let previewHTML = '';
             
-            if (mediaFiles.length === 0) {
-                previewContainer.classList.remove('active');
-                previewContainer.innerHTML = '';
-                return;
-            }
-
-            previewContainer.classList.add('active');
-            previewContainer.innerHTML = mediaFiles.map(file => `
-                <div class="preview-item">
-                    <div class="preview-info">
-                        <div class="preview-icon" style="background: ${file.color};">
-                            <i class="${file.icon}"></i>
+            switch(type) {
+                case 'image':
+                    previewHTML = `
+                        <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             class="preview-image" alt="Vista previa de imagen">
+                        <button class="remove-media" onclick="removeMedia()">
+                            <i class="fas fa-times"></i> Eliminar imagen
+                        </button>
+                    `;
+                    selectedMediaUrl = 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                    break;
+                    
+                case 'video':
+                    previewHTML = `
+                        <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 2rem; border-radius: 10px; color: white; text-align: center;">
+                            <i class="fas fa-play-circle" style="font-size: 3rem;"></i>
+                            <p style="margin-top: 1rem;">Video seleccionado</p>
                         </div>
-                        <div class="preview-details">
-                            <h4>${file.name}</h4>
-                            <p>${file.type.charAt(0).toUpperCase() + file.type.slice(1)} • ${file.size}</p>
+                        <button class="remove-media" onclick="removeMedia()">
+                            <i class="fas fa-times"></i> Eliminar video
+                        </button>
+                    `;
+                    selectedMediaUrl = 'https://example.com/video.mp4';
+                    break;
+                    
+                case 'document':
+                    previewHTML = `
+                        <div class="preview-document">
+                            <i class="fas fa-file-pdf"></i>
+                            <div>
+                                <strong>documento.pdf</strong><br>
+                                <small>1.2 MB - Documento educativo</small>
+                            </div>
                         </div>
-                    </div>
-                    <button class="remove-btn" onclick="removeMedia(${file.id})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
+                        <button class="remove-media" onclick="removeMedia()">
+                            <i class="fas fa-times"></i> Eliminar documento
+                        </button>
+                    `;
+                    selectedMediaUrl = 'https://example.com/document.pdf';
+                    break;
+            }
+            
+            preview.innerHTML = previewHTML;
+            showNotification(`${type === 'image' ? 'Imagen' : type === 'video' ? 'Video' : 'Documento'} agregado`, 'success');
         }
 
-        // ===== GUARDAR BORRADOR =====
-        function saveDraft() {
-            const content = document.getElementById('postContent').value.trim();
+        function removeMedia() {
+            selectedMediaType = null;
+            selectedMediaUrl = null;
+            document.getElementById('mediaPreview').innerHTML = '';
+            showNotification('Medio eliminado', 'info');
+        }
+
+        // ===== SECCIÓN DE ADMINISTRADOR =====
+        function toggleAdminSection() {
+            const content = document.getElementById('adminContent');
+            const arrow = document.getElementById('adminArrow');
             
-            if (!content && mediaFiles.length === 0) {
-                showNotification('No hay nada para guardar como borrador', 'warning');
-                return;
+            content.classList.toggle('active');
+            arrow.classList.toggle('fa-chevron-down');
+            arrow.classList.toggle('fa-chevron-up');
+        }
+
+        function selectPostType(type) {
+            selectedPostType = type;
+            
+            // Remover clase active de todos los botones
+            document.querySelectorAll('.type-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Agregar clase active al botón seleccionado
+            document.querySelector(`.type-option[data-type="${type}"]`).classList.add('active');
+            
+            // Si es un tipo de publicación especial, sugerir nombre de autor institucional
+            if (type !== 'normal') {
+                const authorInput = document.getElementById('adminAuthorName');
+                switch(type) {
+                    case 'scholarship':
+                        authorInput.value = 'Neo Study - Departamento de Becas';
+                        break;
+                    case 'ad':
+                        authorInput.value = 'Neo Study - Alianzas Educativas';
+                        break;
+                    case 'institution':
+                        authorInput.value = 'Neo Study - Sistema';
+                        break;
+                    case 'announcement':
+                        authorInput.value = 'Neo Study - Comunicaciones';
+                        break;
+                    case 'event':
+                        authorInput.value = 'Neo Study - Eventos';
+                        break;
+                }
+                adminAuthorName = authorInput.value;
             }
+        }
 
-            const draft = {
-                content: content,
-                media: mediaFiles,
-                timestamp: new Date().toISOString()
-            };
+        // ===== EJEMPLOS PARA ADMINISTRADOR =====
+        function useExample(exampleNumber) {
+            const contentTextarea = document.getElementById('postContent');
+            
+            switch(exampleNumber) {
+                case 1: // Beca
+                    contentTextarea.value = `¡CONVOCATORIA ABIERTA PARA BECAS DE EXCELENCIA 2024! 🎓
 
-            localStorage.setItem('postDraft', JSON.stringify(draft));
-            showNotification('Borrador guardado exitosamente 💾', 'success');
+Neo Study se complace en anunciar que otorgaremos 10 BECAS COMPLETAS para estudiantes destacados que deseen continuar su formación educativa.
+
+📋 REQUISITOS:
+• Promedio académico mínimo de 4.5/5.0
+• Carta de motivación (máximo 500 palabras)
+• Participación activa en la comunidad NeoStudy
+• Compromiso demostrado con el aprendizaje
+
+🏆 BENEFICIOS:
+• Acceso completo a TODOS nuestros cursos premium
+• Tutorías personalizadas semanales
+• Material de estudio exclusivo
+• Certificación oficial NeoStudy
+
+📅 FECHA LÍMITE: 30 de noviembre de 2024
+📧 Enviar documentos a: becas@neostudy.com
+📞 Más información: +1 234 567 8900
+
+¡No dejes pasar esta oportunidad! Tu futuro educativo es nuestra prioridad.`;
+                    selectPostType('scholarship');
+                    break;
+                    
+                case 2: // Publicidad
+                    contentTextarea.value = `¿QUIERES DOMINAR EL INGLÉS DE UNA VEZ POR TODAS? 🌍
+
+¡Tenemos una excelente noticia para ti! Neo Study ha establecido una alianza estratégica con ENGLISH LAB, la academia de inglés líder en la región.
+
+🎯 NUESTRA OFERTA EXCLUSIVA:
+• 50% DE DESCUENTO en todos los cursos de English Lab
+• Acceso a plataforma 24/7 con contenido interactivo
+• Clases en vivo con tutores nativos certificados
+• Certificación internacional reconocida
+
+📚 CURSOS DISPONIBLES:
+✓ Inglés desde cero (A1)
+✓ Inglés para negocios (B2)
+✓ Preparación IELTS/TOEFL
+✓ Inglés conversacional
+
+🔥 OFERTA ESPECIAL PARA ESTUDIANTES NEO STUDY:
+Usa el código: NEO50 al momento de tu inscripción
+
+🌐 Visita: www.englishlab.com/neostudy
+⏰ Oferta válida hasta: 31 de diciembre 2024
+
+¡Tu futuro internacional comienza aquí!`;
+                    selectPostType('ad');
+                    break;
+                    
+                case 3: // Anuncio institucional
+                    contentTextarea.value = `¡NUEVA FUNCIONALIDAD EN NEO STUDY! 🚀
+
+Nos complace anunciar el lanzamiento de GRUPOS DE ESTUDIO COLABORATIVOS, una herramienta diseñada para potenciar tu aprendizaje a través del trabajo en equipo.
+
+🌟 CARACTERÍSTICAS PRINCIPALES:
+• Creación de grupos de estudio ilimitados
+• Programación de sesiones colaborativas
+• Pizarra virtual compartida
+• Compartir recursos y documentos
+• Sistema de recordatorios automáticos
+
+🎯 BENEFICIOS:
+✅ Aprendizaje más efectivo mediante la discusión grupal
+✅ Resolución colectiva de dudas y problemas
+✅ Compartir diferentes perspectivas y enfoques
+✅ Mantener la motivación y compromiso
+✅ Preparación para trabajos en equipo profesionales
+
+📱 ¿CÓMO ACCEDER?
+1. Ve a la sección "Comunidad"
+2. Haz clic en "Crear Grupo de Estudio"
+3. Invita a tus compañeros
+4. ¡Comienza a colaborar!
+
+💡 CONSEJO PRO:
+Únete a nuestros grupos temáticos oficiales:
+• #MatemáticasAvanzadas
+• #CienciasNaturales
+• #Programación
+• #Idiomas
+
+¡Juntos aprendemos mejor! 🧠`;
+                    selectPostType('announcement');
+                    break;
+            }
+            
+            // Desplazar al textarea
+            contentTextarea.focus();
+            showNotification('Ejemplo cargado. Puedes personalizarlo según tus necesidades.', 'info');
         }
 
         // ===== ENVIAR PUBLICACIÓN =====
-        function submitPost(event) {
-            event.preventDefault();
-            
+        function submitPost() {
             const content = document.getElementById('postContent').value.trim();
             
-            if (!content && mediaFiles.length === 0) {
-                showNotification('La publicación no puede estar vacía', 'warning');
+            if (!content) {
+                showNotification('Por favor escribe el contenido de tu publicación', 'warning');
+                document.getElementById('postContent').focus();
                 return;
             }
-
-            // Crear objeto de publicación
-            const post = {
-                id: Date.now(),
-                content: content,
-                media: mediaFiles,
-                author: {
-                    name: document.getElementById('authorName').textContent,
-                    title: document.getElementById('authorTitle').textContent,
-                    avatar: document.getElementById('authorAvatar').style.backgroundImage || 'gradient'
-                },
-                timestamp: new Date().toISOString(),
-                likes: 0,
-                comments: 0,
-                shares: 0
-            };
-
-            // Guardar en localStorage
-            let posts = JSON.parse(localStorage.getItem('userPosts')) || [];
-            posts.unshift(post); // Agregar al inicio
-            localStorage.setItem('userPosts', JSON.stringify(posts));
             
-            // Limpiar borrador si existe
-            localStorage.removeItem('postDraft');
+            // Obtener datos del usuario
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             
-            // Mostrar confirmación
-            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
-            
-            // Redirigir después de 1.5 segundos
-            setTimeout(() => {
-                window.location.href = 'modulo2_iniciodecesión.html';
-            }, 1500);
-        }
-
-        // ===== CARGAR BORRADOR SI EXISTE =====
-        function loadDraft() {
-            const draft = JSON.parse(localStorage.getItem('postDraft'));
-            
-            if (draft) {
-                if (confirm('¿Quieres recuperar tu borrador guardado?')) {
-                    document.getElementById('postContent').value = draft.content || '';
-                    mediaFiles = draft.media || [];
-                    updateMediaPreview();
-                    showNotification('Borrador cargado', 'info');
-                } else {
-                    localStorage.removeItem('postDraft');
+            let nombreCompleto = 'Usuario NeoStudy';
+            if (userData) {
+                const categoria = userData.categoria || '';
+                if (categoria === 'profesional') {
+                    nombreCompleto = userData.prof_nombre || 'Profesional';
+                } 
+                else if (categoria === 'universitario') {
+                    nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
+                }
+                else if (categoria === 'secundaria') {
+                    nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
+                }
+                else if (categoria === 'general') {
+                    nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
                 }
             }
+            
+            // Determinar autor (usuario normal o admin)
+            const author = isAdminMode && document.getElementById('adminAuthorName').value 
+                ? document.getElementById('adminAuthorName').value 
+                : nombreCompleto;
+            
+            const authorInitials = author.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            // Crear objeto de publicación
+            const newPost = {
+                id: Date.now().toString(),
+                author: author,
+                authorInitials: authorInitials,
+                content: content,
+                mediaType: selectedMediaType,
+                mediaUrl: selectedMediaUrl,
+                type: selectedPostType,
+                likes: 0,
+                comments: 0,
+                timestamp: new Date().toISOString(),
+                userId: userData ? userData.email || 'anonymous' : 'anonymous'
+            };
+            
+            // Guardar en localStorage
+            savePostToStorage(newPost);
+            
+            // Mostrar confirmación
+            document.getElementById('confirmationModal').style.display = 'flex';
+        }
+
+        function savePostToStorage(post) {
+            try {
+                // Obtener publicaciones existentes
+                let posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+                
+                // Agregar nueva publicación
+                posts.push(post);
+                
+                // Guardar en localStorage (limitar a 100 publicaciones máximo)
+                if (posts.length > 100) {
+                    posts = posts.slice(-100); // Mantener solo las 100 más recientes
+                }
+                
+                localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
+                
+                // También guardar en un historial separado si es una publicación institucional
+                if (post.type !== 'normal') {
+                    let institutionalPosts = JSON.parse(localStorage.getItem('neoStudyInstitutionalPosts')) || [];
+                    institutionalPosts.push(post);
+                    localStorage.setItem('neoStudyInstitutionalPosts', JSON.stringify(institutionalPosts));
+                }
+                
+                console.log('Publicación guardada:', post);
+            } catch (error) {
+                console.error('Error guardando publicación:', error);
+                showNotification('Error al guardar la publicación', 'danger');
+            }
+        }
+
+        // ===== NAVEGACIÓN =====
+        function goBack() {
+            if (confirm('¿Estás seguro? Los cambios no guardados se perderán.')) {
+                window.history.back();
+            }
+        }
+
+        function goToFeed() {
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        function closeConfirmation() {
+            document.getElementById('confirmationModal').style.display = 'none';
+            // Limpiar formulario
+            document.getElementById('postForm').reset();
+            document.getElementById('mediaPreview').innerHTML = '';
+            selectedMediaType = null;
+            selectedMediaUrl = null;
+            selectPostType('normal');
+            document.getElementById('postContent').focus();
         }
 
         // ===== NOTIFICACIONES =====
         function showNotification(message, type = 'info') {
+            // Remover notificaciones existentes
             const existingNotification = document.querySelector('.notification');
             if (existingNotification) {
                 existingNotification.remove();
@@ -743,32 +1103,6 @@
                 notification.remove();
             }, 3000);
         }
-
-        // ===== INICIALIZACIÓN =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Cargar datos del usuario
-            loadUserData();
-            
-            // Cargar borrador si existe
-            loadDraft();
-            
-            // Configurar submit del formulario
-            document.getElementById('postForm').addEventListener('submit', submitPost);
-            
-            // Configurar atajos de teclado
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.key === 's') {
-                    e.preventDefault();
-                    saveDraft();
-                }
-                if (e.key === 'Escape') {
-                    goBack();
-                }
-            });
-            
-            // Enfocar el textarea al cargar
-            document.getElementById('postContent').focus();
-        });
     </script>
 </body>
 </html>
