@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Study - Feed Principal</title>
+    <title>Neo Study - Plataforma Educativa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* TODO EL CSS ORIGINAL COMO ESTÁ */
+        /* TODOS LOS ESTILOS DEL CÓDIGO ORIGINAL SE MANTIENEN AQUÍ */
         * {
             margin: 0;
             padding: 0;
@@ -501,6 +501,7 @@
             min-height: 100px;
             font-family: inherit;
             box-sizing: border-box;
+            cursor: pointer;
         }
 
         .post-input:focus {
@@ -1813,29 +1814,33 @@
             </div>
 
             <!-- Crear Publicación MEJORADA Y CENTRADA - COMPLETA EN MÓVIL -->
-            <div class="create-post fade-in">
+            <!-- SE MODIFICA ESTA SECCIÓN PARA QUE SEA UN BOTÓN QUE REDIRIJA -->
+            <div class="create-post fade-in" onclick="redirectToCreatePost()" style="cursor: pointer;">
                 <div class="post-input-container">
                     <div class="post-avatar" id="postAvatar">JM</div>
                     <div class="post-input-wrapper">
                         <div class="post-user-info">
                             <span class="post-user-name" id="postUserName">Usuario</span>
                         </div>
-                        <textarea class="post-input" placeholder="¿Qué estás aprendiendo hoy?" id="postContent"></textarea>
+                        <!-- SE CAMBIA EL TEXTAREA POR UN DIV SIMULADO -->
+                        <div class="post-input" id="postInputPlaceholder" style="min-height: 100px; display: flex; align-items: center; color: var(--secondary);">
+                            ¿Qué estás aprendiendo hoy, Usuario?
+                        </div>
                     </div>
                 </div>
-                <div class="post-actions">
-                    <button class="post-action" onclick="addPostMedia('foto')">
+                <div class="post-actions" style="pointer-events: none;">
+                    <div class="post-action">
                         <i class="fas fa-image"></i> Foto
-                    </button>
-                    <button class="post-action" onclick="addPostMedia('video')">
+                    </div>
+                    <div class="post-action">
                         <i class="fas fa-video"></i> Video
-                    </button>
-                    <button class="post-action" onclick="addPostMedia('documento')">
+                    </div>
+                    <div class="post-action">
                         <i class="fas fa-file-alt"></i> Documento
-                    </button>
-                    <button class="post-action" onclick="createPost()" style="color: var(--primary);">
+                    </div>
+                    <div class="post-action" style="color: var(--primary);">
                         <i class="fas fa-paper-plane"></i> Publicar
-                    </button>
+                    </div>
                 </div>
             </div>
 
@@ -1858,7 +1863,7 @@
                     <span>28 comentarios</span>
                 </div>
                 <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="likePost(this)">
+                    <button class="post-action-btn">
                         <i class="fas fa-thumbs-up"></i> Me gusta
                     </button>
                     <button class="post-action-btn">
@@ -1972,6 +1977,11 @@
         // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
         let welcomeNotificationShown = false;
 
+        // ===== FUNCIÓN PARA REDIRIGIR A CREAR PUBLICACIÓN =====
+        function redirectToCreatePost() {
+            window.location.href = 'modulo2_publicaciones.html';
+        }
+
         // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
         function checkSession() {
             const userData = localStorage.getItem('usuarioNeoStudy');
@@ -2081,9 +2091,9 @@
             
             // CORRECCIÓN MEJORADA: Actualizar placeholder del post con el nombre del usuario
             const nombreParaSaludo = primerNombre || 'Usuario';
-            const postContentElement = document.getElementById('postContent');
-            if (postContentElement) {
-                postContentElement.placeholder = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
+            const postInputPlaceholder = document.getElementById('postInputPlaceholder');
+            if (postInputPlaceholder) {
+                postInputPlaceholder.textContent = `¿Qué estás aprendiendo hoy, ${nombreParaSaludo}?`;
             }
             
             // MOSTRAR NOTIFICACIÓN SOLO UNA VEZ
@@ -2276,112 +2286,6 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        // ===== SISTEMA DE PUBLICACIONES =====
-        function createPost() {
-            const content = document.getElementById('postContent').value;
-            if (content.trim() === '') {
-                showNotification('Por favor escribe algo para publicar', 'warning');
-                return;
-            }
-
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            
-            // Extraer nombre según categoría (igual que en loadUserData)
-            let nombreCompleto = 'Usuario';
-            const categoria = userData?.categoria || '';
-            
-            if (categoria === 'profesional') {
-                nombreCompleto = userData.prof_nombre || 'Profesional';
-            } 
-            else if (categoria === 'universitario') {
-                nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
-            }
-            else if (categoria === 'secundaria') {
-                nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
-            }
-            else if (categoria === 'general') {
-                nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
-            }
-            
-            const primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
-            const initials = primerNombre.split(' ').map(n => n[0]).join('').toUpperCase();
-            
-            let userAvatarHTML;
-            if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
-                userAvatarHTML = `<div class="post-user-avatar" style="background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;"></div>`;
-            } else {
-                userAvatarHTML = `<div class="post-user-avatar">${initials}</div>`;
-            }
-
-            const newPost = document.createElement('div');
-            newPost.className = 'post fade-in';
-            newPost.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        ${userAvatarHTML}
-                        <div class="post-user-info">
-                            <h4>${nombreCompleto}</h4>
-                            <p class="post-time">Ahora mismo · <i class="fas fa-user-graduate"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">${content}</div>
-                <div class="post-stats">
-                    <span>0 reacciones</span>
-                    <span>0 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="likePost(this)">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            `;
-
-            document.querySelector('.feed').insertBefore(newPost, document.querySelector('.create-post').nextSibling);
-            document.getElementById('postContent').value = '';
-            showNotification('¡Publicación creada exitosamente! 🎉', 'success');
-        }
-
-        function likePost(button) {
-            const post = button.closest('.post');
-            const stats = post.querySelector('.post-stats span:first-child');
-            const currentLikes = parseInt(stats.textContent) || 0;
-            stats.textContent = `${currentLikes + 1} reacciones`;
-            
-            button.style.color = 'var(--primary)';
-            button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
-        }
-
-        // ===== SISTEMA DE MEDIOS =====
-        function addPostMedia(type) {
-            const mediaTypes = {
-                'foto': '📷 Foto agregada',
-                'video': '🎥 Video agregado', 
-                'documento': '📄 Documento agregado'
-            };
-            
-            const input = document.getElementById('postContent');
-            if (input.value.includes(mediaTypes[type].split(' ')[1])) {
-                showNotification(`Ya agregaste un ${type} a esta publicación`, 'warning');
-                return;
-            }
-            
-            if (input.value.trim() === '') {
-                input.value = `${mediaTypes[type]} - `;
-            } else {
-                input.value += `\n${mediaTypes[type]}`;
-            }
-            
-            showNotification(`Preparado para subir ${type}...`, 'info');
-        }
-
         // ===== SISTEMA DE 3 MODOS DE TEMA =====
         let currentMode = 'normal';
 
@@ -2494,12 +2398,6 @@
             document.getElementById('postAvatar').onclick = goToProfile;
             document.getElementById('mobileProfileAvatar').onclick = goToProfile;
             
-            document.getElementById('postContent').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && e.ctrlKey) {
-                    createPost();
-                }
-            });
-
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 5000);
         });
