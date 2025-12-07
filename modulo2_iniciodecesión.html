@@ -569,7 +569,7 @@
 
         .post-actions-bar {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 0.3rem;
             padding-top: 0.5rem;
         }
@@ -810,10 +810,169 @@
             color: var(--danger);
         }
 
-        .share-modal h2 {
+        /* ===== MODAL DE COMENTARIOS ===== */
+        .comments-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .comments-modal-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+            margin: auto;
+            overflow-y: auto;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .comments-title {
             color: var(--primary);
-            margin-bottom: 1rem;
             font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .comments-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            padding-right: 10px;
+        }
+
+        .comment-item {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .comment-time {
+            font-size: 0.75rem;
+            color: var(--secondary);
+        }
+
+        .comment-text {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .comment-action-btn {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .comment-action-btn:hover {
+            color: var(--primary);
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light);
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--light);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
+        }
+
+        .send-comment-btn {
+            background: var(--bg-gradient);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-comment-btn:hover {
+            transform: scale(1.1);
         }
 
         .share-modal-buttons {
@@ -1037,6 +1196,28 @@
         }
 
         .mobile-achievement-item:hover .mobile-achievement-icon {
+            transform: scale(1.1);
+        }
+
+        /* ===== BOTÓN DE ELIMINAR EN PUBLICACIONES ===== */
+        .delete-post-btn {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .delete-post-btn:hover {
+            color: var(--danger);
+            background: rgba(220, 53, 69, 0.1);
             transform: scale(1.1);
         }
 
@@ -1347,6 +1528,10 @@
             .prompt-text {
                 font-size: 0.9rem;
             }
+
+            .post-actions-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         /* ===== ANIMACIONES ===== */
@@ -1638,6 +1823,28 @@
     </div>
     <div class="overlay" id="overlay"></div>
 
+    <!-- ===== MODAL DE COMENTARIOS ===== -->
+    <div class="comments-modal" id="commentsModal">
+        <div class="comments-modal-content">
+            <div class="comments-header">
+                <h2 class="comments-title"><i class="fas fa-comments"></i> Comentarios</h2>
+                <span class="close-modal" onclick="closeCommentsModal()">&times;</span>
+            </div>
+            
+            <div class="comments-list" id="commentsList">
+                <!-- Los comentarios se cargarán aquí dinámicamente -->
+            </div>
+            
+            <div class="comment-form">
+                <input type="text" class="comment-input" id="commentInput" 
+                       placeholder="Escribe tu comentario..." maxlength="500">
+                <button class="send-comment-btn" onclick="addComment()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== BOTÓN FLOTANTE PARA COMPARTIR ===== -->
     <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos a NeoStudy">
         <i class="fas fa-share-alt"></i>
@@ -1828,7 +2035,7 @@
                     <button class="post-action-btn">
                         <i class="fas fa-thumbs-up"></i> Me interesa
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openCommentsModal('post1')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
                     <button class="post-action-btn">
@@ -1838,7 +2045,7 @@
             </div>
 
             <!-- Publicación existente 1 -->
-            <div class="post fade-in">
+            <div class="post fade-in" data-post-id="userPost1">
                 <div class="post-header">
                     <div class="post-user">
                         <div class="post-user-avatar">AM</div>
@@ -1847,6 +2054,9 @@
                             <p class="post-time">Hace 2 horas · <i class="fas fa-graduation-cap"></i></p>
                         </div>
                     </div>
+                    <button class="delete-post-btn" onclick="confirmDeletePost('userPost1')" title="Eliminar publicación">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
                 <div class="post-content">
                     ¡Acabo de completar el curso de Álgebra Lineal! 🎉 Los eigenvalores ya no son un misterio para mí. #Matemáticas #Progreso
@@ -1859,7 +2069,7 @@
                     <button class="post-action-btn">
                         <i class="fas fa-thumbs-up"></i> Me gusta
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openCommentsModal('userPost1')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
                     <button class="post-action-btn">
@@ -1894,8 +2104,8 @@
                     <button class="post-action-btn">
                         <i class="fas fa-thumbs-up"></i> Me interesa
                     </button>
-                    <button class="post-action-btn">
-                        <i class="fas fa-calendar-plus"></i> Recordar
+                    <button class="post-action-btn" onclick="openCommentsModal('post2')">
+                        <i class="fas fa-comment"></i> Comentar
                     </button>
                     <button class="post-action-btn">
                         <i class="fas fa-share"></i> Compartir
@@ -1935,7 +2145,7 @@
                     <button class="post-action-btn" onclick="window.open('https://englishlab.com', '_blank')">
                         <i class="fas fa-external-link-alt"></i> Ver más
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openCommentsModal('adPost1')">
                         <i class="fas fa-comment"></i> Preguntar
                     </button>
                     <button class="post-action-btn">
@@ -2011,6 +2221,7 @@
     <script>
         // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
         let welcomeNotificationShown = false;
+        let currentPostId = null; // Para controlar el ID del post actual en los comentarios
 
         // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
         function checkSession() {
@@ -2178,16 +2389,17 @@
             posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             
             // Agregar cada publicación al feed
-            posts.forEach(post => {
-                const postElement = createPostElement(post);
+            posts.forEach((post, index) => {
+                const postElement = createPostElement(post, index);
                 postsContainer.appendChild(postElement);
             });
         }
 
-        // ===== FUNCIÓN PARA CREAR ELEMENTOS DE PUBLICACIÓN =====
-        function createPostElement(post) {
+        // ===== FUNCIÓN PARA CREAR ELEMENTOS DE PUBLICACIÓN (MEJORADA) =====
+        function createPostElement(post, postIndex) {
             const postElement = document.createElement('div');
             postElement.className = 'post fade-in';
+            postElement.setAttribute('data-post-id', `userPost${postIndex}`);
             
             // Determinar tipo de badge según el autor
             let badgeClass = 'type-user';
@@ -2246,6 +2458,22 @@
                 adLabel = '<span class="ad-label institution-label">🏫 INSTITUCIÓN</span>';
             }
             
+            // Obtener datos del usuario actual
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            const currentUser = userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre || 'Usuario';
+            
+            // Verificar si esta publicación pertenece al usuario actual
+            let deleteButton = '';
+            if (post.author === currentUser || post.author.includes(currentUser)) {
+                deleteButton = `<button class="delete-post-btn" onclick="confirmDeletePost('userPost${postIndex}')" title="Eliminar publicación">
+                    <i class="fas fa-trash-alt"></i>
+                </button>`;
+            }
+            
+            // Obtener número de comentarios
+            const postComments = JSON.parse(localStorage.getItem(`postComments_userPost${postIndex}`)) || [];
+            const commentCount = postComments.length;
+            
             postElement.innerHTML = `
                 <div class="post-header">
                     <div class="post-user">
@@ -2255,6 +2483,7 @@
                             <p class="post-time">${timeAgo} · <i class="fas fa-user-graduate"></i></p>
                         </div>
                     </div>
+                    ${deleteButton}
                 </div>
                 <div class="post-content">
                     ${adLabel}
@@ -2263,13 +2492,13 @@
                 ${mediaContent}
                 <div class="post-stats">
                     <span>${post.likes || 0} reacciones</span>
-                    <span>${post.comments || 0} comentarios</span>
+                    <span>${commentCount} comentarios</span>
                 </div>
                 <div class="post-actions-bar">
                     <button class="post-action-btn" onclick="likePost(this)">
                         <i class="fas fa-thumbs-up"></i> Me gusta
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openCommentsModal('userPost${postIndex}')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
                     <button class="post-action-btn">
@@ -2279,6 +2508,238 @@
             `;
             
             return postElement;
+        }
+
+        // ===== SISTEMA DE COMENTARIOS =====
+        function openCommentsModal(postId) {
+            currentPostId = postId;
+            const modal = document.getElementById('commentsModal');
+            const commentsList = document.getElementById('commentsList');
+            
+            // Cargar comentarios existentes
+            loadComments(postId);
+            
+            // Mostrar modal
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Enfocar el input de comentarios
+            setTimeout(() => {
+                document.getElementById('commentInput').focus();
+            }, 300);
+        }
+
+        function closeCommentsModal() {
+            const modal = document.getElementById('commentsModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentPostId = null;
+        }
+
+        function loadComments(postId) {
+            const commentsList = document.getElementById('commentsList');
+            commentsList.innerHTML = '';
+            
+            // Cargar comentarios desde localStorage
+            const comments = JSON.parse(localStorage.getItem(`postComments_${postId}`)) || [];
+            
+            if (comments.length === 0) {
+                commentsList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--secondary);">
+                        <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>No hay comentarios todavía.<br>Sé el primero en comentar.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Mostrar cada comentario
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-item';
+                
+                const commentDate = new Date(comment.timestamp);
+                const now = new Date();
+                const diffMs = now - commentDate;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMins / 60);
+                
+                let timeAgo = '';
+                if (diffMins < 60) {
+                    timeAgo = `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
+                } else {
+                    timeAgo = `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
+                }
+                
+                commentElement.innerHTML = `
+                    <div class="comment-avatar">${comment.authorInitials || 'U'}</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            <span class="comment-time">${timeAgo}</span>
+                        </div>
+                        <p class="comment-text">${comment.text}</p>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn" onclick="likeComment('${postId}', '${comment.id}')">
+                                <i class="fas fa-thumbs-up"></i> ${comment.likes || 0}
+                            </button>
+                            <button class="comment-action-btn" onclick="replyToComment('${comment.author}', '${comment.id}')">
+                                <i class="fas fa-reply"></i> Responder
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                commentsList.appendChild(commentElement);
+            });
+            
+            // Scroll al final de los comentarios
+            commentsList.scrollTop = commentsList.scrollHeight;
+        }
+
+        function addComment() {
+            if (!currentPostId) return;
+            
+            const commentInput = document.getElementById('commentInput');
+            const commentText = commentInput.value.trim();
+            
+            if (!commentText) {
+                showNotification('Escribe un comentario primero', 'warning');
+                return;
+            }
+            
+            // Obtener datos del usuario
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            
+            let userName = 'Usuario';
+            if (userData.categoria === 'profesional') {
+                userName = userData.prof_nombre || 'Profesional';
+            } else if (userData.categoria === 'universitario') {
+                userName = userData.uni_nombre || 'Estudiante';
+            } else if (userData.categoria === 'secundaria') {
+                userName = userData.sec_nombre || 'Estudiante';
+            } else if (userData.categoria === 'general') {
+                userName = userData.gen_nombre || 'Usuario';
+            }
+            
+            // Crear objeto de comentario
+            const comment = {
+                id: Date.now().toString(),
+                postId: currentPostId,
+                author: userName,
+                authorInitials: userName.split(' ').map(n => n[0]).join('').toUpperCase(),
+                text: commentText,
+                timestamp: new Date().toISOString(),
+                likes: 0
+            };
+            
+            // Cargar comentarios existentes
+            const commentsKey = `postComments_${currentPostId}`;
+            const existingComments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            
+            // Agregar nuevo comentario
+            existingComments.push(comment);
+            
+            // Guardar en localStorage
+            localStorage.setItem(commentsKey, JSON.stringify(existingComments));
+            
+            // Actualizar contador de comentarios en la publicación
+            updatePostCommentCount(currentPostId, existingComments.length);
+            
+            // Limpiar input y actualizar lista
+            commentInput.value = '';
+            loadComments(currentPostId);
+            
+            // Mostrar notificación
+            showNotification('Comentario publicado', 'success');
+        }
+
+        function updatePostCommentCount(postId, count) {
+            // Actualizar contador en la publicación
+            const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+            if (postElement) {
+                const statsElement = postElement.querySelector('.post-stats span:last-child');
+                if (statsElement) {
+                    statsElement.textContent = `${count} comentarios`;
+                }
+            }
+            
+            // Si es una publicación del feed principal, actualizar también
+            const mainPost = document.getElementById(postId);
+            if (mainPost) {
+                const mainStats = mainPost.querySelector('.post-stats span:last-child');
+                if (mainStats) {
+                    mainStats.textContent = `${count} comentarios`;
+                }
+            }
+        }
+
+        function likeComment(postId, commentId) {
+            const commentsKey = `postComments_${postId}`;
+            const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            
+            const commentIndex = comments.findIndex(c => c.id === commentId);
+            if (commentIndex !== -1) {
+                comments[commentIndex].likes = (comments[commentIndex].likes || 0) + 1;
+                localStorage.setItem(commentsKey, JSON.stringify(comments));
+                loadComments(postId);
+                showNotification('¡Comentario likeado!', 'info');
+            }
+        }
+
+        function replyToComment(author, commentId) {
+            const commentInput = document.getElementById('commentInput');
+            commentInput.value = `@${author} `;
+            commentInput.focus();
+            showNotification(`Respondiendo a ${author}`, 'info');
+        }
+
+        // ===== SISTEMA DE ELIMINACIÓN DE PUBLICACIONES =====
+        function confirmDeletePost(postId) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
+                deletePost(postId);
+            }
+        }
+
+        function deletePost(postId) {
+            // Si es una publicación del localStorage
+            if (postId.startsWith('userPost')) {
+                const postIndex = parseInt(postId.replace('userPost', ''));
+                const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+                
+                if (posts[postIndex]) {
+                    // Eliminar la publicación del array
+                    posts.splice(postIndex, 1);
+                    localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
+                    
+                    // Eliminar comentarios asociados
+                    localStorage.removeItem(`postComments_${postId}`);
+                    
+                    // Eliminar el elemento del DOM
+                    const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+                    if (postElement) {
+                        postElement.remove();
+                    }
+                    
+                    // Recargar las publicaciones
+                    loadPostsFromStorage();
+                    
+                    showNotification('Publicación eliminada correctamente', 'success');
+                }
+            } else {
+                // Para publicaciones estáticas en el HTML
+                const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+                if (postElement) {
+                    postElement.style.opacity = '0';
+                    postElement.style.transform = 'translateX(-100px)';
+                    
+                    setTimeout(() => {
+                        postElement.remove();
+                        showNotification('Publicación eliminada', 'success');
+                    }, 300);
+                }
+            }
         }
 
         function likePost(button) {
@@ -2353,14 +2814,19 @@
 
         window.onclick = function(event) {
             const modal = document.getElementById('shareModal');
+            const commentsModal = document.getElementById('commentsModal');
             if (event.target === modal) {
                 closeShareModal();
+            }
+            if (event.target === commentsModal) {
+                closeCommentsModal();
             }
         };
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeShareModal();
+                closeCommentsModal();
             }
         });
 
@@ -2563,6 +3029,14 @@
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
             document.getElementById('mobileProfileAvatar').onclick = goToProfile;
+            
+            // Configurar eventos para tecla Enter en comentarios
+            document.getElementById('commentInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addComment();
+                }
+            });
             
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 5000);
