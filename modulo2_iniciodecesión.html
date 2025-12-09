@@ -1667,7 +1667,7 @@
                 </a>
             </nav>
             <div class="user-menu">
-                <div class="avatar" id="userAvatar" onclick="goToProfile()">JM</div>
+                <div class="avatar" id="userAvatar" onclick="goToProfile()">U</div>
                 <button class="btn btn-danger" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </button>
@@ -1729,7 +1729,7 @@
         <!-- Perfil del Usuario en el Menú Lateral -->
         <div class="sidebar-links">
             <div class="post-input-container" style="margin-bottom: 1.2rem;">
-                <div class="post-avatar" id="mobileUserAvatar">JM</div>
+                <div class="post-avatar" id="mobileUserAvatar">U</div>
                 <div>
                     <h4 id="mobileFullName">Usuario NeoStudy</h4>
                     <p class="post-time" id="mobileUserTitle">Estudiante</p>
@@ -1924,10 +1924,10 @@
             <!-- Perfil de Usuario -->
             <div class="user-profile">
                 <div class="post-input-container">
-                    <div class="post-avatar" id="mainAvatar" onclick="goToProfile()">JM</div>
+                    <div class="post-avatar" id="mainAvatar" onclick="goToProfile()">U</div>
                     <div>
-                        <h4 id="userName">Juan Manuel</h4>
-                        <p class="post-time" id="userTitle">Estudiante Universitario</p>
+                        <h4 id="userName">Cargando...</h4>
+                        <p class="post-time" id="userTitle">Cargando...</p>
                     </div>
                 </div>
             </div>
@@ -1938,19 +1938,19 @@
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number" id="studyHours">128</div>
+                    <div class="stat-number" id="studyHours">0</div>
                     <div class="stat-label">Horas Est.</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="completedGoals">12</div>
+                    <div class="stat-number" id="completedGoals">0</div>
                     <div class="stat-label">Metas Cumpl.</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="coursesTaken">8</div>
+                    <div class="stat-number" id="coursesTaken">0</div>
                     <div class="stat-label">Cursos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="achievements">15</div>
+                    <div class="stat-number" id="achievements">0</div>
                     <div class="stat-label">Logros</div>
                 </div>
             </div>
@@ -2000,16 +2000,16 @@
         <main class="feed" id="mainFeed">
             <!-- Perfil Móvil (SOLO MÓVIL) - MEJORADO Y COMPLETO -->
             <div class="mobile-profile fade-in">
-                <div class="mobile-profile-avatar" id="mobileProfileAvatar">JM</div>
+                <div class="mobile-profile-avatar" id="mobileProfileAvatar">U</div>
                 <div class="mobile-profile-info">
-                    <div class="mobile-profile-name" id="mobileProfileName">Usuario NeoStudy</div>
-                    <div class="mobile-profile-title" id="mobileProfileTitle">Estudiante</div>
+                    <div class="mobile-profile-name" id="mobileProfileName">Cargando...</div>
+                    <div class="mobile-profile-title" id="mobileProfileTitle">Cargando...</div>
                 </div>
             </div>
 
             <!-- CREAR PUBLICACIÓN - SOLO LA PREGUNTA QUE REDIRIGE A LA PÁGINA DE PUBLICACIÓN -->
             <div class="create-post-prompt fade-in" onclick="goToCreatePost()">
-                <div class="prompt-avatar" id="postAvatar">JM</div>
+                <div class="prompt-avatar" id="postAvatar">U</div>
                 <div class="prompt-text" id="postPromptText">
                     ¿Qué estás aprendiendo hoy?
                 </div>
@@ -2271,41 +2271,50 @@
                 console.log('Datos completos del usuario:', userData);
                 
                 if (userData && typeof userData === 'object') {
-                    // DETECTAR TIPO DE USUARIO Y EXTRAER DATOS CORRECTAMENTE
+                    // EXTRACCIÓN MEJORADA Y COMPATIBLE CON TODAS LAS CATEGORÍAS
                     let nombreCompleto = '';
                     let titulo = '';
                     let categoria = userData.categoria || '';
+                    let primerNombre = '';
                     
-                    // Extraer nombre según la categoría del modulo1
+                    // Extraer nombre según la categoría - COMPATIBLE CON TODAS LAS FORMAS
                     if (categoria === 'profesional') {
                         nombreCompleto = userData.prof_nombre || 'Profesional';
                         titulo = userData.prof_profesion || 'Profesional';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Profesional';
                     } 
                     else if (categoria === 'universitario') {
                         nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
-                        titulo = userData.uni_carrera || 'Estudiante';
+                        titulo = userData.uni_carrera || 'Estudiante Universitario';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
                     }
                     else if (categoria === 'secundaria') {
                         nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
                         titulo = userData.sec_grado || 'Estudiante';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
                     }
                     else if (categoria === 'general') {
                         nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Usuario General';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                     }
                     else {
-                        // Fallback por si no se detecta la categoría
+                        // FALLBACK COMPLETO - busca en todas las posibles propiedades
                         nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
-                                       userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
-                        titulo = 'Estudiante';
+                                       userData.sec_nombre || userData.gen_nombre || 
+                                       userData.nombre || 'Usuario NeoStudy';
+                        titulo = userData.prof_profesion || userData.uni_carrera || 
+                               userData.sec_grado || 'Estudiante';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                     }
                     
                     console.log('Nombre detectado:', nombreCompleto);
                     console.log('Título detectado:', titulo);
                     console.log('Categoría:', categoria);
+                    console.log('Primer nombre:', primerNombre);
                     
                     // Actualizar todos los lugares donde aparece el nombre
-                    updateUserProfile(nombreCompleto, titulo, nombreCompleto.split(' ')[0], profileData);
+                    updateUserProfile(nombreCompleto, titulo, primerNombre, profileData);
                     
                 } else {
                     throw new Error('Formato de datos inválido');
@@ -2362,7 +2371,7 @@
         // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
         function updateProfilePhoto(userName, profileData) {
             const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, .prompt-avatar, #mobileUserAvatar, #mobileProfileAvatar');
-            const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+            const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U';
             
             avatares.forEach(avatar => {
                 if (profileData && profileData.profilePhoto && 
