@@ -810,8 +810,8 @@
             color: var(--danger);
         }
 
-        /* ===== MODAL DE COMENTARIOS ===== */
-        .comments-modal {
+        /* ===== MODAL DE COMPARTIR PUBLICACIÓN ===== */
+        .share-post-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -827,20 +827,21 @@
             padding: 20px 0;
         }
 
-        .comments-modal-content {
+        .share-post-modal-content {
             background: white;
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 20px;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            text-align: center;
             position: relative;
             animation: modalFadeIn 0.3s ease;
             margin: auto;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
-        .comments-header {
+        .share-post-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -849,30 +850,30 @@
             border-bottom: 2px solid var(--light);
         }
 
-        .comments-title {
+        .share-post-title {
             color: var(--primary);
             font-size: 1.5rem;
             margin: 0;
         }
 
-        .comments-list {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 1.5rem;
-            padding-right: 10px;
-        }
-
-        .comment-item {
+        .share-post-preview {
             background: var(--light);
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
-            margin-bottom: 1rem;
-            display: flex;
-            gap: 1rem;
-            animation: fadeIn 0.3s ease;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
-        .comment-avatar {
+        .share-post-preview-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .share-post-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -882,97 +883,103 @@
             justify-content: center;
             color: var(--white);
             font-weight: bold;
-            flex-shrink: 0;
         }
 
-        .comment-content {
-            flex: 1;
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .comment-author {
+        .share-post-author {
             font-weight: 600;
             color: var(--dark);
         }
 
-        .comment-time {
-            font-size: 0.75rem;
-            color: var(--secondary);
-        }
-
-        .comment-text {
-            margin: 0;
+        .share-post-text {
             line-height: 1.5;
+            font-size: 0.95rem;
         }
 
-        .comment-actions {
-            display: flex;
+        .share-social-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 1rem;
-            margin-top: 0.5rem;
+            margin: 1.5rem 0;
         }
 
-        .comment-action-btn {
-            background: none;
+        @media (max-width: 768px) {
+            .share-social-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .share-social-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .share-social-btn {
+            background: var(--light);
             border: none;
-            color: var(--secondary);
+            padding: 1.2rem 0.8rem;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 0.8rem;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
         }
 
-        .comment-action-btn:hover {
+        .share-social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .share-social-btn i {
+            font-size: 1.8rem;
+        }
+
+        .whatsapp-share {
+            color: #25D366;
+        }
+
+        .facebook-share {
+            color: #1877F2;
+        }
+
+        .messenger-share {
+            color: #0084FF;
+        }
+
+        .instagram-share {
+            color: #E4405F;
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .telegram-share {
+            color: #0088CC;
+        }
+
+        .tiktok-share {
+            color: #000000;
+        }
+
+        .twitter-share {
+            color: #1DA1F2;
+        }
+
+        .linkedin-share {
+            color: #0077B5;
+        }
+
+        .email-share {
+            color: #EA4335;
+        }
+
+        .copy-share {
             color: var(--primary);
-        }
-
-        .comment-form {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--light);
-        }
-
-        .comment-input {
-            flex: 1;
-            padding: 0.8rem 1rem;
-            border: 1px solid var(--light);
-            border-radius: 25px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .comment-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
-        }
-
-        .send-comment-btn {
-            background: var(--bg-gradient);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .send-comment-btn:hover {
-            transform: scale(1.1);
         }
 
         .share-modal-buttons {
@@ -1221,6 +1228,13 @@
             transform: scale(1.1);
         }
 
+        /* ===== FOTO DE PERFIL DEL ADMINISTRADOR ===== */
+        .admin-photo {
+            background-image: url('admin-profile.jpg'); /* Asegúrate de tener esta imagen */
+            background-size: cover;
+            background-position: center;
+        }
+
         /* ===== MODO ESTUDIO - MEJOR CONTRASTE ===== */
         .study-mode {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1464,6 +1478,10 @@
             .post {
                 width: 100%;
                 box-sizing: border-box;
+            }
+
+            .post-actions-bar {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1823,23 +1841,26 @@
     </div>
     <div class="overlay" id="overlay"></div>
 
-    <!-- ===== MODAL DE COMENTARIOS ===== -->
-    <div class="comments-modal" id="commentsModal">
-        <div class="comments-modal-content">
-            <div class="comments-header">
-                <h2 class="comments-title"><i class="fas fa-comments"></i> Comentarios</h2>
-                <span class="close-modal" onclick="closeCommentsModal()">&times;</span>
+    <!-- ===== MODAL DE COMPARTIR PUBLICACIÓN ===== -->
+    <div class="share-post-modal" id="sharePostModal">
+        <div class="share-post-modal-content">
+            <div class="share-post-header">
+                <h2 class="share-post-title"><i class="fas fa-share-alt"></i> Compartir Publicación</h2>
+                <span class="close-modal" onclick="closeSharePostModal()">&times;</span>
             </div>
             
-            <div class="comments-list" id="commentsList">
-                <!-- Los comentarios se cargarán aquí dinámicamente -->
+            <div class="share-post-preview" id="sharePostPreview">
+                <!-- Vista previa de la publicación -->
             </div>
             
-            <div class="comment-form">
-                <input type="text" class="comment-input" id="commentInput" 
-                       placeholder="Escribe tu comentario..." maxlength="500">
-                <button class="send-comment-btn" onclick="addComment()">
-                    <i class="fas fa-paper-plane"></i>
+            <div class="share-social-grid" id="shareSocialButtons">
+                <!-- Botones de redes sociales se cargarán aquí -->
+            </div>
+            
+            <div class="link-copy" style="margin-top: 2rem;">
+                <input type="text" id="postLink" value="" readonly>
+                <button class="copy-btn" onclick="copyPostLink()">
+                    <i class="fas fa-copy"></i> Copiar Enlace
                 </button>
             </div>
         </div>
@@ -2010,10 +2031,10 @@
             </div>
 
             <!-- Ejemplo de publicación del sistema/administrador -->
-            <div class="post fade-in">
+            <div class="post fade-in" data-post-id="adminPost1">
                 <div class="post-header">
                     <div class="post-user">
-                        <div class="post-user-avatar" style="background: linear-gradient(135deg, #FFD700, #FFA500);">NS</div>
+                        <div class="post-user-avatar admin-photo" style="background: linear-gradient(135deg, #FFD700, #FFA500);">NS</div>
                         <div class="post-user-info">
                             <h4>Neo Study - Sistema <span class="post-type-badge type-admin">Admin</span></h4>
                             <p class="post-time">Hace 1 día · <i class="fas fa-graduation-cap"></i></p>
@@ -2035,10 +2056,10 @@
                     <button class="post-action-btn">
                         <i class="fas fa-thumbs-up"></i> Me interesa
                     </button>
-                    <button class="post-action-btn" onclick="openCommentsModal('post1')">
+                    <button class="post-action-btn" onclick="openComments('adminPost1')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openSharePostModal('adminPost1')">
                         <i class="fas fa-share"></i> Compartir
                     </button>
                 </div>
@@ -2069,17 +2090,17 @@
                     <button class="post-action-btn">
                         <i class="fas fa-thumbs-up"></i> Me gusta
                     </button>
-                    <button class="post-action-btn" onclick="openCommentsModal('userPost1')">
+                    <button class="post-action-btn" onclick="openComments('userPost1')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openSharePostModal('userPost1')">
                         <i class="fas fa-share"></i> Compartir
                     </button>
                 </div>
             </div>
 
             <!-- Publicación existente 2 -->
-            <div class="post fade-in">
+            <div class="post fade-in" data-post-id="tutorPost1">
                 <div class="post-header">
                     <div class="post-user">
                         <div class="post-user-avatar">CP</div>
@@ -2104,17 +2125,17 @@
                     <button class="post-action-btn">
                         <i class="fas fa-thumbs-up"></i> Me interesa
                     </button>
-                    <button class="post-action-btn" onclick="openCommentsModal('post2')">
+                    <button class="post-action-btn" onclick="openComments('tutorPost1')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openSharePostModal('tutorPost1')">
                         <i class="fas fa-share"></i> Compartir
                     </button>
                 </div>
             </div>
 
             <!-- Ejemplo de publicidad patrocinada -->
-            <div class="post fade-in">
+            <div class="post fade-in" data-post-id="adPost1">
                 <div class="post-header">
                     <div class="post-user">
                         <div class="post-user-avatar" style="background: linear-gradient(135deg, #32CD32, #228B22);">EL</div>
@@ -2145,10 +2166,10 @@
                     <button class="post-action-btn" onclick="window.open('https://englishlab.com', '_blank')">
                         <i class="fas fa-external-link-alt"></i> Ver más
                     </button>
-                    <button class="post-action-btn" onclick="openCommentsModal('adPost1')">
+                    <button class="post-action-btn" onclick="openComments('adPost1')">
                         <i class="fas fa-comment"></i> Preguntar
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openSharePostModal('adPost1')">
                         <i class="fas fa-share"></i> Compartir
                     </button>
                 </div>
@@ -2221,7 +2242,6 @@
     <script>
         // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
         let welcomeNotificationShown = false;
-        let currentPostId = null; // Para controlar el ID del post actual en los comentarios
 
         // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
         function checkSession() {
@@ -2368,6 +2388,14 @@
             window.location.href = 'modulo2_publicaciones.html';
         }
 
+        // ===== NAVEGACIÓN A LA PÁGINA DE COMENTARIOS =====
+        function openComments(postId) {
+            // Guardar el ID de la publicación en localStorage
+            localStorage.setItem('currentPostForComments', postId);
+            // Redirigir a la página de comentarios
+            window.location.href = 'modulo2_comentarios.html';
+        }
+
         // ===== SISTEMA PARA CARGAR PUBLICACIONES DESDE LOCALSTORAGE =====
         function loadPostsFromStorage() {
             const postsContainer = document.getElementById('postsContainer');
@@ -2498,10 +2526,10 @@
                     <button class="post-action-btn" onclick="likePost(this)">
                         <i class="fas fa-thumbs-up"></i> Me gusta
                     </button>
-                    <button class="post-action-btn" onclick="openCommentsModal('userPost${postIndex}')">
+                    <button class="post-action-btn" onclick="openComments('userPost${postIndex}')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
-                    <button class="post-action-btn">
+                    <button class="post-action-btn" onclick="openSharePostModal('userPost${postIndex}')">
                         <i class="fas fa-share"></i> Compartir
                     </button>
                 </div>
@@ -2510,189 +2538,148 @@
             return postElement;
         }
 
-        // ===== SISTEMA DE COMENTARIOS =====
-        function openCommentsModal(postId) {
-            currentPostId = postId;
-            const modal = document.getElementById('commentsModal');
-            const commentsList = document.getElementById('commentsList');
+        // ===== SISTEMA DE COMPARTIR PUBLICACIONES =====
+        let currentSharePostId = null;
+
+        function openSharePostModal(postId) {
+            currentSharePostId = postId;
+            const modal = document.getElementById('sharePostModal');
+            const preview = document.getElementById('sharePostPreview');
+            const socialButtons = document.getElementById('shareSocialButtons');
             
-            // Cargar comentarios existentes
-            loadComments(postId);
+            // Obtener datos de la publicación
+            const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+            if (!postElement) {
+                showNotification('Error al cargar la publicación', 'danger');
+                return;
+            }
+            
+            const author = postElement.querySelector('.post-user-info h4').textContent;
+            const content = postElement.querySelector('.post-content').innerText;
+            const time = postElement.querySelector('.post-time').textContent;
+            
+            // Crear vista previa
+            preview.innerHTML = `
+                <div class="share-post-preview-header">
+                    <div class="share-post-avatar">${author.charAt(0)}</div>
+                    <div>
+                        <div class="share-post-author">${author}</div>
+                        <div style="color: var(--secondary); font-size: 0.8rem;">${time}</div>
+                    </div>
+                </div>
+                <div class="share-post-text">${content.substring(0, 200)}${content.length > 200 ? '...' : ''}</div>
+            `;
+            
+            // Configurar enlace de compartir
+            const postLinkInput = document.getElementById('postLink');
+            postLinkInput.value = `https://neostudy.com/post/${postId}`;
+            
+            // Crear botones de redes sociales
+            const socialMedia = [
+                { name: 'WhatsApp', icon: 'fab fa-whatsapp', class: 'whatsapp-share', action: 'shareWhatsAppPost' },
+                { name: 'Facebook', icon: 'fab fa-facebook', class: 'facebook-share', action: 'shareFacebookPost' },
+                { name: 'Messenger', icon: 'fab fa-facebook-messenger', class: 'messenger-share', action: 'shareMessengerPost' },
+                { name: 'Instagram', icon: 'fab fa-instagram', class: 'instagram-share', action: 'shareInstagramPost' },
+                { name: 'Telegram', icon: 'fab fa-telegram', class: 'telegram-share', action: 'shareTelegramPost' },
+                { name: 'TikTok', icon: 'fab fa-tiktok', class: 'tiktok-share', action: 'shareTikTokPost' },
+                { name: 'Twitter', icon: 'fab fa-twitter', class: 'twitter-share', action: 'shareTwitterPost' },
+                { name: 'LinkedIn', icon: 'fab fa-linkedin', class: 'linkedin-share', action: 'shareLinkedInPost' },
+                { name: 'Email', icon: 'fas fa-envelope', class: 'email-share', action: 'shareEmailPost' },
+                { name: 'Copiar', icon: 'fas fa-copy', class: 'copy-share', action: 'copyPostLink' }
+            ];
+            
+            socialButtons.innerHTML = '';
+            socialMedia.forEach(social => {
+                const button = document.createElement('button');
+                button.className = `share-social-btn ${social.class}`;
+                button.onclick = () => window[social.action]();
+                button.innerHTML = `
+                    <i class="${social.icon}"></i>
+                    <span>${social.name}</span>
+                `;
+                socialButtons.appendChild(button);
+            });
             
             // Mostrar modal
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
-            // Enfocar el input de comentarios
-            setTimeout(() => {
-                document.getElementById('commentInput').focus();
-            }, 300);
         }
 
-        function closeCommentsModal() {
-            const modal = document.getElementById('commentsModal');
+        function closeSharePostModal() {
+            const modal = document.getElementById('sharePostModal');
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
-            currentPostId = null;
+            currentSharePostId = null;
         }
 
-        function loadComments(postId) {
-            const commentsList = document.getElementById('commentsList');
-            commentsList.innerHTML = '';
-            
-            // Cargar comentarios desde localStorage
-            const comments = JSON.parse(localStorage.getItem(`postComments_${postId}`)) || [];
-            
-            if (comments.length === 0) {
-                commentsList.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--secondary);">
-                        <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <p>No hay comentarios todavía.<br>Sé el primero en comentar.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Mostrar cada comentario
-            comments.forEach(comment => {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment-item';
-                
-                const commentDate = new Date(comment.timestamp);
-                const now = new Date();
-                const diffMs = now - commentDate;
-                const diffMins = Math.floor(diffMs / 60000);
-                const diffHours = Math.floor(diffMins / 60);
-                
-                let timeAgo = '';
-                if (diffMins < 60) {
-                    timeAgo = `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
-                } else {
-                    timeAgo = `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
-                }
-                
-                commentElement.innerHTML = `
-                    <div class="comment-avatar">${comment.authorInitials || 'U'}</div>
-                    <div class="comment-content">
-                        <div class="comment-header">
-                            <span class="comment-author">${comment.author}</span>
-                            <span class="comment-time">${timeAgo}</span>
-                        </div>
-                        <p class="comment-text">${comment.text}</p>
-                        <div class="comment-actions">
-                            <button class="comment-action-btn" onclick="likeComment('${postId}', '${comment.id}')">
-                                <i class="fas fa-thumbs-up"></i> ${comment.likes || 0}
-                            </button>
-                            <button class="comment-action-btn" onclick="replyToComment('${comment.author}', '${comment.id}')">
-                                <i class="fas fa-reply"></i> Responder
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                commentsList.appendChild(commentElement);
-            });
-            
-            // Scroll al final de los comentarios
-            commentsList.scrollTop = commentsList.scrollHeight;
+        function shareWhatsAppPost() {
+            const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓\n\n${document.getElementById('postLink').value}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+            showNotification('Compartiendo en WhatsApp...', 'info');
         }
 
-        function addComment() {
-            if (!currentPostId) return;
-            
-            const commentInput = document.getElementById('commentInput');
-            const commentText = commentInput.value.trim();
-            
-            if (!commentText) {
-                showNotification('Escribe un comentario primero', 'warning');
-                return;
-            }
-            
-            // Obtener datos del usuario
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            
-            let userName = 'Usuario';
-            if (userData.categoria === 'profesional') {
-                userName = userData.prof_nombre || 'Profesional';
-            } else if (userData.categoria === 'universitario') {
-                userName = userData.uni_nombre || 'Estudiante';
-            } else if (userData.categoria === 'secundaria') {
-                userName = userData.sec_nombre || 'Estudiante';
-            } else if (userData.categoria === 'general') {
-                userName = userData.gen_nombre || 'Usuario';
-            }
-            
-            // Crear objeto de comentario
-            const comment = {
-                id: Date.now().toString(),
-                postId: currentPostId,
-                author: userName,
-                authorInitials: userName.split(' ').map(n => n[0]).join('').toUpperCase(),
-                text: commentText,
-                timestamp: new Date().toISOString(),
-                likes: 0
-            };
-            
-            // Cargar comentarios existentes
-            const commentsKey = `postComments_${currentPostId}`;
-            const existingComments = JSON.parse(localStorage.getItem(commentsKey)) || [];
-            
-            // Agregar nuevo comentario
-            existingComments.push(comment);
-            
-            // Guardar en localStorage
-            localStorage.setItem(commentsKey, JSON.stringify(existingComments));
-            
-            // Actualizar contador de comentarios en la publicación
-            updatePostCommentCount(currentPostId, existingComments.length);
-            
-            // Limpiar input y actualizar lista
-            commentInput.value = '';
-            loadComments(currentPostId);
-            
-            // Mostrar notificación
-            showNotification('Comentario publicado', 'success');
+        function shareFacebookPost() {
+            const url = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            showNotification('Compartiendo en Facebook...', 'info');
         }
 
-        function updatePostCommentCount(postId, count) {
-            // Actualizar contador en la publicación
-            const postElement = document.querySelector(`[data-post-id="${postId}"]`);
-            if (postElement) {
-                const statsElement = postElement.querySelector('.post-stats span:last-child');
-                if (statsElement) {
-                    statsElement.textContent = `${count} comentarios`;
-                }
-            }
-            
-            // Si es una publicación del feed principal, actualizar también
-            const mainPost = document.getElementById(postId);
-            if (mainPost) {
-                const mainStats = mainPost.querySelector('.post-stats span:last-child');
-                if (mainStats) {
-                    mainStats.textContent = `${count} comentarios`;
-                }
-            }
+        function shareMessengerPost() {
+            const url = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`fb-messenger://share/?link=${url}`, '_blank');
+            showNotification('Compartiendo en Messenger...', 'info');
         }
 
-        function likeComment(postId, commentId) {
-            const commentsKey = `postComments_${postId}`;
-            const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
-            
-            const commentIndex = comments.findIndex(c => c.id === commentId);
-            if (commentIndex !== -1) {
-                comments[commentIndex].likes = (comments[commentIndex].likes || 0) + 1;
-                localStorage.setItem(commentsKey, JSON.stringify(comments));
-                loadComments(postId);
-                showNotification('¡Comentario likeado!', 'info');
-            }
+        function shareInstagramPost() {
+            // Instagram no permite compartir directamente, solo copiar enlace
+            copyPostLink();
+            showNotification('Enlace copiado para compartir en Instagram', 'info');
         }
 
-        function replyToComment(author, commentId) {
-            const commentInput = document.getElementById('commentInput');
-            commentInput.value = `@${author} `;
-            commentInput.focus();
-            showNotification(`Respondiendo a ${author}`, 'info');
+        function shareTelegramPost() {
+            const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓`);
+            const url = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+            showNotification('Compartiendo en Telegram...', 'info');
+        }
+
+        function shareTikTokPost() {
+            // TikTok no permite compartir directamente, solo copiar enlace
+            copyPostLink();
+            showNotification('Enlace copiado para compartir en TikTok', 'info');
+        }
+
+        function shareTwitterPost() {
+            const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓`);
+            const url = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+            showNotification('Compartiendo en Twitter...', 'info');
+        }
+
+        function shareLinkedInPost() {
+            const url = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+            showNotification('Compartiendo en LinkedIn...', 'info');
+        }
+
+        function shareEmailPost() {
+            const subject = encodeURIComponent('Mira esta publicación en NeoStudy');
+            const body = encodeURIComponent(`¡Hola!\n\nTe comparto esta publicación interesante en NeoStudy:\n\n${document.getElementById('postLink').value}\n\n¡Saludos!`);
+            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+            showNotification('Abriendo cliente de email...', 'info');
+        }
+
+        function copyPostLink() {
+            const linkInput = document.getElementById('postLink');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(linkInput.value)
+                .then(() => showNotification('Enlace de la publicación copiado 📋', 'success'))
+                .catch(err => {
+                    document.execCommand('copy');
+                    showNotification('Enlace de la publicación copiado 📋', 'success');
+                });
         }
 
         // ===== SISTEMA DE ELIMINACIÓN DE PUBLICACIONES =====
@@ -2814,19 +2801,19 @@
 
         window.onclick = function(event) {
             const modal = document.getElementById('shareModal');
-            const commentsModal = document.getElementById('commentsModal');
+            const sharePostModal = document.getElementById('sharePostModal');
             if (event.target === modal) {
                 closeShareModal();
             }
-            if (event.target === commentsModal) {
-                closeCommentsModal();
+            if (event.target === sharePostModal) {
+                closeSharePostModal();
             }
         };
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeShareModal();
-                closeCommentsModal();
+                closeSharePostModal();
             }
         });
 
@@ -3029,14 +3016,6 @@
             document.getElementById('userAvatar').onclick = goToProfile;
             document.getElementById('mainAvatar').onclick = goToProfile;
             document.getElementById('mobileProfileAvatar').onclick = goToProfile;
-            
-            // Configurar eventos para tecla Enter en comentarios
-            document.getElementById('commentInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addComment();
-                }
-            });
             
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 5000);
