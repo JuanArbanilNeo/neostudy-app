@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comentarios - Neo Study</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #00C4FF;
+            --primary-dark: #007bff;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #00C4FF, #007bff);
+            --card-radius: 12px;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+
+        /* ===== HEADER PARA ESCRITORIO ===== */
+        .desktop-header {
+            background: var(--bg-gradient);
+            color: var(--white);
+            padding: 0.8rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== HEADER PARA MÓVIL ===== */
+        .mobile-header {
+            display: none;
+            background: var(--bg-gradient);
+            color: var(--white);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+        }
+
+        .mobile-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hamburger-menu {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ===== CONTENIDO PRINCIPAL DE COMENTARIOS ===== */
+        .main-container {
+            max-width: 800px;
+            margin: 80px auto 20px;
+            padding: 0 1rem;
+        }
+
+        .back-button {
+            background: var(--bg-gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        /* ===== PUBLICACIÓN PRINCIPAL ===== */
+        .post-main {
+            background: var(--white);
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .post-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .post-user-info h4 {
+            margin-bottom: 0.2rem;
+            font-size: 1.1rem;
+        }
+
+        .post-time {
+            font-size: 0.85rem;
+            color: var(--secondary);
+        }
+
+        .post-content {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light);
+        }
+
+        /* ===== SECCIÓN DE COMENTARIOS ===== */
+        .comments-section {
+            background: var(--white);
+            border-radius: var(--card-radius);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .comments-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .comments-count {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* ===== LISTA DE COMENTARIOS ===== */
+        .comments-list {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            padding-right: 10px;
+        }
+
+        .comment-item {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .comment-time {
+            font-size: 0.75rem;
+            color: var(--secondary);
+        }
+
+        .comment-text {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .comment-action-btn {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .comment-action-btn:hover {
+            color: var(--primary);
+        }
+
+        .comment-likes {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* ===== FORMULARIO DE COMENTARIOS ===== */
+        .comment-form {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+        }
+
+        .comment-input-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .current-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--light);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            resize: none;
+            min-height: 80px;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
+        }
+
+        .comment-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .char-count {
+            color: var(--secondary);
+            font-size: 0.85rem;
+        }
+
+        .send-comment-btn {
+            background: var(--bg-gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .send-comment-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+        }
+
+        .send-comment-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== MENSAJE SIN COMENTARIOS ===== */
+        .no-comments {
+            text-align: center;
+            padding: 3rem;
+            color: var(--secondary);
+        }
+
+        .no-comments i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .desktop-header {
+                display: none;
+            }
+
+            .mobile-header {
+                display: block;
+            }
+
+            .main-container {
+                margin: 70px auto 20px;
+            }
+
+            .post-main {
+                padding: 1rem;
+            }
+
+            .comments-section {
+                padding: 1rem;
+            }
+
+            .comment-input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .current-user-avatar {
+                align-self: center;
+            }
+
+            .comment-form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .char-count {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .post-user-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .current-user-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .comment-item {
+                padding: 0.8rem;
+            }
+
+            .comment-avatar {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== NOTIFICACIONES ===== */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.info {
+            background: var(--info);
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HEADER PARA ESCRITORIO ===== -->
+    <header class="desktop-header">
+        <div class="nav-container">
+            <div class="logo" onclick="goToFeed()">
+                <i class="fas fa-graduation-cap"></i>
+                Neo Study
+            </div>
+            <nav class="nav-menu">
+                <a href="modulo2_iniciodecesión.html" class="nav-item">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a href="modulo4_cursos.html" class="nav-item">
+                    <i class="fas fa-book"></i> Cursos
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i> Comunidad
+                </a>
+            </nav>
+            <div class="user-menu">
+                <div class="avatar" id="userAvatar" onclick="goToProfile()">U</div>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== HEADER PARA MÓVIL ===== -->
+    <header class="mobile-header">
+        <div class="mobile-nav-top">
+            <div class="mobile-logo" onclick="goToFeed()">
+                <i class="fas fa-graduation-cap"></i>
+                Neo Study
+            </div>
+            <div class="mobile-controls">
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
+    <div class="main-container">
+        <!-- Botón para volver al feed -->
+        <button class="back-button" onclick="goBackToFeed()">
+            <i class="fas fa-arrow-left"></i>
+            Volver al Feed
+        </button>
+
+        <!-- Publicación Principal -->
+        <div class="post-main" id="postMain">
+            <!-- La publicación se cargará aquí -->
+        </div>
+
+        <!-- Sección de Comentarios -->
+        <div class="comments-section">
+            <div class="comments-header">
+                <h2 class="comments-title"><i class="fas fa-comments"></i> Comentarios</h2>
+                <span class="comments-count" id="commentsCount">0 comentarios</span>
+            </div>
+
+            <!-- Lista de Comentarios -->
+            <div class="comments-list" id="commentsList">
+                <!-- Los comentarios se cargarán aquí -->
+            </div>
+
+            <!-- Mensaje cuando no hay comentarios -->
+            <div class="no-comments" id="noComments" style="display: none;">
+                <i class="fas fa-comment-slash"></i>
+                <h3>No hay comentarios todavía</h3>
+                <p>Sé el primero en comentar esta publicación.</p>
+            </div>
+
+            <!-- Formulario para comentar -->
+            <div class="comment-form">
+                <div class="comment-input-container">
+                    <div class="current-user-avatar" id="currentUserAvatar">U</div>
+                    <textarea class="comment-input" id="commentInput" 
+                              placeholder="Escribe tu comentario..." 
+                              maxlength="500"
+                              oninput="updateCharCount()"></textarea>
+                </div>
+                <div class="comment-form-actions">
+                    <span class="char-count" id="charCount">0/500</span>
+                    <button class="send-comment-btn" id="sendCommentBtn" onclick="addComment()" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                        Publicar Comentario
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== VARIABLES GLOBALES =====
+        let currentPostId = null;
+        let currentUserData = null;
+        let currentUserAvatar = 'U';
+
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos del usuario
+            loadUserData();
+            
+            // Obtener el ID de la publicación desde localStorage
+            currentPostId = localStorage.getItem('currentPostForComments');
+            
+            if (!currentPostId) {
+                showNotification('No se encontró la publicación', 'error');
+                setTimeout(() => goBackToFeed(), 2000);
+                return;
+            }
+            
+            // Cargar la publicación y comentarios
+            loadPostData();
+            loadComments();
+            
+            // Configurar eventos
+            document.getElementById('commentInput').addEventListener('input', checkCommentInput);
+            document.getElementById('commentInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+                    addComment();
+                }
+            });
+            
+            // Configurar tema si existe en localStorage
+            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            if (savedTheme === 'dark-mode') {
+                document.body.classList.add('dark-mode');
+            } else if (savedTheme === 'study-mode') {
+                document.body.classList.add('study-mode');
+            }
+        });
+
+        // ===== CARGAR DATOS DEL USUARIO =====
+        function loadUserData() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+                const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+                
+                currentUserData = userData;
+                
+                if (userData) {
+                    // Obtener nombre del usuario
+                    let userName = 'Usuario';
+                    if (userData.categoria === 'profesional') {
+                        userName = userData.prof_nombre || 'Profesional';
+                    } else if (userData.categoria === 'universitario') {
+                        userName = userData.uni_nombre || 'Estudiante';
+                    } else if (userData.categoria === 'secundaria') {
+                        userName = userData.sec_nombre || 'Estudiante';
+                    } else if (userData.categoria === 'general') {
+                        userName = userData.gen_nombre || 'Usuario';
+                    }
+                    
+                    // Actualizar avatar
+                    currentUserAvatar = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    
+                    const avatarElement = document.getElementById('currentUserAvatar');
+                    const headerAvatar = document.getElementById('userAvatar');
+                    
+                    if (avatarElement) avatarElement.textContent = currentUserAvatar;
+                    if (headerAvatar) headerAvatar.textContent = currentUserAvatar;
+                    
+                    // Si hay foto de perfil, mostrarla
+                    if (profileData && profileData.profilePhoto && 
+                        profileData.profilePhoto.startsWith('data:image')) {
+                        
+                        if (avatarElement) {
+                            avatarElement.style.backgroundImage = `url(${profileData.profilePhoto})`;
+                            avatarElement.textContent = '';
+                        }
+                        if (headerAvatar) {
+                            headerAvatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
+                            headerAvatar.textContent = '';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error cargando datos del usuario:', error);
+            }
+        }
+
+        // ===== CARGAR DATOS DE LA PUBLICACIÓN =====
+        function loadPostData() {
+            const postMain = document.getElementById('postMain');
+            
+            // Buscar la publicación en las publicaciones del localStorage
+            if (currentPostId.startsWith('userPost')) {
+                const postIndex = parseInt(currentPostId.replace('userPost', ''));
+                const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+                
+                if (posts[postIndex]) {
+                    displayPost(posts[postIndex]);
+                    return;
+                }
+            }
+            
+            // Si no está en localStorage, buscar en las publicaciones estáticas
+            const staticPosts = {
+                'adminPost1': {
+                    author: 'Neo Study - Sistema',
+                    authorInitials: 'NS',
+                    content: '<span class="ad-label scholarship-label">🏆 BECA COMPLETA</span><br><strong>¡Convocatoria abierta para becas de excelencia 2024!</strong><br><br>Neo Study otorgará 10 becas completas para estudiantes destacados. Requisitos: promedio mínimo de 4.5, carta de motivación y participar en nuestra comunidad.<br><br>📅 Fecha límite: 30 de noviembre 2024<br>📧 Enviar documentos a: becas@neostudy.com',
+                    timestamp: new Date(Date.now() - 86400000).toISOString(), // Hace 1 día
+                    type: 'admin'
+                },
+                'userPost1': {
+                    author: 'Ana Martínez',
+                    authorInitials: 'AM',
+                    content: '¡Acabo de completar el curso de Álgebra Lineal! 🎉 Los eigenvalores ya no son un misterio para mí. #Matemáticas #Progreso',
+                    timestamp: new Date(Date.now() - 7200000).toISOString(), // Hace 2 horas
+                    type: 'user'
+                },
+                'tutorPost1': {
+                    author: 'Carlos Pérez - Tutor',
+                    authorInitials: 'CP',
+                    content: '📚 Clase en vivo este sábado: "Resolución de problemas de Física - Movimiento Parabólico". ¡No se lo pierdan! Traigan sus dudas y ejercicios.',
+                    timestamp: new Date(Date.now() - 86400000).toISOString(), // Hace 1 día
+                    type: 'user',
+                    hasImage: true
+                },
+                'adPost1': {
+                    author: 'English Lab',
+                    authorInitials: 'EL',
+                    content: '<span class="ad-label sponsored-label">📚 PATROCINADO</span><br><strong>Aprende inglés desde cero con nuestro método comprobado</strong><br><br>🎯 Niveles A1 a C2<br>👨‍🏫 Tutores nativos certificados<br>💻 Clases virtuales en vivo<br>📱 Plataforma interactiva 24/7<br><br><strong>¡50% de descuento para estudiantes de NeoStudy!</strong><br>Usa el código: <strong>NEO50</strong>',
+                    timestamp: new Date(Date.now() - 259200000).toISOString(), // Hace 3 días
+                    type: 'ad'
+                }
+            };
+            
+            if (staticPosts[currentPostId]) {
+                displayPost(staticPosts[currentPostId]);
+            } else {
+                // Publicación no encontrada
+                postMain.innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;"></i>
+                        <h3>Publicación no encontrada</h3>
+                        <p>La publicación que buscas no existe o ha sido eliminada.</p>
+                        <button class="back-button" onclick="goBackToFeed()" style="margin-top: 1rem;">
+                            <i class="fas fa-arrow-left"></i>
+                            Volver al Feed
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function displayPost(post) {
+            const postMain = document.getElementById('postMain');
+            
+            // Formatear fecha
+            const postDate = new Date(post.timestamp);
+            const now = new Date();
+            const diffMs = now - postDate;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            let timeAgo = '';
+            if (diffMins < 60) {
+                timeAgo = `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
+            } else if (diffHours < 24) {
+                timeAgo = `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
+            } else {
+                timeAgo = `Hace ${diffDays} día${diffDays !== 1 ? 's' : ''}`;
+            }
+            
+            // Determinar badge
+            let badgeClass = 'type-user';
+            let badgeText = 'Usuario';
+            
+            if (post.type === 'admin') {
+                badgeClass = 'type-admin';
+                badgeText = 'Admin';
+            } else if (post.type === 'ad') {
+                badgeClass = 'type-ad';
+                badgeText = 'Patrocinado';
+            }
+            
+            // Construir HTML de la publicación
+            let imageContent = '';
+            if (post.hasImage) {
+                imageContent = `
+                    <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        CLASE EN VIVO - SÁBADO 3 PM
+                    </div>
+                `;
+            }
+            
+            postMain.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-user-avatar" style="${post.type === 'admin' ? 'background: linear-gradient(135deg, #FFD700, #FFA500);' : ''}">
+                            ${post.authorInitials}
+                        </div>
+                        <div class="post-user-info">
+                            <h4>${post.author} <span class="post-type-badge ${badgeClass}">${badgeText}</span></h4>
+                            <p class="post-time">${timeAgo} · <i class="fas fa-user-graduate"></i></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    ${post.content}
+                </div>
+                ${imageContent}
+                <div class="post-stats">
+                    <span id="postLikes">0 reacciones</span>
+                    <span id="postCommentsCount">0 comentarios</span>
+                </div>
+            `;
+        }
+
+        // ===== CARGAR COMENTARIOS =====
+        function loadComments() {
+            const commentsList = document.getElementById('commentsList');
+            const noComments = document.getElementById('noComments');
+            
+            // Obtener comentarios del localStorage
+            const commentsKey = `postComments_${currentPostId}`;
+            const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            
+            // Actualizar contador
+            updateCommentsCount(comments.length);
+            
+            if (comments.length === 0) {
+                commentsList.innerHTML = '';
+                noComments.style.display = 'block';
+                return;
+            }
+            
+            noComments.style.display = 'none';
+            commentsList.innerHTML = '';
+            
+            // Ordenar comentarios por fecha (más recientes primero)
+            comments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Mostrar cada comentario
+            comments.forEach(comment => {
+                const commentElement = createCommentElement(comment);
+                commentsList.appendChild(commentElement);
+            });
+            
+            // Scroll al final de los comentarios
+            setTimeout(() => {
+                commentsList.scrollTop = commentsList.scrollHeight;
+            }, 100);
+        }
+
+        function createCommentElement(comment) {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment-item';
+            
+            const commentDate = new Date(comment.timestamp);
+            const now = new Date();
+            const diffMs = now - commentDate;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            
+            let timeAgo = '';
+            if (diffMins < 60) {
+                timeAgo = `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
+            } else {
+                timeAgo = `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
+            }
+            
+            commentElement.innerHTML = `
+                <div class="comment-avatar">${comment.authorInitials || 'U'}</div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.author}</span>
+                        <span class="comment-time">${timeAgo}</span>
+                    </div>
+                    <p class="comment-text">${comment.text}</p>
+                    <div class="comment-actions">
+                        <button class="comment-action-btn" onclick="likeComment('${comment.id}')">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span class="comment-likes">${comment.likes || 0}</span>
+                        </button>
+                        <button class="comment-action-btn" onclick="replyToComment('${comment.author}')">
+                            <i class="fas fa-reply"></i> Responder
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return commentElement;
+        }
+
+        function updateCommentsCount(count) {
+            const countElement = document.getElementById('commentsCount');
+            const postCountElement = document.getElementById('postCommentsCount');
+            
+            if (countElement) {
+                countElement.textContent = `${count} comentario${count !== 1 ? 's' : ''}`;
+            }
+            
+            if (postCountElement) {
+                postCountElement.textContent = `${count} comentario${count !== 1 ? 's' : ''}`;
+            }
+        }
+
+        // ===== AGREGAR NUEVO COMENTARIO =====
+        function addComment() {
+            const commentInput = document.getElementById('commentInput');
+            const commentText = commentInput.value.trim();
+            
+            if (!commentText) {
+                showNotification('Escribe un comentario primero', 'error');
+                return;
+            }
+            
+            if (!currentUserData) {
+                showNotification('Debes iniciar sesión para comentar', 'error');
+                return;
+            }
+            
+            // Obtener nombre del usuario
+            let userName = 'Usuario';
+            if (currentUserData.categoria === 'profesional') {
+                userName = currentUserData.prof_nombre || 'Profesional';
+            } else if (currentUserData.categoria === 'universitario') {
+                userName = currentUserData.uni_nombre || 'Estudiante';
+            } else if (currentUserData.categoria === 'secundaria') {
+                userName = currentUserData.sec_nombre || 'Estudiante';
+            } else if (currentUserData.categoria === 'general') {
+                userName = currentUserData.gen_nombre || 'Usuario';
+            }
+            
+            // Crear objeto de comentario
+            const comment = {
+                id: Date.now().toString(),
+                postId: currentPostId,
+                author: userName,
+                authorInitials: currentUserAvatar,
+                text: commentText,
+                timestamp: new Date().toISOString(),
+                likes: 0
+            };
+            
+            // Obtener comentarios existentes
+            const commentsKey = `postComments_${currentPostId}`;
+            const existingComments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            
+            // Agregar nuevo comentario
+            existingComments.push(comment);
+            
+            // Guardar en localStorage
+            localStorage.setItem(commentsKey, JSON.stringify(existingComments));
+            
+            // Limpiar input
+            commentInput.value = '';
+            updateCharCount();
+            checkCommentInput();
+            
+            // Actualizar lista de comentarios
+            loadComments();
+            
+            // Mostrar notificación
+            showNotification('Comentario publicado', 'success');
+            
+            // Enfocar el input de nuevo
+            commentInput.focus();
+        }
+
+        // ===== FUNCIONES DE INTERACCIÓN =====
+        function likeComment(commentId) {
+            const commentsKey = `postComments_${currentPostId}`;
+            const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            
+            const commentIndex = comments.findIndex(c => c.id === commentId);
+            if (commentIndex !== -1) {
+                comments[commentIndex].likes = (comments[commentIndex].likes || 0) + 1;
+                localStorage.setItem(commentsKey, JSON.stringify(comments));
+                loadComments();
+                showNotification('¡Comentario likeado!', 'info');
+            }
+        }
+
+        function replyToComment(author) {
+            const commentInput = document.getElementById('commentInput');
+            commentInput.value = `@${author} `;
+            commentInput.focus();
+            updateCharCount();
+            checkCommentInput();
+            showNotification(`Respondiendo a ${author}`, 'info');
+        }
+
+        // ===== FUNCIONES DE UTILIDAD =====
+        function updateCharCount() {
+            const commentInput = document.getElementById('commentInput');
+            const charCount = document.getElementById('charCount');
+            const currentLength = commentInput.value.length;
+            charCount.textContent = `${currentLength}/500`;
+            
+            if (currentLength > 450) {
+                charCount.style.color = 'var(--warning)';
+            } else if (currentLength > 490) {
+                charCount.style.color = 'var(--danger)';
+            } else {
+                charCount.style.color = 'var(--secondary)';
+            }
+        }
+
+        function checkCommentInput() {
+            const commentInput = document.getElementById('commentInput');
+            const sendBtn = document.getElementById('sendCommentBtn');
+            const hasText = commentInput.value.trim().length > 0;
+            
+            sendBtn.disabled = !hasText;
+        }
+
+        // ===== NAVEGACIÓN =====
+        function goBackToFeed() {
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        function goToFeed() {
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        function goToProfile() {
+            window.location.href = 'modulo3_perfil.html';
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                showNotification('Sesión cerrada correctamente', 'info');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 1500);
+            }
+        }
+
+        // ===== SISTEMA DE NOTIFICACIONES =====
+        function showNotification(message, type = 'info') {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.background = 
+                type === 'success' ? 'var(--success)' :
+                type === 'error' ? 'var(--danger)' :
+                type === 'info' ? 'var(--info)' : 'var(--warning)';
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
