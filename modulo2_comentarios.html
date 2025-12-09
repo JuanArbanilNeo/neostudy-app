@@ -27,175 +27,105 @@
             --bg-gradient: linear-gradient(135deg, #00C4FF, #007bff);
             --card-radius: 12px;
             --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --light-border: #e9ecef;
+            --reply-bg: #f1f8ff;
         }
 
         body {
             background: var(--light);
             color: var(--dark);
-            overflow-x: hidden;
             line-height: 1.5;
             transition: all 0.3s ease;
-        }
-
-        /* ===== HEADER PARA ESCRITORIO ===== */
-        .desktop-header {
-            background: var(--bg-gradient);
-            color: var(--white);
-            padding: 0.8rem 0;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1rem;
+            flex-direction: column;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .nav-item {
-            color: var(--white);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        /* ===== HEADER SIMPLIFICADO ===== */
+        .comments-header {
             background: var(--white);
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--light-border);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--primary);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .avatar:hover {
-            transform: scale(1.1);
-        }
-
-        /* ===== HEADER PARA MÓVIL ===== */
-        .mobile-header {
-            display: none;
-            background: var(--bg-gradient);
-            color: var(--white);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .mobile-nav-top {
-            display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .mobile-logo {
-            font-size: 1.2rem;
-            font-weight: bold;
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        .mobile-controls {
-            display: flex;
             gap: 1rem;
-            align-items: center;
-        }
-
-        .hamburger-menu {
-            background: none;
-            border: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* ===== CONTENIDO PRINCIPAL DE COMENTARIOS ===== */
-        .main-container {
-            max-width: 800px;
-            margin: 80px auto 20px;
-            padding: 0 1rem;
         }
 
         .back-button {
-            background: var(--bg-gradient);
-            color: white;
+            background: none;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
+            color: var(--primary);
+            font-size: 1.2rem;
             cursor: pointer;
-            margin-bottom: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
         }
 
         .back-button:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+            background: rgba(0, 196, 255, 0.1);
+            transform: translateX(-2px);
         }
 
-        /* ===== PUBLICACIÓN PRINCIPAL ===== */
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .comments-count {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL ===== */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0;
+        }
+
+        /* ===== SECCIÓN DE PUBLICACIÓN ===== */
+        .post-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-border);
+            flex-shrink: 0;
+        }
+
         .post-main {
             background: var(--white);
             border-radius: var(--card-radius);
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 1.5rem;
+            padding: 0;
         }
 
         .post-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1rem;
         }
 
@@ -223,6 +153,31 @@
         .post-user-info h4 {
             margin-bottom: 0.2rem;
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .post-type-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .type-user {
+            background: rgba(0, 196, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .type-admin {
+            background: rgba(255, 215, 0, 0.1);
+            color: #FFA500;
+        }
+
+        .type-ad {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
         }
 
         .post-time {
@@ -234,6 +189,7 @@
             margin-bottom: 1rem;
             line-height: 1.6;
             font-size: 1rem;
+            padding: 0.5rem 0;
         }
 
         .post-image {
@@ -250,59 +206,47 @@
             justify-content: space-between;
             color: var(--secondary);
             font-size: 0.9rem;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--light);
+            margin-bottom: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-border);
         }
 
         /* ===== SECCIÓN DE COMENTARIOS ===== */
         .comments-section {
-            background: var(--white);
-            border-radius: var(--card-radius);
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-        }
-
-        .comments-header {
+            flex: 1;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--light);
+            flex-direction: column;
+            background: var(--white);
         }
 
-        .comments-title {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin: 0;
-        }
-
-        .comments-count {
-            background: var(--primary);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        /* ===== LISTA DE COMENTARIOS ===== */
-        .comments-list {
-            max-height: 500px;
+        .comments-list-container {
+            flex: 1;
             overflow-y: auto;
-            margin-bottom: 1.5rem;
-            padding-right: 10px;
+            padding: 1.5rem;
         }
 
+        .comments-list {
+            max-height: 100%;
+        }
+
+        /* ===== ESTRUCTURA DE COMENTARIOS ===== */
         .comment-item {
-            background: var(--light);
+            background: var(--white);
             padding: 1rem;
-            border-radius: 12px;
+            border-radius: var(--card-radius);
             margin-bottom: 1rem;
+            border: 1px solid var(--light-border);
+            animation: fadeIn 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        .comment-item:hover {
+            border-color: var(--primary);
+        }
+
+        .comment-main {
             display: flex;
             gap: 1rem;
-            animation: fadeIn 0.3s ease;
         }
 
         .comment-avatar {
@@ -342,14 +286,15 @@
         }
 
         .comment-text {
-            margin: 0;
+            margin: 0.5rem 0;
             line-height: 1.5;
+            word-break: break-word;
         }
 
         .comment-actions {
             display: flex;
             gap: 1rem;
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
         }
 
         .comment-action-btn {
@@ -362,9 +307,12 @@
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
         }
 
         .comment-action-btn:hover {
+            background: rgba(0, 196, 255, 0.1);
             color: var(--primary);
         }
 
@@ -374,18 +322,99 @@
             gap: 0.3rem;
         }
 
+        /* ===== COMENTARIOS ANIDADOS (RESPUESTAS) ===== */
+        .comment-replies {
+            margin-top: 1rem;
+            margin-left: 3rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--light-border);
+        }
+
+        .comment-reply-item {
+            background: var(--reply-bg);
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            border: 1px solid rgba(0, 196, 255, 0.2);
+        }
+
+        .reply-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .reply-indicator i {
+            font-size: 0.7rem;
+        }
+
+        .reply-avatar {
+            width: 32px;
+            height: 32px;
+        }
+
+        .reply-header {
+            margin-bottom: 0.3rem;
+        }
+
+        .reply-text {
+            font-size: 0.95rem;
+            color: var(--dark);
+        }
+
         /* ===== FORMULARIO DE COMENTARIOS ===== */
-        .comment-form {
-            background: var(--light);
+        .comment-form-section {
+            background: var(--white);
             padding: 1.5rem;
-            border-radius: 15px;
-            margin-top: 1.5rem;
+            border-top: 1px solid var(--light-border);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            bottom: 0;
+            z-index: 99;
+        }
+
+        .reply-indicator-active {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--reply-bg);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .reply-indicator-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .cancel-reply-btn {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 50%;
+        }
+
+        .cancel-reply-btn:hover {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
         }
 
         .comment-input-container {
             display: flex;
             gap: 1rem;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1rem;
         }
 
@@ -407,12 +436,13 @@
         .comment-input {
             flex: 1;
             padding: 1rem;
-            border: 2px solid var(--light);
+            border: 2px solid var(--light-border);
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
             resize: none;
             min-height: 80px;
+            font-family: inherit;
         }
 
         .comment-input:focus {
@@ -421,11 +451,16 @@
             box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
         }
 
+        .comment-input.replying {
+            border-color: var(--primary);
+            background: var(--reply-bg);
+        }
+
         .comment-form-actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
+            justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
         .char-count {
@@ -462,59 +497,78 @@
             text-align: center;
             padding: 3rem;
             color: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
         }
 
         .no-comments i {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: var(--light);
+            color: #e9ecef;
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ===== NOTIFICACIONES ===== */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+            max-width: 350px;
+            word-break: break-word;
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.info {
+            background: var(--info);
         }
 
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
-            .desktop-header {
-                display: none;
-            }
-
-            .mobile-header {
-                display: block;
-            }
-
             .main-container {
-                margin: 70px auto 20px;
+                max-width: 100%;
             }
 
-            .post-main {
+            .comments-header {
+                padding: 0.8rem;
+            }
+
+            .post-section {
                 padding: 1rem;
             }
 
-            .comments-section {
+            .comments-list-container {
+                padding: 1rem;
+            }
+
+            .comment-form-section {
                 padding: 1rem;
             }
 
             .comment-input-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .current-user-avatar {
-                align-self: center;
-            }
-
-            .comment-form-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .char-count {
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .post-user-avatar {
-                width: 40px;
-                height: 40px;
+                gap: 0.8rem;
             }
 
             .current-user-avatar {
@@ -526,118 +580,132 @@
                 padding: 0.8rem;
             }
 
+            .comment-replies {
+                margin-left: 2rem;
+                padding-left: 0.8rem;
+            }
+
             .comment-avatar {
-                width: 35px;
-                height: 35px;
+                width: 36px;
+                height: 36px;
             }
         }
 
-        /* ===== ANIMACIONES ===== */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1rem;
+            }
+
+            .comments-count {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.6rem;
+            }
+
+            .post-user-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .comment-replies {
+                margin-left: 1.5rem;
+            }
+
+            .comment-form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .char-count {
+                text-align: center;
+            }
+
+            .send-comment-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
-        /* ===== NOTIFICACIONES ===== */
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: var(--success);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-container {
+                max-width: 90%;
+            }
         }
 
-        .notification.error {
-            background: var(--danger);
+        /* ===== ESTADOS ===== */
+        .highlighted-comment {
+            background: var(--reply-bg);
+            border-color: var(--primary);
+            animation: fadeIn 0.5s ease;
         }
 
-        .notification.info {
-            background: var(--info);
+        /* ===== SCROLLBAR PERSONALIZADA ===== */
+        .comments-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .comments-list-container::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        .comments-list-container::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 3px;
+        }
+
+        .comments-list-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
         }
     </style>
 </head>
 <body>
-    <!-- ===== HEADER PARA ESCRITORIO ===== -->
-    <header class="desktop-header">
-        <div class="nav-container">
-            <div class="logo" onclick="goToFeed()">
-                <i class="fas fa-graduation-cap"></i>
-                Neo Study
-            </div>
-            <nav class="nav-menu">
-                <a href="modulo2_iniciodecesión.html" class="nav-item">
-                    <i class="fas fa-home"></i> Inicio
-                </a>
-                <a href="modulo4_cursos.html" class="nav-item">
-                    <i class="fas fa-book"></i> Cursos
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-users"></i> Comunidad
-                </a>
-            </nav>
-            <div class="user-menu">
-                <div class="avatar" id="userAvatar" onclick="goToProfile()">U</div>
-                <button class="btn btn-danger" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                </button>
-            </div>
+    <!-- ===== HEADER SIMPLIFICADO ===== -->
+    <header class="comments-header">
+        <div class="header-left">
+            <button class="back-button" onclick="goBackToFeed()" title="Volver al feed">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 class="header-title">Comentarios</h1>
         </div>
+        <span class="comments-count" id="commentsCount">0 comentarios</span>
     </header>
 
-    <!-- ===== HEADER PARA MÓVIL ===== -->
-    <header class="mobile-header">
-        <div class="mobile-nav-top">
-            <div class="mobile-logo" onclick="goToFeed()">
-                <i class="fas fa-graduation-cap"></i>
-                Neo Study
-            </div>
-            <div class="mobile-controls">
-                <button class="btn btn-danger" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- ===== CONTENIDO PRINCIPAL ===== -->
+    <!-- ===== CONTENEDOR PRINCIPAL ===== -->
     <div class="main-container">
-        <!-- Botón para volver al feed -->
-        <button class="back-button" onclick="goBackToFeed()">
-            <i class="fas fa-arrow-left"></i>
-            Volver al Feed
-        </button>
-
-        <!-- Publicación Principal -->
-        <div class="post-main" id="postMain">
-            <!-- La publicación se cargará aquí -->
-        </div>
+        <!-- Sección de Publicación -->
+        <section class="post-section">
+            <div class="post-main" id="postMain">
+                <!-- La publicación se cargará aquí -->
+            </div>
+        </section>
 
         <!-- Sección de Comentarios -->
-        <div class="comments-section">
-            <div class="comments-header">
-                <h2 class="comments-title"><i class="fas fa-comments"></i> Comentarios</h2>
-                <span class="comments-count" id="commentsCount">0 comentarios</span>
-            </div>
+        <section class="comments-section">
+            <div class="comments-list-container" id="commentsListContainer">
+                <!-- Lista de Comentarios -->
+                <div class="comments-list" id="commentsList">
+                    <!-- Los comentarios se cargarán aquí -->
+                </div>
 
-            <!-- Lista de Comentarios -->
-            <div class="comments-list" id="commentsList">
-                <!-- Los comentarios se cargarán aquí -->
-            </div>
-
-            <!-- Mensaje cuando no hay comentarios -->
-            <div class="no-comments" id="noComments" style="display: none;">
-                <i class="fas fa-comment-slash"></i>
-                <h3>No hay comentarios todavía</h3>
-                <p>Sé el primero en comentar esta publicación.</p>
+                <!-- Mensaje cuando no hay comentarios -->
+                <div class="no-comments" id="noComments" style="display: none;">
+                    <i class="fas fa-comment-slash"></i>
+                    <h3>No hay comentarios todavía</h3>
+                    <p>Sé el primero en comentar esta publicación.</p>
+                </div>
             </div>
 
             <!-- Formulario para comentar -->
-            <div class="comment-form">
+            <div class="comment-form-section">
+                <div id="replyIndicator" class="reply-indicator-active" style="display: none;">
+                    <div class="reply-indicator-text">
+                        <i class="fas fa-reply"></i>
+                        Respondiendo a <span id="replyToAuthor"></span>
+                    </div>
+                    <button class="cancel-reply-btn" onclick="cancelReply()" title="Cancelar respuesta">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
                 <div class="comment-input-container">
                     <div class="current-user-avatar" id="currentUserAvatar">U</div>
                     <textarea class="comment-input" id="commentInput" 
@@ -649,11 +717,11 @@
                     <span class="char-count" id="charCount">0/500</span>
                     <button class="send-comment-btn" id="sendCommentBtn" onclick="addComment()" disabled>
                         <i class="fas fa-paper-plane"></i>
-                        Publicar Comentario
+                        Publicar
                     </button>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <script>
@@ -661,6 +729,9 @@
         let currentPostId = null;
         let currentUserData = null;
         let currentUserAvatar = 'U';
+        let replyingTo = null;
+        let replyingToCommentId = null;
+        let currentCommentBeingReplied = null;
 
         // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
@@ -688,14 +759,6 @@
                     addComment();
                 }
             });
-            
-            // Configurar tema si existe en localStorage
-            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
-            if (savedTheme === 'dark-mode') {
-                document.body.classList.add('dark-mode');
-            } else if (savedTheme === 'study-mode') {
-                document.body.classList.add('study-mode');
-            }
         });
 
         // ===== CARGAR DATOS DEL USUARIO =====
@@ -723,10 +786,8 @@
                     currentUserAvatar = userName.split(' ').map(n => n[0]).join('').toUpperCase();
                     
                     const avatarElement = document.getElementById('currentUserAvatar');
-                    const headerAvatar = document.getElementById('userAvatar');
                     
                     if (avatarElement) avatarElement.textContent = currentUserAvatar;
-                    if (headerAvatar) headerAvatar.textContent = currentUserAvatar;
                     
                     // Si hay foto de perfil, mostrarla
                     if (profileData && profileData.profilePhoto && 
@@ -735,10 +796,6 @@
                         if (avatarElement) {
                             avatarElement.style.backgroundImage = `url(${profileData.profilePhoto})`;
                             avatarElement.textContent = '';
-                        }
-                        if (headerAvatar) {
-                            headerAvatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
-                            headerAvatar.textContent = '';
                         }
                     }
                 }
@@ -804,7 +861,7 @@
                         <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;"></i>
                         <h3>Publicación no encontrada</h3>
                         <p>La publicación que buscas no existe o ha sido eliminada.</p>
-                        <button class="back-button" onclick="goBackToFeed()" style="margin-top: 1rem;">
+                        <button onclick="goBackToFeed()" style="background: var(--bg-gradient); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 25px; cursor: pointer; margin-top: 1rem;">
                             <i class="fas fa-arrow-left"></i>
                             Volver al Feed
                         </button>
@@ -849,7 +906,7 @@
             let imageContent = '';
             if (post.hasImage) {
                 imageContent = `
-                    <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border-radius: 10px;">
                         CLASE EN VIVO - SÁBADO 3 PM
                     </div>
                 `;
@@ -863,7 +920,7 @@
                         </div>
                         <div class="post-user-info">
                             <h4>${post.author} <span class="post-type-badge ${badgeClass}">${badgeText}</span></h4>
-                            <p class="post-time">${timeAgo} · <i class="fas fa-user-graduate"></i></p>
+                            <p class="post-time">${timeAgo}</p>
                         </div>
                     </div>
                 </div>
@@ -885,14 +942,22 @@
             
             // Obtener comentarios del localStorage
             const commentsKey = `postComments_${currentPostId}`;
-            const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            const commentsData = JSON.parse(localStorage.getItem(commentsKey)) || { comments: [], replies: {} };
             
-            // Actualizar contador
-            updateCommentsCount(comments.length);
+            let comments = commentsData.comments || [];
+            let replies = commentsData.replies || {};
+            
+            // Actualizar contador total (comentarios + respuestas)
+            let totalComments = comments.length;
+            Object.keys(replies).forEach(commentId => {
+                totalComments += (replies[commentId] || []).length;
+            });
+            
+            updateCommentsCount(totalComments);
             
             if (comments.length === 0) {
                 commentsList.innerHTML = '';
-                noComments.style.display = 'block';
+                noComments.style.display = 'flex';
                 return;
             }
             
@@ -902,21 +967,24 @@
             // Ordenar comentarios por fecha (más recientes primero)
             comments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             
-            // Mostrar cada comentario
+            // Mostrar cada comentario con sus respuestas
             comments.forEach(comment => {
-                const commentElement = createCommentElement(comment);
+                const commentElement = createCommentElement(comment, replies[comment.id] || []);
                 commentsList.appendChild(commentElement);
             });
             
             // Scroll al final de los comentarios
             setTimeout(() => {
-                commentsList.scrollTop = commentsList.scrollHeight;
+                const container = document.getElementById('commentsListContainer');
+                container.scrollTop = container.scrollHeight;
             }, 100);
         }
 
-        function createCommentElement(comment) {
+        function createCommentElement(comment, replies = []) {
             const commentElement = document.createElement('div');
             commentElement.className = 'comment-item';
+            commentElement.id = `comment-${comment.id}`;
+            commentElement.dataset.commentId = comment.id;
             
             const commentDate = new Date(comment.timestamp);
             const now = new Date();
@@ -931,43 +999,195 @@
                 timeAgo = `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
             }
             
+            // Construir HTML principal del comentario
             commentElement.innerHTML = `
-                <div class="comment-avatar">${comment.authorInitials || 'U'}</div>
-                <div class="comment-content">
-                    <div class="comment-header">
-                        <span class="comment-author">${comment.author}</span>
-                        <span class="comment-time">${timeAgo}</span>
-                    </div>
-                    <p class="comment-text">${comment.text}</p>
-                    <div class="comment-actions">
-                        <button class="comment-action-btn" onclick="likeComment('${comment.id}')">
-                            <i class="fas fa-thumbs-up"></i>
-                            <span class="comment-likes">${comment.likes || 0}</span>
-                        </button>
-                        <button class="comment-action-btn" onclick="replyToComment('${comment.author}')">
-                            <i class="fas fa-reply"></i> Responder
-                        </button>
+                <div class="comment-main">
+                    <div class="comment-avatar">${comment.authorInitials || 'U'}</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            <span class="comment-time">${timeAgo}</span>
+                        </div>
+                        <p class="comment-text">${comment.text}</p>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn" onclick="likeComment('${comment.id}')">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span class="comment-likes" id="likes-${comment.id}">${comment.likes || 0}</span>
+                            </button>
+                            <button class="comment-action-btn" onclick="startReply('${comment.id}', '${comment.author}')">
+                                <i class="fas fa-reply"></i> Responder
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
             
+            // Agregar respuestas si existen
+            if (replies.length > 0) {
+                const repliesContainer = document.createElement('div');
+                repliesContainer.className = 'comment-replies';
+                repliesContainer.id = `replies-${comment.id}`;
+                
+                // Ordenar respuestas por fecha (más recientes primero)
+                replies.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                replies.forEach(reply => {
+                    const replyElement = createReplyElement(reply);
+                    repliesContainer.appendChild(replyElement);
+                });
+                
+                commentElement.appendChild(repliesContainer);
+            }
+            
             return commentElement;
         }
 
-        function updateCommentsCount(count) {
+        function createReplyElement(reply) {
+            const replyElement = document.createElement('div');
+            replyElement.className = 'comment-reply-item';
+            
+            const replyDate = new Date(reply.timestamp);
+            const now = new Date();
+            const diffMs = now - replyDate;
+            const diffMins = Math.floor(diffMs / 60000);
+            
+            let timeAgo = '';
+            if (diffMins < 60) {
+                timeAgo = `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
+            } else {
+                timeAgo = `Hace ${Math.floor(diffMins / 60)} hora${Math.floor(diffMins / 60) !== 1 ? 's' : ''}`;
+            }
+            
+            replyElement.innerHTML = `
+                <div class="reply-indicator">
+                    <i class="fas fa-reply"></i>
+                    <span>Respondiendo a ${reply.replyToAuthor || 'usuario'}</span>
+                </div>
+                <div style="display: flex; gap: 0.8rem;">
+                    <div class="comment-avatar reply-avatar">${reply.authorInitials || 'U'}</div>
+                    <div style="flex: 1;">
+                        <div class="reply-header">
+                            <span class="comment-author">${reply.author}</span>
+                            <span class="comment-time">${timeAgo}</span>
+                        </div>
+                        <p class="reply-text">${reply.text}</p>
+                        <div class="comment-actions">
+                            <button class="comment-action-btn" onclick="likeReply('${reply.id}', '${reply.parentCommentId}')">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span class="comment-likes" id="reply-likes-${reply.id}">${reply.likes || 0}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return replyElement;
+        }
+
+        function updateCommentsCount(totalCount) {
             const countElement = document.getElementById('commentsCount');
             const postCountElement = document.getElementById('postCommentsCount');
             
             if (countElement) {
-                countElement.textContent = `${count} comentario${count !== 1 ? 's' : ''}`;
+                countElement.textContent = `${totalCount} comentario${totalCount !== 1 ? 's' : ''}`;
             }
             
             if (postCountElement) {
-                postCountElement.textContent = `${count} comentario${count !== 1 ? 's' : ''}`;
+                postCountElement.textContent = `${totalCount} comentario${totalCount !== 1 ? 's' : ''}`;
             }
         }
 
-        // ===== AGREGAR NUEVO COMENTARIO =====
+        // ===== FUNCIONALIDAD DE RESPUESTAS =====
+        function startReply(commentId, authorName) {
+            replyingTo = authorName;
+            replyingToCommentId = commentId;
+            currentCommentBeingReplied = commentId;
+            
+            // Mostrar indicador de respuesta
+            const replyIndicator = document.getElementById('replyIndicator');
+            const replyToAuthor = document.getElementById('replyToAuthor');
+            
+            replyIndicator.style.display = 'flex';
+            replyToAuthor.textContent = authorName;
+            
+            // Cambiar estilo del textarea
+            const commentInput = document.getElementById('commentInput');
+            commentInput.classList.add('replying');
+            commentInput.placeholder = `Respondiendo a ${authorName}...`;
+            
+            // Enfocar el campo de texto
+            commentInput.focus();
+            
+            // Desplazar la vista al formulario (si es necesario en móvil)
+            if (window.innerWidth < 768) {
+                setTimeout(() => {
+                    document.querySelector('.comment-form-section').scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 300);
+            } else {
+                // Destacar el comentario al que se está respondiendo
+                highlightComment(commentId);
+            }
+            
+            showNotification(`Respondiendo a ${authorName}`, 'info');
+        }
+
+        function cancelReply() {
+            resetReplyState();
+            showNotification('Respuesta cancelada', 'info');
+        }
+
+        function resetReplyState() {
+            replyingTo = null;
+            replyingToCommentId = null;
+            
+            // Ocultar indicador de respuesta
+            const replyIndicator = document.getElementById('replyIndicator');
+            replyIndicator.style.display = 'none';
+            
+            // Restaurar textarea
+            const commentInput = document.getElementById('commentInput');
+            commentInput.classList.remove('replying');
+            commentInput.placeholder = 'Escribe tu comentario...';
+            
+            // Quitar destacado del comentario
+            if (currentCommentBeingReplied) {
+                removeHighlight(currentCommentBeingReplied);
+                currentCommentBeingReplied = null;
+            }
+        }
+
+        function highlightComment(commentId) {
+            // Quitar cualquier destacado previo
+            document.querySelectorAll('.highlighted-comment').forEach(el => {
+                el.classList.remove('highlighted-comment');
+            });
+            
+            // Destacar el comentario actual
+            const commentElement = document.getElementById(`comment-${commentId}`);
+            if (commentElement) {
+                commentElement.classList.add('highlighted-comment');
+                
+                // Desplazar a la vista si es necesario
+                setTimeout(() => {
+                    commentElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 100);
+            }
+        }
+
+        function removeHighlight(commentId) {
+            const commentElement = document.getElementById(`comment-${commentId}`);
+            if (commentElement) {
+                commentElement.classList.remove('highlighted-comment');
+            }
+        }
+
+        // ===== AGREGAR NUEVO COMENTARIO O RESPUESTA =====
         function addComment() {
             const commentInput = document.getElementById('commentInput');
             const commentText = commentInput.value.trim();
@@ -994,7 +1214,32 @@
                 userName = currentUserData.gen_nombre || 'Usuario';
             }
             
-            // Crear objeto de comentario
+            // Obtener datos del localStorage
+            const commentsKey = `postComments_${currentPostId}`;
+            const commentsData = JSON.parse(localStorage.getItem(commentsKey)) || { comments: [], replies: {} };
+            
+            if (replyingTo) {
+                // Agregar como respuesta
+                addReply(commentText, userName, commentsData);
+            } else {
+                // Agregar como comentario principal
+                addMainComment(commentText, userName, commentsData);
+            }
+            
+            // Limpiar formulario
+            commentInput.value = '';
+            updateCharCount();
+            checkCommentInput();
+            resetReplyState();
+            
+            // Recargar comentarios
+            loadComments();
+            
+            // Enfocar el input de nuevo
+            setTimeout(() => commentInput.focus(), 100);
+        }
+
+        function addMainComment(commentText, userName, commentsData) {
             const comment = {
                 id: Date.now().toString(),
                 postId: currentPostId,
@@ -1005,52 +1250,63 @@
                 likes: 0
             };
             
-            // Obtener comentarios existentes
-            const commentsKey = `postComments_${currentPostId}`;
-            const existingComments = JSON.parse(localStorage.getItem(commentsKey)) || [];
-            
-            // Agregar nuevo comentario
-            existingComments.push(comment);
-            
-            // Guardar en localStorage
-            localStorage.setItem(commentsKey, JSON.stringify(existingComments));
-            
-            // Limpiar input
-            commentInput.value = '';
-            updateCharCount();
-            checkCommentInput();
-            
-            // Actualizar lista de comentarios
-            loadComments();
-            
-            // Mostrar notificación
+            commentsData.comments.push(comment);
+            localStorage.setItem(`postComments_${currentPostId}`, JSON.stringify(commentsData));
             showNotification('Comentario publicado', 'success');
+        }
+
+        function addReply(commentText, userName, commentsData) {
+            if (!replyingToCommentId) return;
             
-            // Enfocar el input de nuevo
-            commentInput.focus();
+            const reply = {
+                id: `reply_${Date.now()}`,
+                parentCommentId: replyingToCommentId,
+                author: userName,
+                authorInitials: currentUserAvatar,
+                text: commentText,
+                replyToAuthor: replyingTo,
+                timestamp: new Date().toISOString(),
+                likes: 0
+            };
+            
+            // Inicializar array de respuestas si no existe
+            if (!commentsData.replies[replyingToCommentId]) {
+                commentsData.replies[replyingToCommentId] = [];
+            }
+            
+            commentsData.replies[replyingToCommentId].push(reply);
+            localStorage.setItem(`postComments_${currentPostId}`, JSON.stringify(commentsData));
+            showNotification('Respuesta publicada', 'success');
         }
 
         // ===== FUNCIONES DE INTERACCIÓN =====
         function likeComment(commentId) {
             const commentsKey = `postComments_${currentPostId}`;
-            const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            const commentsData = JSON.parse(localStorage.getItem(commentsKey)) || { comments: [], replies: {} };
             
-            const commentIndex = comments.findIndex(c => c.id === commentId);
+            const commentIndex = commentsData.comments.findIndex(c => c.id === commentId);
             if (commentIndex !== -1) {
-                comments[commentIndex].likes = (comments[commentIndex].likes || 0) + 1;
-                localStorage.setItem(commentsKey, JSON.stringify(comments));
+                commentsData.comments[commentIndex].likes = (commentsData.comments[commentIndex].likes || 0) + 1;
+                localStorage.setItem(commentsKey, JSON.stringify(commentsData));
                 loadComments();
                 showNotification('¡Comentario likeado!', 'info');
             }
         }
 
-        function replyToComment(author) {
-            const commentInput = document.getElementById('commentInput');
-            commentInput.value = `@${author} `;
-            commentInput.focus();
-            updateCharCount();
-            checkCommentInput();
-            showNotification(`Respondiendo a ${author}`, 'info');
+        function likeReply(replyId, parentCommentId) {
+            const commentsKey = `postComments_${currentPostId}`;
+            const commentsData = JSON.parse(localStorage.getItem(commentsKey)) || { comments: [], replies: {} };
+            
+            if (commentsData.replies[parentCommentId]) {
+                const replyIndex = commentsData.replies[parentCommentId].findIndex(r => r.id === replyId);
+                if (replyIndex !== -1) {
+                    commentsData.replies[parentCommentId][replyIndex].likes = 
+                        (commentsData.replies[parentCommentId][replyIndex].likes || 0) + 1;
+                    localStorage.setItem(commentsKey, JSON.stringify(commentsData));
+                    loadComments();
+                    showNotification('¡Respuesta likeada!', 'info');
+                }
+            }
         }
 
         // ===== FUNCIONES DE UTILIDAD =====
@@ -1082,23 +1338,6 @@
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
-        function goToFeed() {
-            window.location.href = 'modulo2_iniciodecesión.html';
-        }
-
-        function goToProfile() {
-            window.location.href = 'modulo3_perfil.html';
-        }
-
-        function logout() {
-            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                showNotification('Sesión cerrada correctamente', 'info');
-                setTimeout(() => {
-                    window.location.href = 'modulo1_inicio.html';
-                }, 1500);
-            }
-        }
-
         // ===== SISTEMA DE NOTIFICACIONES =====
         function showNotification(message, type = 'info') {
             const existingNotification = document.querySelector('.notification');
@@ -1117,7 +1356,9 @@
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.remove();
+                if (notification.parentNode) {
+                    notification.remove();
+                }
             }, 3000);
         }
     </script>
