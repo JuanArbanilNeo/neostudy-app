@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Publicación - Neo Study</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -28,6 +28,7 @@
             --card-radius: 16px;
             --card-shadow: 0 8px 30px rgba(0,0,0,0.12);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --book-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         body {
@@ -37,13 +38,15 @@
             line-height: 1.6;
             font-family: 'Poppins', 'Segoe UI', sans-serif;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ===== HEADER PROFESIONAL ===== */
+        /* ===== HEADER MODERNO ===== */
         .header {
             background: var(--bg-gradient);
             color: var(--white);
-            padding: 1.2rem 2rem;
+            padding: 1rem 1.5rem;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -59,22 +62,26 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 700;
             letter-spacing: 0.5px;
         }
 
         .header-title i {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            background: var(--book-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .back-button {
             background: rgba(255,255,255,0.15);
             border: 2px solid rgba(255,255,255,0.2);
             color: white;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -86,25 +93,28 @@
 
         .back-button:hover {
             background: rgba(255,255,255,0.25);
-            transform: translateY(-2px) scale(1.05);
+            transform: translateY(-2px);
             border-color: rgba(255,255,255,0.3);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* ===== CONTENIDO PRINCIPAL ===== */
         .main-content {
-            max-width: 1000px;
-            margin: 3rem auto;
+            max-width: 1200px;
+            margin: 2rem auto;
             padding: 0 1.5rem;
             display: grid;
             grid-template-columns: 1fr;
             gap: 2rem;
+            flex: 1;
+            width: 100%;
         }
 
         @media (min-width: 1024px) {
             .main-content {
-                grid-template-columns: 2fr 1fr;
-                gap: 3rem;
+                grid-template-columns: 1.2fr 0.8fr;
+                gap: 2.5rem;
+                margin: 3rem auto;
             }
         }
 
@@ -115,15 +125,11 @@
             box-shadow: var(--card-shadow);
             overflow: hidden;
             transition: var(--transition);
-        }
-
-        .post-form-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            height: fit-content;
         }
 
         .form-header {
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             color: white;
             padding: 2rem;
             position: relative;
@@ -145,7 +151,7 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 0.5rem;
             font-weight: 700;
             position: relative;
@@ -157,6 +163,7 @@
             font-weight: 300;
             position: relative;
             z-index: 1;
+            font-size: 0.95rem;
         }
 
         .post-form {
@@ -176,43 +183,38 @@
         }
 
         .author-avatar {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             background-size: cover;
             background-position: center;
             border: 3px solid white;
-            box-shadow: 0 4px 15px rgba(0, 196, 255, 0.3);
-            transition: var(--transition);
-        }
-
-        .author-avatar:hover {
-            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .author-details h3 {
             margin-bottom: 0.3rem;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--dark);
         }
 
         .author-details p {
             color: var(--secondary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 400;
         }
 
         /* ===== EDITOR DE PUBLICACIÓN ===== */
         .form-group {
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
         }
 
         .form-label {
@@ -231,8 +233,8 @@
 
         .text-area {
             width: 100%;
-            min-height: 180px;
-            padding: 1.5rem;
+            min-height: 160px;
+            padding: 1.2rem;
             border: 2px solid #e3e8f0;
             border-radius: 12px;
             font-size: 1rem;
@@ -251,23 +253,122 @@
             background: #fafcff;
         }
 
-        .text-area::placeholder {
-            color: #94a3b8;
-            font-weight: 300;
+        /* ===== BOTONES DE DISEÑO ===== */
+        .design-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
 
-        /* ===== DISEÑO DE PUBLICACIÓN ===== */
-        .design-section {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
+        .design-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.2rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-weight: 500;
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .design-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .design-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* ===== MODALES DE DISEÑO ===== */
+        .design-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            padding: 1rem;
+        }
+
+        .design-modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
             padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .design-options {
+        .modal-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: #f8f9fa;
+            color: var(--dark);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* ===== OPCIONES DE DISEÑO ===== */
+        .design-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
         }
@@ -288,8 +389,8 @@
 
         .design-option:hover {
             border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .design-option.active {
@@ -300,50 +401,52 @@
 
         .design-preview {
             width: 100%;
-            height: 80px;
+            height: 70px;
             border-radius: 6px;
             margin-bottom: 0.5rem;
         }
 
-        .font-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+        /* ===== OPCIONES DE FUENTE ===== */
+        .font-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
         .font-option {
-            padding: 0.5rem 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
             cursor: pointer;
             transition: var(--transition);
-            font-size: 0.9rem;
+            text-align: center;
         }
 
         .font-option:hover {
             border-color: var(--primary);
-            background: #f0f9ff;
+            transform: translateY(-2px);
         }
 
         .font-option.active {
+            border-color: var(--primary);
             background: var(--primary);
             color: white;
-            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 196, 255, 0.2);
         }
 
-        /* ===== SECCIÓN DE MEDIOS MEJORADA ===== */
+        /* ===== SECCIÓN DE MEDIOS ===== */
         .media-section {
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
             border: 1px solid #e2e8f0;
         }
 
         .media-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 1rem;
             margin: 1.5rem 0;
         }
@@ -352,7 +455,7 @@
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
-            padding: 1.5rem 1rem;
+            padding: 1.2rem 0.8rem;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
@@ -366,23 +469,13 @@
 
         .media-option:hover {
             border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
         .media-option i {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             color: var(--primary);
-            transition: var(--transition);
-        }
-
-        .media-option:hover i {
-            transform: scale(1.1);
-        }
-
-        .media-option span {
-            font-weight: 500;
-            color: var(--dark);
         }
 
         .media-option input[type="file"] {
@@ -398,93 +491,77 @@
         /* ===== PREVIEW DE MEDIOS ===== */
         .media-preview {
             margin-top: 1.5rem;
-            text-align: center;
         }
 
-        .preview-container {
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
             position: relative;
-            max-width: 100%;
-            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .preview-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .preview-image {
-            max-width: 100%;
-            max-height: 400px;
-            border-radius: 12px;
-            margin: 0 auto;
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
             display: block;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-        }
-
-        .preview-image:hover {
-            transform: scale(1.01);
         }
 
         .preview-video {
-            max-width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
         }
 
-        .preview-document {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
+        .preview-doc {
+            padding: 1rem;
             display: flex;
             align-items: center;
-            gap: 1.2rem;
-            margin-top: 1rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
+            gap: 1rem;
+            height: 120px;
         }
 
-        .preview-document:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .preview-document i {
-            font-size: 2.5rem;
+        .preview-doc i {
+            font-size: 2rem;
             color: var(--danger);
         }
 
-        .file-info {
-            flex: 1;
-            text-align: left;
-        }
-
-        .file-info strong {
-            display: block;
-            margin-bottom: 0.3rem;
-            color: var(--dark);
-        }
-
-        .file-info small {
-            color: var(--secondary);
-            font-size: 0.85rem;
-        }
-
-        .remove-media {
-            background: linear-gradient(135deg, var(--danger), #c82333);
+        .remove-media-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger);
             color: white;
             border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 1rem;
-            display: inline-flex;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.9;
             transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
         }
 
-        .remove-media:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+        .remove-media-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
         }
 
         /* ===== PREVIEW DE PUBLICACIÓN ===== */
@@ -492,20 +569,46 @@
             background: white;
             border-radius: var(--card-radius);
             box-shadow: var(--card-shadow);
-            padding: 2rem;
+            padding: 1.8rem;
+            height: fit-content;
             position: sticky;
             top: 100px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
+            overflow: hidden;
         }
 
-        .preview-section h3 {
+        .preview-header {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 1rem;
             margin-bottom: 1.5rem;
-            color: var(--dark);
-            font-size: 1.3rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .preview-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: var(--book-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .preview-author h4 {
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .preview-author p {
+            color: var(--secondary);
+            font-size: 0.85rem;
         }
 
         .preview-card {
@@ -515,46 +618,23 @@
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: var(--transition);
-        }
-
-        .preview-header {
+            min-height: 300px;
             display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .preview-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--bg-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .preview-author h4 {
-            margin-bottom: 0.2rem;
-            font-weight: 600;
-        }
-
-        .preview-author p {
-            color: var(--secondary);
-            font-size: 0.85rem;
+            flex-direction: column;
         }
 
         .preview-content {
+            flex: 1;
             margin: 1rem 0;
             line-height: 1.6;
             white-space: pre-wrap;
             word-wrap: break-word;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
         }
 
-        .preview-media {
+        .preview-media-container {
             margin-top: 1rem;
             border-radius: 8px;
             overflow: hidden;
@@ -565,6 +645,8 @@
             font-size: 0.8rem;
             margin-top: 1rem;
             text-align: right;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
         }
 
         /* ===== SECCIÓN ADMINISTRADOR ===== */
@@ -572,9 +654,8 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
             border-left: 5px solid var(--primary);
-            border: 1px solid #dee2e6;
         }
 
         .admin-toggle {
@@ -600,24 +681,13 @@
             animation: slideDown 0.3s ease;
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .admin-content.active {
             display: block;
         }
 
         .post-type-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
@@ -626,16 +696,12 @@
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
-            padding: 1rem;
+            padding: 0.8rem 0.5rem;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
             font-weight: 500;
-        }
-
-        .type-option:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
+            font-size: 0.9rem;
         }
 
         .type-option.active {
@@ -649,12 +715,12 @@
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.2rem;
+            gap: 1rem;
             margin-top: 2rem;
         }
 
         .btn {
-            padding: 1.2rem 1.5rem;
+            padding: 1rem 1.5rem;
             border: none;
             border-radius: 12px;
             font-weight: 600;
@@ -665,19 +731,18 @@
             justify-content: center;
             gap: 0.8rem;
             font-size: 1rem;
-            letter-spacing: 0.5px;
             font-family: 'Poppins', sans-serif;
         }
 
         .btn-primary {
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             color: var(--white);
-            box-shadow: 0 6px 20px rgba(0, 196, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 196, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
@@ -689,7 +754,6 @@
         .btn-secondary:hover {
             background: #f8f9fa;
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             border-color: var(--primary);
         }
 
@@ -702,7 +766,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.8);
-            z-index: 2000;
+            z-index: 3000;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(5px);
@@ -710,30 +774,25 @@
 
         .confirmation-content {
             background: white;
-            padding: 3rem;
+            padding: 2.5rem;
             border-radius: 20px;
-            max-width: 500px;
+            max-width: 450px;
             width: 90%;
             text-align: center;
-            animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: modalFadeIn 0.4s ease;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .confirmation-buttons {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
         }
 
         .btn-success {
@@ -742,83 +801,155 @@
             box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
         }
 
-        .btn-success:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
-        }
-
         /* ===== NOTIFICACIONES ===== */
         .notification {
             position: fixed;
             top: 100px;
-            right: 30px;
+            right: 20px;
             background: var(--success);
             color: white;
-            padding: 1.2rem 2rem;
+            padding: 1rem 1.5rem;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             z-index: 10000;
-            animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: 350px;
+            animation: fadeInUp 0.4s ease;
+            max-width: 300px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .notification.warning {
-            background: var(--warning);
-        }
-
-        .notification.danger {
-            background: var(--danger);
-        }
-
-        .notification.info {
-            background: var(--info);
-        }
-
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .header {
-                padding: 1rem;
+                padding: 0.8rem 1rem;
+            }
+            
+            .header-title {
+                font-size: 1.1rem;
             }
             
             .main-content {
-                margin: 1.5rem auto;
+                margin: 1rem auto;
                 padding: 0 1rem;
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
             
             .preview-section {
                 position: static;
-                max-height: none;
-                margin-top: 2rem;
+                margin-top: 1rem;
+            }
+            
+            .design-buttons {
+                flex-direction: column;
+            }
+            
+            .design-btn {
+                min-width: 100%;
             }
             
             .media-options {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .action-buttons {
                 grid-template-columns: 1fr;
             }
             
-            .confirmation-content {
-                padding: 2rem 1.5rem;
+            .confirmation-buttons {
+                grid-template-columns: 1fr;
             }
             
-            .confirmation-buttons {
+            .form-header h2 {
+                font-size: 1.4rem;
+            }
+            
+            .post-form {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                max-width: 800px;
+            }
+            
+            .preview-section {
+                position: static;
+                margin-top: 2rem;
+            }
+        }
+
+        /* ===== ESTILOS ESPECÍFICOS PARA TABLETS ===== */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .design-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .font-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .preview-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ===== ESTILOS ESPECÍFICOS PARA MÓVILES ===== */
+        @media (max-width: 480px) {
+            .design-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .font-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .media-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .post-type-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-header {
+                padding: 1.5rem;
+            }
+            
+            .author-info {
                 flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+            }
+            
+            .author-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.4rem;
+            }
+        }
+
+        /* ===== ESTILOS PARA COMPUTADORAS GRANDES ===== */
+        @media (min-width: 1200px) {
+            .main-content {
+                max-width: 1300px;
+                grid-template-columns: 1.5fr 1fr;
+            }
+            
+            .preview-section {
+                max-height: calc(100vh - 120px);
+                overflow-y: auto;
             }
         }
     </style>
@@ -830,10 +961,10 @@
             <i class="fas fa-arrow-left"></i>
         </button>
         <div class="header-title">
-            <i class="fas fa-pen-square"></i>
+            <i class="fas fa-book-open"></i>
             Crear Publicación
         </div>
-        <div style="width: 48px;"></div>
+        <div style="width: 44px;"></div>
     </div>
 
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
@@ -841,8 +972,8 @@
         <!-- Formulario de publicación -->
         <div class="post-form-container">
             <div class="form-header">
-                <h2><i class="fas fa-feather-alt"></i> Comparte con la comunidad</h2>
-                <p>Publica tus logros, preguntas o contenido educativo</p>
+                <h2><i class="fas fa-book-open"></i> Libro Digital NeoStudy</h2>
+                <p>Comparte tus logros, conocimientos y experiencias educativas</p>
             </div>
             
             <form class="post-form" id="postForm">
@@ -862,53 +993,30 @@
                         ¿Qué quieres compartir?
                     </label>
                     <textarea class="text-area" id="postContent" 
-                              placeholder="Comparte tu progreso de estudio, preguntas, logros o cualquier contenido educativo que quieras mostrar a la comunidad..."
+                              placeholder="Escribe aquí tu publicación. Puedes compartir logros, preguntas, material de estudio o experiencias educativas..."
                               required></textarea>
                 </div>
 
-                <!-- Diseño de la publicación -->
-                <div class="design-section">
-                    <label class="form-label">
+                <!-- Botones de diseño -->
+                <div class="design-buttons">
+                    <button type="button" class="design-btn" onclick="openDesignModal()">
                         <i class="fas fa-palette"></i>
-                        Personalizar diseño
-                    </label>
-                    
-                    <div class="font-options">
-                        <div class="font-option active" onclick="selectFont('default')">Normal</div>
-                        <div class="font-option" onclick="selectFont('poppins')">Poppins</div>
-                        <div class="font-option" onclick="selectFont('roboto')">Roboto</div>
-                        <div class="font-option" onclick="selectFont('monospace')">Monospace</div>
-                        <div class="font-option" onclick="selectFont('cursive')">Cursiva</div>
-                    </div>
-                    
-                    <div class="design-options">
-                        <div class="design-option active" onclick="selectDesign('default')">
-                            <div class="design-preview" style="background: linear-gradient(135deg, #ffffff, #f8f9fa)"></div>
-                            <span>Clásico</span>
-                        </div>
-                        <div class="design-option" onclick="selectDesign('gradient')">
-                            <div class="design-preview" style="background: linear-gradient(135deg, #00C4FF, #007bff)"></div>
-                            <span>Gradiente</span>
-                        </div>
-                        <div class="design-option" onclick="selectDesign('light')">
-                            <div class="design-preview" style="background: linear-gradient(135deg, #f8fafc, #e2e8f0)"></div>
-                            <span>Ligero</span>
-                        </div>
-                        <div class="design-option" onclick="selectDesign('dark')">
-                            <div class="design-preview" style="background: linear-gradient(135deg, #1e293b, #334155)"></div>
-                            <span>Oscuro</span>
-                        </div>
-                    </div>
+                        Estilos
+                    </button>
+                    <button type="button" class="design-btn" onclick="openFontModal()">
+                        <i class="fas fa-font"></i>
+                        Tipos de letra
+                    </button>
                 </div>
 
-                <!-- Sección de medios mejorada -->
+                <!-- Sección de medios -->
                 <div class="media-section">
                     <label class="form-label">
                         <i class="fas fa-paperclip"></i>
-                        Añadir medios (opcional)
+                        Añadir archivos (opcional)
                     </label>
                     <p style="color: var(--secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-                        Puedes añadir imágenes, videos o documentos a tu publicación
+                        Selecciona imágenes, videos o documentos desde tu dispositivo
                     </p>
                     
                     <div class="media-options">
@@ -925,7 +1033,7 @@
                         <div class="media-option">
                             <i class="fas fa-file-alt"></i>
                             <span>Documentos</span>
-                            <input type="file" id="documentInput" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx" onchange="handleDocumentUpload(event)" multiple>
+                            <input type="file" id="documentInput" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx" onchange="handleDocumentUpload(event)" multiple>
                         </div>
                     </div>
 
@@ -938,13 +1046,13 @@
                 <div class="admin-section">
                     <div class="admin-toggle" onclick="toggleAdminSection()">
                         <i class="fas fa-user-shield"></i>
-                        <strong>Modo Administrador (Solo para administradores de NeoStudy)</strong>
+                        <strong>Modo Administrador</strong>
                         <i class="fas fa-chevron-down" id="adminArrow"></i>
                     </div>
                     
                     <div class="admin-content" id="adminContent">
                         <p style="color: var(--secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-                            Como administrador, puedes crear publicaciones especiales como anuncios de becas, publicidades educativas o comunicados oficiales.
+                            Crear publicaciones institucionales para la comunidad
                         </p>
                         
                         <div class="form-group">
@@ -959,12 +1067,6 @@
                                 <div class="type-option" data-type="scholarship" onclick="selectPostType('scholarship')">
                                     Beca
                                 </div>
-                                <div class="type-option" data-type="ad" onclick="selectPostType('ad')">
-                                    Publicidad
-                                </div>
-                                <div class="type-option" data-type="institution" onclick="selectPostType('institution')">
-                                    Institución
-                                </div>
                                 <div class="type-option" data-type="announcement" onclick="selectPostType('announcement')">
                                     Anuncio
                                 </div>
@@ -977,10 +1079,10 @@
                         <div class="form-group">
                             <label class="form-label">
                                 <i class="fas fa-user-tie"></i>
-                                Nombre del autor (para publicaciones oficiales)
+                                Autor institucional
                             </label>
                             <input type="text" class="text-area" id="adminAuthorName" 
-                                   placeholder="Ej: Neo Study - Sistema, Departamento de Becas, etc." 
+                                   placeholder="Ej: NeoStudy - Comunicaciones" 
                                    style="min-height: auto; padding: 0.8rem;">
                         </div>
                     </div>
@@ -1000,21 +1102,105 @@
 
         <!-- Preview de publicación -->
         <div class="preview-section">
-            <h3><i class="fas fa-eye"></i> Vista Previa</h3>
-            <div class="preview-card" id="postPreview">
-                <div class="preview-header">
-                    <div class="preview-avatar" id="previewAvatar">U</div>
-                    <div class="preview-author">
-                        <h4 id="previewAuthor">Usuario</h4>
-                        <p id="previewTitle">Estudiante</p>
-                    </div>
+            <div class="preview-header">
+                <div class="preview-avatar" id="previewAvatar">U</div>
+                <div class="preview-author">
+                    <h4 id="previewAuthor">Usuario</h4>
+                    <p id="previewTitle">Estudiante</p>
                 </div>
+            </div>
+            <h3 style="margin-bottom: 1rem; color: var(--dark);">
+                <i class="fas fa-eye"></i> Vista Previa
+            </h3>
+            <div class="preview-card" id="postPreview">
                 <div class="preview-content" id="previewContent">
                     Tu publicación aparecerá aquí...
                 </div>
-                <div id="previewMedia"></div>
+                <div class="preview-media-container" id="previewMedia">
+                    <!-- Media aparecerá aquí -->
+                </div>
                 <div class="preview-timestamp" id="previewTimestamp">
                     Ahora mismo
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DE ESTILOS ===== -->
+    <div class="design-modal" id="designModal">
+        <div class="design-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-palette"></i> Estilos de publicación</h3>
+                <button class="close-modal" onclick="closeDesignModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--secondary); margin-bottom: 1rem;">
+                    Selecciona un estilo para tu publicación
+                </p>
+                <div class="design-grid">
+                    <div class="design-option active" onclick="selectDesign('classic')" data-design="classic">
+                        <div class="design-preview" style="background: linear-gradient(135deg, #ffffff, #f8f9fa)"></div>
+                        <span>Clásico</span>
+                    </div>
+                    <div class="design-option" onclick="selectDesign('gradient')" data-design="gradient">
+                        <div class="design-preview" style="background: linear-gradient(135deg, #00C4FF, #007bff)"></div>
+                        <span>Gradiente</span>
+                    </div>
+                    <div class="design-option" onclick="selectDesign('light')" data-design="light">
+                        <div class="design-preview" style="background: linear-gradient(135deg, #f8fafc, #e2e8f0)"></div>
+                        <span>Ligero</span>
+                    </div>
+                    <div class="design-option" onclick="selectDesign('dark')" data-design="dark">
+                        <div class="design-preview" style="background: linear-gradient(135deg, #1e293b, #334155)"></div>
+                        <span>Oscuro</span>
+                    </div>
+                    <div class="design-option" onclick="selectDesign('book')" data-design="book">
+                        <div class="design-preview" style="background: linear-gradient(135deg, #667eea, #764ba2)"></div>
+                        <span>Libro</span>
+                    </div>
+                    <div class="design-option" onclick="selectDesign('paper')" data-design="paper">
+                        <div class="design-preview" style="background: linear-gradient(135deg, #f5f5dc, #f0e6d2)"></div>
+                        <span>Papel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DE FUENTES ===== -->
+    <div class="design-modal" id="fontModal">
+        <div class="design-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-font"></i> Tipos de letra</h3>
+                <button class="close-modal" onclick="closeFontModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--secondary); margin-bottom: 1rem;">
+                    Selecciona una fuente para tu texto
+                </p>
+                <div class="font-grid">
+                    <div class="font-option active" onclick="selectFont('poppins')" style="font-family: 'Poppins', sans-serif;">
+                        Poppins
+                    </div>
+                    <div class="font-option" onclick="selectFont('roboto')" style="font-family: 'Roboto', sans-serif;">
+                        Roboto
+                    </div>
+                    <div class="font-option" onclick="selectFont('montserrat')" style="font-family: 'Montserrat', sans-serif;">
+                        Montserrat
+                    </div>
+                    <div class="font-option" onclick="selectFont('opensans')" style="font-family: 'Open Sans', sans-serif;">
+                        Open Sans
+                    </div>
+                    <div class="font-option" onclick="selectFont('monospace')" style="font-family: 'Courier New', monospace;">
+                        Monospace
+                    </div>
+                    <div class="font-option" onclick="selectFont('cursive')" style="font-family: 'Brush Script MT', cursive;">
+                        Cursiva
+                    </div>
                 </div>
             </div>
         </div>
@@ -1023,9 +1209,11 @@
     <!-- ===== MODAL DE CONFIRMACIÓN ===== -->
     <div class="confirmation-modal" id="confirmationModal">
         <div class="confirmation-content">
-            <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 1rem;"></i>
-            <h2>¡Publicación creada exitosamente! 🎉</h2>
-            <p>Tu publicación ha sido guardada y aparecerá en el feed principal.</p>
+            <i class="fas fa-check-circle" style="font-size: 3.5rem; color: var(--success); margin-bottom: 1rem;"></i>
+            <h2 style="margin-bottom: 0.8rem;">¡Publicación creada! 🎉</h2>
+            <p style="color: var(--secondary); margin-bottom: 1.5rem;">
+                Tu publicación ha sido guardada exitosamente y aparecerá en el feed principal.
+            </p>
             <div class="confirmation-buttons">
                 <button class="btn btn-secondary" onclick="closeConfirmation()">
                     <i class="fas fa-edit"></i> Crear otra
@@ -1041,9 +1229,10 @@
         // ===== VARIABLES GLOBALES =====
         let selectedMedia = [];
         let selectedPostType = 'normal';
-        let selectedFont = 'default';
-        let selectedDesign = 'default';
+        let selectedFont = 'poppins';
+        let selectedDesign = 'classic';
         let isAdminMode = false;
+        let currentUserId = '';
 
         // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
@@ -1060,6 +1249,8 @@
                 const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 
                 if (userData) {
+                    currentUserId = userData.email || Date.now().toString();
+                    
                     let nombreCompleto = '';
                     let titulo = '';
                     let categoria = userData.categoria || '';
@@ -1086,6 +1277,7 @@
                         titulo = 'Estudiante';
                     }
                     
+                    // Actualizar interfaz
                     document.getElementById('authorName').textContent = nombreCompleto;
                     document.getElementById('authorTitle').textContent = titulo;
                     document.getElementById('previewAuthor').textContent = nombreCompleto;
@@ -1112,11 +1304,21 @@
 
         // ===== CONFIGURAR EVENT LISTENERS =====
         function setupEventListeners() {
+            // Seleccionar tipo de publicación por defecto
             selectPostType('normal');
             
+            // Permitir Ctrl+Enter para publicar
             document.getElementById('postContent').addEventListener('keydown', function(e) {
                 if (e.ctrlKey && e.key === 'Enter') {
                     submitPost();
+                }
+            });
+            
+            // Cerrar modales con ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeDesignModal();
+                    closeFontModal();
                 }
             });
         }
@@ -1125,40 +1327,151 @@
         function setupPreviewUpdates() {
             const contentTextarea = document.getElementById('postContent');
             contentTextarea.addEventListener('input', updatePreview);
-            
-            // Actualizar preview cuando se selecciona diseño
-            document.querySelectorAll('.design-option').forEach(option => {
-                option.addEventListener('click', updatePreview);
-            });
-            
-            // Actualizar preview cuando se selecciona fuente
-            document.querySelectorAll('.font-option').forEach(option => {
-                option.addEventListener('click', updatePreview);
-            });
         }
 
         function updatePreview() {
             const content = document.getElementById('postContent').value;
             const previewContent = document.getElementById('previewContent');
+            const previewCard = document.getElementById('postPreview');
             
             if (content.trim()) {
                 previewContent.textContent = content;
                 previewContent.style.fontFamily = getFontFamily(selectedFont);
-                previewContent.style.color = getDesignColors(selectedDesign).text;
-                previewContent.style.backgroundColor = getDesignColors(selectedDesign).bg;
-                previewContent.style.padding = '1rem';
-                previewContent.style.borderRadius = '8px';
+                
+                const designColors = getDesignColors(selectedDesign);
+                previewContent.style.backgroundColor = designColors.bg;
+                previewContent.style.color = designColors.text;
+                previewContent.style.border = designColors.border;
+                previewCard.style.background = designColors.cardBg;
+                
             } else {
                 previewContent.textContent = 'Tu publicación aparecerá aquí...';
                 previewContent.style.fontFamily = 'inherit';
-                previewContent.style.color = 'inherit';
-                previewContent.style.backgroundColor = 'transparent';
+                previewContent.style.backgroundColor = '#f8f9fa';
+                previewContent.style.color = '#6c757d';
+                previewContent.style.border = 'none';
+                previewCard.style.background = 'white';
             }
+            
+            // Actualizar media preview
+            updateMediaPreview();
             
             // Actualizar timestamp
             const now = new Date();
-            document.getElementById('previewTimestamp').textContent = 
-                `Hoy a las ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            const timeString = now.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            document.getElementById('previewTimestamp').textContent = `Hoy a las ${timeString}`;
+        }
+
+        // ===== MODALES DE DISEÑO =====
+        function openDesignModal() {
+            document.getElementById('designModal').style.display = 'flex';
+        }
+
+        function closeDesignModal() {
+            document.getElementById('designModal').style.display = 'none';
+        }
+
+        function openFontModal() {
+            document.getElementById('fontModal').style.display = 'flex';
+        }
+
+        function closeFontModal() {
+            document.getElementById('fontModal').style.display = 'none';
+        }
+
+        // ===== SELECCIÓN DE DISEÑO Y FUENTE =====
+        function selectDesign(design) {
+            selectedDesign = design;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.design-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.design-option').classList.add('active');
+            
+            // Actualizar preview
+            updatePreview();
+            
+            // Cerrar modal después de seleccionar
+            setTimeout(closeDesignModal, 300);
+        }
+
+        function selectFont(font) {
+            selectedFont = font;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.font-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Actualizar preview
+            updatePreview();
+            
+            // Cerrar modal después de seleccionar
+            setTimeout(closeFontModal, 300);
+        }
+
+        function getFontFamily(font) {
+            switch(font) {
+                case 'poppins': return "'Poppins', sans-serif";
+                case 'roboto': return "'Roboto', sans-serif";
+                case 'montserrat': return "'Montserrat', sans-serif";
+                case 'opensans': return "'Open Sans', sans-serif";
+                case 'monospace': return "'Courier New', monospace";
+                case 'cursive': return "'Brush Script MT', cursive";
+                default: return "'Poppins', sans-serif";
+            }
+        }
+
+        function getDesignColors(design) {
+            switch(design) {
+                case 'gradient':
+                    return {
+                        bg: 'linear-gradient(135deg, #00C4FF10, #007bff10)',
+                        text: '#1e293b',
+                        border: '2px solid rgba(0, 196, 255, 0.2)',
+                        cardBg: '#ffffff'
+                    };
+                case 'light':
+                    return {
+                        bg: '#f8fafc',
+                        text: '#1e293b',
+                        border: '2px solid #e2e8f0',
+                        cardBg: '#ffffff'
+                    };
+                case 'dark':
+                    return {
+                        bg: '#1e293b',
+                        text: '#ffffff',
+                        border: '2px solid #334155',
+                        cardBg: '#0f172a'
+                    };
+                case 'book':
+                    return {
+                        bg: 'linear-gradient(135deg, #667eea10, #764ba210)',
+                        text: '#1e293b',
+                        border: '2px solid rgba(102, 126, 234, 0.2)',
+                        cardBg: '#ffffff'
+                    };
+                case 'paper':
+                    return {
+                        bg: '#f5f5dc',
+                        text: '#3c2f2f',
+                        border: '1px solid #d4b483',
+                        cardBg: '#f0e6d2'
+                    };
+                default: // classic
+                    return {
+                        bg: '#ffffff',
+                        text: '#1e293b',
+                        border: '2px solid #e2e8f0',
+                        cardBg: '#ffffff'
+                    };
+            }
         }
 
         // ===== MANEJO DE MEDIOS =====
@@ -1166,29 +1479,34 @@
             const files = Array.from(event.target.files);
             const preview = document.getElementById('mediaPreview');
             
-            selectedMedia = selectedMedia.filter(media => media.type !== 'image');
-            
             files.forEach((file, index) => {
                 if (file.size > 10 * 1024 * 1024) {
                     showNotification('La imagen ' + file.name + ' es demasiado grande (máximo 10MB)', 'warning');
                     return;
                 }
                 
+                if (!file.type.startsWith('image/')) {
+                    showNotification('El archivo ' + file.name + ' no es una imagen válida', 'warning');
+                    return;
+                }
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const media = {
+                        id: Date.now() + index,
                         type: 'image',
                         file: file,
                         url: e.target.result,
                         name: file.name,
-                        size: formatFileSize(file.size)
+                        size: formatFileSize(file.size),
+                        preview: e.target.result
                     };
                     
                     selectedMedia.push(media);
                     showMediaPreview();
                     
-                    if (index === 0) {
-                        showNotification(`${files.length} imagen(es) cargada(s) correctamente`, 'success');
+                    if (index === files.length - 1) {
+                        showNotification(`${files.length} imagen(es) cargada(s)`, 'success');
                     }
                 };
                 reader.readAsDataURL(file);
@@ -1208,19 +1526,28 @@
                 return;
             }
             
-            selectedMedia = selectedMedia.filter(media => media.type !== 'video');
+            if (!file.type.startsWith('video/')) {
+                showNotification('El archivo no es un video válido', 'warning');
+                event.target.value = '';
+                return;
+            }
             
             const reader = new FileReader();
             reader.onload = function(e) {
                 const media = {
+                    id: Date.now(),
                     type: 'video',
                     file: file,
                     url: e.target.result,
                     name: file.name,
-                    size: formatFileSize(file.size)
+                    size: formatFileSize(file.size),
+                    preview: e.target.result
                 };
                 
+                // Limitar a 1 video por publicación
+                selectedMedia = selectedMedia.filter(m => m.type !== 'video');
                 selectedMedia.push(media);
+                
                 showMediaPreview();
                 showNotification('Video cargado correctamente', 'success');
             };
@@ -1231,12 +1558,16 @@
 
         function handleDocumentUpload(event) {
             const files = Array.from(event.target.files);
-            const preview = document.getElementById('mediaPreview');
-            
-            // Filtrar documentos existentes
-            selectedMedia = selectedMedia.filter(media => media.type !== 'document');
+            const allowedTypes = ['.pdf', '.doc', '.docx', '.txt', '.ppt', '.pptx', '.xls', '.xlsx'];
             
             files.forEach((file, index) => {
+                const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+                
+                if (!allowedTypes.includes(fileExtension)) {
+                    showNotification('Tipo de archivo no permitido: ' + file.name, 'warning');
+                    return;
+                }
+                
                 if (file.size > 25 * 1024 * 1024) {
                     showNotification('El documento ' + file.name + ' es demasiado grande (máximo 25MB)', 'warning');
                     return;
@@ -1245,6 +1576,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const media = {
+                        id: Date.now() + index,
                         type: 'document',
                         file: file,
                         url: e.target.result,
@@ -1256,8 +1588,8 @@
                     selectedMedia.push(media);
                     showMediaPreview();
                     
-                    if (index === 0) {
-                        showNotification(`${files.length} documento(s) cargado(s) correctamente`, 'success');
+                    if (index === files.length - 1) {
+                        showNotification(`${files.length} documento(s) cargado(s)`, 'success');
                     }
                 };
                 reader.readAsDataURL(file);
@@ -1283,89 +1615,119 @@
 
         function showMediaPreview() {
             const preview = document.getElementById('mediaPreview');
-            const previewMedia = document.getElementById('previewMedia');
             
             if (selectedMedia.length === 0) {
-                preview.innerHTML = '<p style="color: var(--secondary); text-align: center; padding: 2rem;">No hay medios seleccionados</p>';
-                previewMedia.innerHTML = '';
+                preview.innerHTML = '<p style="color: var(--secondary); text-align: center; padding: 1rem;">No hay archivos seleccionados</p>';
                 return;
             }
             
-            let previewHTML = '';
-            let mediaPreviewHTML = '';
+            let previewHTML = '<div class="preview-grid">';
             
             selectedMedia.forEach((media, index) => {
                 if (media.type === 'image') {
                     previewHTML += `
-                        <div class="preview-container" style="margin-bottom: 1rem;">
-                            <img src="${media.url}" class="preview-image" alt="${media.name}">
-                            <button class="remove-media" onclick="removeMedia(${index})">
-                                <i class="fas fa-times"></i> Eliminar imagen
+                        <div class="preview-item">
+                            <img src="${media.preview}" class="preview-image" alt="${media.name}">
+                            <button class="remove-media-btn" onclick="removeMedia(${index})">
+                                <i class="fas fa-times"></i>
                             </button>
-                        </div>
-                    `;
-                    
-                    mediaPreviewHTML += `
-                        <div style="margin-top: 1rem;">
-                            <img src="${media.url}" style="max-width: 100%; border-radius: 8px; margin-bottom: 0.5rem;" alt="Imagen">
                         </div>
                     `;
                 }
                 else if (media.type === 'video') {
                     previewHTML += `
-                        <div class="preview-container" style="margin-bottom: 1rem;">
-                            <video controls class="preview-video" style="width: 100%; max-height: 300px;">
-                                <source src="${media.url}" type="video/mp4">
-                                Tu navegador no soporta el elemento de video.
+                        <div class="preview-item">
+                            <video class="preview-video">
+                                <source src="${media.preview}" type="${media.file.type}">
                             </video>
-                            <button class="remove-media" onclick="removeMedia(${index})">
-                                <i class="fas fa-times"></i> Eliminar video
+                            <button class="remove-media-btn" onclick="removeMedia(${index})">
+                                <i class="fas fa-times"></i>
                             </button>
                         </div>
                     `;
-                    
-                    mediaPreviewHTML += `
-                        <div style="margin-top: 1rem; background: #000; border-radius: 8px; overflow: hidden;">
+                }
+                else if (media.type === 'document') {
+                    previewHTML += `
+                        <div class="preview-item">
+                            <div class="preview-doc">
+                                <i class="${media.icon}"></i>
+                                <div style="overflow: hidden;">
+                                    <div style="font-weight: 500; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        ${media.name}
+                                    </div>
+                                    <div style="color: var(--secondary); font-size: 0.8rem;">
+                                        ${media.size}
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="remove-media-btn" onclick="removeMedia(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+            
+            previewHTML += '</div>';
+            preview.innerHTML = previewHTML;
+            
+            // Actualizar preview en la vista previa
+            updateMediaPreview();
+        }
+
+        function updateMediaPreview() {
+            const previewMedia = document.getElementById('previewMedia');
+            
+            if (selectedMedia.length === 0) {
+                previewMedia.innerHTML = '';
+                return;
+            }
+            
+            let previewHTML = '';
+            
+            selectedMedia.forEach((media, index) => {
+                if (media.type === 'image') {
+                    previewHTML += `
+                        <div style="margin-bottom: 0.5rem; border-radius: 8px; overflow: hidden;">
+                            <img src="${media.preview}" style="width: 100%; max-height: 200px; object-fit: cover;" alt="Imagen">
+                        </div>
+                    `;
+                }
+                else if (media.type === 'video') {
+                    previewHTML += `
+                        <div style="margin-bottom: 0.5rem; background: #000; border-radius: 8px; overflow: hidden;">
                             <video controls style="width: 100%; max-height: 200px;">
-                                <source src="${media.url}" type="video/mp4">
+                                <source src="${media.preview}" type="${media.file.type}">
                             </video>
                         </div>
                     `;
                 }
                 else if (media.type === 'document') {
                     previewHTML += `
-                        <div class="preview-document" style="margin-bottom: 1rem;">
-                            <i class="${media.icon}"></i>
-                            <div class="file-info">
-                                <strong>${media.name}</strong>
-                                <small>${media.size} - Documento educativo</small>
-                            </div>
-                            <button class="remove-media" onclick="removeMedia(${index})" style="margin-top: 0;">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                    
-                    mediaPreviewHTML += `
-                        <div style="margin-top: 1rem; background: var(--light); padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem;">
-                            <i class="${media.icon}" style="font-size: 2rem; color: var(--danger);"></i>
-                            <div>
-                                <strong>${media.name}</strong><br>
-                                <small>${media.size}</small>
+                        <div style="margin-bottom: 0.5rem; background: var(--light); padding: 0.8rem; border-radius: 8px; display: flex; align-items: center; gap: 0.8rem;">
+                            <i class="${media.icon}" style="font-size: 1.5rem; color: var(--danger);"></i>
+                            <div style="overflow: hidden;">
+                                <div style="font-weight: 500; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    ${media.name}
+                                </div>
+                                <div style="color: var(--secondary); font-size: 0.8rem;">
+                                    ${media.size}
+                                </div>
                             </div>
                         </div>
                     `;
                 }
             });
             
-            preview.innerHTML = previewHTML;
-            previewMedia.innerHTML = mediaPreviewHTML;
+            previewMedia.innerHTML = previewHTML;
         }
 
         function removeMedia(index) {
-            selectedMedia.splice(index, 1);
-            showMediaPreview();
-            showNotification('Medio eliminado', 'info');
+            if (index >= 0 && index < selectedMedia.length) {
+                selectedMedia.splice(index, 1);
+                showMediaPreview();
+                showNotification('Archivo eliminado', 'info');
+            }
         }
 
         function formatFileSize(bytes) {
@@ -1374,52 +1736,6 @@
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // ===== DISEÑO Y FUENTES =====
-        function selectDesign(design) {
-            selectedDesign = design;
-            
-            document.querySelectorAll('.design-option').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            event.target.closest('.design-option').classList.add('active');
-            updatePreview();
-        }
-
-        function selectFont(font) {
-            selectedFont = font;
-            
-            document.querySelectorAll('.font-option').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            event.target.classList.add('active');
-            updatePreview();
-        }
-
-        function getFontFamily(font) {
-            switch(font) {
-                case 'poppins': return "'Poppins', sans-serif";
-                case 'roboto': return "'Roboto', sans-serif";
-                case 'monospace': return "'Courier New', monospace";
-                case 'cursive': return "'Brush Script MT', cursive";
-                default: return "inherit";
-            }
-        }
-
-        function getDesignColors(design) {
-            switch(design) {
-                case 'gradient':
-                    return { bg: 'linear-gradient(135deg, #00C4FF10, #007bff10)', text: '#1e293b' };
-                case 'light':
-                    return { bg: '#f8fafc', text: '#1e293b' };
-                case 'dark':
-                    return { bg: '#1e293b', text: '#ffffff' };
-                default:
-                    return { bg: 'transparent', text: 'inherit' };
-            }
         }
 
         // ===== VERIFICAR ACCESO DE ADMINISTRADOR =====
@@ -1451,25 +1767,22 @@
                 btn.classList.remove('active');
             });
             
-            document.querySelector(`.type-option[data-type="${type}"]`).classList.add('active');
+            const selectedBtn = document.querySelector(`.type-option[data-type="${type}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('active');
+            }
             
-            if (type !== 'normal') {
+            if (type !== 'normal' && isAdminMode) {
                 const authorInput = document.getElementById('adminAuthorName');
                 switch(type) {
                     case 'scholarship':
-                        authorInput.value = 'Neo Study - Departamento de Becas';
-                        break;
-                    case 'ad':
-                        authorInput.value = 'Neo Study - Alianzas Educativas';
-                        break;
-                    case 'institution':
-                        authorInput.value = 'Neo Study - Sistema';
+                        authorInput.value = 'NeoStudy - Departamento de Becas';
                         break;
                     case 'announcement':
-                        authorInput.value = 'Neo Study - Comunicaciones';
+                        authorInput.value = 'NeoStudy - Comunicaciones';
                         break;
                     case 'event':
-                        authorInput.value = 'Neo Study - Eventos';
+                        authorInput.value = 'NeoStudy - Eventos';
                         break;
                 }
             }
@@ -1494,8 +1807,12 @@
             const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
             
             let nombreCompleto = 'Usuario NeoStudy';
+            let userCategory = 'estudiante';
+            
             if (userData) {
                 const categoria = userData.categoria || '';
+                userCategory = categoria;
+                
                 if (categoria === 'profesional') {
                     nombreCompleto = userData.prof_nombre || 'Profesional';
                 } 
@@ -1517,52 +1834,95 @@
             const authorInitials = author.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
             
             const newPost = {
-                id: Date.now().toString(),
+                id: 'post_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                 author: author,
                 authorInitials: authorInitials,
+                authorCategory: userCategory,
                 content: content,
                 media: selectedMedia.map(media => ({
+                    id: media.id,
                     type: media.type,
                     name: media.name,
                     size: media.size,
-                    url: media.url
+                    url: media.url,
+                    icon: media.icon || null,
+                    preview: media.preview || null
                 })),
                 design: selectedDesign,
                 font: selectedFont,
                 type: selectedPostType,
                 likes: 0,
-                comments: 0,
+                comments: [],
                 shares: 0,
                 timestamp: new Date().toISOString(),
-                userId: userData ? userData.email || 'anonymous' : 'anonymous',
+                userId: currentUserId,
+                userAvatar: profileData.profilePhoto || null,
                 isAdminPost: isAdminMode && selectedPostType !== 'normal'
             };
             
             savePostToStorage(newPost);
             document.getElementById('confirmationModal').style.display = 'flex';
+            
+            // Guardar también en el historial de medios del usuario
+            saveUserMediaHistory(newPost);
         }
 
         function savePostToStorage(post) {
             try {
                 let posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+                
+                // Agregar la nueva publicación al principio del array
                 posts.unshift(post);
                 
-                if (posts.length > 100) {
-                    posts = posts.slice(0, 100);
+                // Limitar a 1000 publicaciones para no sobrecargar localStorage
+                if (posts.length > 1000) {
+                    posts = posts.slice(0, 1000);
                 }
                 
                 localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
                 
+                // Guardar en un archivo separado para publicaciones institucionales
                 if (post.isAdminPost) {
                     let institutionalPosts = JSON.parse(localStorage.getItem('neoStudyInstitutionalPosts')) || [];
                     institutionalPosts.unshift(post);
                     localStorage.setItem('neoStudyInstitutionalPosts', JSON.stringify(institutionalPosts));
                 }
                 
-                console.log('Publicación guardada exitosamente:', post);
+                console.log('✅ Publicación guardada exitosamente:', post.id);
+                
             } catch (error) {
-                console.error('Error guardando publicación:', error);
+                console.error('❌ Error guardando publicación:', error);
                 showNotification('Error al guardar la publicación', 'danger');
+            }
+        }
+
+        function saveUserMediaHistory(post) {
+            try {
+                // Guardar referencia a los medios en el historial del usuario
+                const userId = currentUserId;
+                if (!userId) return;
+                
+                let userMediaHistory = JSON.parse(localStorage.getItem(`userMedia_${userId}`)) || [];
+                
+                post.media.forEach(media => {
+                    userMediaHistory.push({
+                        postId: post.id,
+                        mediaId: media.id,
+                        type: media.type,
+                        name: media.name,
+                        timestamp: post.timestamp
+                    });
+                });
+                
+                // Limitar historial a 500 elementos
+                if (userMediaHistory.length > 500) {
+                    userMediaHistory = userMediaHistory.slice(-500);
+                }
+                
+                localStorage.setItem(`userMedia_${userId}`, JSON.stringify(userMediaHistory));
+                
+            } catch (error) {
+                console.error('Error guardando historial de medios:', error);
             }
         }
 
@@ -1578,37 +1938,57 @@
         }
 
         function goToFeed() {
+            // Guardar estado de la sesión actual
+            const sessionData = {
+                lastPostTime: new Date().toISOString(),
+                hasNewPosts: true
+            };
+            localStorage.setItem('neoStudySession', JSON.stringify(sessionData));
+            
+            // Redirigir al feed
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
         function closeConfirmation() {
             document.getElementById('confirmationModal').style.display = 'none';
-            document.getElementById('postForm').reset();
-            document.getElementById('mediaPreview').innerHTML = '<p style="color: var(--secondary); text-align: center; padding: 2rem;">No hay medios seleccionados</p>';
-            document.getElementById('previewMedia').innerHTML = '';
+            resetForm();
+        }
+
+        function resetForm() {
+            // Limpiar formulario
+            document.getElementById('postContent').value = '';
             selectedMedia = [];
             selectedPostType = 'normal';
-            selectedFont = 'default';
-            selectedDesign = 'default';
+            selectedFont = 'poppins';
+            selectedDesign = 'classic';
             
+            // Resetear botones de diseño
             document.querySelectorAll('.design-option').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector('.design-option').classList.add('active');
+            document.querySelector('.design-option[data-design="classic"]').classList.add('active');
             
             document.querySelectorAll('.font-option').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector('.font-option').classList.add('active');
+            document.querySelector('.font-option[onclick="selectFont(\'poppins\')"]').classList.add('active');
             
             document.querySelectorAll('.type-option').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector('.type-option[data-type="normal"]').classList.add('active');
             
-            document.getElementById('postContent').value = '';
+            // Limpiar previews
+            document.getElementById('mediaPreview').innerHTML = '<p style="color: var(--secondary); text-align: center; padding: 1rem;">No hay archivos seleccionados</p>';
+            document.getElementById('previewMedia').innerHTML = '';
+            
+            // Actualizar preview
             updatePreview();
+            
+            // Enfocar en el textarea
             document.getElementById('postContent').focus();
+            
+            showNotification('Formulario reiniciado. ¡Crea una nueva publicación!', 'info');
         }
 
         // ===== NOTIFICACIONES =====
@@ -1619,7 +1999,12 @@
             }
 
             const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
+            notification.className = 'notification';
+            notification.style.background = 
+                type === 'success' ? 'var(--success)' :
+                type === 'warning' ? 'var(--warning)' :
+                type === 'danger' ? 'var(--danger)' : 'var(--info)';
+            
             notification.textContent = message;
             document.body.appendChild(notification);
             
@@ -1629,6 +2014,22 @@
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
+
+        // ===== FUNCIONES PARA EL FEED (modulo2_iniciodecesión.html) =====
+        // Estas funciones serán utilizadas por el feed para mostrar las publicaciones
+        window.getUserPosts = function() {
+            return JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+        };
+
+        window.getUserMediaPosts = function() {
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            return posts.filter(post => post.media && post.media.length > 0);
+        };
+
+        window.getRecentPosts = function(limit = 20) {
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            return posts.slice(0, limit);
+        };
     </script>
 </body>
 </html>
