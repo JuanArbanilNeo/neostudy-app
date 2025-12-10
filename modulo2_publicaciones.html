@@ -1254,27 +1254,33 @@
                     let nombreCompleto = '';
                     let titulo = '';
                     let categoria = userData.categoria || '';
+                    let primerNombre = '';
                     
                     if (categoria === 'profesional') {
                         nombreCompleto = userData.prof_nombre || 'Profesional';
                         titulo = userData.prof_profesion || 'Profesional';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Profesional';
                     } 
                     else if (categoria === 'universitario') {
                         nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
                         titulo = userData.uni_carrera || 'Estudiante';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
                     }
                     else if (categoria === 'secundaria') {
                         nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
                         titulo = userData.sec_grado || 'Estudiante';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
                     }
                     else if (categoria === 'general') {
                         nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Usuario General';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                     }
                     else {
                         nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
                                        userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Estudiante';
+                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                     }
                     
                     // Actualizar interfaz
@@ -1532,26 +1538,24 @@
                 return;
             }
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const media = {
-                    id: Date.now(),
-                    type: 'video',
-                    file: file,
-                    url: e.target.result,
-                    name: file.name,
-                    size: formatFileSize(file.size),
-                    preview: e.target.result
-                };
-                
-                // Limitar a 1 video por publicación
-                selectedMedia = selectedMedia.filter(m => m.type !== 'video');
-                selectedMedia.push(media);
-                
-                showMediaPreview();
-                showNotification('Video cargado correctamente', 'success');
+            // CORRECCIÓN: Para videos, NO usar FileReader porque puede causar errores con archivos grandes
+            // En su lugar, guardamos información del archivo pero NO el contenido completo
+            const media = {
+                id: Date.now(),
+                type: 'video',
+                file: file,
+                url: URL.createObjectURL(file), // Usar object URL para preview
+                name: file.name,
+                size: formatFileSize(file.size),
+                preview: 'video' // Indicador especial para video
             };
-            reader.readAsDataURL(file);
+            
+            // Limitar a 1 video por publicación
+            selectedMedia = selectedMedia.filter(m => m.type !== 'video');
+            selectedMedia.push(media);
+            
+            showMediaPreview();
+            showNotification('Video cargado correctamente', 'success');
             
             event.target.value = '';
         }
@@ -1637,9 +1641,13 @@
                 else if (media.type === 'video') {
                     previewHTML += `
                         <div class="preview-item">
-                            <video class="preview-video">
-                                <source src="${media.preview}" type="${media.file.type}">
-                            </video>
+                            <div style="width: 100%; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
+                                <i class="fas fa-play-circle" style="font-size: 2.5rem;"></i>
+                                <div style="margin-top: 0.5rem; font-size: 0.9rem; text-align: center;">
+                                    ${media.name}<br>
+                                    <small>${media.size}</small>
+                                </div>
+                            </div>
                             <button class="remove-media-btn" onclick="removeMedia(${index})">
                                 <i class="fas fa-times"></i>
                             </button>
@@ -1695,10 +1703,12 @@
                 }
                 else if (media.type === 'video') {
                     previewHTML += `
-                        <div style="margin-bottom: 0.5rem; background: #000; border-radius: 8px; overflow: hidden;">
-                            <video controls style="width: 100%; max-height: 200px;">
-                                <source src="${media.preview}" type="${media.file.type}">
-                            </video>
+                        <div style="margin-bottom: 0.5rem; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; padding: 2rem; text-align: center; color: white;">
+                            <i class="fas fa-play-circle" style="font-size: 3rem;"></i>
+                            <div style="margin-top: 1rem;">
+                                <strong>Video cargado</strong><br>
+                                <small>${media.name}</small>
+                            </div>
                         </div>
                     `;
                 }
@@ -1724,6 +1734,13 @@
 
         function removeMedia(index) {
             if (index >= 0 && index < selectedMedia.length) {
+                // Liberar URL del video si existe
+                if (selectedMedia[index].type === 'video' && selectedMedia[index].url) {
+                    if (selectedMedia[index].url.startsWith('blob:')) {
+                        URL.revokeObjectURL(selectedMedia[index].url);
+                    }
+                }
+                
                 selectedMedia.splice(index, 1);
                 showMediaPreview();
                 showNotification('Archivo eliminado', 'info');
@@ -1788,7 +1805,7 @@
             }
         }
 
-        // ===== ENVIAR PUBLICACIÓN =====
+        // ===== ENVIAR PUBLICACIÓN (CORREGIDO PARA VIDEOS) =====
         function submitPost() {
             const content = document.getElementById('postContent').value.trim();
             
@@ -1833,26 +1850,41 @@
             
             const authorInitials = author.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
             
+            // CORRECCIÓN: Para videos, no guardar el archivo completo en localStorage
+            // Solo guardar información sobre el video
+            const processedMedia = selectedMedia.map(media => {
+                if (media.type === 'video') {
+                    return {
+                        type: 'video',
+                        name: media.name,
+                        size: media.size,
+                        icon: 'fas fa-video',
+                        preview: 'video'
+                    };
+                } else {
+                    return {
+                        type: media.type,
+                        name: media.name,
+                        size: media.size,
+                        url: media.url,
+                        icon: media.icon || null,
+                        preview: media.preview || null
+                    };
+                }
+            });
+            
             const newPost = {
                 id: 'post_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                 author: author,
                 authorInitials: authorInitials,
                 authorCategory: userCategory,
                 content: content,
-                media: selectedMedia.map(media => ({
-                    id: media.id,
-                    type: media.type,
-                    name: media.name,
-                    size: media.size,
-                    url: media.url,
-                    icon: media.icon || null,
-                    preview: media.preview || null
-                })),
+                media: processedMedia,
                 design: selectedDesign,
                 font: selectedFont,
                 type: selectedPostType,
                 likes: 0,
-                comments: [],
+                comments: [], // Inicializar array de comentarios vacío
                 shares: 0,
                 timestamp: new Date().toISOString(),
                 userId: currentUserId,
@@ -1865,6 +1897,13 @@
             
             // Guardar también en el historial de medios del usuario
             saveUserMediaHistory(newPost);
+            
+            // Liberar URLs de video si existen
+            selectedMedia.forEach(media => {
+                if (media.type === 'video' && media.url && media.url.startsWith('blob:')) {
+                    URL.revokeObjectURL(media.url);
+                }
+            });
         }
 
         function savePostToStorage(post) {
@@ -2014,22 +2053,6 @@
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
-
-        // ===== FUNCIONES PARA EL FEED (modulo2_iniciodecesión.html) =====
-        // Estas funciones serán utilizadas por el feed para mostrar las publicaciones
-        window.getUserPosts = function() {
-            return JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
-        };
-
-        window.getUserMediaPosts = function() {
-            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
-            return posts.filter(post => post.media && post.media.length > 0);
-        };
-
-        window.getRecentPosts = function(limit = 20) {
-            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
-            return posts.slice(0, limit);
-        };
     </script>
 </body>
 </html>
