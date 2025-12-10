@@ -25,28 +25,33 @@
             --dark: #343a40;
             --white: #ffffff;
             --bg-gradient: linear-gradient(135deg, #00C4FF, #007bff);
-            --card-radius: 12px;
-            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --book-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-radius: 16px;
+            --card-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            background: var(--light);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
             color: var(--dark);
             overflow-x: hidden;
-            line-height: 1.5;
-            transition: all 0.3s ease;
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
         }
 
         /* ===== HEADER PARA ESCRITORIO ===== */
         .desktop-header {
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             color: var(--white);
             padding: 0.8rem 0;
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-container {
@@ -55,7 +60,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 1rem;
+            padding: 0 1.5rem;
         }
 
         .logo {
@@ -65,6 +70,11 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
         }
 
         .nav-menu {
@@ -76,17 +86,21 @@
         .nav-item {
             color: var(--white);
             text-decoration: none;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 20px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 0.5rem;
             font-weight: 500;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
         }
 
         .nav-item:hover, .nav-item.active {
             background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .user-menu {
@@ -96,8 +110,8 @@
         }
 
         .avatar {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--white);
             display: flex;
@@ -106,32 +120,35 @@
             font-weight: bold;
             color: var(--primary);
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: var(--transition);
             background-size: cover;
             background-position: center;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
         .avatar:hover {
             transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         /* ===== HEADER PARA MÓVIL ===== */
         .mobile-header {
             display: none;
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             color: var(--white);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
         }
 
         .mobile-nav-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem;
+            padding: 0.8rem 1rem;
         }
 
         .mobile-logo {
@@ -154,6 +171,17 @@
             color: var(--white);
             font-size: 1.5rem;
             cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-menu:hover {
+            background: rgba(255,255,255,0.1);
         }
 
         .mobile-nav-bottom {
@@ -161,7 +189,7 @@
             justify-content: space-around;
             padding: 0.5rem 0;
             border-top: 1px solid rgba(255,255,255,0.2);
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
         }
 
         .mobile-nav-item {
@@ -173,12 +201,14 @@
             gap: 0.25rem;
             font-size: 0.8rem;
             padding: 0.5rem;
-            border-radius: 8px;
-            transition: background 0.3s ease;
+            border-radius: 12px;
+            transition: var(--transition);
+            width: 80px;
         }
 
         .mobile-nav-item.active, .mobile-nav-item:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
         }
 
         .mobile-nav-item i {
@@ -197,15 +227,22 @@
             gap: 1.2rem;
             text-align: left;
             width: 100%;
-            max-width: 100%;
             overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mobile-profile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .mobile-profile-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -215,12 +252,13 @@
             background-size: cover;
             background-position: center;
             flex-shrink: 0;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .mobile-profile-info {
             flex: 1;
             min-width: 0;
-            overflow: hidden;
         }
 
         .mobile-profile-name {
@@ -228,145 +266,129 @@
             font-weight: bold;
             color: var(--dark);
             margin-bottom: 0.5rem;
-            white-space: normal;
-            overflow: visible;
-            text-overflow: unset;
-            word-wrap: break-word;
             line-height: 1.3;
-            width: 100%;
         }
 
         .mobile-profile-title {
             font-size: 1rem;
             color: var(--primary);
             font-weight: 600;
-            background: var(--light);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             padding: 0.5rem 1rem;
             border-radius: 20px;
             display: inline-block;
-            white-space: normal;
-            overflow: visible;
-            text-overflow: unset;
-            max-width: 100%;
-            word-wrap: break-word;
+            border: 2px solid rgba(0, 196, 255, 0.2);
         }
 
         /* ===== CONTENIDO PRINCIPAL ===== */
         .main-container {
             max-width: 1200px;
-            margin: 80px auto 20px;
-            padding: 0 1rem;
+            margin: 80px auto 100px;
+            padding: 0 1.5rem;
             display: grid;
             grid-template-columns: 280px 1fr 280px;
-            gap: 1.5rem;
+            gap: 1.8rem;
         }
 
-        /* ===== SIDEBARS - MÁS COMPACTAS ===== */
+        /* ===== SIDEBARS - MEJOR DISEÑO ===== */
         .sidebar {
             background: var(--white);
             border-radius: var(--card-radius);
-            padding: 1.2rem;
+            padding: 1.5rem;
             box-shadow: var(--card-shadow);
             height: fit-content;
+            transition: var(--transition);
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .sidebar-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             color: var(--dark);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
         }
 
-        /* ===== PERFIL DE USUARIO MÁS COMPACTO ===== */
+        /* ===== PERFIL DE USUARIO ===== */
         .user-profile {
             margin-bottom: 1.5rem;
         }
 
-        .user-profile .post-input-container {
-            margin-bottom: 0;
-        }
-
-        /* ===== PANEL DE ESTADÍSTICAS MÁS COMPACTO ===== */
+        /* ===== PANEL DE ESTADÍSTICAS MEJORADO ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-            margin-bottom: 1.2rem;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
-            background: var(--light);
-            padding: 0.8rem;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 1rem;
+            border-radius: 12px;
             text-align: center;
-            transition: transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
         }
 
         .stat-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover::before {
-            transform: scaleX(1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary);
         }
 
         .stat-number {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
+            margin-bottom: 0.25rem;
         }
 
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--secondary);
+            font-weight: 500;
         }
 
-        /* ===== PROGRESO DE METAS MÁS COMPACTO ===== */
+        /* ===== PROGRESO DE METAS MEJORADO ===== */
         .goal-item {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            padding: 0.8rem 0;
+            gap: 1rem;
+            padding: 1rem;
             border-bottom: 1px solid var(--light);
-            transition: background-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: var(--transition);
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
         }
 
         .goal-item:hover {
-            background: var(--light);
-            border-radius: 10px;
-            padding: 0.8rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            transform: translateX(5px);
         }
 
         .goal-icon {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
             flex-shrink: 0;
-            transition: transform 0.3s ease;
+            transition: var(--transition);
         }
 
         .goal-item:hover .goal-icon {
@@ -379,12 +401,12 @@
 
         .goal-title {
             font-weight: 600;
-            margin-bottom: 0.25rem;
-            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
         }
 
         .goal-progress {
-            height: 5px;
+            height: 6px;
             background: var(--light);
             border-radius: 3px;
             overflow: hidden;
@@ -393,7 +415,7 @@
 
         .goal-progress-bar {
             height: 100%;
-            background: var(--primary);
+            background: var(--book-gradient);
             border-radius: 3px;
             transition: width 0.5s ease;
             position: relative;
@@ -419,94 +441,100 @@
         .feed {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 1.5rem;
         }
 
-        /* ===== CREAR PUBLICACIÓN MEJORADA - REDUCIDA A SOLO LA PREGUNTA ===== */
+        /* ===== CREAR PUBLICACIÓN MEJORADA ===== */
         .create-post-prompt {
             background: var(--white);
             border-radius: var(--card-radius);
             padding: 1.5rem;
             box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem;
             width: 100%;
+            border: 2px solid transparent;
         }
 
         .create-post-prompt:hover {
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: var(--primary);
         }
 
         .prompt-avatar {
-            width: 48px;
-            height: 48px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
             font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: var(--transition);
             background-size: cover;
             background-position: center;
             flex-shrink: 0;
+            border: 2px solid white;
         }
 
         .prompt-text {
             flex: 1;
             color: var(--secondary);
             font-size: 1.1rem;
-            padding: 0.8rem 1rem;
-            background: var(--light);
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 12px;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            transition: var(--transition);
         }
 
         .create-post-prompt:hover .prompt-text {
             border-color: var(--primary);
             background: var(--white);
+            color: var(--dark);
         }
 
-        /* ===== PUBLICACIONES MEJORADAS - MÁS ORDENADAS Y VISUALES ===== */
+        /* ===== PUBLICACIONES MEJORADAS - COMPATIBLES CON MÓDULO DE PUBLICACIONES ===== */
         .post {
             background: var(--white);
             border-radius: var(--card-radius);
-            padding: 1.2rem;
+            padding: 1.5rem;
             box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: var(--transition);
             width: 100%;
+            border: 1px solid #e2e8f0;
         }
 
         .post:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: var(--primary);
         }
 
         .post-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
+            align-items: flex-start;
+            margin-bottom: 1rem;
         }
 
         .post-user {
             display: flex;
-            align-items: center;
-            gap: 0.8rem;
+            align-items: flex-start;
+            gap: 1rem;
+            flex: 1;
         }
 
         .post-user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -515,112 +543,232 @@
             background-size: cover;
             background-position: center;
             flex-shrink: 0;
+            border: 2px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .post-user-info {
+            flex: 1;
         }
 
         .post-user-info h4 {
-            margin-bottom: 0.2rem;
-            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .post-time {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .post-content {
-            margin-bottom: 0.8rem;
-            line-height: 1.5;
-            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-size: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
-        .post-image {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 0.8rem;
-            overflow: hidden;
-            max-height: 400px;
-            object-fit: cover;
+        /* ===== DISEÑOS DE PUBLICACIÓN ===== */
+        .post-design-classic .post-content {
+            background: white;
+            color: var(--dark);
         }
 
-        .post-file {
-            background: var(--light);
+        .post-design-gradient .post-content {
+            background: linear-gradient(135deg, #00C4FF10, #007bff10);
+            color: var(--dark);
             padding: 1rem;
             border-radius: 10px;
-            margin-bottom: 0.8rem;
+        }
+
+        .post-design-light .post-content {
+            background: #f8fafc;
+            color: var(--dark);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .post-design-dark .post-content {
+            background: #1e293b;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .post-design-book .post-content {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            color: var(--dark);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .post-design-paper .post-content {
+            background: #f5f5dc;
+            color: #3c2f2f;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #d4b483;
+        }
+
+        /* ===== FUENTES DE PUBLICACIÓN ===== */
+        .post-font-poppins .post-content {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .post-font-roboto .post-content {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .post-font-montserrat .post-content {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .post-font-opensans .post-content {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .post-font-monospace .post-content {
+            font-family: 'Courier New', monospace;
+        }
+
+        .post-font-cursive .post-content {
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        /* ===== MEDIA DE PUBLICACIONES ===== */
+        .post-media-container {
+            margin: 1rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .post-media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .post-media-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .post-media-image:hover {
+            transform: scale(1.05);
+        }
+
+        .post-media-video {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        .post-media-document {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 1rem;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             gap: 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .post-file i {
-            font-size: 1.5rem;
-            color: var(--primary);
+        .post-media-document i {
+            font-size: 2rem;
+            color: var(--danger);
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-info strong {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .document-info small {
+            color: var(--secondary);
         }
 
         .post-stats {
             display: flex;
             justify-content: space-between;
             color: var(--secondary);
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            padding: 0.8rem 0;
             border-bottom: 1px solid var(--light);
         }
 
         .post-actions-bar {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.3rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
             padding-top: 0.5rem;
         }
 
         .post-action-btn {
             background: none;
             border: none;
-            padding: 0.5rem;
-            border-radius: 6px;
+            padding: 0.8rem;
+            border-radius: 10px;
             color: var(--secondary);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
+            gap: 0.5rem;
             font-weight: 500;
         }
 
         .post-action-btn:hover {
-            background: var(--light);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        /* ===== SISTEMA DE LOGROS MÁS COMPACTO ===== */
+        /* ===== SISTEMA DE LOGROS MEJORADO ===== */
         .achievements-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
+            gap: 1rem;
         }
 
         .achievement-card {
-            background: var(--light);
-            padding: 0.8rem;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 1rem;
+            border-radius: 12px;
             text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #e2e8f0;
         }
 
         .achievement-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary);
         }
 
         .achievement-icon {
-            font-size: 1.8rem;
-            margin-bottom: 0.4rem;
-            transition: transform 0.3s ease;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
         }
 
         .achievement-card:hover .achievement-icon {
@@ -629,8 +777,8 @@
 
         .achievement-title {
             font-weight: 600;
-            margin-bottom: 0.2rem;
-            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
         }
 
         .achievement-desc {
@@ -638,32 +786,33 @@
             color: var(--secondary);
         }
 
-        /* ===== CLASES EN VIVO MÁS COMPACTAS ===== */
+        /* ===== CLASES EN VIVO ===== */
         .live-classes {
             background: var(--white);
             border-radius: var(--card-radius);
-            padding: 1.2rem;
+            padding: 1.5rem;
             box-shadow: var(--card-shadow);
             margin-top: 1.5rem;
         }
 
         .class-card {
-            background: var(--light);
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
             border-left: 4px solid var(--primary);
-            transition: transform 0.3s ease;
+            transition: var(--transition);
         }
 
         .class-card:hover {
             transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .class-title {
             font-weight: 600;
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
         }
 
         .class-meta {
@@ -675,57 +824,55 @@
 
         /* ===== BOTONES ===== */
         .btn {
-            padding: 0.7rem 1.2rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 25px;
+            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             position: relative;
             overflow: hidden;
         }
 
-        .btn::after {
+        .btn::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
         }
 
-        .btn:hover::after {
-            width: 300px;
-            height: 300px;
-            top: -150px;
-            left: -150px;
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             color: var(--white);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 196, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
         .btn-danger {
-            background: var(--danger);
+            background: linear-gradient(135deg, var(--danger), #c82333);
             color: var(--white);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
         }
 
         .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
         }
 
         .btn-block {
@@ -738,7 +885,7 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--book-gradient);
             color: white;
             border: none;
             width: 60px;
@@ -746,9 +893,9 @@
             border-radius: 50%;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -756,92 +903,49 @@
 
         .floating-share-btn:hover {
             transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
         }
 
-        /* ===== MODAL PARA COMPARTIR ===== */
-        .share-modal {
+        /* ===== MODALES ===== */
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.8);
             z-index: 2000;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(5px);
-            overflow-y: auto;
-            padding: 20px 0;
+            padding: 1rem;
         }
 
-        .share-modal-content {
+        .modal-content {
             background: white;
             padding: 2rem;
             border-radius: 20px;
             max-width: 500px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-            animation: modalFadeIn 0.3s ease;
-            margin: auto;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--secondary);
-            transition: color 0.3s ease;
-            z-index: 1;
-        }
-
-        .close-modal:hover {
-            color: var(--danger);
-        }
-
-        /* ===== MODAL DE COMPARTIR PUBLICACIÓN ===== */
-        .share-post-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-            overflow-y: auto;
-            padding: 20px 0;
-        }
-
-        .share-post-modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-            animation: modalFadeIn 0.3s ease;
-            margin: auto;
             max-height: 90vh;
             overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
-        .share-post-header {
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -850,211 +954,30 @@
             border-bottom: 2px solid var(--light);
         }
 
-        .share-post-title {
-            color: var(--primary);
+        .modal-title {
+            color: var(--dark);
             font-size: 1.5rem;
             margin: 0;
         }
 
-        .share-post-preview {
-            background: var(--light);
-            padding: 1.2rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .share-post-preview-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .share-post-avatar {
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: var(--transition);
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--bg-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--white);
-            font-weight: bold;
         }
 
-        .share-post-author {
-            font-weight: 600;
+        .close-modal:hover {
+            background: var(--light);
             color: var(--dark);
-        }
-
-        .share-post-text {
-            line-height: 1.5;
-            font-size: 0.95rem;
-        }
-
-        .share-social-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        @media (max-width: 768px) {
-            .share-social-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .share-social-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .share-social-btn {
-            background: var(--light);
-            border: none;
-            padding: 1.2rem 0.8rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .share-social-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .share-social-btn i {
-            font-size: 1.8rem;
-        }
-
-        .whatsapp-share {
-            color: #25D366;
-        }
-
-        .facebook-share {
-            color: #1877F2;
-        }
-
-        .messenger-share {
-            color: #0084FF;
-        }
-
-        .instagram-share {
-            color: #E4405F;
-            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .telegram-share {
-            color: #0088CC;
-        }
-
-        .tiktok-share {
-            color: #000000;
-        }
-
-        .twitter-share {
-            color: #1DA1F2;
-        }
-
-        .linkedin-share {
-            color: #0077B5;
-        }
-
-        .email-share {
-            color: #EA4335;
-        }
-
-        .copy-share {
-            color: var(--primary);
-        }
-
-        .share-modal-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .share-modal-btn {
-            background: var(--light);
-            border: 2px solid var(--primary);
-            padding: 1rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .share-modal-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .qr-section {
-            background: var(--light);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 1.5rem 0;
-        }
-
-        .qr-code {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-            border: 1px solid #ddd;
-            padding: 15px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .link-copy {
-            display: flex;
-            gap: 10px;
-            margin-top: 1rem;
-        }
-
-        .link-copy input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-
-        .copy-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            background: var(--primary-dark);
         }
 
         /* ===== MENÚ LATERAL PARA MÓVIL ===== */
@@ -1075,9 +998,9 @@
         }
 
         .sidebar-header {
-            background: var(--bg-gradient);
+            background: var(--book-gradient);
             color: var(--white);
-            padding: 1.2rem;
+            padding: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1086,38 +1009,26 @@
             z-index: 1;
         }
 
-        .close-sidebar {
-            background: none;
-            border: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
         .sidebar-links {
-            padding: 1.2rem;
+            padding: 1.5rem;
         }
 
         .sidebar-link {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0.8rem 0;
+            padding: 1rem 0;
             text-decoration: none;
             color: var(--dark);
             border-bottom: 1px solid var(--light);
-            transition: color 0.3s ease;
+            transition: var(--transition);
             cursor: pointer;
             font-weight: 500;
         }
 
         .sidebar-link:hover {
             color: var(--primary);
-        }
-
-        .sidebar-link i {
-            width: 20px;
-            text-align: center;
+            transform: translateX(5px);
         }
 
         .overlay {
@@ -1135,318 +1046,125 @@
             display: block;
         }
 
-        /* ===== SECCIONES DEL MENÚ LATERAL ===== */
-        .mobile-section {
-            display: none;
-            padding: 1.2rem;
-            background: var(--white);
+        /* ===== ETIQUETAS DE PUBLICIDAD ===== */
+        .post-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .mobile-section.active {
-            display: block;
+        .label-scholarship {
+            background: linear-gradient(135deg, #4169E1, #00008B);
+            color: white;
         }
 
-        .mobile-progress-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
-            margin: 0.8rem 0;
+        .label-ad {
+            background: linear-gradient(135deg, #32CD32, #228B22);
+            color: white;
         }
 
-        .mobile-progress-card {
-            background: var(--light);
-            padding: 1rem;
-            border-radius: 10px;
+        .label-institution {
+            background: linear-gradient(135deg, #FF69B4, #C71585);
+            color: white;
+        }
+
+        .label-announcement {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+        }
+
+        .label-event {
+            background: linear-gradient(135deg, #9C27B0, #673AB7);
+            color: white;
+        }
+
+        /* ===== MENSAJE VACÍO ===== */
+        .empty-message {
             text-align: center;
-            border-left: 4px solid var(--primary);
-            transition: transform 0.3s ease;
-        }
-
-        .mobile-progress-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .mobile-goal-item {
-            background: var(--light);
-            padding: 0.8rem;
-            border-radius: 10px;
-            margin-bottom: 0.8rem;
-            border-left: 4px solid var(--success);
-            transition: transform 0.3s ease;
-        }
-
-        .mobile-goal-item:hover {
-            transform: translateX(5px);
-        }
-
-        .mobile-achievement-item {
-            background: var(--light);
-            padding: 0.8rem;
-            border-radius: 10px;
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            transition: transform 0.3s ease;
-        }
-
-        .mobile-achievement-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .mobile-achievement-icon {
-            font-size: 1.8rem;
-            width: 50px;
-            text-align: center;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
-        }
-
-        .mobile-achievement-item:hover .mobile-achievement-icon {
-            transform: scale(1.1);
-        }
-
-        /* ===== BOTÓN DE ELIMINAR EN PUBLICACIONES ===== */
-        .delete-post-btn {
-            background: none;
-            border: none;
+            padding: 3rem;
             color: var(--secondary);
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            font-size: 1.1rem;
+            background: var(--white);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
         }
 
-        .delete-post-btn:hover {
-            color: var(--danger);
-            background: rgba(220, 53, 69, 0.1);
-            transform: scale(1.1);
+        .empty-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
         }
 
-        /* ===== FOTO DE PERFIL DEL ADMINISTRADOR ===== */
-        .admin-photo {
-            background-image: url('admin-profile.jpg'); /* Asegúrate de tener esta imagen */
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* ===== MODO ESTUDIO - MEJOR CONTRASTE ===== */
-        .study-mode {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        /* ===== NOTIFICACIONES ===== */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--success);
             color: white;
-        }
-
-        .study-mode .header {
-            background: rgba(0,0,0,0.2);
-        }
-
-        .study-mode .sidebar,
-        .study-mode .create-post-prompt,
-        .study-mode .post,
-        .study-mode .live-classes {
-            background: rgba(255,255,255,0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: fadeInUp 0.4s ease;
+            max-width: 300px;
             backdrop-filter: blur(10px);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .study-mode .post-input {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-color: rgba(255,255,255,0.3);
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .study-mode .post-input::placeholder {
-            color: rgba(255,255,255,0.7);
-        }
-
-        .study-mode .post-input:focus {
-            border-color: rgba(255,255,255,0.5);
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
-        }
-
-        .study-mode .post-stats,
-        .study-mode .post-time,
-        .study-mode .stat-label,
-        .study-mode .achievement-desc,
-        .study-mode .class-meta {
-            color: rgba(255,255,255,0.8);
-        }
-
-        .study-mode .goal-item:hover,
-        .study-mode .post-action:hover,
-        .study-mode .post-action-btn:hover {
-            background: rgba(255,255,255,0.15);
-        }
-
-        /* ===== MODO OSCURO - MEJOR CONTRASTE ===== */
-        .dark-mode {
-            background: #1a1a1a;
-            color: #f0f0f0;
-        }
-
-        .dark-mode .header {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-        }
-
-        .dark-mode .sidebar,
-        .dark-mode .create-post-prompt,
-        .dark-mode .post,
-        .dark-mode .live-classes {
-            background: #2d2d2d;
-            color: #f0f0f0;
-            border: 1px solid #3d3d3d;
-        }
-
-        .dark-mode .prompt-text,
-        .dark-mode .stat-card,
-        .dark-mode .achievement-card,
-        .dark-mode .class-card {
-            background: #3d3d3d;
-            color: #f0f0f0;
-            border-color: #444;
-        }
-
-        .dark-mode .prompt-text:hover {
-            border-color: var(--primary);
-            background: #454545;
-        }
-
-        .dark-mode .goal-item:hover,
-        .dark-mode .post-action:hover,
-        .dark-mode .post-action-btn:hover {
-            background: #3d3d3d;
-        }
-
-        .dark-mode .stat-label,
-        .dark-mode .post-time,
-        .dark-mode .achievement-desc,
-        .dark-mode .class-meta {
-            color: #cccccc;
-        }
-
-        .dark-mode .mobile-profile-title {
-            background: #3d3d3d;
-            color: var(--primary);
-        }
-
-        /* ===== RESPONSIVE DESIGN ===== */
+        /* ===== RESPONSIVE DESIGN MEJORADO ===== */
         @media (max-width: 1024px) {
             .main-container {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 1.5rem;
             }
             
             .sidebar {
-                display: block !important;
-                margin-bottom: 1rem;
+                display: none !important;
             }
-
+            
             .nav-container {
-                flex-wrap: wrap;
-                gap: 1rem;
+                padding: 0 1rem;
             }
-
-            .nav-menu {
-                order: 3;
-                width: 100%;
-                justify-content: center;
-                gap: 1rem;
-            }
-
-            .user-menu {
-                gap: 0.5rem;
-            }
-
+            
             .stats-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
-
+            
             .achievements-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
-            /* Ocultar header de escritorio en móviles */
             .desktop-header {
                 display: none;
             }
 
-            /* Mostrar header móvil */
             .mobile-header {
                 display: block;
             }
 
-            /* Ajustar margen superior del contenido principal */
             .main-container {
-                margin: 120px auto 80px;
-                padding: 0 15px;
-                grid-template-columns: 1fr;
-                width: 100%;
-            }
-
-            /* Ajustes para el contenido en móviles */
-            .nav-menu {
-                flex-wrap: wrap;
-            }
-
-            .nav-item {
-                font-size: 0.9rem;
-                padding: 0.5rem;
-            }
-
-            .user-menu {
-                flex-wrap: wrap;
+                margin: 120px auto 100px;
+                padding: 0 1rem;
             }
 
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .share-modal-buttons {
-                grid-template-columns: 1fr;
-            }
-            
-            .share-modal-content {
-                padding: 1.5rem;
-            }
-            
-            .qr-code {
-                width: 150px;
-                height: 150px;
-            }
-
-            .mobile-progress-grid {
-                grid-template-columns: 1fr;
-            }
-
-            /* Asegurar que el menú lateral ocupe toda la pantalla */
-            .mobile-sidebar {
-                width: 100%;
-            }
-
-            /* Ocultar las sidebars en móviles */
-            .sidebar {
-                display: none !important;
-            }
-
-            /* Mostrar solo el feed en móviles */
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-
-            /* MEJORAS ESPECÍFICAS PARA MÓVIL */
             .mobile-profile {
                 padding: 1.2rem;
-                margin: 0 0 1.5rem 0;
-                width: 100%;
-                box-sizing: border-box;
             }
 
             .mobile-profile-avatar {
@@ -1459,83 +1177,38 @@
                 font-size: 1.2rem;
             }
 
-            .mobile-profile-title {
-                font-size: 0.9rem;
-                padding: 0.4rem 0.8rem;
-            }
-
             .create-post-prompt {
                 padding: 1.2rem;
-                width: 100%;
-                box-sizing: border-box;
             }
 
-            .prompt-text {
-                font-size: 1rem;
-                padding: 0.8rem;
-            }
-
-            .post {
-                width: 100%;
-                box-sizing: border-box;
+            .prompt-avatar {
+                width: 50px;
+                height: 50px;
             }
 
             .post-actions-bar {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
         @media (max-width: 480px) {
-            .logo {
-                font-size: 1.2rem;
+            .main-container {
+                margin: 140px auto 100px;
+                padding: 0 0.8rem;
             }
 
-            .nav-item span {
-                display: none;
-            }
-
-            .nav-item {
-                padding: 0.5rem;
-            }
-
-            .btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .achievements-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .mobile-nav-item span {
+            .mobile-nav-item {
+                width: 70px;
                 font-size: 0.7rem;
             }
 
             .mobile-profile {
-                padding: 1rem;
                 flex-direction: column;
                 text-align: center;
                 gap: 1rem;
             }
 
-            .mobile-profile-avatar {
-                width: 80px;
-                height: 80px;
-                font-size: 1.5rem;
-            }
-
-            .mobile-profile-name {
-                font-size: 1.3rem;
-                text-align: center;
-            }
-
-            .mobile-profile-title {
-                font-size: 0.9rem;
-                padding: 0.5rem 1rem;
+            .mobile-profile-info {
                 text-align: center;
             }
 
@@ -1544,11 +1217,24 @@
             }
 
             .prompt-text {
-                font-size: 0.9rem;
+                font-size: 1rem;
+            }
+
+            .post {
+                padding: 1.2rem;
             }
 
             .post-actions-bar {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .post-action-btn {
+                padding: 0.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1562,85 +1248,49 @@
             animation: fadeIn 0.5s ease;
         }
 
-        /* ===== NOTIFICACIONES ===== */
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: var(--success);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* ===== ETIQUETAS DE PUBLICIDAD ===== */
-        .ad-label {
-            display: inline-block;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #333;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            margin-right: 0.5rem;
-            vertical-align: middle;
-        }
-
-        .sponsored-label {
-            background: linear-gradient(135deg, #32CD32, #228B22);
-            color: white;
-        }
-
-        .scholarship-label {
-            background: linear-gradient(135deg, #4169E1, #00008B);
-            color: white;
-        }
-
-        .institution-label {
-            background: linear-gradient(135deg, #FF69B4, #C71585);
-            color: white;
-        }
-
+        /* ===== TIPOS DE PUBLICACIÓN ===== */
         .post-type-badge {
             display: inline-block;
             font-size: 0.7rem;
             padding: 0.2rem 0.5rem;
             border-radius: 8px;
-            margin-left: 0.5rem;
             background: var(--light);
             color: var(--secondary);
         }
 
-        .type-user {
+        .badge-normal {
             background: var(--primary);
             color: white;
         }
 
-        .type-admin {
+        .badge-admin {
             background: var(--success);
             color: white;
         }
 
-        .type-ad {
-            background: var(--warning);
+        .badge-scholarship {
+            background: linear-gradient(135deg, #4169E1, #00008B);
+            color: white;
+        }
+
+        .badge-ad {
+            background: linear-gradient(135deg, #32CD32, #228B22);
+            color: white;
+        }
+
+        .badge-institution {
+            background: linear-gradient(135deg, #FF69B4, #C71585);
+            color: white;
+        }
+
+        .badge-announcement {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #333;
         }
 
-        /* ===== MENSAJE VACÍO ===== */
-        .empty-message {
-            text-align: center;
-            padding: 3rem;
-            color: var(--secondary);
-            font-size: 1.1rem;
-        }
-
-        .empty-message i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--light);
+        .badge-event {
+            background: linear-gradient(135deg, #9C27B0, #673AB7);
+            color: white;
         }
     </style>
 </head>
@@ -1649,7 +1299,7 @@
     <header class="desktop-header">
         <div class="nav-container">
             <div class="logo" onclick="goToFeed()">
-                <i class="fas fa-graduation-cap"></i>
+                <i class="fas fa-book-open"></i>
                 Neo Study
             </div>
             <nav class="nav-menu">
@@ -1668,11 +1318,11 @@
             </nav>
             <div class="user-menu">
                 <div class="avatar" id="userAvatar" onclick="goToProfile()">U</div>
-                <button class="btn btn-danger" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                </button>
                 <button class="btn btn-primary" onclick="toggleThemeMode()">
                     <i class="fas fa-moon"></i> Modo Normal
+                </button>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </button>
             </div>
         </div>
@@ -1682,7 +1332,7 @@
     <header class="mobile-header">
         <div class="mobile-nav-top">
             <div class="mobile-logo">
-                <i class="fas fa-graduation-cap"></i>
+                <i class="fas fa-book-open"></i>
                 Neo Study
             </div>
             <div class="mobile-controls">
@@ -1721,18 +1371,17 @@
     <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <h3 id="mobileUserName">Mi Perfil</h3>
-            <button class="close-sidebar" id="closeSidebar">
+            <button class="close-modal" id="closeSidebar">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <!-- Perfil del Usuario en el Menú Lateral -->
         <div class="sidebar-links">
-            <div class="post-input-container" style="margin-bottom: 1.2rem;">
-                <div class="post-avatar" id="mobileUserAvatar">U</div>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="avatar" id="mobileUserAvatar" style="width: 60px; height: 60px;">U</div>
                 <div>
                     <h4 id="mobileFullName">Usuario NeoStudy</h4>
-                    <p class="post-time" id="mobileUserTitle">Estudiante</p>
+                    <p style="color: var(--secondary); font-size: 0.9rem;" id="mobileUserTitle">Estudiante</p>
                 </div>
             </div>
             
@@ -1748,214 +1397,145 @@
                 <i class="fas fa-trophy"></i>
                 Mis Logros
             </a>
-        </div>
-
-        <!-- Sección Mi Progreso -->
-        <div class="mobile-section" id="mobileProgress">
-            <h2><i class="fas fa-chart-line"></i> Mi Progreso</h2>
-            <div class="mobile-progress-grid">
-                <div class="mobile-progress-card">
-                    <div class="stat-number">128</div>
-                    <div class="stat-label">Horas de Estudio</div>
-                </div>
-                <div class="mobile-progress-card">
-                    <div class="stat-number">12</div>
-                    <div class="stat-label">Metas Completadas</div>
-                </div>
-                <div class="mobile-progress-card">
-                    <div class="stat-number">8</div>
-                    <div class="stat-label">Cursos Tomados</div>
-                </div>
-                <div class="mobile-progress-card">
-                    <div class="stat-number">15</div>
-                    <div class="stat-label">Logros Obtenidos</div>
-                </div>
-            </div>
-            <div class="sidebar-title">
-                <i class="fas fa-trending-up"></i> Progreso Semanal
-            </div>
-            <p>Tu progreso esta semana ha sido excelente. Has completado 5 horas más que la semana anterior.</p>
-        </div>
-
-        <!-- Sección Mis Metas -->
-        <div class="mobile-section" id="mobileGoals">
-            <h2><i class="fas fa-bullseye"></i> Mis Metas</h2>
-            <div class="mobile-goal-item">
-                <h4>Matemáticas Básicas</h4>
-                <p>Completar curso de álgebra</p>
-                <div class="goal-progress">
-                    <div class="goal-progress-bar" style="width: 75%"></div>
-                </div>
-                <small>75% completado</small>
-            </div>
-            <div class="mobile-goal-item">
-                <h4>Química General</h4>
-                <p>Terminar módulo de estequiometría</p>
-                <div class="goal-progress">
-                    <div class="goal-progress-bar" style="width: 40%"></div>
-                </div>
-                <small>40% completado</small>
-            </div>
-            <div class="mobile-goal-item">
-                <h4>Inglés Intermedio</h4>
-                <p>Completar nivel B1</p>
-                <div class="goal-progress">
-                    <div class="goal-progress-bar" style="width: 60%"></div>
-                </div>
-                <small>60% completado</small>
-            </div>
-        </div>
-
-        <!-- Sección Mis Logros -->
-        <div class="mobile-section" id="mobileAchievements">
-            <h2><i class="fas fa-trophy"></i> Mis Logros</h2>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">🏆</div>
-                <div>
-                    <h4>Estrella Naciente</h4>
-                    <p>Primera semana de estudio completada</p>
-                </div>
-            </div>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">📚</div>
-                <div>
-                    <h4>Voraz Lector</h4>
-                    <p>50 horas de lectura completadas</p>
-                </div>
-            </div>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">⚡</div>
-                <div>
-                    <h4>Rápido Aprendiz</h4>
-                    <p>5 cursos completados en 1 mes</p>
-                </div>
-            </div>
-            <div class="mobile-achievement-item">
-                <div class="mobile-achievement-icon">🎯</div>
-                <div>
-                    <h4>Disciplinado</h4>
-                    <p>30 días seguidos de estudio</p>
-                </div>
-            </div>
+            <a class="sidebar-link" onclick="goToProfile()">
+                <i class="fas fa-user"></i>
+                Mi Perfil
+            </a>
+            <a class="sidebar-link" onclick="goToCreatePost()">
+                <i class="fas fa-pen"></i>
+                Crear Publicación
+            </a>
         </div>
     </div>
     <div class="overlay" id="overlay"></div>
 
     <!-- ===== MODAL DE COMPARTIR PUBLICACIÓN ===== -->
-    <div class="share-post-modal" id="sharePostModal">
-        <div class="share-post-modal-content">
-            <div class="share-post-header">
-                <h2 class="share-post-title"><i class="fas fa-share-alt"></i> Compartir Publicación</h2>
-                <span class="close-modal" onclick="closeSharePostModal()">&times;</span>
+    <div class="modal-overlay" id="sharePostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-share-alt"></i> Compartir Publicación</h2>
+                <button class="close-modal" onclick="closeSharePostModal()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
-            <div class="share-post-preview" id="sharePostPreview">
+            <div id="sharePostPreview" style="margin-bottom: 1.5rem;">
                 <!-- Vista previa de la publicación -->
             </div>
             
-            <div class="share-social-grid" id="shareSocialButtons">
-                <!-- Botones de redes sociales se cargarán aquí -->
-            </div>
-            
-            <div class="link-copy" style="margin-top: 2rem;">
-                <input type="text" id="postLink" value="" readonly>
-                <button class="copy-btn" onclick="copyPostLink()">
-                    <i class="fas fa-copy"></i> Copiar Enlace
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== BOTÓN FLOTANTE PARA COMPARTIR ===== -->
-    <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos a NeoStudy">
-        <i class="fas fa-share-alt"></i>
-    </button>
-
-    <!-- ===== MODAL PARA COMPARTIR - CORREGIDO CON TU QR ===== -->
-    <div class="share-modal" id="shareModal">
-        <div class="share-modal-content">
-            <span class="close-modal" onclick="closeShareModal()">&times;</span>
-            <h2>¡Invita a tus amigos a NeoStudy! 🚀</h2>
-            <p>Comparte nuestra plataforma y ayuda a más estudiantes a alcanzar sus metas</p>
-            
-            <div class="share-modal-buttons">
-                <button class="share-modal-btn" onclick="shareNative()">
-                    <i class="fas fa-share-alt"></i> Compartir Enlace
-                </button>
-                <button class="share-modal-btn" onclick="shareWhatsApp()">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <button class="btn btn-primary" onclick="shareWhatsAppPost()">
                     <i class="fab fa-whatsapp"></i> WhatsApp
                 </button>
-                <button class="share-modal-btn" onclick="shareFacebook()">
+                <button class="btn btn-primary" onclick="shareFacebookPost()">
                     <i class="fab fa-facebook"></i> Facebook
                 </button>
-                <button class="share-modal-btn" onclick="shareTelegram()">
+                <button class="btn btn-primary" onclick="shareTwitterPost()">
+                    <i class="fab fa-twitter"></i> Twitter
+                </button>
+                <button class="btn btn-primary" onclick="shareTelegramPost()">
                     <i class="fab fa-telegram"></i> Telegram
                 </button>
             </div>
-
-            <div class="qr-section">
-                <h3 style="margin-bottom: 1rem;">Código QR para compartir</h3>
-                <div class="qr-code" id="qrCode">
-                    <!-- TU QR IMAGEN INTEGRADA -->
-                    <img src="imagen-qrneostady.png" alt="QR Code NeoStudy" 
-                         style="width: 180px; height: 180px; border-radius: 8px;">
-                </div>
-                <p style="color: var(--secondary); margin: 1rem 0;">
-                    Escanea para acceder a NeoStudy
-                </p>
-                <button class="btn btn-primary" onclick="downloadQR()">
-                    <i class="fas fa-download"></i> Descargar QR
-                </button>
-            </div>
-
-            <div class="link-copy">
-                <input type="text" id="appLink" value="https://juanarbanilneo.github.io/neostudy-app/" readonly>
-                <button class="copy-btn" onclick="copyLink()">
+            
+            <div style="margin-top: 1.5rem;">
+                <input type="text" id="postLink" value="" readonly 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 0.5rem;">
+                <button class="btn btn-block btn-secondary" onclick="copyPostLink()">
                     <i class="fas fa-copy"></i> Copiar Enlace
                 </button>
             </div>
         </div>
     </div>
+
+    <!-- ===== MODAL PARA COMPARTIR APP ===== -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-share-alt"></i> Invitar Amigos</h2>
+                <button class="close-modal" onclick="closeShareModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <p style="color: var(--secondary); margin-bottom: 1.5rem;">
+                ¡Invita a tus amigos a unirse a NeoStudy!
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <button class="btn btn-primary" onclick="shareNative()">
+                    <i class="fas fa-share-alt"></i> Compartir
+                </button>
+                <button class="btn btn-primary" onclick="shareWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="btn btn-primary" onclick="shareFacebook()">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+                <button class="btn btn-primary" onclick="shareTelegram()">
+                    <i class="fab fa-telegram"></i> Telegram
+                </button>
+            </div>
+            
+            <div style="text-align: center; margin: 1.5rem 0;">
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px;">
+                    <img src="imagen-qrneostady.png" alt="QR NeoStudy" 
+                         style="width: 200px; height: 200px; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="color: var(--secondary);">Escanea para unirte a NeoStudy</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <input type="text" id="appLink" value="https://juanarbanilneo.github.io/neostudy-app/" readonly 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 0.5rem;">
+                <button class="btn btn-block btn-secondary" onclick="copyLink()">
+                    <i class="fas fa-copy"></i> Copiar Enlace
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BOTÓN FLOTANTE ===== -->
+    <button class="floating-share-btn" onclick="openShareModal()" title="Invitar amigos">
+        <i class="fas fa-share-alt"></i>
+    </button>
 
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <div class="main-container">
         <!-- Sidebar Izquierda - Perfil y Metas (SOLO ESCRITORIO) -->
         <aside class="sidebar desktop-only">
-            <!-- Perfil de Usuario -->
             <div class="user-profile">
-                <div class="post-input-container">
-                    <div class="post-avatar" id="mainAvatar" onclick="goToProfile()">U</div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="avatar" id="mainAvatar" style="width: 70px; height: 70px; font-size: 1.5rem;">U</div>
                     <div>
                         <h4 id="userName">Cargando...</h4>
-                        <p class="post-time" id="userTitle">Cargando...</p>
+                        <p style="color: var(--secondary); font-size: 0.9rem;" id="userTitle">Cargando...</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Estadísticas Rápidas -->
             <div class="sidebar-title">
                 <i class="fas fa-chart-line"></i> Mi Progreso
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number" id="studyHours">0</div>
-                    <div class="stat-label">Horas Est.</div>
+                    <div class="stat-number" id="studyHours">128</div>
+                    <div class="stat-label">Horas Estudio</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="completedGoals">0</div>
-                    <div class="stat-label">Metas Cumpl.</div>
+                    <div class="stat-number" id="completedGoals">12</div>
+                    <div class="stat-label">Metas Cumplidas</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="coursesTaken">0</div>
-                    <div class="stat-label">Cursos</div>
+                    <div class="stat-number" id="coursesTaken">8</div>
+                    <div class="stat-label">Cursos Tomados</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="achievements">0</div>
+                    <div class="stat-number" id="achievements">15</div>
                     <div class="stat-label">Logros</div>
                 </div>
             </div>
 
-            <!-- Metas Activas -->
             <div class="sidebar-title">
                 <i class="fas fa-bullseye"></i> Mis Metas
             </div>
@@ -1998,7 +1578,7 @@
 
         <!-- Feed Principal -->
         <main class="feed" id="mainFeed">
-            <!-- Perfil Móvil (SOLO MÓVIL) - MEJORADO Y COMPLETO -->
+            <!-- Perfil Móvil (SOLO MÓVIL) -->
             <div class="mobile-profile fade-in">
                 <div class="mobile-profile-avatar" id="mobileProfileAvatar">U</div>
                 <div class="mobile-profile-info">
@@ -2007,7 +1587,7 @@
                 </div>
             </div>
 
-            <!-- CREAR PUBLICACIÓN - SOLO LA PREGUNTA QUE REDIRIGE A LA PÁGINA DE PUBLICACIÓN -->
+            <!-- CREAR PUBLICACIÓN -->
             <div class="create-post-prompt fade-in" onclick="goToCreatePost()">
                 <div class="prompt-avatar" id="postAvatar">U</div>
                 <div class="prompt-text" id="postPromptText">
@@ -2029,156 +1609,10 @@
                     <i class="fas fa-pen"></i> Crear mi primera publicación
                 </button>
             </div>
-
-            <!-- Ejemplo de publicación del sistema/administrador -->
-            <div class="post fade-in" data-post-id="adminPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar admin-photo" style="background: linear-gradient(135deg, #FFD700, #FFA500);">NS</div>
-                        <div class="post-user-info">
-                            <h4>Neo Study - Sistema <span class="post-type-badge type-admin">Admin</span></h4>
-                            <p class="post-time">Hace 1 día · <i class="fas fa-graduation-cap"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <span class="ad-label scholarship-label">🏆 BECA COMPLETA</span>
-                    <strong>¡Convocatoria abierta para becas de excelencia 2024!</strong><br><br>
-                    Neo Study otorgará 10 becas completas para estudiantes destacados. Requisitos: promedio mínimo de 4.5, carta de motivación y participar en nuestra comunidad.<br><br>
-                    📅 Fecha límite: 30 de noviembre 2024<br>
-                    📧 Enviar documentos a: becas@neostudy.com
-                </div>
-                <div class="post-stats">
-                    <span>342 interesados</span>
-                    <span>45 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me interesa
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('adminPost1')">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('adminPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
-
-            <!-- Publicación existente 1 -->
-            <div class="post fade-in" data-post-id="userPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar">AM</div>
-                        <div class="post-user-info">
-                            <h4>Ana Martínez <span class="post-type-badge type-user">Usuario</span></h4>
-                            <p class="post-time">Hace 2 horas · <i class="fas fa-graduation-cap"></i></p>
-                        </div>
-                    </div>
-                    <button class="delete-post-btn" onclick="confirmDeletePost('userPost1')" title="Eliminar publicación">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-                <div class="post-content">
-                    ¡Acabo de completar el curso de Álgebra Lineal! 🎉 Los eigenvalores ya no son un misterio para mí. #Matemáticas #Progreso
-                </div>
-                <div class="post-stats">
-                    <span>125 reacciones</span>
-                    <span>28 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('userPost1')">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('userPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
-
-            <!-- Publicación existente 2 -->
-            <div class="post fade-in" data-post-id="tutorPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar">CP</div>
-                        <div class="post-user-info">
-                            <h4>Carlos Pérez - Tutor <span class="post-type-badge type-user">Tutor</span></h4>
-                            <p class="post-time">Ayer · <i class="fas fa-chalkboard-teacher"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    📚 Clase en vivo este sábado: "Resolución de problemas de Física - Movimiento Parabólico". 
-                    ¡No se lo pierdan! Traigan sus dudas y ejercicios.
-                </div>
-                <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                    CLASE EN VIVO - SÁBADO 3 PM
-                </div>
-                <div class="post-stats">
-                    <span>89 interesados</span>
-                    <span>15 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me interesa
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('tutorPost1')">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('tutorPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
-
-            <!-- Ejemplo de publicidad patrocinada -->
-            <div class="post fade-in" data-post-id="adPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar" style="background: linear-gradient(135deg, #32CD32, #228B22);">EL</div>
-                        <div class="post-user-info">
-                            <h4>English Lab <span class="post-type-badge type-ad">Patrocinado</span></h4>
-                            <p class="post-time">Hace 3 días · <i class="fas fa-ad"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <span class="ad-label sponsored-label">📚 PATROCINADO</span>
-                    <strong>Aprende inglés desde cero con nuestro método comprobado</strong><br><br>
-                    🎯 Niveles A1 a C2<br>
-                    👨‍🏫 Tutores nativos certificados<br>
-                    💻 Clases virtuales en vivo<br>
-                    📱 Plataforma interactiva 24/7<br><br>
-                    <strong>¡50% de descuento para estudiantes de NeoStudy!</strong><br>
-                    Usa el código: <strong>NEO50</strong>
-                </div>
-                <div class="post-image" style="background: linear-gradient(135deg, #32CD32, #228B22); height: 150px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                    ENGLISH LAB - PROMOCIÓN ESPECIAL
-                </div>
-                <div class="post-stats">
-                    <span>234 clicks</span>
-                    <span>67 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="window.open('https://englishlab.com', '_blank')">
-                        <i class="fas fa-external-link-alt"></i> Ver más
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('adPost1')">
-                        <i class="fas fa-comment"></i> Preguntar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('adPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
         </main>
 
         <!-- Sidebar Derecha - Logros y Clases (SOLO ESCRITORIO) -->
         <aside class="sidebar desktop-only">
-            <!-- Logros Recientes -->
             <div class="sidebar-title">
                 <i class="fas fa-trophy"></i> Mis Logros
             </div>
@@ -2205,7 +1639,6 @@
                 </div>
             </div>
 
-            <!-- Clases en Vivo Programadas -->
             <div class="sidebar-title" style="margin-top: 2rem;">
                 <i class="fas fa-video"></i> Próximas Clases
             </div>
@@ -2234,152 +1667,109 @@
             </div>
 
             <button class="btn btn-primary btn-block" style="margin-top: 1rem;">
-                <i class="fas fa-calendar-alt"></i> Ver Calendario Completo
+                <i class="fas fa-calendar-alt"></i> Ver Calendario
             </button>
         </aside>
     </div>
 
     <script>
-        // ===== VARIABLE PARA CONTROLAR NOTIFICACIONES =====
+        // ===== SISTEMA PRINCIPAL =====
+        let currentSharePostId = null;
         let welcomeNotificationShown = false;
 
-        // ===== VERIFICACIÓN DE SESIÓN COMPATIBLE CON MODULO1 =====
-        function checkSession() {
-            const userData = localStorage.getItem('usuarioNeoStudy');
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadPostsFromStorage();
+            setupTheme();
+            setupMobileNavigation();
+            setupEventListeners();
             
-            if (!userData) {
-                console.log('No hay usuario registrado, redirigiendo al login...');
-                showNotification('Por favor inicia sesión primero', 'danger');
-                setTimeout(() => {
-                    window.location.href = 'modulo1_inicio.html';
-                }, 2000);
-                return false;
-            }
+            // Verificar si hay nuevas publicaciones desde la última visita
+            checkNewPosts();
             
-            console.log('Usuario encontrado en localStorage:', JSON.parse(userData));
-            return true;
-        }
+            // Configurar actualización automática
+            setInterval(() => {
+                loadPostsFromStorage();
+            }, 5000);
+        });
 
-        // ===== SISTEMA DE CARGA DE USUARIO COMPATIBLE CON MODULO1 =====
+        // ===== CARGAR DATOS DEL USUARIO =====
         function loadUserData() {
-            if (!checkSession()) return;
-            
             try {
                 const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
                 const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
                 
-                console.log('Datos completos del usuario:', userData);
-                
-                if (userData && typeof userData === 'object') {
-                    // EXTRACCIÓN MEJORADA Y COMPATIBLE CON TODAS LAS CATEGORÍAS
+                if (userData) {
                     let nombreCompleto = '';
                     let titulo = '';
                     let categoria = userData.categoria || '';
-                    let primerNombre = '';
                     
-                    // Extraer nombre según la categoría - COMPATIBLE CON TODAS LAS FORMAS
                     if (categoria === 'profesional') {
                         nombreCompleto = userData.prof_nombre || 'Profesional';
                         titulo = userData.prof_profesion || 'Profesional';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Profesional';
                     } 
                     else if (categoria === 'universitario') {
                         nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
-                        titulo = userData.uni_carrera || 'Estudiante Universitario';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
+                        titulo = userData.uni_carrera || 'Estudiante';
                     }
                     else if (categoria === 'secundaria') {
                         nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
                         titulo = userData.sec_grado || 'Estudiante';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
                     }
                     else if (categoria === 'general') {
                         nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Usuario General';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                     }
                     else {
-                        // FALLBACK COMPLETO - busca en todas las posibles propiedades
                         nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
-                                       userData.sec_nombre || userData.gen_nombre || 
-                                       userData.nombre || 'Usuario NeoStudy';
-                        titulo = userData.prof_profesion || userData.uni_carrera || 
-                               userData.sec_grado || 'Estudiante';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
+                                       userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
+                        titulo = 'Estudiante';
                     }
                     
-                    console.log('Nombre detectado:', nombreCompleto);
-                    console.log('Título detectado:', titulo);
-                    console.log('Categoría:', categoria);
-                    console.log('Primer nombre:', primerNombre);
+                    // Actualizar interfaz
+                    updateUserInterface(nombreCompleto, titulo, profileData);
                     
-                    // Actualizar todos los lugares donde aparece el nombre
-                    updateUserProfile(nombreCompleto, titulo, primerNombre, profileData);
-                    
-                } else {
-                    throw new Error('Formato de datos inválido');
+                    // Mostrar notificación de bienvenida
+                    if (!welcomeNotificationShown) {
+                        const primerNombre = nombreCompleto.split(' ')[0];
+                        showNotification(`¡Bienvenido de nuevo, ${primerNombre}! 🎓`, 'success');
+                        welcomeNotificationShown = true;
+                    }
                 }
             } catch (error) {
                 console.error('Error cargando datos:', error);
-                showNotification('Error al cargar los datos del usuario', 'danger');
-                setTimeout(() => {
-                    window.location.href = 'modulo1_inicio.html';
-                }, 2000);
             }
         }
 
-        function updateUserProfile(nombreCompleto, titulo, primerNombre, profileData) {
-            // Actualizar escritorio
-            const userNameElement = document.getElementById('userName');
-            const userTitleElement = document.getElementById('userTitle');
+        function updateUserInterface(nombreCompleto, titulo, profileData) {
+            // Actualizar todos los elementos
+            const elements = {
+                userName: document.getElementById('userName'),
+                userTitle: document.getElementById('userTitle'),
+                mobileUserName: document.getElementById('mobileUserName'),
+                mobileFullName: document.getElementById('mobileFullName'),
+                mobileUserTitle: document.getElementById('mobileUserTitle'),
+                mobileProfileName: document.getElementById('mobileProfileName'),
+                mobileProfileTitle: document.getElementById('mobileProfileTitle')
+            };
             
-            if (userNameElement) userNameElement.textContent = nombreCompleto;
-            if (userTitleElement) userTitleElement.textContent = titulo;
-            
-            // Actualizar móvil - menú lateral
-            const mobileUserNameElement = document.getElementById('mobileUserName');
-            const mobileFullNameElement = document.getElementById('mobileFullName');
-            const mobileUserTitleElement = document.getElementById('mobileUserTitle');
-            
-            if (mobileUserNameElement) mobileUserNameElement.textContent = nombreCompleto;
-            if (mobileFullNameElement) mobileFullNameElement.textContent = nombreCompleto;
-            if (mobileUserTitleElement) mobileUserTitleElement.textContent = titulo;
-            
-            // Actualizar móvil - perfil en el feed
-            const mobileProfileNameElement = document.getElementById('mobileProfileName');
-            const mobileProfileTitleElement = document.getElementById('mobileProfileTitle');
-            
-            if (mobileProfileNameElement) mobileProfileNameElement.textContent = nombreCompleto;
-            if (mobileProfileTitleElement) mobileProfileTitleElement.textContent = titulo;
-            
-            // Actualizar avatar y foto de perfil
-            updateProfilePhoto(primerNombre, profileData);
-            
-            // Actualizar el texto de la pregunta con el nombre del usuario
-            const postPromptTextElement = document.getElementById('postPromptText');
-            if (postPromptTextElement) {
-                postPromptTextElement.textContent = `¿Qué estás aprendiendo hoy, ${primerNombre}?`;
+            for (const [id, element] of Object.entries(elements)) {
+                if (element) {
+                    if (id.includes('Name')) {
+                        element.textContent = nombreCompleto;
+                    } else if (id.includes('Title')) {
+                        element.textContent = titulo;
+                    }
+                }
             }
             
-            // MOSTRAR NOTIFICACIÓN SOLO UNA VEZ
-            if (!welcomeNotificationShown) {
-                showNotification(`¡Bienvenido de nuevo, ${primerNombre}! 🎓`, 'success');
-                welcomeNotificationShown = true;
-            }
-        }
-
-        // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
-        function updateProfilePhoto(userName, profileData) {
-            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, .prompt-avatar, #mobileUserAvatar, #mobileProfileAvatar');
-            const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U';
+            // Actualizar avatares
+            const avatares = document.querySelectorAll('.avatar, .post-avatar, .prompt-avatar, .mobile-profile-avatar, #mobileUserAvatar, #mobileProfileAvatar');
+            const initials = nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
             
             avatares.forEach(avatar => {
-                if (profileData && profileData.profilePhoto && 
-                    profileData.profilePhoto !== "" && 
-                    profileData.profilePhoto !== "null" && 
-                    profileData.profilePhoto !== "undefined" &&
-                    profileData.profilePhoto.startsWith('data:image')) {
-                    
+                if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
                     avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
                     avatar.textContent = '';
                     avatar.style.backgroundSize = 'cover';
@@ -2387,25 +1777,19 @@
                 } else {
                     avatar.textContent = initials;
                     avatar.style.backgroundImage = 'none';
-                    avatar.style.background = 'var(--bg-gradient)';
+                    avatar.style.background = 'var(--book-gradient)';
                 }
             });
+            
+            // Actualizar texto de la pregunta
+            const postPromptText = document.getElementById('postPromptText');
+            const primerNombre = nombreCompleto.split(' ')[0];
+            if (postPromptText) {
+                postPromptText.textContent = `¿Qué estás aprendiendo hoy, ${primerNombre}?`;
+            }
         }
 
-        // ===== NAVEGACIÓN A LA PÁGINA DE CREAR PUBLICACIÓN =====
-        function goToCreatePost() {
-            window.location.href = 'modulo2_publicaciones.html';
-        }
-
-        // ===== NAVEGACIÓN A LA PÁGINA DE COMENTARIOS =====
-        function openComments(postId) {
-            // Guardar el ID de la publicación en localStorage
-            localStorage.setItem('currentPostForComments', postId);
-            // Redirigir a la página de comentarios
-            window.location.href = 'modulo2_comentarios.html';
-        }
-
-        // ===== SISTEMA PARA CARGAR PUBLICACIONES DESDE LOCALSTORAGE =====
+        // ===== CARGAR PUBLICACIONES DESDE LOCALSTORAGE =====
         function loadPostsFromStorage() {
             const postsContainer = document.getElementById('postsContainer');
             const emptyMessage = document.getElementById('emptyPostsMessage');
@@ -2419,263 +1803,283 @@
             
             if (emptyMessage) emptyMessage.style.display = 'none';
             
-            // Limpiar contenedor
-            postsContainer.innerHTML = '';
-            
             // Ordenar publicaciones por fecha (más recientes primero)
-            posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const sortedPosts = [...posts].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             
-            // Agregar cada publicación al feed
-            posts.forEach((post, index) => {
-                const postElement = createPostElement(post, index);
-                postsContainer.appendChild(postElement);
-            });
+            // Verificar si hay cambios
+            const currentContent = postsContainer.innerHTML;
+            const newContent = generatePostsHTML(sortedPosts);
+            
+            if (currentContent !== newContent) {
+                postsContainer.innerHTML = newContent;
+            }
         }
 
-        // ===== FUNCIÓN PARA CREAR ELEMENTOS DE PUBLICACIÓN (MEJORADA) =====
-        function createPostElement(post, postIndex) {
-            const postElement = document.createElement('div');
-            postElement.className = 'post fade-in';
-            postElement.setAttribute('data-post-id', `userPost${postIndex}`);
+        function generatePostsHTML(posts) {
+            let html = '';
             
-            // Determinar tipo de badge según el autor
-            let badgeClass = 'type-user';
-            let badgeText = 'Usuario';
+            posts.forEach((post, index) => {
+                html += createPostHTML(post, index);
+            });
             
-            if (post.author === 'admin' || post.author.includes('Neo Study')) {
-                badgeClass = 'type-admin';
-                badgeText = 'Admin';
+            return html;
+        }
+
+        function createPostHTML(post, index) {
+            // Determinar etiqueta según tipo
+            let label = '';
+            let badgeClass = 'badge-normal';
+            
+            if (post.type === 'scholarship') {
+                label = `<span class="post-label label-scholarship">🏆 BECA</span>`;
+                badgeClass = 'badge-scholarship';
             } else if (post.type === 'ad') {
-                badgeClass = 'type-ad';
-                badgeText = 'Patrocinado';
-            }
-            
-            // Crear contenido de la publicación
-            let mediaContent = '';
-            if (post.mediaType === 'image' && post.mediaUrl) {
-                mediaContent = `<img src="${post.mediaUrl}" class="post-image" alt="Publicación">`;
-            } else if (post.mediaType === 'video' && post.mediaUrl) {
-                mediaContent = `<div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; height: 200px;">
-                    <i class="fas fa-play-circle" style="font-size: 3rem;"></i><br>VIDEO INCORPORADO
-                </div>`;
-            } else if (post.mediaType === 'document' && post.mediaUrl) {
-                mediaContent = `<div class="post-file">
-                    <i class="fas fa-file-pdf"></i>
-                    <div>
-                        <strong>Documento adjunto</strong><br>
-                        <small>${post.fileName || 'documento.pdf'}</small>
-                    </div>
-                </div>`;
+                label = `<span class="post-label label-ad">📚 PUBLICIDAD</span>`;
+                badgeClass = 'badge-ad';
+            } else if (post.type === 'institution') {
+                label = `<span class="post-label label-institution">🏫 INSTITUCIÓN</span>`;
+                badgeClass = 'badge-institution';
+            } else if (post.type === 'announcement') {
+                label = `<span class="post-label label-announcement">📢 ANUNCIO</span>`;
+                badgeClass = 'badge-announcement';
+            } else if (post.type === 'event') {
+                label = `<span class="post-label label-event">🎉 EVENTO</span>`;
+                badgeClass = 'badge-event';
+            } else if (post.isAdminPost) {
+                badgeClass = 'badge-admin';
             }
             
             // Formatear fecha
-            const postDate = new Date(post.timestamp);
+            const timeAgo = formatTimeAgo(post.timestamp);
+            
+            // Generar HTML de medios
+            let mediaHTML = '';
+            if (post.media && post.media.length > 0) {
+                mediaHTML = generateMediaHTML(post.media);
+            }
+            
+            // Determinar si mostrar botón de eliminar (solo para publicaciones del usuario actual)
+            let deleteButton = '';
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
+            const currentUserName = userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre || '';
+            
+            if (post.author === currentUserName || post.author.includes(currentUserName)) {
+                deleteButton = `
+                    <button class="close-modal" onclick="confirmDeletePost(${index})" title="Eliminar publicación" style="position: relative; z-index: 1;">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+            }
+            
+            // Obtener diseño y fuente
+            const designClass = post.design ? `post-design-${post.design}` : '';
+            const fontClass = post.font ? `post-font-${post.font}` : '';
+            
+            return `
+                <div class="post fade-in ${designClass} ${fontClass}" id="post-${index}">
+                    <div class="post-header">
+                        <div class="post-user">
+                            <div class="post-user-avatar">${post.authorInitials || 'U'}</div>
+                            <div class="post-user-info">
+                                <h4>
+                                    ${post.author} 
+                                    <span class="post-type-badge ${badgeClass}">
+                                        ${post.isAdminPost ? 'Admin' : 'Usuario'}
+                                    </span>
+                                </h4>
+                                <p class="post-time">
+                                    <i class="far fa-clock"></i> ${timeAgo}
+                                </p>
+                            </div>
+                        </div>
+                        ${deleteButton}
+                    </div>
+                    
+                    <div class="post-content">
+                        ${label}
+                        ${post.content || ''}
+                    </div>
+                    
+                    ${mediaHTML}
+                    
+                    <div class="post-stats">
+                        <span><i class="fas fa-heart"></i> ${post.likes || 0} reacciones</span>
+                        <span><i class="fas fa-comment"></i> ${post.comments?.length || 0} comentarios</span>
+                    </div>
+                    
+                    <div class="post-actions-bar">
+                        <button class="post-action-btn" onclick="likePost(${index})">
+                            <i class="fas fa-thumbs-up"></i> Me gusta
+                        </button>
+                        <button class="post-action-btn" onclick="openComments(${index})">
+                            <i class="fas fa-comment"></i> Comentar
+                        </button>
+                        <button class="post-action-btn" onclick="openSharePostModal(${index})">
+                            <i class="fas fa-share"></i> Compartir
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateMediaHTML(mediaArray) {
+            let html = '<div class="post-media-container">';
+            
+            mediaArray.forEach((media, index) => {
+                if (media.type === 'image' && media.url) {
+                    html += `
+                        <img src="${media.url}" class="post-media-image" alt="Imagen ${index + 1}" 
+                             onclick="openMediaViewer('${media.url}')">
+                    `;
+                } else if (media.type === 'video' && media.url) {
+                    html += `
+                        <video controls class="post-media-video">
+                            <source src="${media.url}" type="video/mp4">
+                        </video>
+                    `;
+                } else if (media.type === 'document' && media.url) {
+                    html += `
+                        <div class="post-media-document" onclick="window.open('${media.url}', '_blank')">
+                            <i class="${media.icon || 'fas fa-file'}"></i>
+                            <div class="document-info">
+                                <strong>${media.name || 'Documento'}</strong>
+                                <small>${media.size || ''}</small>
+                            </div>
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    `;
+                }
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function formatTimeAgo(timestamp) {
+            const postDate = new Date(timestamp);
             const now = new Date();
             const diffMs = now - postDate;
             const diffMins = Math.floor(diffMs / 60000);
             const diffHours = Math.floor(diffMins / 60);
             const diffDays = Math.floor(diffHours / 24);
             
-            let timeAgo = '';
             if (diffMins < 60) {
-                timeAgo = `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
+                return `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
             } else if (diffHours < 24) {
-                timeAgo = `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
+                return `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
+            } else if (diffDays < 7) {
+                return `Hace ${diffDays} día${diffDays !== 1 ? 's' : ''}`;
             } else {
-                timeAgo = `Hace ${diffDays} día${diffDays !== 1 ? 's' : ''}`;
+                return postDate.toLocaleDateString('es-ES', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
             }
-            
-            // Etiquetas de publicidad si corresponde
-            let adLabel = '';
-            if (post.type === 'scholarship') {
-                adLabel = '<span class="ad-label scholarship-label">🏆 BECA</span>';
-            } else if (post.type === 'ad') {
-                adLabel = '<span class="ad-label sponsored-label">📚 PATROCINADO</span>';
-            } else if (post.type === 'institution') {
-                adLabel = '<span class="ad-label institution-label">🏫 INSTITUCIÓN</span>';
-            }
-            
-            // Obtener datos del usuario actual
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy')) || {};
-            const currentUser = userData.prof_nombre || userData.uni_nombre || userData.sec_nombre || userData.gen_nombre || 'Usuario';
-            
-            // Verificar si esta publicación pertenece al usuario actual
-            let deleteButton = '';
-            if (post.author === currentUser || post.author.includes(currentUser)) {
-                deleteButton = `<button class="delete-post-btn" onclick="confirmDeletePost('userPost${postIndex}')" title="Eliminar publicación">
-                    <i class="fas fa-trash-alt"></i>
-                </button>`;
-            }
-            
-            // Obtener número de comentarios
-            const postComments = JSON.parse(localStorage.getItem(`postComments_userPost${postIndex}`)) || [];
-            const commentCount = postComments.length;
-            
-            postElement.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar">${post.authorInitials || 'U'}</div>
-                        <div class="post-user-info">
-                            <h4>${post.author} <span class="post-type-badge ${badgeClass}">${badgeText}</span></h4>
-                            <p class="post-time">${timeAgo} · <i class="fas fa-user-graduate"></i></p>
-                        </div>
-                    </div>
-                    ${deleteButton}
-                </div>
-                <div class="post-content">
-                    ${adLabel}
-                    ${post.content}
-                </div>
-                ${mediaContent}
-                <div class="post-stats">
-                    <span>${post.likes || 0} reacciones</span>
-                    <span>${commentCount} comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="likePost(this)">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('userPost${postIndex}')">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('userPost${postIndex}')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            `;
-            
-            return postElement;
         }
 
-        // ===== SISTEMA DE COMPARTIR PUBLICACIONES =====
-        let currentSharePostId = null;
+        // ===== FUNCIONALIDADES DE PUBLICACIONES =====
+        function likePost(postIndex) {
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            if (posts[postIndex]) {
+                posts[postIndex].likes = (posts[postIndex].likes || 0) + 1;
+                localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
+                
+                // Actualizar visualmente
+                const postElement = document.getElementById(`post-${postIndex}`);
+                if (postElement) {
+                    const stats = postElement.querySelector('.post-stats span:first-child');
+                    if (stats) {
+                        stats.innerHTML = `<i class="fas fa-heart"></i> ${posts[postIndex].likes} reacciones`;
+                    }
+                }
+                
+                showNotification('¡Me gusta agregado! ❤️', 'success');
+            }
+        }
 
-        function openSharePostModal(postId) {
-            currentSharePostId = postId;
+        function confirmDeletePost(postIndex) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
+                deletePost(postIndex);
+            }
+        }
+
+        function deletePost(postIndex) {
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            if (posts[postIndex]) {
+                posts.splice(postIndex, 1);
+                localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
+                
+                // Recargar publicaciones
+                loadPostsFromStorage();
+                
+                showNotification('Publicación eliminada correctamente', 'success');
+            }
+        }
+
+        function openComments(postIndex) {
+            localStorage.setItem('currentPostForComments', postIndex);
+            window.location.href = 'modulo2_comentarios.html';
+        }
+
+        // ===== SISTEMA DE COMPARTIR =====
+        function openSharePostModal(postIndex) {
+            currentSharePostId = postIndex;
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            const post = posts[postIndex];
+            
+            if (!post) return;
+            
             const modal = document.getElementById('sharePostModal');
             const preview = document.getElementById('sharePostPreview');
-            const socialButtons = document.getElementById('shareSocialButtons');
             
-            // Obtener datos de la publicación
-            const postElement = document.querySelector(`[data-post-id="${postId}"]`);
-            if (!postElement) {
-                showNotification('Error al cargar la publicación', 'danger');
-                return;
-            }
-            
-            const author = postElement.querySelector('.post-user-info h4').textContent;
-            const content = postElement.querySelector('.post-content').innerText;
-            const time = postElement.querySelector('.post-time').textContent;
-            
-            // Crear vista previa
             preview.innerHTML = `
-                <div class="share-post-preview-header">
-                    <div class="share-post-avatar">${author.charAt(0)}</div>
-                    <div>
-                        <div class="share-post-author">${author}</div>
-                        <div style="color: var(--secondary); font-size: 0.8rem;">${time}</div>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="post-user-avatar" style="width: 40px; height: 40px;">${post.authorInitials || 'U'}</div>
+                        <div>
+                            <strong>${post.author}</strong>
+                            <p style="color: var(--secondary); font-size: 0.8rem; margin: 0;">${formatTimeAgo(post.timestamp)}</p>
+                        </div>
                     </div>
+                    <p style="margin: 0; font-size: 0.9rem;">${post.content?.substring(0, 100) || ''}${post.content?.length > 100 ? '...' : ''}</p>
                 </div>
-                <div class="share-post-text">${content.substring(0, 200)}${content.length > 200 ? '...' : ''}</div>
             `;
             
-            // Configurar enlace de compartir
-            const postLinkInput = document.getElementById('postLink');
-            postLinkInput.value = `https://neostudy.com/post/${postId}`;
-            
-            // Crear botones de redes sociales
-            const socialMedia = [
-                { name: 'WhatsApp', icon: 'fab fa-whatsapp', class: 'whatsapp-share', action: 'shareWhatsAppPost' },
-                { name: 'Facebook', icon: 'fab fa-facebook', class: 'facebook-share', action: 'shareFacebookPost' },
-                { name: 'Messenger', icon: 'fab fa-facebook-messenger', class: 'messenger-share', action: 'shareMessengerPost' },
-                { name: 'Instagram', icon: 'fab fa-instagram', class: 'instagram-share', action: 'shareInstagramPost' },
-                { name: 'Telegram', icon: 'fab fa-telegram', class: 'telegram-share', action: 'shareTelegramPost' },
-                { name: 'TikTok', icon: 'fab fa-tiktok', class: 'tiktok-share', action: 'shareTikTokPost' },
-                { name: 'Twitter', icon: 'fab fa-twitter', class: 'twitter-share', action: 'shareTwitterPost' },
-                { name: 'LinkedIn', icon: 'fab fa-linkedin', class: 'linkedin-share', action: 'shareLinkedInPost' },
-                { name: 'Email', icon: 'fas fa-envelope', class: 'email-share', action: 'shareEmailPost' },
-                { name: 'Copiar', icon: 'fas fa-copy', class: 'copy-share', action: 'copyPostLink' }
-            ];
-            
-            socialButtons.innerHTML = '';
-            socialMedia.forEach(social => {
-                const button = document.createElement('button');
-                button.className = `share-social-btn ${social.class}`;
-                button.onclick = () => window[social.action]();
-                button.innerHTML = `
-                    <i class="${social.icon}"></i>
-                    <span>${social.name}</span>
-                `;
-                socialButtons.appendChild(button);
-            });
-            
-            // Mostrar modal
+            document.getElementById('postLink').value = `https://neostudy.com/post/${postIndex}`;
             modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
         }
 
         function closeSharePostModal() {
-            const modal = document.getElementById('sharePostModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+            document.getElementById('sharePostModal').style.display = 'none';
             currentSharePostId = null;
         }
 
         function shareWhatsAppPost() {
-            const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓\n\n${document.getElementById('postLink').value}`);
+            const link = document.getElementById('postLink').value;
+            const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓\n\n${link}`);
             window.open(`https://wa.me/?text=${text}`, '_blank');
             showNotification('Compartiendo en WhatsApp...', 'info');
         }
 
         function shareFacebookPost() {
-            const url = encodeURIComponent(document.getElementById('postLink').value);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            const link = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${link}`, '_blank');
             showNotification('Compartiendo en Facebook...', 'info');
-        }
-
-        function shareMessengerPost() {
-            const url = encodeURIComponent(document.getElementById('postLink').value);
-            window.open(`fb-messenger://share/?link=${url}`, '_blank');
-            showNotification('Compartiendo en Messenger...', 'info');
-        }
-
-        function shareInstagramPost() {
-            // Instagram no permite compartir directamente, solo copiar enlace
-            copyPostLink();
-            showNotification('Enlace copiado para compartir en Instagram', 'info');
-        }
-
-        function shareTelegramPost() {
-            const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓`);
-            const url = encodeURIComponent(document.getElementById('postLink').value);
-            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
-            showNotification('Compartiendo en Telegram...', 'info');
-        }
-
-        function shareTikTokPost() {
-            // TikTok no permite compartir directamente, solo copiar enlace
-            copyPostLink();
-            showNotification('Enlace copiado para compartir en TikTok', 'info');
         }
 
         function shareTwitterPost() {
             const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓`);
-            const url = encodeURIComponent(document.getElementById('postLink').value);
-            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+            const link = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${link}`, '_blank');
             showNotification('Compartiendo en Twitter...', 'info');
         }
 
-        function shareLinkedInPost() {
-            const url = encodeURIComponent(document.getElementById('postLink').value);
-            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
-            showNotification('Compartiendo en LinkedIn...', 'info');
-        }
-
-        function shareEmailPost() {
-            const subject = encodeURIComponent('Mira esta publicación en NeoStudy');
-            const body = encodeURIComponent(`¡Hola!\n\nTe comparto esta publicación interesante en NeoStudy:\n\n${document.getElementById('postLink').value}\n\n¡Saludos!`);
-            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
-            showNotification('Abriendo cliente de email...', 'info');
+        function shareTelegramPost() {
+            const text = encodeURIComponent(`¡Mira esta publicación en NeoStudy! 🎓`);
+            const link = encodeURIComponent(document.getElementById('postLink').value);
+            window.open(`https://t.me/share/url?url=${link}&text=${text}`, '_blank');
+            showNotification('Compartiendo en Telegram...', 'info');
         }
 
         function copyPostLink() {
@@ -2684,236 +2088,130 @@
             linkInput.setSelectionRange(0, 99999);
             
             navigator.clipboard.writeText(linkInput.value)
-                .then(() => showNotification('Enlace de la publicación copiado 📋', 'success'))
-                .catch(err => {
+                .then(() => showNotification('Enlace copiado 📋', 'success'))
+                .catch(() => {
                     document.execCommand('copy');
-                    showNotification('Enlace de la publicación copiado 📋', 'success');
+                    showNotification('Enlace copiado 📋', 'success');
                 });
         }
 
-        // ===== SISTEMA DE ELIMINACIÓN DE PUBLICACIONES =====
-        function confirmDeletePost(postId) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
-                deletePost(postId);
-            }
-        }
-
-        function deletePost(postId) {
-            // Si es una publicación del localStorage
-            if (postId.startsWith('userPost')) {
-                const postIndex = parseInt(postId.replace('userPost', ''));
-                const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
-                
-                if (posts[postIndex]) {
-                    // Eliminar la publicación del array
-                    posts.splice(postIndex, 1);
-                    localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
-                    
-                    // Eliminar comentarios asociados
-                    localStorage.removeItem(`postComments_${postId}`);
-                    
-                    // Eliminar el elemento del DOM
-                    const postElement = document.querySelector(`[data-post-id="${postId}"]`);
-                    if (postElement) {
-                        postElement.remove();
-                    }
-                    
-                    // Recargar las publicaciones
-                    loadPostsFromStorage();
-                    
-                    showNotification('Publicación eliminada correctamente', 'success');
-                }
-            } else {
-                // Para publicaciones estáticas en el HTML
-                const postElement = document.querySelector(`[data-post-id="${postId}"]`);
-                if (postElement) {
-                    postElement.style.opacity = '0';
-                    postElement.style.transform = 'translateX(-100px)';
-                    
-                    setTimeout(() => {
-                        postElement.remove();
-                        showNotification('Publicación eliminada', 'success');
-                    }, 300);
-                }
-            }
-        }
-
-        function likePost(button) {
-            const post = button.closest('.post');
-            const stats = post.querySelector('.post-stats span:first-child');
-            const currentLikes = parseInt(stats.textContent) || 0;
-            stats.textContent = `${currentLikes + 1} reacciones`;
-            
-            button.style.color = 'var(--primary)';
-            button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
-        }
-
-        // ===== SISTEMA DE NAVEGACIÓN MÓVIL =====
-        const hamburgerMenu = document.getElementById('hamburgerMenu');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const mobileSidebar = document.getElementById('mobileSidebar');
-        const overlay = document.getElementById('overlay');
-
-        if (hamburgerMenu) {
-            hamburgerMenu.addEventListener('click', () => {
-                mobileSidebar.classList.add('active');
-                overlay.classList.add('active');
-                hideAllMobileSections();
-            });
-        }
-
-        if (closeSidebar) {
-            closeSidebar.addEventListener('click', () => {
-                mobileSidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-        }
-
-        if (overlay) {
-            overlay.addEventListener('click', () => {
-                mobileSidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-        }
-
-        // ===== SISTEMA DE SECCIONES MÓVILES =====
-        function hideAllMobileSections() {
-            document.querySelectorAll('.mobile-section').forEach(section => {
-                section.classList.remove('active');
-            });
-        }
-
-        function showMobileSection(section) {
-            hideAllMobileSections();
-            const sectionElement = document.getElementById('mobile' + section.charAt(0).toUpperCase() + section.slice(1));
-            if (sectionElement) {
-                sectionElement.classList.add('active');
-            }
-        }
-
-        // ===== SISTEMA DE COMPARTIR - SIMPLIFICADO CON TU QR IMAGEN =====
+        // ===== SISTEMA DE COMPARTIR APP =====
         function openShareModal() {
-            const modal = document.getElementById('shareModal');
-            if (modal) {
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
+            document.getElementById('shareModal').style.display = 'flex';
         }
 
         function closeShareModal() {
-            const modal = document.getElementById('shareModal');
-            if (modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
+            document.getElementById('shareModal').style.display = 'none';
         }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('shareModal');
-            const sharePostModal = document.getElementById('sharePostModal');
-            if (event.target === modal) {
-                closeShareModal();
-            }
-            if (event.target === sharePostModal) {
-                closeSharePostModal();
-            }
-        };
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeShareModal();
-                closeSharePostModal();
-            }
-        });
 
         function shareNative() {
             const shareData = {
                 title: 'NeoStudy - Plataforma Educativa',
-                text: '¡Únete a NeoStudy! La mejor plataforma para estudiantes. Cursos, tutorías y comunidad educativa.',
+                text: '¡Únete a NeoStudy! La mejor plataforma para estudiantes.',
                 url: 'https://juanarbanilneo.github.io/neostudy-app/'
             };
 
             if (navigator.share) {
                 navigator.share(shareData)
-                    .then(() => showNotification('¡Compartido exitosamente! 🎉', 'success'))
-                    .catch(error => showNotification('Compartir cancelado', 'info'));
+                    .then(() => showNotification('¡Compartido! 🎉', 'success'))
+                    .catch(() => showNotification('Compartir cancelado', 'info'));
             } else {
                 copyLink();
             }
-            closeShareModal();
         }
 
         function shareWhatsApp() {
-            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa. 🎓\nhttps://juanarbanilneo.github.io/neostudy-app/');
+            const text = encodeURIComponent('¡Únete a NeoStudy! 🎓\nhttps://juanarbanilneo.github.io/neostudy-app/');
             window.open(`https://wa.me/?text=${text}`, '_blank');
-            showNotification('Compartiendo en WhatsApp...', 'info');
         }
 
         function shareFacebook() {
             const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
             window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-            showNotification('Compartiendo en Facebook...', 'info');
         }
 
         function shareTelegram() {
-            const text = encodeURIComponent('¡Únete a NeoStudy! La mejor plataforma educativa 🎓');
+            const text = encodeURIComponent('¡Únete a NeoStudy! 🎓');
             const url = encodeURIComponent('https://juanarbanilneo.github.io/neostudy-app/');
             window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
-            showNotification('Compartiendo en Telegram...', 'info');
         }
 
         function copyLink() {
             const linkInput = document.getElementById('appLink');
-            linkInput.value = 'https://juanarbanilneo.github.io/neostudy-app/';
-            
             linkInput.select();
             linkInput.setSelectionRange(0, 99999);
             
             navigator.clipboard.writeText(linkInput.value)
-                .then(() => showNotification('Enlace copiado al portapapeles 📋', 'success'))
-                .catch(err => {
+                .then(() => showNotification('Enlace copiado 📋', 'success'))
+                .catch(() => {
                     document.execCommand('copy');
-                    showNotification('Enlace copiado al portapapeles 📋', 'success');
+                    showNotification('Enlace copiado 📋', 'success');
                 });
         }
 
-        // ===== FUNCIÓN DE DESCARGA SIMPLIFICADA CON TU QR =====
-        function downloadQR() {
-            try {
-                const link = document.createElement('a');
-                link.download = 'neostudy-qr-code.png';
-                link.href = 'imagen-qrneostady.png'; // Tu imagen QR
-                link.click();
-                showNotification('QR descargado exitosamente 📱', 'success');
-            } catch (error) {
-                console.error('Error descargando QR:', error);
-                showNotification('Error al descargar el QR', 'danger');
+        // ===== NAVEGACIÓN MÓVIL =====
+        function setupMobileNavigation() {
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const closeSidebar = document.getElementById('closeSidebar');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('overlay');
+
+            if (hamburgerMenu) {
+                hamburgerMenu.addEventListener('click', () => {
+                    mobileSidebar.classList.add('active');
+                    overlay.classList.add('active');
+                });
+            }
+
+            if (closeSidebar) {
+                closeSidebar.addEventListener('click', () => {
+                    mobileSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    mobileSidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
             }
         }
 
-        // ===== NAVEGACIÓN AL PERFIL =====
+        function showMobileSection(sectionId) {
+            // Implementación de secciones móviles
+            showNotification('Sección en desarrollo', 'info');
+        }
+
+        // ===== NAVEGACIÓN =====
+        function goToFeed() {
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        function goToCreatePost() {
+            window.location.href = 'modulo2_publicaciones.html';
+        }
+
         function goToProfile() {
             window.location.href = 'modulo3_perfil.html';
         }
 
-        // ===== SISTEMA DE CERRAR SESIÓN =====
         function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                showNotification('Sesión cerrada correctamente', 'info');
+                showNotification('Sesión cerrada', 'info');
                 setTimeout(() => {
                     window.location.href = 'modulo1_inicio.html';
                 }, 1500);
             }
         }
 
-        // ===== NAVEGACIÓN =====
-        function goToFeed(e) {
-            if (e) e.preventDefault();
-            window.location.href = 'modulo2_iniciodecesión.html';
-        }
-
-        // ===== SISTEMA DE 3 MODOS DE TEMA =====
+        // ===== TEMA =====
         let currentMode = 'normal';
+
+        function setupTheme() {
+            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
+            setThemeMode(savedTheme);
+        }
 
         function toggleThemeMode() {
             if (currentMode === 'normal') {
@@ -2948,35 +2246,14 @@
                 'estudio': 'Modo Estudio'
             };
             
-            btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
-            
-            showNotification(`${texts[mode]} activado`, 'info');
-            localStorage.setItem('neoStudyTheme', mode);
-            
-            if (mode === 'estudio') {
-                startStudySession();
+            if (btn) {
+                btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
             }
+            
+            localStorage.setItem('neoStudyTheme', mode);
         }
 
-        function startStudySession() {
-            let seconds = 0;
-            const timer = setInterval(() => {
-                if (currentMode !== 'estudio') {
-                    clearInterval(timer);
-                    return;
-                }
-                
-                seconds++;
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                
-                document.getElementById('studyHours').textContent = 128 + hours;
-                document.getElementById('completedGoals').textContent = 12 + Math.floor(hours / 2);
-                
-            }, 1000);
-        }
-
-        // ===== SISTEMA DE NOTIFICACIONES =====
+        // ===== NOTIFICACIONES =====
         function showNotification(message, type = 'info') {
             const existingNotification = document.querySelector('.notification');
             if (existingNotification) {
@@ -2998,37 +2275,66 @@
             }, 3000);
         }
 
-        // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
-        function checkForProfileUpdates() {
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            
-            if (userData) {
-                loadUserData(); // Recargar datos completos
-            }
+        // ===== UTILIDADES =====
+        function openMediaViewer(imageUrl) {
+            window.open(imageUrl, '_blank');
         }
 
-        // ===== INICIALIZACIÓN MEJORADA =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Cargar datos del usuario primero
-            loadUserData();
+        function checkNewPosts() {
+            const lastVisit = localStorage.getItem('lastFeedVisit');
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
             
-            // Cargar publicaciones desde localStorage
-            loadPostsFromStorage();
+            if (!lastVisit) {
+                localStorage.setItem('lastFeedVisit', new Date().toISOString());
+                return;
+            }
             
-            // Configurar tema
-            const savedTheme = localStorage.getItem('neoStudyTheme') || 'normal';
-            setThemeMode(savedTheme);
+            const newPosts = posts.filter(post => new Date(post.timestamp) > new Date(lastVisit));
             
-            // Configurar eventos
-            document.querySelector('.logo').onclick = goToFeed;
-            document.getElementById('userAvatar').onclick = goToProfile;
-            document.getElementById('mainAvatar').onclick = goToProfile;
-            document.getElementById('mobileProfileAvatar').onclick = goToProfile;
+            if (newPosts.length > 0) {
+                showNotification(`Tienes ${newPosts.length} nueva${newPosts.length > 1 ? 's' : ''} publicación${newPosts.length > 1 ? 'es' : ''} ✨`, 'info');
+            }
             
-            // Verificar actualizaciones periódicamente
-            setInterval(checkForProfileUpdates, 5000);
-        });
+            localStorage.setItem('lastFeedVisit', new Date().toISOString());
+        }
+
+        function setupEventListeners() {
+            // Cerrar modales con ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeShareModal();
+                    closeSharePostModal();
+                }
+            });
+            
+            // Cerrar modales al hacer clic fuera
+            window.onclick = function(event) {
+                const shareModal = document.getElementById('shareModal');
+                const sharePostModal = document.getElementById('sharePostModal');
+                
+                if (event.target === shareModal) {
+                    closeShareModal();
+                }
+                if (event.target === sharePostModal) {
+                    closeSharePostModal();
+                }
+            };
+        }
+
+        // ===== EXPORTAR FUNCIONES PARA EL MÓDULO DE PUBLICACIONES =====
+        window.getUserPosts = function() {
+            return JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+        };
+
+        window.getUserMediaPosts = function() {
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            return posts.filter(post => post.media && post.media.length > 0);
+        };
+
+        window.getRecentPosts = function(limit = 20) {
+            const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            return posts.slice(0, limit);
+        };
     </script>
 </body>
 </html>
