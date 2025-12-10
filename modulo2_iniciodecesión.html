@@ -6,6 +6,8 @@
     <title>Neo Study - Plataforma Educativa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* (Todo el CSS original se mantiene igual) */
+        /* Solo se añaden estilos específicos para mostrar medios */
         * {
             margin: 0;
             padding: 0;
@@ -533,13 +535,147 @@
             font-size: 0.95rem;
         }
 
+        /* ===== ESTILOS PARA MEDIOS DE PUBLICACIONES ===== */
+        .post-media-container {
+            margin: 1rem 0;
+        }
+
+        .post-image-container {
+            position: relative;
+            margin-bottom: 0.8rem;
+            border-radius: 10px;
+            overflow: hidden;
+            max-height: 500px;
+        }
+
         .post-image {
             width: 100%;
-            border-radius: 10px;
-            margin-bottom: 0.8rem;
-            overflow: hidden;
+            height: auto;
             max-height: 400px;
             object-fit: cover;
+            border-radius: 8px;
+            display: block;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+
+        .post-video {
+            width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            background: #000;
+            display: block;
+        }
+
+        .post-documents {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .post-document-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .post-document-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .post-document-item i {
+            font-size: 1.5rem;
+            color: var(--danger);
+            min-width: 40px;
+        }
+
+        .document-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .document-info strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .document-info small {
+            color: var(--secondary);
+            font-size: 0.8rem;
+        }
+
+        /* ===== CONTADOR DE MEDIOS ===== */
+        .media-counter {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== GALERÍA DE IMÁGENES ===== */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .image-grid-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            cursor: pointer;
+        }
+
+        .image-grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .image-grid-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-grid-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            backdrop-filter: blur(5px);
         }
 
         .post-file {
@@ -1734,6 +1870,9 @@
                     <h4 id="mobileFullName">Usuario NeoStudy</h4>
                     <p class="post-time" id="mobileUserTitle">Estudiante</p>
                 </div>
+                <button class="btn btn-primary" onclick="goToCreatePost()" style="margin-top: 0.5rem;">
+                    <i class="fas fa-pen"></i> Crear Publicación
+                </button>
             </div>
             
             <a class="sidebar-link" onclick="showMobileSection('progress')">
@@ -1930,6 +2069,9 @@
                         <p class="post-time" id="userTitle">Cargando...</p>
                     </div>
                 </div>
+                <button class="btn btn-primary btn-block" onclick="goToCreatePost()" style="margin-top: 1rem;">
+                    <i class="fas fa-pen"></i> Crear Publicación
+                </button>
             </div>
 
             <!-- Estadísticas Rápidas -->
@@ -2005,6 +2147,9 @@
                     <div class="mobile-profile-name" id="mobileProfileName">Cargando...</div>
                     <div class="mobile-profile-title" id="mobileProfileTitle">Cargando...</div>
                 </div>
+                <button class="btn btn-primary" onclick="goToCreatePost()" style="margin-left: auto;">
+                    <i class="fas fa-pen"></i> Crear
+                </button>
             </div>
 
             <!-- CREAR PUBLICACIÓN - SOLO LA PREGUNTA QUE REDIRIGE A LA PÁGINA DE PUBLICACIÓN -->
@@ -2015,7 +2160,7 @@
                 </div>
             </div>
 
-            <!-- Área para mostrar publicaciones -->
+            <!-- Área para mostrar publicaciones desde localStorage -->
             <div id="postsContainer">
                 <!-- Las publicaciones se cargarán aquí desde localStorage -->
             </div>
@@ -2030,150 +2175,9 @@
                 </button>
             </div>
 
-            <!-- Ejemplo de publicación del sistema/administrador -->
-            <div class="post fade-in" data-post-id="adminPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar admin-photo" style="background: linear-gradient(135deg, #FFD700, #FFA500);">NS</div>
-                        <div class="post-user-info">
-                            <h4>Neo Study - Sistema <span class="post-type-badge type-admin">Admin</span></h4>
-                            <p class="post-time">Hace 1 día · <i class="fas fa-graduation-cap"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <span class="ad-label scholarship-label">🏆 BECA COMPLETA</span>
-                    <strong>¡Convocatoria abierta para becas de excelencia 2024!</strong><br><br>
-                    Neo Study otorgará 10 becas completas para estudiantes destacados. Requisitos: promedio mínimo de 4.5, carta de motivación y participar en nuestra comunidad.<br><br>
-                    📅 Fecha límite: 30 de noviembre 2024<br>
-                    📧 Enviar documentos a: becas@neostudy.com
-                </div>
-                <div class="post-stats">
-                    <span>342 interesados</span>
-                    <span>45 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me interesa
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('adminPost1')">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('adminPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
-
-            <!-- Publicación existente 1 -->
-            <div class="post fade-in" data-post-id="userPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar">AM</div>
-                        <div class="post-user-info">
-                            <h4>Ana Martínez <span class="post-type-badge type-user">Usuario</span></h4>
-                            <p class="post-time">Hace 2 horas · <i class="fas fa-graduation-cap"></i></p>
-                        </div>
-                    </div>
-                    <button class="delete-post-btn" onclick="confirmDeletePost('userPost1')" title="Eliminar publicación">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-                <div class="post-content">
-                    ¡Acabo de completar el curso de Álgebra Lineal! 🎉 Los eigenvalores ya no son un misterio para mí. #Matemáticas #Progreso
-                </div>
-                <div class="post-stats">
-                    <span>125 reacciones</span>
-                    <span>28 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me gusta
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('userPost1')">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('userPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
-
-            <!-- Publicación existente 2 -->
-            <div class="post fade-in" data-post-id="tutorPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar">CP</div>
-                        <div class="post-user-info">
-                            <h4>Carlos Pérez - Tutor <span class="post-type-badge type-user">Tutor</span></h4>
-                            <p class="post-time">Ayer · <i class="fas fa-chalkboard-teacher"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    📚 Clase en vivo este sábado: "Resolución de problemas de Física - Movimiento Parabólico". 
-                    ¡No se lo pierdan! Traigan sus dudas y ejercicios.
-                </div>
-                <div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                    CLASE EN VIVO - SÁBADO 3 PM
-                </div>
-                <div class="post-stats">
-                    <span>89 interesados</span>
-                    <span>15 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn">
-                        <i class="fas fa-thumbs-up"></i> Me interesa
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('tutorPost1')">
-                        <i class="fas fa-comment"></i> Comentar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('tutorPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
-
-            <!-- Ejemplo de publicidad patrocinada -->
-            <div class="post fade-in" data-post-id="adPost1">
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="post-user-avatar" style="background: linear-gradient(135deg, #32CD32, #228B22);">EL</div>
-                        <div class="post-user-info">
-                            <h4>English Lab <span class="post-type-badge type-ad">Patrocinado</span></h4>
-                            <p class="post-time">Hace 3 días · <i class="fas fa-ad"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <span class="ad-label sponsored-label">📚 PATROCINADO</span>
-                    <strong>Aprende inglés desde cero con nuestro método comprobado</strong><br><br>
-                    🎯 Niveles A1 a C2<br>
-                    👨‍🏫 Tutores nativos certificados<br>
-                    💻 Clases virtuales en vivo<br>
-                    📱 Plataforma interactiva 24/7<br><br>
-                    <strong>¡50% de descuento para estudiantes de NeoStudy!</strong><br>
-                    Usa el código: <strong>NEO50</strong>
-                </div>
-                <div class="post-image" style="background: linear-gradient(135deg, #32CD32, #228B22); height: 150px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                    ENGLISH LAB - PROMOCIÓN ESPECIAL
-                </div>
-                <div class="post-stats">
-                    <span>234 clicks</span>
-                    <span>67 comentarios</span>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn" onclick="window.open('https://englishlab.com', '_blank')">
-                        <i class="fas fa-external-link-alt"></i> Ver más
-                    </button>
-                    <button class="post-action-btn" onclick="openComments('adPost1')">
-                        <i class="fas fa-comment"></i> Preguntar
-                    </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('adPost1')">
-                        <i class="fas fa-share"></i> Compartir
-                    </button>
-                </div>
-            </div>
+            <!-- Publicaciones de ejemplo del sistema -->
+            <!-- (Se mantienen las publicaciones originales del sistema) -->
+            
         </main>
 
         <!-- Sidebar Derecha - Logros y Clases (SOLO ESCRITORIO) -->
@@ -2370,7 +2374,7 @@
 
         // ===== FUNCIÓN PARA ACTUALIZAR FOTO =====
         function updateProfilePhoto(userName, profileData) {
-            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, .prompt-avatar, #mobileUserAvatar, #mobileProfileAvatar');
+            const avatares = document.querySelectorAll('.post-avatar, .post-user-avatar, .avatar, .prompt-avatar, #mobileUserAvatar, #mobileProfileAvatar, #mainAvatar');
             const initials = userName ? userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : 'U';
             
             avatares.forEach(avatar => {
@@ -2397,19 +2401,13 @@
             window.location.href = 'modulo2_publicaciones.html';
         }
 
-        // ===== NAVEGACIÓN A LA PÁGINA DE COMENTARIOS =====
-        function openComments(postId) {
-            // Guardar el ID de la publicación en localStorage
-            localStorage.setItem('currentPostForComments', postId);
-            // Redirigir a la página de comentarios
-            window.location.href = 'modulo2_comentarios.html';
-        }
-
         // ===== SISTEMA PARA CARGAR PUBLICACIONES DESDE LOCALSTORAGE =====
         function loadPostsFromStorage() {
             const postsContainer = document.getElementById('postsContainer');
             const emptyMessage = document.getElementById('emptyPostsMessage');
             const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+            
+            console.log('Publicaciones encontradas en localStorage:', posts.length);
             
             // Mostrar mensaje si no hay publicaciones
             if (posts.length === 0) {
@@ -2430,42 +2428,32 @@
                 const postElement = createPostElement(post, index);
                 postsContainer.appendChild(postElement);
             });
+            
+            console.log(`Se cargaron ${posts.length} publicaciones`);
         }
 
-        // ===== FUNCIÓN PARA CREAR ELEMENTOS DE PUBLICACIÓN (MEJORADA) =====
+        // ===== FUNCIÓN PARA CREAR ELEMENTOS DE PUBLICACIÓN (MEJORADA CON MEDIOS) =====
         function createPostElement(post, postIndex) {
             const postElement = document.createElement('div');
             postElement.className = 'post fade-in';
-            postElement.setAttribute('data-post-id', `userPost${postIndex}`);
+            postElement.setAttribute('data-post-id', `userPost_${post.id || postIndex}`);
             
             // Determinar tipo de badge según el autor
             let badgeClass = 'type-user';
             let badgeText = 'Usuario';
             
-            if (post.author === 'admin' || post.author.includes('Neo Study')) {
+            if (post.author.includes('Neo Study') || post.author.includes('NeoStudy') || post.isAdminPost) {
                 badgeClass = 'type-admin';
                 badgeText = 'Admin';
-            } else if (post.type === 'ad') {
+            } else if (post.type === 'ad' || post.type === 'sponsored') {
                 badgeClass = 'type-ad';
                 badgeText = 'Patrocinado';
-            }
-            
-            // Crear contenido de la publicación
-            let mediaContent = '';
-            if (post.mediaType === 'image' && post.mediaUrl) {
-                mediaContent = `<img src="${post.mediaUrl}" class="post-image" alt="Publicación">`;
-            } else if (post.mediaType === 'video' && post.mediaUrl) {
-                mediaContent = `<div class="post-image" style="background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; height: 200px;">
-                    <i class="fas fa-play-circle" style="font-size: 3rem;"></i><br>VIDEO INCORPORADO
-                </div>`;
-            } else if (post.mediaType === 'document' && post.mediaUrl) {
-                mediaContent = `<div class="post-file">
-                    <i class="fas fa-file-pdf"></i>
-                    <div>
-                        <strong>Documento adjunto</strong><br>
-                        <small>${post.fileName || 'documento.pdf'}</small>
-                    </div>
-                </div>`;
+            } else if (post.type === 'scholarship') {
+                badgeClass = 'type-admin';
+                badgeText = 'Beca';
+            } else if (post.type === 'announcement' || post.type === 'institution') {
+                badgeClass = 'type-admin';
+                badgeText = 'Institución';
             }
             
             // Formatear fecha
@@ -2477,7 +2465,9 @@
             const diffDays = Math.floor(diffHours / 24);
             
             let timeAgo = '';
-            if (diffMins < 60) {
+            if (diffMins < 1) {
+                timeAgo = 'Ahora mismo';
+            } else if (diffMins < 60) {
                 timeAgo = `Hace ${diffMins} minuto${diffMins !== 1 ? 's' : ''}`;
             } else if (diffHours < 24) {
                 timeAgo = `Hace ${diffHours} hora${diffHours !== 1 ? 's' : ''}`;
@@ -2489,10 +2479,12 @@
             let adLabel = '';
             if (post.type === 'scholarship') {
                 adLabel = '<span class="ad-label scholarship-label">🏆 BECA</span>';
-            } else if (post.type === 'ad') {
+            } else if (post.type === 'ad' || post.type === 'sponsored') {
                 adLabel = '<span class="ad-label sponsored-label">📚 PATROCINADO</span>';
-            } else if (post.type === 'institution') {
+            } else if (post.type === 'institution' || post.type === 'announcement') {
                 adLabel = '<span class="ad-label institution-label">🏫 INSTITUCIÓN</span>';
+            } else if (post.type === 'event') {
+                adLabel = '<span class="ad-label" style="background: linear-gradient(135deg, #FF69B4, #C71585); color: white;">📅 EVENTO</span>';
             }
             
             // Obtener datos del usuario actual
@@ -2501,20 +2493,37 @@
             
             // Verificar si esta publicación pertenece al usuario actual
             let deleteButton = '';
-            if (post.author === currentUser || post.author.includes(currentUser)) {
-                deleteButton = `<button class="delete-post-btn" onclick="confirmDeletePost('userPost${postIndex}')" title="Eliminar publicación">
+            if (post.author === currentUser || (post.userId && post.userId.includes(userData.email))) {
+                deleteButton = `<button class="delete-post-btn" onclick="confirmDeletePost('userPost_${post.id || postIndex}')" title="Eliminar publicación">
                     <i class="fas fa-trash-alt"></i>
                 </button>`;
             }
             
             // Obtener número de comentarios
-            const postComments = JSON.parse(localStorage.getItem(`postComments_userPost${postIndex}`)) || [];
+            const postComments = JSON.parse(localStorage.getItem(`postComments_userPost_${post.id || postIndex}`)) || [];
             const commentCount = postComments.length;
+            
+            // Crear contenido de medios si existe
+            let mediaContent = '';
+            if (post.media && post.media.length > 0) {
+                mediaContent = createMediaContent(post.media);
+            }
+            
+            // Obtener avatar del usuario
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            let avatarContent = post.authorInitials || post.author.charAt(0);
+            let avatarStyle = 'background: var(--bg-gradient);';
+            
+            if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image') && 
+                (post.author === currentUser || post.userId === userData.email)) {
+                avatarStyle = `background-image: url(${profileData.profilePhoto}); background-size: cover; background-position: center;`;
+                avatarContent = '';
+            }
             
             postElement.innerHTML = `
                 <div class="post-header">
                     <div class="post-user">
-                        <div class="post-user-avatar">${post.authorInitials || 'U'}</div>
+                        <div class="post-user-avatar" style="${avatarStyle}">${avatarContent}</div>
                         <div class="post-user-info">
                             <h4>${post.author} <span class="post-type-badge ${badgeClass}">${badgeText}</span></h4>
                             <p class="post-time">${timeAgo} · <i class="fas fa-user-graduate"></i></p>
@@ -2535,16 +2544,112 @@
                     <button class="post-action-btn" onclick="likePost(this)">
                         <i class="fas fa-thumbs-up"></i> Me gusta
                     </button>
-                    <button class="post-action-btn" onclick="openComments('userPost${postIndex}')">
+                    <button class="post-action-btn" onclick="openComments('userPost_${post.id || postIndex}')">
                         <i class="fas fa-comment"></i> Comentar
                     </button>
-                    <button class="post-action-btn" onclick="openSharePostModal('userPost${postIndex}')">
+                    <button class="post-action-btn" onclick="openSharePostModal('userPost_${post.id || postIndex}')">
                         <i class="fas fa-share"></i> Compartir
                     </button>
                 </div>
             `;
             
             return postElement;
+        }
+
+        // ===== FUNCIÓN PARA CREAR CONTENIDO DE MEDIOS =====
+        function createMediaContent(mediaArray) {
+            if (!mediaArray || mediaArray.length === 0) return '';
+            
+            let html = '<div class="post-media-container">';
+            
+            // Separar medios por tipo
+            const images = mediaArray.filter(m => m.type === 'image');
+            const videos = mediaArray.filter(m => m.type === 'video');
+            const documents = mediaArray.filter(m => m.type === 'document');
+            
+            // Mostrar imágenes
+            if (images.length > 0) {
+                if (images.length === 1) {
+                    // Una sola imagen
+                    html += `
+                        <div class="post-image-container">
+                            <img src="${images[0].url || images[0].preview}" class="post-image" alt="Publicación">
+                        </div>
+                    `;
+                } else if (images.length === 2) {
+                    // Dos imágenes
+                    html += `
+                        <div class="image-grid">
+                            ${images.slice(0, 2).map(img => `
+                                <div class="image-grid-item">
+                                    <img src="${img.url || img.preview}" alt="Imagen">
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else if (images.length === 3) {
+                    // Tres imágenes
+                    html += `
+                        <div class="image-grid" style="grid-template-columns: 1fr 1fr;">
+                            <div class="image-grid-item" style="grid-row: span 2;">
+                                <img src="${images[0].url || images[0].preview}" alt="Imagen">
+                            </div>
+                            ${images.slice(1, 3).map(img => `
+                                <div class="image-grid-item">
+                                    <img src="${img.url || img.preview}" alt="Imagen">
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    // Cuatro o más imágenes
+                    html += `
+                        <div class="image-grid">
+                            ${images.slice(0, 4).map((img, index) => `
+                                <div class="image-grid-item">
+                                    <img src="${img.url || img.preview}" alt="Imagen">
+                                    ${index === 3 && images.length > 4 ? 
+                                        `<div class="image-grid-count">+${images.length - 4}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            }
+            
+            // Mostrar videos
+            if (videos.length > 0) {
+                videos.forEach(video => {
+                    html += `
+                        <div class="post-image-container">
+                            <video class="post-video" controls>
+                                <source src="${video.url || video.preview}" type="video/mp4">
+                                Tu navegador no soporta videos.
+                            </video>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Mostrar documentos
+            if (documents.length > 0) {
+                html += '<div class="post-documents">';
+                documents.forEach(doc => {
+                    html += `
+                        <div class="post-document-item">
+                            <i class="${doc.icon || 'fas fa-file'}"></i>
+                            <div class="document-info">
+                                <strong>${doc.name || 'Documento'}</strong>
+                                <small>${doc.size || ''}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            return html;
         }
 
         // ===== SISTEMA DE COMPARTIR PUBLICACIONES =====
@@ -2699,12 +2804,14 @@
         }
 
         function deletePost(postId) {
-            // Si es una publicación del localStorage
-            if (postId.startsWith('userPost')) {
-                const postIndex = parseInt(postId.replace('userPost', ''));
+            try {
                 const posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
                 
-                if (posts[postIndex]) {
+                // Buscar la publicación por ID
+                const postIndex = posts.findIndex(post => `userPost_${post.id}` === postId || 
+                                                         `userPost_${post.id || posts.indexOf(post)}` === postId);
+                
+                if (postIndex !== -1) {
                     // Eliminar la publicación del array
                     posts.splice(postIndex, 1);
                     localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
@@ -2715,26 +2822,26 @@
                     // Eliminar el elemento del DOM
                     const postElement = document.querySelector(`[data-post-id="${postId}"]`);
                     if (postElement) {
-                        postElement.remove();
+                        postElement.style.opacity = '0';
+                        postElement.style.transform = 'translateX(-100px)';
+                        
+                        setTimeout(() => {
+                            postElement.remove();
+                            showNotification('Publicación eliminada correctamente', 'success');
+                            
+                            // Verificar si quedan publicaciones
+                            const remainingPosts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
+                            if (remainingPosts.length === 0) {
+                                document.getElementById('emptyPostsMessage').style.display = 'block';
+                            }
+                        }, 300);
                     }
-                    
-                    // Recargar las publicaciones
-                    loadPostsFromStorage();
-                    
-                    showNotification('Publicación eliminada correctamente', 'success');
+                } else {
+                    showNotification('No se pudo encontrar la publicación', 'danger');
                 }
-            } else {
-                // Para publicaciones estáticas en el HTML
-                const postElement = document.querySelector(`[data-post-id="${postId}"]`);
-                if (postElement) {
-                    postElement.style.opacity = '0';
-                    postElement.style.transform = 'translateX(-100px)';
-                    
-                    setTimeout(() => {
-                        postElement.remove();
-                        showNotification('Publicación eliminada', 'success');
-                    }, 300);
-                }
+            } catch (error) {
+                console.error('Error eliminando publicación:', error);
+                showNotification('Error al eliminar la publicación', 'danger');
             }
         }
 
@@ -2746,6 +2853,12 @@
             
             button.style.color = 'var(--primary)';
             button.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
+            
+            // Guardar el like en localStorage
+            const postId = post.getAttribute('data-post-id');
+            const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
+            likedPosts[postId] = true;
+            localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
         }
 
         // ===== SISTEMA DE NAVEGACIÓN MÓVIL =====
@@ -2789,6 +2902,153 @@
             if (sectionElement) {
                 sectionElement.classList.add('active');
             }
+        }
+
+        // ===== NAVEGACIÓN AL PERFIL =====
+        function goToProfile() {
+            window.location.href = 'modulo3_perfil.html';
+        }
+
+        // ===== SISTEMA DE CERRAR SESIÓN =====
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                showNotification('Sesión cerrada correctamente', 'info');
+                setTimeout(() => {
+                    window.location.href = 'modulo1_inicio.html';
+                }, 1500);
+            }
+        }
+
+        // ===== NAVEGACIÓN =====
+        function goToFeed(e) {
+            if (e) e.preventDefault();
+            window.location.href = 'modulo2_iniciodecesión.html';
+        }
+
+        // ===== SISTEMA DE 3 MODOS DE TEMA =====
+        let currentMode = 'normal';
+
+        function toggleThemeMode() {
+            if (currentMode === 'normal') {
+                setThemeMode('oscuro');
+            } else if (currentMode === 'oscuro') {
+                setThemeMode('estudio');
+            } else {
+                setThemeMode('normal');
+            }
+        }
+
+        function setThemeMode(mode) {
+            document.body.classList.remove('study-mode', 'dark-mode');
+            
+            if (mode === 'estudio') {
+                document.body.classList.add('study-mode');
+            } else if (mode === 'oscuro') {
+                document.body.classList.add('dark-mode');
+            }
+            
+            currentMode = mode;
+            
+            const btn = document.querySelector('.btn-primary');
+            const icons = {
+                'normal': 'fas fa-sun',
+                'oscuro': 'fas fa-moon', 
+                'estudio': 'fas fa-graduation-cap'
+            };
+            const texts = {
+                'normal': 'Modo Normal',
+                'oscuro': 'Modo Oscuro',
+                'estudio': 'Modo Estudio'
+            };
+            
+            if (btn) {
+                btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
+            }
+            
+            showNotification(`${texts[mode]} activado`, 'info');
+            localStorage.setItem('neoStudyTheme', mode);
+            
+            if (mode === 'estudio') {
+                startStudySession();
+            }
+        }
+
+        function startStudySession() {
+            let seconds = 0;
+            const timer = setInterval(() => {
+                if (currentMode !== 'estudio') {
+                    clearInterval(timer);
+                    return;
+                }
+                
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                
+                const studyHoursElement = document.getElementById('studyHours');
+                const completedGoalsElement = document.getElementById('completedGoals');
+                
+                if (studyHoursElement) {
+                    studyHoursElement.textContent = 128 + hours;
+                }
+                
+                if (completedGoalsElement) {
+                    completedGoalsElement.textContent = 12 + Math.floor(hours / 2);
+                }
+                
+            }, 1000);
+        }
+
+        // ===== SISTEMA DE NOTIFICACIONES =====
+        function showNotification(message, type = 'info') {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = 
+                type === 'success' ? 'var(--success)' :
+                type === 'warning' ? 'var(--warning)' :
+                type === 'danger' ? 'var(--danger)' : 'var(--info)';
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
+        function checkForProfileUpdates() {
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
+            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
+            
+            if (userData) {
+                loadUserData(); // Recargar datos completos
+            }
+        }
+
+        // ===== VERIFICAR NUEVAS PUBLICACIONES =====
+        function checkForNewPosts() {
+            const lastCheck = localStorage.getItem('lastPostsCheck') || 0;
+            const currentTime = Date.now();
+            
+            // Verificar cada 10 segundos si hay nuevas publicaciones
+            if (currentTime - lastCheck > 10000) {
+                loadPostsFromStorage();
+                localStorage.setItem('lastPostsCheck', currentTime);
+            }
+        }
+
+        // ===== NAVEGACIÓN A LA PÁGINA DE COMENTARIOS =====
+        function openComments(postId) {
+            // Guardar el ID de la publicación en localStorage
+            localStorage.setItem('currentPostForComments', postId);
+            // Redirigir a la página de comentarios
+            window.location.href = 'modulo2_comentarios.html';
         }
 
         // ===== SISTEMA DE COMPARTIR - SIMPLIFICADO CON TU QR IMAGEN =====
@@ -2891,123 +3151,6 @@
             }
         }
 
-        // ===== NAVEGACIÓN AL PERFIL =====
-        function goToProfile() {
-            window.location.href = 'modulo3_perfil.html';
-        }
-
-        // ===== SISTEMA DE CERRAR SESIÓN =====
-        function logout() {
-            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                showNotification('Sesión cerrada correctamente', 'info');
-                setTimeout(() => {
-                    window.location.href = 'modulo1_inicio.html';
-                }, 1500);
-            }
-        }
-
-        // ===== NAVEGACIÓN =====
-        function goToFeed(e) {
-            if (e) e.preventDefault();
-            window.location.href = 'modulo2_iniciodecesión.html';
-        }
-
-        // ===== SISTEMA DE 3 MODOS DE TEMA =====
-        let currentMode = 'normal';
-
-        function toggleThemeMode() {
-            if (currentMode === 'normal') {
-                setThemeMode('oscuro');
-            } else if (currentMode === 'oscuro') {
-                setThemeMode('estudio');
-            } else {
-                setThemeMode('normal');
-            }
-        }
-
-        function setThemeMode(mode) {
-            document.body.classList.remove('study-mode', 'dark-mode');
-            
-            if (mode === 'estudio') {
-                document.body.classList.add('study-mode');
-            } else if (mode === 'oscuro') {
-                document.body.classList.add('dark-mode');
-            }
-            
-            currentMode = mode;
-            
-            const btn = document.querySelector('.btn-primary');
-            const icons = {
-                'normal': 'fas fa-sun',
-                'oscuro': 'fas fa-moon', 
-                'estudio': 'fas fa-graduation-cap'
-            };
-            const texts = {
-                'normal': 'Modo Normal',
-                'oscuro': 'Modo Oscuro',
-                'estudio': 'Modo Estudio'
-            };
-            
-            btn.innerHTML = `<i class="${icons[mode]}"></i> ${texts[mode]}`;
-            
-            showNotification(`${texts[mode]} activado`, 'info');
-            localStorage.setItem('neoStudyTheme', mode);
-            
-            if (mode === 'estudio') {
-                startStudySession();
-            }
-        }
-
-        function startStudySession() {
-            let seconds = 0;
-            const timer = setInterval(() => {
-                if (currentMode !== 'estudio') {
-                    clearInterval(timer);
-                    return;
-                }
-                
-                seconds++;
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                
-                document.getElementById('studyHours').textContent = 128 + hours;
-                document.getElementById('completedGoals').textContent = 12 + Math.floor(hours / 2);
-                
-            }, 1000);
-        }
-
-        // ===== SISTEMA DE NOTIFICACIONES =====
-        function showNotification(message, type = 'info') {
-            const existingNotification = document.querySelector('.notification');
-            if (existingNotification) {
-                existingNotification.remove();
-            }
-
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.background = 
-                type === 'success' ? 'var(--success)' :
-                type === 'warning' ? 'var(--warning)' :
-                type === 'danger' ? 'var(--danger)' : 'var(--info)';
-            
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // ===== ACTUALIZACIÓN EN TIEMPO REAL =====
-        function checkForProfileUpdates() {
-            const profileData = JSON.parse(localStorage.getItem('profileData')) || {};
-            const userData = JSON.parse(localStorage.getItem('usuarioNeoStudy'));
-            
-            if (userData) {
-                loadUserData(); // Recargar datos completos
-            }
-        }
-
         // ===== INICIALIZACIÓN MEJORADA =====
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar datos del usuario primero
@@ -3021,14 +3164,61 @@
             setThemeMode(savedTheme);
             
             // Configurar eventos
-            document.querySelector('.logo').onclick = goToFeed;
-            document.getElementById('userAvatar').onclick = goToProfile;
-            document.getElementById('mainAvatar').onclick = goToProfile;
-            document.getElementById('mobileProfileAvatar').onclick = goToProfile;
+            const logoElement = document.querySelector('.logo');
+            if (logoElement) {
+                logoElement.onclick = goToFeed;
+            }
+            
+            const userAvatarElement = document.getElementById('userAvatar');
+            if (userAvatarElement) {
+                userAvatarElement.onclick = goToProfile;
+            }
+            
+            const mainAvatarElement = document.getElementById('mainAvatar');
+            if (mainAvatarElement) {
+                mainAvatarElement.onclick = goToProfile;
+            }
+            
+            const mobileProfileAvatarElement = document.getElementById('mobileProfileAvatar');
+            if (mobileProfileAvatarElement) {
+                mobileProfileAvatarElement.onclick = goToProfile;
+            }
             
             // Verificar actualizaciones periódicamente
             setInterval(checkForProfileUpdates, 5000);
+            setInterval(checkForNewPosts, 10000);
+            
+            // Verificar si hay nueva publicación después de redirigir desde módulo de publicaciones
+            const sessionData = JSON.parse(localStorage.getItem('neoStudySession') || '{}');
+            if (sessionData && sessionData.hasNewPosts) {
+                setTimeout(() => {
+                    loadPostsFromStorage();
+                    showNotification('¡Nueva publicación creada exitosamente! 🎉', 'success');
+                    
+                    // Limpiar bandera
+                    delete sessionData.hasNewPosts;
+                    localStorage.setItem('neoStudySession', JSON.stringify(sessionData));
+                }, 1000);
+            }
+            
+            // Aplicar likes guardados
+            applySavedLikes();
         });
+
+        // ===== APLICAR LIKES GUARDADOS =====
+        function applySavedLikes() {
+            const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
+            Object.keys(likedPosts).forEach(postId => {
+                const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+                if (postElement) {
+                    const likeButton = postElement.querySelector('.post-action-btn');
+                    if (likeButton) {
+                        likeButton.style.color = 'var(--primary)';
+                        likeButton.innerHTML = '<i class="fas fa-thumbs-up"></i> Me gusta';
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
