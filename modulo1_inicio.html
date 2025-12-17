@@ -354,7 +354,7 @@ const forms = {
   general: document.getElementById("formGeneral")
 };
 
-// URL de redirección CORRECTA
+// URL de redirección
 const REDIRECT_URL = "modulo2_iniciodecesión.html";
 
 // Función para mostrar/ocultar loader en botones
@@ -381,7 +381,10 @@ function setButtonLoading(buttonId, isLoading) {
   }
 }
 
-// Verificar si ya existe sesión activa - VERSIÓN CORREGIDA
+// ==============================================
+// VERIFICACIÓN DE SESIÓN 100% CON SUPABASE
+// ==============================================
+
 async function checkExistingSession() {
   try {
     // Esperar a que Supabase se inicialice
@@ -395,15 +398,44 @@ async function checkExistingSession() {
     }
     
     if (window.supabaseClient) {
-      const { data: { session } } = await window.supabaseClient.auth.getSession();
+      const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+      
+      if (error) {
+        console.error("Error obteniendo sesión:", error);
+        return;
+      }
+      
       if (session) {
-        // Usuario ya tiene sesión activa, redirigir al dashboard
-        console.log("✅ Sesión activa encontrada, redirigiendo...");
-        showStatus("Ya tienes una sesión activa. Redirigiendo...", "info");
+        console.log("✅ Sesión activa encontrada en Supabase");
+        
+        // Verificar si hay bandera de logout desde modulo2
+        const logoutFromModulo2 = localStorage.getItem('neoStudyLogoutFromModulo2');
+        
+        if (logoutFromModulo2 === 'true') {
+          // El usuario cerró sesión desde modulo2, cerrar también en Supabase
+          console.log("📛 Cerrando sesión en Supabase por logout desde modulo2");
+          await window.supabaseClient.auth.signOut();
+          
+          // Limpiar la bandera
+          localStorage.removeItem('neoStudyLogoutFromModulo2');
+          
+          // Mostrar mensaje
+          showStatus("Sesión cerrada correctamente. Por favor inicia sesión nuevamente.", "info");
+          return;
+        }
+        
+        // Hay sesión activa y NO hubo logout desde modulo2 → redirigir
+        console.log("✅ Redirigiendo a modulo2...");
+        showStatus("Sesión activa encontrada. Redirigiendo...", "info");
+        
+        // Pequeña pausa para mostrar el mensaje
         setTimeout(() => {
-          // CORRECCIÓN: Usar la URL CORRECTA
           window.location.href = REDIRECT_URL;
-        }, 1500);
+        }, 1000);
+        
+      } else {
+        console.log("📛 No hay sesión activa en Supabase");
+        // No hacer nada, mostrar pantalla de login normal
       }
     }
   } catch (error) {
@@ -411,34 +443,11 @@ async function checkExistingSession() {
   }
 }
 
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-  // Verificar sesión después de un breve retraso
-  setTimeout(checkExistingSession, 1000);
-});
+// ==============================================
+// INICIO DE SESIÓN Y REGISTRO CON SUPABASE
+// ==============================================
 
-// Botón "Crear cuenta" funcional
-document.getElementById("btnCrearCuenta").addEventListener("click", function() {
-  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
-  categoriaSelect.focus();
-  showStatus("Por favor selecciona tu categoría para crear tu cuenta", "info");
-});
-
-// Mostrar formulario según categoría
-categoriaSelect.addEventListener("change", () => {
-  const value = categoriaSelect.value;
-  Object.values(forms).forEach(f => f.classList.add("hidden"));
-  if(value && forms[value]) {
-    forms[value].classList.remove("hidden");
-    // Enfocar el primer campo del formulario
-    const firstInput = forms[value].querySelector('input');
-    if (firstInput) {
-      setTimeout(() => firstInput.focus(), 100);
-    }
-  }
-});
-
-// Función para crear cuenta con Supabase - VERSIÓN CORREGIDA
+// Función para crear cuenta con Supabase
 async function saveUser(form, category) {
   try {
     // Obtener el cliente Supabase
@@ -543,7 +552,6 @@ async function saveUser(form, category) {
           categoria: category,
           fecha_nacimiento: birthDate
         },
-        // CORRECCIÓN: Usar la URL CORRECTA
         emailRedirectTo: window.location.origin + '/' + REDIRECT_URL
       }
     });
@@ -588,7 +596,6 @@ async function saveUser(form, category) {
     
     if (dbError) {
       console.warn("Nota: Datos adicionales no guardados. Error:", dbError.message);
-      // No mostramos error al usuario porque la cuenta de auth sí se creó
     }
     
     if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
@@ -607,19 +614,9 @@ async function saveUser(form, category) {
     categoriaSelect.value = "";
     Object.values(forms).forEach(f => f.classList.add("hidden"));
     
-    // Intentar inicio de sesión automático si ya está confirmado
+    // Si hay sesión automática (cuenta ya confirmada), redirigir
     if (authData.session) {
-      // Guardar información localmente
-      localStorage.setItem("neoStudyUser", JSON.stringify({
-        id: authData.user.id,
-        email: authData.user.email,
-        nombre: fullName,
-        categoria: category
-      }));
-      
-      // Redirigir después de 3 segundos
       setTimeout(() => {
-        // CORRECCIÓN: Usar la URL CORRECTA
         window.location.href = REDIRECT_URL;
       }, 3000);
     } else {
@@ -642,15 +639,7 @@ async function saveUser(form, category) {
   }
 }
 
-// Asignar eventos a formularios
-Object.keys(forms).forEach(cat => {
-  forms[cat].addEventListener("submit", async (e) => {
-    e.preventDefault();
-    await saveUser(forms[cat], cat);
-  });
-});
-
-// Login con Supabase - VERSIÓN CORREGIDA Y MEJORADA
+// Login con Supabase
 document.getElementById("btnLogin").addEventListener("click", async () => {
   try {
     const supabase = window.supabaseClient;
@@ -685,7 +674,6 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     setButtonLoading('btnLogin', false);
     
     if (error) {
-      // MANEJO MEJORADO DE ERRORES - Evita el 404
       if (error.message.includes("Invalid login credentials")) {
         showStatus("❌ Credenciales incorrectas. Verifica tu email/teléfono y contraseña.", "error");
       } else if (error.message.includes("Email not confirmed")) {
@@ -704,25 +692,11 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     
     showStatus("✅ ¡Inicio de sesión exitoso! Redirigiendo...", "success");
     
-    // Obtener datos adicionales del usuario
-    const { data: userData } = await supabase
-      .from('usuarios')
-      .select('*')
-      .eq('id', data.user.id)
-      .single();
+    // Limpiar bandera de logout si existe
+    localStorage.removeItem('neoStudyLogoutFromModulo2');
     
-    // Guardar información localmente para uso inmediato
-    localStorage.setItem("neoStudyUser", JSON.stringify({
-      id: data.user.id,
-      email: data.user.email,
-      nombre: data.user.user_metadata?.full_name || userData?.nombre_completo || "Usuario",
-      categoria: data.user.user_metadata?.categoria || userData?.categoria || "general",
-      user_type: data.user.user_metadata?.user_type || userData?.user_type
-    }));
-    
-    // Redirigir al dashboard después de 1.5 segundos
+    // Redirigir después de 1.5 segundos
     setTimeout(() => {
-      // CORRECCIÓN: Usar la URL CORRECTA
       window.location.href = REDIRECT_URL;
     }, 1500);
     
@@ -735,7 +709,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
   }
 });
 
-// Login con Google - VERSIÓN MEJORADA
+// Login con Google
 document.getElementById("btnGoogleLogin").addEventListener("click", async () => {
   try {
     const supabase = window.supabaseClient;
@@ -749,7 +723,6 @@ document.getElementById("btnGoogleLogin").addEventListener("click", async () => 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        // CORRECCIÓN: Usar la URL CORRECTA
         redirectTo: window.location.origin + '/' + REDIRECT_URL,
         queryParams: {
           access_type: 'offline',
@@ -763,6 +736,8 @@ document.getElementById("btnGoogleLogin").addEventListener("click", async () => 
     
     if (error) {
       showStatus("❌ Error al iniciar con Google: " + error.message, "error");
+    } else {
+      showStatus("✅ Redirigiendo a Google...", "info");
     }
   } catch (error) {
     console.error("Google login error:", error);
@@ -771,6 +746,39 @@ document.getElementById("btnGoogleLogin").addEventListener("click", async () => 
     // Restaurar botón
     setButtonLoading('btnGoogleLogin', false);
   }
+});
+
+// ==============================================
+// FUNCIONES AUXILIARES
+// ==============================================
+
+// Botón "Crear cuenta" funcional
+document.getElementById("btnCrearCuenta").addEventListener("click", function() {
+  categoriaSelect.scrollIntoView({ behavior: 'smooth' });
+  categoriaSelect.focus();
+  showStatus("Por favor selecciona tu categoría para crear tu cuenta", "info");
+});
+
+// Mostrar formulario según categoría
+categoriaSelect.addEventListener("change", () => {
+  const value = categoriaSelect.value;
+  Object.values(forms).forEach(f => f.classList.add("hidden"));
+  if(value && forms[value]) {
+    forms[value].classList.remove("hidden");
+    // Enfocar el primer campo del formulario
+    const firstInput = forms[value].querySelector('input');
+    if (firstInput) {
+      setTimeout(() => firstInput.focus(), 100);
+    }
+  }
+});
+
+// Asignar eventos a formularios
+Object.keys(forms).forEach(cat => {
+  forms[cat].addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await saveUser(forms[cat], cat);
+  });
 });
 
 // Validación en tiempo real para contraseñas
@@ -814,14 +822,6 @@ document.getElementById('login_contacto').addEventListener('input', function(e) 
   }
 });
 
-// Función para formatear fecha
-function formatearFecha(fechaISO) {
-  if (!fechaISO) return "";
-  const fecha = new Date(fechaISO);
-  const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-  return fecha.toLocaleDateString('es-ES', opciones);
-}
-
 // Permitir login con Enter en los campos
 document.getElementById('login_password').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') {
@@ -840,7 +840,17 @@ Object.values(forms).forEach(form => {
   });
 });
 
-// Función para verificar si el archivo existe antes de redirigir (precaución adicional)
+// ==============================================
+// INICIALIZACIÓN
+// ==============================================
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  // Verificar sesión después de un breve retraso
+  setTimeout(checkExistingSession, 1000);
+});
+
+// Función para verificar si el archivo existe antes de redirigir
 async function verificarRedireccion(url) {
   try {
     const response = await fetch(url, { method: 'HEAD' });
@@ -860,24 +870,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       showStatus("Advertencia: La página de destino no está disponible.", "info");
     }
   } catch (error) {
-    // No mostrar error al usuario, solo registrar en consola
     console.warn("No se pudo verificar la existencia del archivo de destino:", error);
-  }
-});
-
-// Interceptar posibles redirecciones fallidas
-window.addEventListener('error', function(event) {
-  if (event.target.tagName === 'A' || event.target.tagName === 'FORM') {
-    console.log("Se detectó un error de navegación");
-    showStatus("Error de navegación. Por favor verifica la URL de destino.", "error");
-  }
-});
-
-// Prevenir recarga de página con F5 si hay error
-window.addEventListener('keydown', function(e) {
-  if (e.key === 'F5') {
-    e.preventDefault();
-    showStatus("Recarga manual detectada. Si hay problemas, cierra y abre nuevamente la página.", "info");
   }
 });
 </script>
