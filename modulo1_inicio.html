@@ -25,10 +25,12 @@ function initSupabase() {
             return supabaseClient;
         } else {
             console.error("❌ Supabase no se cargó correctamente");
+            showStatus("Error de conexión. Por favor recarga la página.", "error");
             return null;
         }
     } catch (error) {
         console.error("❌ Error al inicializar Supabase:", error);
+        showStatus("Error al inicializar el sistema. Por favor recarga la página.", "error");
         return null;
     }
 }
@@ -46,6 +48,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 1000);
 });
+
+// Función para mostrar mensajes de estado (definida aquí para uso global)
+function showStatus(message, type = 'info') {
+  const statusEl = document.getElementById('statusMessage');
+  if (statusEl) {
+    statusEl.textContent = message;
+    statusEl.className = `status-message ${type}`;
+    statusEl.classList.remove('hidden');
+    
+    // Auto-ocultar mensajes informativos después de 5 segundos
+    if (type === 'info') {
+      setTimeout(() => {
+        statusEl.classList.add('hidden');
+      }, 5000);
+    }
+  }
+}
 </script>
 <style>
   * {
@@ -335,20 +354,8 @@ const forms = {
   general: document.getElementById("formGeneral")
 };
 
-// Función para mostrar mensajes de estado
-function showStatus(message, type = 'info') {
-  const statusEl = document.getElementById('statusMessage');
-  statusEl.textContent = message;
-  statusEl.className = `status-message ${type}`;
-  statusEl.classList.remove('hidden');
-  
-  // Auto-ocultar mensajes informativos después de 5 segundos
-  if (type === 'info') {
-    setTimeout(() => {
-      statusEl.classList.add('hidden');
-    }, 5000);
-  }
-}
+// URL de redirección CORRECTA
+const REDIRECT_URL = "modulo2_iniciodecesión.html";
 
 // Función para mostrar/ocultar loader en botones
 function setButtonLoading(buttonId, isLoading) {
@@ -365,6 +372,8 @@ function setButtonLoading(buttonId, isLoading) {
       btnText.textContent = 'Iniciar Sesión';
     } else if (buttonId.includes('Submit')) {
       btnText.textContent = 'Crear Cuenta';
+    } else if (buttonId === 'btnGoogleLogin') {
+      btnText.textContent = 'Iniciar con Google';
     } else {
       btnText.textContent = button.getAttribute('data-original-text') || 'Continuar';
     }
@@ -392,7 +401,8 @@ async function checkExistingSession() {
         console.log("✅ Sesión activa encontrada, redirigiendo...");
         showStatus("Ya tienes una sesión activa. Redirigiendo...", "info");
         setTimeout(() => {
-          window.location.href = "modulo2_iniciodecisión.html";
+          // CORRECCIÓN: Usar la URL CORRECTA
+          window.location.href = REDIRECT_URL;
         }, 1500);
       }
     }
@@ -533,7 +543,8 @@ async function saveUser(form, category) {
           categoria: category,
           fecha_nacimiento: birthDate
         },
-        emailRedirectTo: window.location.origin + '/modulo2_iniciodecesión.html'
+        // CORRECCIÓN: Usar la URL CORRECTA
+        emailRedirectTo: window.location.origin + '/' + REDIRECT_URL
       }
     });
     
@@ -608,7 +619,8 @@ async function saveUser(form, category) {
       
       // Redirigir después de 3 segundos
       setTimeout(() => {
-        window.location.href = "modulo2_iniciodecesión.html";
+        // CORRECCIÓN: Usar la URL CORRECTA
+        window.location.href = REDIRECT_URL;
       }, 3000);
     } else {
       // Si no hay sesión, ofrecer ir al login
@@ -638,7 +650,7 @@ Object.keys(forms).forEach(cat => {
   });
 });
 
-// Login con Supabase - VERSIÓN CORREGIDA
+// Login con Supabase - VERSIÓN CORREGIDA Y MEJORADA
 document.getElementById("btnLogin").addEventListener("click", async () => {
   try {
     const supabase = window.supabaseClient;
@@ -673,14 +685,19 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     setButtonLoading('btnLogin', false);
     
     if (error) {
+      // MANEJO MEJORADO DE ERRORES - Evita el 404
       if (error.message.includes("Invalid login credentials")) {
-        showStatus("Credenciales incorrectas. Verifica tu email/teléfono y contraseña.", "error");
+        showStatus("❌ Credenciales incorrectas. Verifica tu email/teléfono y contraseña.", "error");
       } else if (error.message.includes("Email not confirmed")) {
-        showStatus("Por favor confirma tu email antes de iniciar sesión.", "error");
+        showStatus("⚠️ Por favor confirma tu email antes de iniciar sesión.", "error");
       } else if (error.message.includes("User not found")) {
-        showStatus("Usuario no encontrado. Por favor crea una cuenta primero.", "error");
+        showStatus("❌ Este usuario no existe en NeoStudy. Por favor crea una cuenta primero.", "error");
+      } else if (error.message.includes("Invalid email")) {
+        showStatus("❌ Formato de email o teléfono inválido.", "error");
+      } else if (error.message.includes("rate limit")) {
+        showStatus("⚠️ Demasiados intentos. Por favor espera unos minutos.", "error");
       } else {
-        showStatus("Error al iniciar sesión: " + error.message, "error");
+        showStatus("❌ Error al iniciar sesión: " + error.message, "error");
       }
       return;
     }
@@ -705,19 +722,20 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     
     // Redirigir al dashboard después de 1.5 segundos
     setTimeout(() => {
-      window.location.href = "modulo2_iniciodecesión.html";
+      // CORRECCIÓN: Usar la URL CORRECTA
+      window.location.href = REDIRECT_URL;
     }, 1500);
     
   } catch (error) {
     console.error("Login error:", error);
-    showStatus("Error al iniciar sesión. Por favor verifica tus credenciales.", "error");
+    showStatus("❌ Error al iniciar sesión. Por favor verifica tus credenciales.", "error");
     
     // Restaurar botón en caso de error
     setButtonLoading('btnLogin', false);
   }
 });
 
-// Login con Google
+// Login con Google - VERSIÓN MEJORADA
 document.getElementById("btnGoogleLogin").addEventListener("click", async () => {
   try {
     const supabase = window.supabaseClient;
@@ -726,17 +744,13 @@ document.getElementById("btnGoogleLogin").addEventListener("click", async () => 
       return;
     }
     
-    // Guardar texto original del botón
-    const btn = document.getElementById('btnGoogleLogin');
-    const btnText = btn.querySelector('.btn-text');
-    const originalText = btnText.textContent;
-    btnText.innerHTML = `<span class="loader"></span>Conectando...`;
-    btn.disabled = true;
+    setButtonLoading('btnGoogleLogin', true);
     
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/modulo2_iniciodecesión.html',
+        // CORRECCIÓN: Usar la URL CORRECTA
+        redirectTo: window.location.origin + '/' + REDIRECT_URL,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent'
@@ -745,21 +759,17 @@ document.getElementById("btnGoogleLogin").addEventListener("click", async () => 
     });
     
     // Restaurar botón
-    btnText.textContent = originalText;
-    btn.disabled = false;
+    setButtonLoading('btnGoogleLogin', false);
     
     if (error) {
-      showStatus("Error al iniciar con Google: " + error.message, "error");
+      showStatus("❌ Error al iniciar con Google: " + error.message, "error");
     }
   } catch (error) {
     console.error("Google login error:", error);
-    showStatus("Error al iniciar sesión con Google.", "error");
+    showStatus("❌ Error al iniciar sesión con Google.", "error");
     
     // Restaurar botón
-    const btn = document.getElementById('btnGoogleLogin');
-    const btnText = btn.querySelector('.btn-text');
-    btnText.textContent = 'Iniciar con Google';
-    btn.disabled = false;
+    setButtonLoading('btnGoogleLogin', false);
   }
 });
 
@@ -828,6 +838,47 @@ Object.values(forms).forEach(form => {
       if (submitBtn) submitBtn.click();
     }
   });
+});
+
+// Función para verificar si el archivo existe antes de redirigir (precaución adicional)
+async function verificarRedireccion(url) {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    console.error("Error verificando archivo:", error);
+    return false;
+  }
+}
+
+// Verificar archivo de redirección al cargar la página
+document.addEventListener('DOMContentLoaded', async function() {
+  try {
+    const archivoExiste = await verificarRedireccion(REDIRECT_URL);
+    if (!archivoExiste) {
+      console.warn(`⚠️ Advertencia: El archivo ${REDIRECT_URL} no existe en el servidor.`);
+      showStatus("Advertencia: La página de destino no está disponible.", "info");
+    }
+  } catch (error) {
+    // No mostrar error al usuario, solo registrar en consola
+    console.warn("No se pudo verificar la existencia del archivo de destino:", error);
+  }
+});
+
+// Interceptar posibles redirecciones fallidas
+window.addEventListener('error', function(event) {
+  if (event.target.tagName === 'A' || event.target.tagName === 'FORM') {
+    console.log("Se detectó un error de navegación");
+    showStatus("Error de navegación. Por favor verifica la URL de destino.", "error");
+  }
+});
+
+// Prevenir recarga de página con F5 si hay error
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'F5') {
+    e.preventDefault();
+    showStatus("Recarga manual detectada. Si hay problemas, cierra y abre nuevamente la página.", "info");
+  }
 });
 </script>
 </body>
