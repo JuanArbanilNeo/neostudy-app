@@ -29,47 +29,52 @@
             --card-shadow: 0 8px 30px rgba(0,0,0,0.12);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --book-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --facebook-blue: #1877F2;
+            --facebook-hover: #166fe5;
+            --gray-100: #f0f2f5;
+            --gray-200: #e4e6eb;
+            --gray-300: #d8dadf;
+            --gray-600: #65676b;
+            --toolbar-bg: #f8f9fa;
+            --toolbar-border: #dee2e6;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            background: #f0f2f5;
             color: var(--dark);
             overflow-x: hidden;
             line-height: 1.6;
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            padding-bottom: 100px; /* Espacio para botones flotantes */
         }
 
-        /* ===== HEADER MODERNO ===== */
+        /* ===== HEADER PROFESIONAL ===== */
         .header {
-            background: var(--bg-gradient);
-            color: var(--white);
-            padding: 1rem 1.5rem;
+            background: var(--white);
+            color: var(--dark);
+            padding: 0.75rem 1.5rem;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .header-title {
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
         }
 
         .header-title i {
-            font-size: 1.5rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            font-size: 1.4rem;
             background: var(--book-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -77,166 +82,110 @@
         }
 
         .back-button {
-            background: rgba(255,255,255,0.15);
-            border: 2px solid rgba(255,255,255,0.2);
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            background: var(--gray-100);
+            border: none;
+            color: var(--gray-600);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
-            backdrop-filter: blur(5px);
+            font-size: 1.1rem;
         }
 
         .back-button:hover {
-            background: rgba(255,255,255,0.25);
-            transform: translateY(-2px);
-            border-color: rgba(255,255,255,0.3);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            background: var(--gray-200);
+            color: var(--dark);
         }
 
         /* ===== CONTENIDO PRINCIPAL ===== */
         .main-content {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            flex: 1;
+            max-width: 680px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
             width: 100%;
         }
 
-        @media (min-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1.2fr 0.8fr;
-                gap: 2.5rem;
-                margin: 3rem auto;
-            }
-        }
-
-        /* ===== FORMULARIO DE PUBLICACIÓN ===== */
+        /* ===== FORMULARIO PROFESIONAL ===== */
         .post-form-container {
             background: var(--white);
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            transition: var(--transition);
-            height: fit-content;
+            margin-bottom: 1.5rem;
         }
 
         .form-header {
-            background: var(--book-gradient);
-            color: white;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .form-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-
-        .form-header h2 {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            font-size: 1.6rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
         }
 
-        .form-header p {
-            opacity: 0.9;
-            font-weight: 300;
-            position: relative;
-            z-index: 1;
-            font-size: 0.95rem;
-        }
-
-        .post-form {
-            padding: 2rem;
+        .form-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
         }
 
         /* ===== INFORMACIÓN DEL AUTOR ===== */
         .author-info {
             display: flex;
             align-items: center;
-            gap: 1.2rem;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #e9f2ff 100%);
-            border-radius: 12px;
-            border: 1px solid rgba(0, 196, 255, 0.1);
+            gap: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .author-avatar {
-            width: 65px;
-            height: 65px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--book-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 700;
-            font-size: 1.6rem;
+            font-weight: 600;
+            font-size: 1rem;
             background-size: cover;
             background-position: center;
-            border: 3px solid white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            border: 2px solid var(--white);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .author-details h3 {
-            margin-bottom: 0.3rem;
-            font-size: 1.2rem;
+            font-size: 0.9375rem;
             font-weight: 600;
             color: var(--dark);
+            margin-bottom: 0.125rem;
         }
 
         .author-details p {
-            color: var(--secondary);
-            font-size: 0.9rem;
-            font-weight: 400;
+            color: var(--gray-600);
+            font-size: 0.8125rem;
         }
 
         /* ===== EDITOR DE PUBLICACIÓN ===== */
         .form-group {
-            margin-bottom: 1.8rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
         }
 
-        .form-label {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 1.1rem;
+        .text-area-container {
+            position: relative;
         }
 
-        .form-label i {
-            color: var(--primary);
-        }
-
-        .text-area {
+        #postContent {
             width: 100%;
-            min-height: 160px;
-            padding: 1.2rem;
-            border: 2px solid #e3e8f0;
-            border-radius: 12px;
+            min-height: 200px;
+            padding: 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
             font-size: 1rem;
             font-family: inherit;
             resize: vertical;
@@ -244,312 +193,334 @@
             background: var(--white);
             color: var(--dark);
             line-height: 1.6;
+            margin-top: 0.5rem;
         }
 
-        .text-area:focus {
+        #postContent:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 196, 255, 0.15);
-            background: #fafcff;
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
         }
 
-        /* ===== BOTONES DE DISEÑO ===== */
-        .design-buttons {
+        #postContent::placeholder {
+            color: var(--gray-600);
+            font-size: 1rem;
+        }
+
+        /* ===== BARRA DE HERRAMIENTAS COMPLETA (ESTILO WORD) ===== */
+        .editor-toolbar {
+            background: var(--toolbar-bg);
+            border: 1px solid var(--toolbar-border);
+            border-radius: 6px;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
             flex-wrap: wrap;
+            gap: 0.25rem;
+            align-items: center;
         }
 
-        .design-btn {
+        .toolbar-group {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.2rem;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-weight: 500;
+            gap: 0.125rem;
+            padding: 0 0.25rem;
+            border-right: 1px solid var(--gray-300);
+            margin-right: 0.25rem;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+            margin-right: 0;
+        }
+
+        .toolbar-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 4px;
+            background: transparent;
             color: var(--dark);
             cursor: pointer;
             transition: var(--transition);
-            flex: 1;
-            min-width: 140px;
-            justify-content: center;
-        }
-
-        .design-btn:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .design-btn i {
-            font-size: 1.2rem;
-        }
-
-        /* ===== MODALES DE DISEÑO ===== */
-        .design-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
+            display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
-            padding: 1rem;
+            font-size: 0.875rem;
+            position: relative;
         }
 
-        .design-modal-content {
+        .toolbar-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .toolbar-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .toolbar-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .toolbar-btn i {
+            font-size: 0.9rem;
+        }
+
+        .font-selector, .size-selector {
+            height: 32px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            padding: 0 0.5rem;
+            font-size: 0.875rem;
             background: white;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: modalSlideIn 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            color: var(--dark);
+            cursor: pointer;
+            margin: 0 0.125rem;
         }
 
-        @keyframes modalSlideIn {
+        .color-picker-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .color-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .color-picker {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            padding: 0.75rem;
+            display: none;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.375rem;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-top: 0.25rem;
+        }
+
+        .color-picker.show {
+            display: grid;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--gray-300);
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .align-buttons {
+            display: flex;
+            gap: 0.125rem;
+        }
+
+        .list-buttons {
+            display: flex;
+            gap: 0.125rem;
+        }
+
+        .separator {
+            width: 1px;
+            height: 24px;
+            background: var(--gray-300);
+            margin: 0 0.5rem;
+        }
+
+        /* ===== BOTONES FLOTANTES MEJORADOS ===== */
+        .floating-action-buttons {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.75rem;
+            z-index: 1000;
+            opacity: 0;
+            animation: slideUpFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.3s;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideUpFade {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateX(-50%) translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(-50%) translateY(0);
             }
         }
 
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--dark);
-        }
-
-        .close-modal {
-            background: none;
+        .floating-btn {
+            padding: 0.6rem 1.5rem;
             border: none;
-            font-size: 1.5rem;
-            color: var(--secondary);
+            border-radius: 50px;
+            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .close-modal:hover {
-            background: #f8f9fa;
-            color: var(--dark);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
-        /* ===== OPCIONES DE DISEÑO ===== */
-        .design-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .design-option {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             gap: 0.5rem;
-        }
-
-        .design-option:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .design-option.active {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #00C4FF10 0%, #007bff10 100%);
-            box-shadow: 0 4px 15px rgba(0, 196, 255, 0.2);
-        }
-
-        .design-preview {
-            width: 100%;
-            height: 70px;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-        }
-
-        /* ===== OPCIONES DE FUENTE ===== */
-        .font-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .font-option {
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .font-option:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .font-option.active {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 196, 255, 0.2);
-        }
-
-        /* ===== SECCIÓN DE MEDIOS ===== */
-        .media-section {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.8rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .media-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .media-option {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 1.2rem 0.8rem;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.8rem;
+            font-size: 0.9rem;
+            min-width: 120px;
             position: relative;
             overflow: hidden;
         }
 
-        .media-option:hover {
-            border-color: var(--primary);
+        .floating-btn-cancel {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .floating-btn-cancel:hover {
+            background: var(--gray-200);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
         }
 
-        .media-option i {
-            font-size: 1.8rem;
-            color: var(--primary);
+        .floating-btn-cancel:active {
+            transform: translateY(0);
         }
 
-        .media-option input[type="file"] {
+        .floating-btn-publish {
+            background: linear-gradient(135deg, var(--facebook-blue), #36a5ff);
+            color: var(--white);
+        }
+
+        .floating-btn-publish:hover {
+            background: linear-gradient(135deg, var(--facebook-hover), #2a95ff);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(24, 119, 242, 0.3);
+        }
+
+        .floating-btn-publish:active {
+            transform: translateY(0);
+        }
+
+        .pulse-animation {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pulse-animation::after {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            70% {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+            }
+            100% {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+            }
+        }
+
+        /* ===== VISTA PREVIA DE MEDIOS ===== */
+        .media-preview-section {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .media-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .media-image {
             width: 100%;
             height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        /* ===== PREVIEW DE MEDIOS ===== */
-        .media-preview {
-            margin-top: 1.5rem;
-        }
-
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .preview-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: var(--transition);
-        }
-
-        .preview-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .preview-image {
-            width: 100%;
-            height: 120px;
             object-fit: cover;
             display: block;
         }
 
-        .preview-video {
+        .media-video {
             width: 100%;
-            height: 120px;
+            height: 100%;
             object-fit: cover;
             display: block;
         }
 
-        .preview-doc {
-            padding: 1rem;
+        .media-doc {
+            width: 100%;
+            height: 100%;
+            background: var(--gray-100);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 1rem;
-            height: 120px;
-        }
-
-        .preview-doc i {
-            font-size: 2rem;
-            color: var(--danger);
+            justify-content: center;
+            padding: 0.5rem;
         }
 
         .remove-media-btn {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            background: var(--danger);
+            top: 0.25rem;
+            right: 0.25rem;
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -557,204 +528,152 @@
             cursor: pointer;
             opacity: 0.9;
             transition: var(--transition);
+            font-size: 0.75rem;
         }
 
         .remove-media-btn:hover {
             opacity: 1;
-            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.7);
         }
 
-        /* ===== PREVIEW DE PUBLICACIÓN ===== */
-        .preview-section {
-            background: white;
-            border-radius: var(--card-radius);
-            box-shadow: var(--card-shadow);
-            padding: 1.8rem;
-            height: fit-content;
-            position: sticky;
-            top: 100px;
-            overflow: hidden;
-        }
-
-        .preview-header {
+        /* ===== BARRA DE HERRAMIENTAS (estilo Facebook) ===== */
+        .toolbar {
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f1f5f9;
+            justify-content: space-between;
         }
 
-        .preview-avatar {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: var(--book-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .preview-author h4 {
-            margin-bottom: 0.2rem;
+        .toolbar-title {
+            font-size: 0.9375rem;
             font-weight: 600;
-            font-size: 1.1rem;
+            color: var(--dark);
         }
 
-        .preview-author p {
-            color: var(--secondary);
-            font-size: 0.85rem;
-        }
-
-        .preview-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
-            min-height: 300px;
+        .toolbar-buttons {
             display: flex;
-            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        .preview-content {
-            flex: 1;
-            margin: 1rem 0;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            padding: 1rem;
+        .toolbar-btn-large {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--gray-100);
+            border: none;
             border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
             transition: var(--transition);
         }
 
-        .preview-media-container {
-            margin-top: 1rem;
-            border-radius: 8px;
-            overflow: hidden;
+        .toolbar-btn-large:hover {
+            background: var(--gray-200);
         }
 
-        .preview-timestamp {
-            color: var(--secondary);
-            font-size: 0.8rem;
-            margin-top: 1rem;
-            text-align: right;
-            padding-top: 1rem;
-            border-top: 1px solid #e2e8f0;
+        .toolbar-btn-large i {
+            font-size: 1.125rem;
         }
 
         /* ===== SECCIÓN ADMINISTRADOR ===== */
         .admin-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: var(--white);
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.8rem;
-            border-left: 5px solid var(--primary);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
         }
 
-        .admin-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
+        .admin-header {
+            padding: 1rem 1.5rem;
+            background: var(--gray-100);
+            border-bottom: 1px solid var(--gray-200);
             cursor: pointer;
             user-select: none;
-            padding: 0.8rem;
-            background: white;
-            border-radius: 8px;
-            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .admin-toggle:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
+        .admin-header:hover {
+            background: var(--gray-200);
         }
 
         .admin-content {
+            padding: 1.5rem;
             display: none;
-            animation: slideDown 0.3s ease;
         }
 
         .admin-content.active {
             display: block;
         }
 
-        .post-type-options {
+        .admin-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin: 1rem 0;
         }
 
-        .type-option {
-            background: white;
-            border: 2px solid #e2e8f0;
+        .admin-option {
+            background: var(--gray-100);
+            border: 2px solid transparent;
             border-radius: 8px;
-            padding: 0.8rem 0.5rem;
+            padding: 0.75rem;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
         }
 
-        .type-option.active {
+        .admin-option:hover {
+            background: var(--gray-200);
+        }
+
+        .admin-option.active {
             border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 196, 255, 0.2);
+            background: rgba(0, 196, 255, 0.1);
         }
 
-        /* ===== BOTONES DE ACCIÓN ===== */
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 1rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
+        /* ===== MODALES ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
+            padding: 1rem;
         }
 
-        .btn-primary {
-            background: var(--book-gradient);
-            color: var(--white);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
+        .modal-content {
             background: white;
-            color: var(--dark);
-            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.2s ease;
         }
 
-        .btn-secondary:hover {
-            background: #f8f9fa;
-            transform: translateY(-3px);
-            border-color: var(--primary);
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ===== MODAL DE CONFIRMACIÓN ===== */
@@ -765,192 +684,262 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.5);
             z-index: 3000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
+            padding: 1rem;
         }
 
         .confirmation-content {
             background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            max-width: 450px;
-            width: 90%;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 100%;
             text-align: center;
-            animation: modalFadeIn 0.4s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.2s ease;
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.9); }
+            from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
 
         .confirmation-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-top: 1.5rem;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), #218838);
-            color: white;
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
         }
 
         /* ===== NOTIFICACIONES ===== */
         .notification {
             position: fixed;
-            top: 100px;
+            top: 20px;
             right: 20px;
             background: var(--success);
             color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 10000;
-            animation: fadeInUp 0.4s ease;
+            animation: fadeInUp 0.2s ease;
             max-width: 300px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.875rem;
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== ESTILOS DE TEXTO PARA PREVIEW ===== */
+        .text-bold {
+            font-weight: bold;
+        }
+        
+        .text-italic {
+            font-style: italic;
+        }
+        
+        .text-underline {
+            text-decoration: underline;
+        }
+        
+        .text-strikethrough {
+            text-decoration: line-through;
+        }
+
+        .post-hint {
+            color: var(--gray-600);
+            font-size: 0.8125rem;
+            margin-top: 0.5rem;
+            padding-left: 0.25rem;
+        }
+
+        /* ===== CONTADOR DE CARACTERES ===== */
+        .character-count {
+            text-align: right;
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ===== ESTILOS PARA EDUCACIÓN ===== */
+        .education-tag {
+            display: inline-block;
+            background: rgba(0, 196, 255, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .header {
-                padding: 0.8rem 1rem;
-            }
-            
-            .header-title {
-                font-size: 1.1rem;
+                padding: 0.75rem 1rem;
             }
             
             .main-content {
                 margin: 1rem auto;
-                padding: 0 1rem;
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+                padding: 0 0.75rem;
             }
             
-            .preview-section {
-                position: static;
-                margin-top: 1rem;
+            .floating-action-buttons {
+                bottom: 1rem;
+                padding: 0.6rem 1rem;
+                min-width: auto;
+                width: 90%;
             }
             
-            .design-buttons {
+            .floating-btn {
+                min-width: 110px;
+                padding: 0.5rem 1.25rem;
+                font-size: 0.85rem;
+            }
+            
+            .editor-toolbar {
+                overflow-x: auto;
+                padding: 0.375rem;
+            }
+            
+            .toolbar-group {
+                flex-shrink: 0;
+            }
+            
+            .text-area {
+                font-size: 1rem;
+                min-height: 150px;
+            }
+            
+            .toolbar {
                 flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
             }
             
-            .design-btn {
-                min-width: 100%;
-            }
-            
-            .media-options {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .action-buttons {
-                grid-template-columns: 1fr;
-            }
-            
-            .confirmation-buttons {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-header h2 {
-                font-size: 1.4rem;
-            }
-            
-            .post-form {
-                padding: 1.5rem;
+            .toolbar-buttons {
+                width: 100%;
+                justify-content: space-between;
             }
         }
 
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-                max-width: 800px;
-            }
-            
-            .preview-section {
-                position: static;
-                margin-top: 2rem;
-            }
-        }
-
-        /* ===== ESTILOS ESPECÍFICOS PARA TABLETS ===== */
-        @media (min-width: 481px) and (max-width: 768px) {
-            .design-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .font-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .preview-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        /* ===== ESTILOS ESPECÍFICOS PARA MÓVILES ===== */
         @media (max-width: 480px) {
-            .design-grid {
+            .floating-action-buttons {
+                bottom: 0.75rem;
+                padding: 0.5rem 0.75rem;
+                width: 95%;
+            }
+            
+            .floating-btn {
+                min-width: 100px;
+                padding: 0.45rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .editor-toolbar {
+                gap: 0.125rem;
+            }
+            
+            .toolbar-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            
+            .font-selector, .size-selector {
+                height: 28px;
+                font-size: 0.8rem;
+                padding: 0 0.375rem;
+            }
+            
+            .toolbar-btn-large {
+                padding: 0.375rem 0.5rem;
+                font-size: 0.8125rem;
+            }
+            
+            .media-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .font-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .preview-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .media-options {
-                grid-template-columns: 1fr;
-            }
-            
-            .post-type-options {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .form-header {
-                padding: 1.5rem;
-            }
-            
-            .author-info {
-                flex-direction: column;
-                text-align: center;
-                padding: 1rem;
-            }
-            
-            .author-avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 1.4rem;
             }
         }
 
-        /* ===== ESTILOS PARA COMPUTADORAS GRANDES ===== */
-        @media (min-width: 1200px) {
-            .main-content {
-                max-width: 1300px;
-                grid-template-columns: 1.5fr 1fr;
-            }
-            
-            .preview-section {
-                max-height: calc(100vh - 120px);
-                overflow-y: auto;
-            }
+        /* ===== ESTILOS ESPECÍFICOS PARA EL EDITOR ===== */
+        .editor-container {
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        #postContent[contenteditable="true"] {
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            background: white;
+            outline: none;
+        }
+
+        #postContent[contenteditable="true"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 196, 255, 0.1);
+        }
+
+        #postContent[contenteditable="true"]:empty:before {
+            content: attr(placeholder);
+            color: var(--gray-600);
+            pointer-events: none;
+        }
+
+        /* ===== ESTILOS PARA BOTONES ===== */
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        /* ===== MEJORAS PARA EL FORMULARIO ===== */
+        .post-form {
+            /* Se eliminó el formulario para evitar el envío accidental */
+        }
+
+        .text-area {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: inherit;
         }
     </style>
 </head>
@@ -964,7 +953,7 @@
             <i class="fas fa-book-open"></i>
             Crear Publicación
         </div>
-        <div style="width: 44px;"></div>
+        <div style="width: 40px;"></div>
     </div>
 
     <!-- ===== CONTENIDO PRINCIPAL ===== -->
@@ -972,254 +961,262 @@
         <!-- Formulario de publicación -->
         <div class="post-form-container">
             <div class="form-header">
-                <h2><i class="fas fa-book-open"></i> Libro Digital NeoStudy</h2>
-                <p>Comparte tus logros, conocimientos y experiencias educativas</p>
+                <i class="fas fa-pencil-alt" style="color: var(--primary);"></i>
+                <h2>Crear publicación</h2>
             </div>
             
-            <form class="post-form" id="postForm">
+            <!-- Se eliminó el formulario <form> para evitar envíos accidentales -->
+            <div id="postContainer">
                 <!-- Información del autor -->
                 <div class="author-info">
                     <div class="author-avatar" id="authorAvatar">U</div>
                     <div class="author-details">
-                        <h3 id="authorName">Usuario</h3>
-                        <p id="authorTitle">Estudiante</p>
+                        <h3 id="authorName">Usuario NeoStudy</h3>
+                        <p id="authorTitle">Compartiendo conocimiento</p>
                     </div>
                 </div>
 
-                <!-- Contenido de la publicación -->
+                <!-- Editor de publicación con barra de herramientas -->
                 <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-edit"></i>
-                        ¿Qué quieres compartir?
-                    </label>
-                    <textarea class="text-area" id="postContent" 
-                              placeholder="Escribe aquí tu publicación. Puedes compartir logros, preguntas, material de estudio o experiencias educativas..."
-                              required></textarea>
-                </div>
-
-                <!-- Botones de diseño -->
-                <div class="design-buttons">
-                    <button type="button" class="design-btn" onclick="openDesignModal()">
-                        <i class="fas fa-palette"></i>
-                        Estilos
-                    </button>
-                    <button type="button" class="design-btn" onclick="openFontModal()">
-                        <i class="fas fa-font"></i>
-                        Tipos de letra
-                    </button>
-                </div>
-
-                <!-- Sección de medios -->
-                <div class="media-section">
-                    <label class="form-label">
-                        <i class="fas fa-paperclip"></i>
-                        Añadir archivos (opcional)
-                    </label>
-                    <p style="color: var(--secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-                        Selecciona imágenes, videos o documentos desde tu dispositivo
-                    </p>
-                    
-                    <div class="media-options">
-                        <div class="media-option">
-                            <i class="fas fa-image"></i>
-                            <span>Imágenes</span>
-                            <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(event)" multiple>
+                    <!-- Barra de herramientas estilo Word -->
+                    <div class="editor-toolbar">
+                        <!-- Grupo Fuente -->
+                        <div class="toolbar-group">
+                            <select class="font-selector" id="fontSelector">
+                                <option value="Arial, sans-serif">Arial</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                                <option value="Georgia, serif">Georgia</option>
+                                <option value="Verdana, sans-serif">Verdana</option>
+                                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            </select>
+                            
+                            <select class="size-selector" id="sizeSelector">
+                                <option value="1">8px</option>
+                                <option value="2">10px</option>
+                                <option value="3">12px</option>
+                                <option value="4">14px</option>
+                                <option value="5" selected>16px</option>
+                                <option value="6">18px</option>
+                                <option value="7">24px</option>
+                            </select>
                         </div>
-                        <div class="media-option">
-                            <i class="fas fa-video"></i>
-                            <span>Videos</span>
-                            <input type="file" id="videoInput" accept="video/*" onchange="handleVideoUpload(event)">
-                        </div>
-                        <div class="media-option">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Documentos</span>
-                            <input type="file" id="documentInput" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx" onchange="handleDocumentUpload(event)" multiple>
-                        </div>
-                    </div>
-
-                    <div class="media-preview" id="mediaPreview">
-                        <!-- Vista previa de medios aparecerá aquí -->
-                    </div>
-                </div>
-
-                <!-- ===== SECCIÓN PARA ADMINISTRADOR ===== -->
-                <div class="admin-section">
-                    <div class="admin-toggle" onclick="toggleAdminSection()">
-                        <i class="fas fa-user-shield"></i>
-                        <strong>Modo Administrador</strong>
-                        <i class="fas fa-chevron-down" id="adminArrow"></i>
-                    </div>
-                    
-                    <div class="admin-content" id="adminContent">
-                        <p style="color: var(--secondary); margin-bottom: 1rem; font-size: 0.9rem;">
-                            Crear publicaciones institucionales para la comunidad
-                        </p>
                         
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-tag"></i>
-                                Tipo de publicación
-                            </label>
-                            <div class="post-type-options">
-                                <div class="type-option" data-type="normal" onclick="selectPostType('normal')">
-                                    Normal
-                                </div>
-                                <div class="type-option" data-type="scholarship" onclick="selectPostType('scholarship')">
-                                    Beca
-                                </div>
-                                <div class="type-option" data-type="announcement" onclick="selectPostType('announcement')">
-                                    Anuncio
-                                </div>
-                                <div class="type-option" data-type="event" onclick="selectPostType('event')">
-                                    Evento
+                        <div class="separator"></div>
+                        
+                        <!-- Grupo Formato de texto -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" id="boldBtn" title="Negrita (Ctrl+B)">
+                                <strong>B</strong>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="italicBtn" title="Cursiva (Ctrl+I)">
+                                <i>I</i>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="underlineBtn" title="Subrayado (Ctrl+U)">
+                                <u>U</u>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="strikeBtn" title="Tachado">
+                                <s>S</s>
+                            </button>
+                        </div>
+                        
+                        <div class="separator"></div>
+                        
+                        <!-- Grupo Color -->
+                        <div class="toolbar-group">
+                            <div class="color-picker-container">
+                                <button type="button" class="toolbar-btn color-btn" id="colorBtn" title="Color del texto">
+                                    <div class="color-preview" style="background: var(--dark);">
+                                        <i class="fas fa-font" style="color: white; font-size: 0.8rem;"></i>
+                                    </div>
+                                </button>
+                                <div class="color-picker" id="colorPicker">
+                                    <div class="color-option" style="background: #000000;" data-color="#000000"></div>
+                                    <div class="color-option" style="background: #333333;" data-color="#333333"></div>
+                                    <div class="color-option" style="background: #666666;" data-color="#666666"></div>
+                                    <div class="color-option" style="background: #999999;" data-color="#999999"></div>
+                                    <div class="color-option" style="background: #CCCCCC;" data-color="#CCCCCC"></div>
+                                    <div class="color-option" style="background: #FF0000;" data-color="#FF0000"></div>
+                                    <div class="color-option" style="background: #00FF00;" data-color="#00FF00"></div>
+                                    <div class="color-option" style="background: #0000FF;" data-color="#0000FF"></div>
+                                    <div class="color-option" style="background: #FFFF00;" data-color="#FFFF00"></div>
+                                    <div class="color-option" style="background: #FF00FF;" data-color="#FF00FF"></div>
+                                    <div class="color-option" style="background: #00FFFF;" data-color="#00FFFF"></div>
+                                    <div class="color-option" style="background: #FF6600;" data-color="#FF6600"></div>
+                                    <div class="color-option" style="background: #0066FF;" data-color="#0066FF"></div>
+                                    <div class="color-option" style="background: #6600FF;" data-color="#6600FF"></div>
+                                    <div class="color-option" style="background: #1877F2;" data-color="#1877F2"></div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-user-tie"></i>
-                                Autor institucional
-                            </label>
-                            <input type="text" class="text-area" id="adminAuthorName" 
-                                   placeholder="Ej: NeoStudy - Comunicaciones" 
-                                   style="min-height: auto; padding: 0.8rem;">
+                        
+                        <div class="separator"></div>
+                        
+                        <!-- Grupo Alineación -->
+                        <div class="toolbar-group">
+                            <div class="align-buttons">
+                                <button type="button" class="toolbar-btn" id="alignLeftBtn" title="Alinear a la izquierda">
+                                    <i class="fas fa-align-left"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" id="alignCenterBtn" title="Centrar">
+                                    <i class="fas fa-align-center"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" id="alignRightBtn" title="Alinear a la derecha">
+                                    <i class="fas fa-align-right"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" id="alignJustifyBtn" title="Justificar">
+                                    <i class="fas fa-align-justify"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="separator"></div>
+                        
+                        <!-- Grupo Listas -->
+                        <div class="toolbar-group">
+                            <div class="list-buttons">
+                                <button type="button" class="toolbar-btn" id="bulletListBtn" title="Lista con viñetas">
+                                    <i class="fas fa-list-ul"></i>
+                                </button>
+                                <button type="button" class="toolbar-btn" id="numberListBtn" title="Lista numerada">
+                                    <i class="fas fa-list-ol"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="separator"></div>
+                        
+                        <!-- Grupo Misceláneos -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" id="linkBtn" title="Insertar enlace">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" id="clearBtn" title="Limpiar formato">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Editor de texto -->
+                    <div class="editor-container">
+                        <div id="postContent" contenteditable="true" placeholder="¿Qué estás aprendiendo hoy?"></div>
+                    </div>
+                    
+                    <div class="character-count">
+                        <div class="post-hint">
+                            <span class="education-tag">Consejo educativo</span>
+                            Comparte tus logros, preguntas o recursos de estudio
+                        </div>
+                        <div>
+                            <span id="charCount">0</span>/5000 caracteres
                         </div>
                     </div>
                 </div>
 
-                <!-- Botones de acción -->
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-secondary" onclick="goBack()">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
-                    <button type="button" class="btn btn-primary" onclick="submitPost()">
-                        <i class="fas fa-paper-plane"></i> Publicar
-                    </button>
+                <!-- Vista previa de medios -->
+                <div class="media-preview-section" id="mediaPreviewSection" style="display: none;">
+                    <div class="media-grid" id="mediaPreview">
+                        <!-- Los medios aparecerán aquí -->
+                    </div>
                 </div>
-            </form>
-        </div>
 
-        <!-- Preview de publicación -->
-        <div class="preview-section">
-            <div class="preview-header">
-                <div class="preview-avatar" id="previewAvatar">U</div>
-                <div class="preview-author">
-                    <h4 id="previewAuthor">Usuario</h4>
-                    <p id="previewTitle">Estudiante</p>
-                </div>
-            </div>
-            <h3 style="margin-bottom: 1rem; color: var(--dark);">
-                <i class="fas fa-eye"></i> Vista Previa
-            </h3>
-            <div class="preview-card" id="postPreview">
-                <div class="preview-content" id="previewContent">
-                    Tu publicación aparecerá aquí...
-                </div>
-                <div class="preview-media-container" id="previewMedia">
-                    <!-- Media aparecerá aquí -->
-                </div>
-                <div class="preview-timestamp" id="previewTimestamp">
-                    Ahora mismo
+                <!-- Barra de herramientas de medios -->
+                <div class="toolbar">
+                    <div class="toolbar-title">Añadir a tu publicación</div>
+                    <div class="toolbar-buttons">
+                        <button type="button" class="toolbar-btn-large" onclick="document.getElementById('imageInput').click()">
+                            <i class="fas fa-image" style="color: #45BD62;"></i>
+                            <span>Foto</span>
+                        </button>
+                        <button type="button" class="toolbar-btn-large" onclick="document.getElementById('videoInput').click()">
+                            <i class="fas fa-video" style="color: #F5533D;"></i>
+                            <span>Video</span>
+                        </button>
+                        <button type="button" class="toolbar-btn-large" onclick="document.getElementById('documentInput').click()">
+                            <i class="fas fa-file-alt" style="color: #FF9500;"></i>
+                            <span>Documento</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ===== MODAL DE ESTILOS ===== -->
-    <div class="design-modal" id="designModal">
-        <div class="design-modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-palette"></i> Estilos de publicación</h3>
-                <button class="close-modal" onclick="closeDesignModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+        <!-- ===== SECCIÓN PARA ADMINISTRADOR ===== -->
+        <div class="admin-section" id="adminSection" style="display: none;">
+            <div class="admin-header" onclick="toggleAdminSection()">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-user-shield" style="color: var(--primary);"></i>
+                    <strong>Modo Administrador</strong>
+                </div>
+                <i class="fas fa-chevron-down" id="adminArrow"></i>
             </div>
-            <div class="modal-body">
-                <p style="color: var(--secondary); margin-bottom: 1rem;">
-                    Selecciona un estilo para tu publicación
+            
+            <div class="admin-content" id="adminContent">
+                <p style="color: var(--gray-600); margin-bottom: 1rem; font-size: 0.875rem;">
+                    Crear publicaciones institucionales para la comunidad educativa
                 </p>
-                <div class="design-grid">
-                    <div class="design-option active" onclick="selectDesign('classic')" data-design="classic">
-                        <div class="design-preview" style="background: linear-gradient(135deg, #ffffff, #f8f9fa)"></div>
-                        <span>Clásico</span>
+                
+                <div class="form-group" style="padding: 0; border: none;">
+                    <label style="display: block; margin-bottom: 0.75rem; font-weight: 500; color: var(--dark);">
+                        Tipo de publicación
+                    </label>
+                    <div class="admin-options">
+                        <button type="button" class="admin-option active" data-type="normal" onclick="selectPostType('normal')">
+                            Normal
+                        </button>
+                        <button type="button" class="admin-option" data-type="scholarship" onclick="selectPostType('scholarship')">
+                            Beca
+                        </button>
+                        <button type="button" class="admin-option" data-type="announcement" onclick="selectPostType('announcement')">
+                            Anuncio
+                        </button>
+                        <button type="button" class="admin-option" data-type="event" onclick="selectPostType('event')">
+                            Evento
+                        </button>
                     </div>
-                    <div class="design-option" onclick="selectDesign('gradient')" data-design="gradient">
-                        <div class="design-preview" style="background: linear-gradient(135deg, #00C4FF, #007bff)"></div>
-                        <span>Gradiente</span>
-                    </div>
-                    <div class="design-option" onclick="selectDesign('light')" data-design="light">
-                        <div class="design-preview" style="background: linear-gradient(135deg, #f8fafc, #e2e8f0)"></div>
-                        <span>Ligero</span>
-                    </div>
-                    <div class="design-option" onclick="selectDesign('dark')" data-design="dark">
-                        <div class="design-preview" style="background: linear-gradient(135deg, #1e293b, #334155)"></div>
-                        <span>Oscuro</span>
-                    </div>
-                    <div class="design-option" onclick="selectDesign('book')" data-design="book">
-                        <div class="design-preview" style="background: linear-gradient(135deg, #667eea, #764ba2)"></div>
-                        <span>Libro</span>
-                    </div>
-                    <div class="design-option" onclick="selectDesign('paper')" data-design="paper">
-                        <div class="design-preview" style="background: linear-gradient(135deg, #f5f5dc, #f0e6d2)"></div>
-                        <span>Papel</span>
-                    </div>
+                </div>
+
+                <div class="form-group" style="padding: 0; border: none; margin-top: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--dark);">
+                        Autor institucional
+                    </label>
+                    <input type="text" class="text-area" id="adminAuthorName" 
+                           placeholder="Ej: NeoStudy - Departamento de Educación" 
+                           style="min-height: auto; padding: 0.5rem; font-size: 0.875rem; border: 1px solid var(--gray-200);">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== MODAL DE FUENTES ===== -->
-    <div class="design-modal" id="fontModal">
-        <div class="design-modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-font"></i> Tipos de letra</h3>
-                <button class="close-modal" onclick="closeFontModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p style="color: var(--secondary); margin-bottom: 1rem;">
-                    Selecciona una fuente para tu texto
-                </p>
-                <div class="font-grid">
-                    <div class="font-option active" onclick="selectFont('poppins')" style="font-family: 'Poppins', sans-serif;">
-                        Poppins
-                    </div>
-                    <div class="font-option" onclick="selectFont('roboto')" style="font-family: 'Roboto', sans-serif;">
-                        Roboto
-                    </div>
-                    <div class="font-option" onclick="selectFont('montserrat')" style="font-family: 'Montserrat', sans-serif;">
-                        Montserrat
-                    </div>
-                    <div class="font-option" onclick="selectFont('opensans')" style="font-family: 'Open Sans', sans-serif;">
-                        Open Sans
-                    </div>
-                    <div class="font-option" onclick="selectFont('monospace')" style="font-family: 'Courier New', monospace;">
-                        Monospace
-                    </div>
-                    <div class="font-option" onclick="selectFont('cursive')" style="font-family: 'Brush Script MT', cursive;">
-                        Cursiva
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Botones flotantes animados -->
+    <div class="floating-action-buttons" id="floatingButtons">
+        <button class="floating-btn floating-btn-cancel" onclick="goBack()">
+            <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button class="floating-btn floating-btn-publish pulse-animation" onclick="submitPost()">
+            <i class="fas fa-paper-plane"></i> Publicar
+        </button>
     </div>
+
+    <!-- Inputs de archivo ocultos -->
+    <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(event)" multiple style="display: none;">
+    <input type="file" id="videoInput" accept="video/*" onchange="handleVideoUpload(event)" style="display: none;">
+    <input type="file" id="documentInput" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx" onchange="handleDocumentUpload(event)" multiple style="display: none;">
 
     <!-- ===== MODAL DE CONFIRMACIÓN ===== -->
     <div class="confirmation-modal" id="confirmationModal">
         <div class="confirmation-content">
-            <i class="fas fa-check-circle" style="font-size: 3.5rem; color: var(--success); margin-bottom: 1rem;"></i>
-            <h2 style="margin-bottom: 0.8rem;">¡Publicación creada! 🎉</h2>
-            <p style="color: var(--secondary); margin-bottom: 1.5rem;">
-                Tu publicación ha sido guardada exitosamente y aparecerá en el feed principal.
+            <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--success); margin-bottom: 1rem;"></i>
+            <h2 style="margin-bottom: 0.5rem; font-size: 1.25rem;">¡Publicación creada!</h2>
+            <p style="color: var(--gray-600); margin-bottom: 1.5rem; font-size: 0.875rem;">
+                Tu contenido educativo ha sido compartido con la comunidad.
             </p>
             <div class="confirmation-buttons">
                 <button class="btn btn-secondary" onclick="closeConfirmation()">
-                    <i class="fas fa-edit"></i> Crear otra
+                    Crear otra
                 </button>
-                <button class="btn btn-success" onclick="goToFeed()">
-                    <i class="fas fa-home"></i> Ver en el feed
+                <button class="btn btn-primary" onclick="goToFeed()">
+                    Ver en el feed
                 </button>
             </div>
         </div>
@@ -1229,18 +1226,276 @@
         // ===== VARIABLES GLOBALES =====
         let selectedMedia = [];
         let selectedPostType = 'normal';
-        let selectedFont = 'poppins';
-        let selectedDesign = 'classic';
         let isAdminMode = false;
         let currentUserId = '';
+        let currentColor = '#000000';
+        let isColorPickerOpen = false;
 
         // ===== INICIALIZACIÓN =====
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
             setupEventListeners();
             checkAdminAccess();
-            setupPreviewUpdates();
+            setupFormattingToolbar();
         });
+
+        // ===== CONFIGURAR BARRA DE HERRAMIENTAS COMPLETA =====
+        function setupFormattingToolbar() {
+            const editor = document.getElementById('postContent');
+            
+            // Configurar atajos de teclado
+            editor.addEventListener('keydown', function(e) {
+                // Ctrl+B para negrita
+                if (e.ctrlKey && e.key === 'b') {
+                    e.preventDefault();
+                    toggleBold();
+                }
+                // Ctrl+I para cursiva
+                if (e.ctrlKey && e.key === 'i') {
+                    e.preventDefault();
+                    toggleItalic();
+                }
+                // Ctrl+U para subrayado
+                if (e.ctrlKey && e.key === 'u') {
+                    e.preventDefault();
+                    toggleUnderline();
+                }
+                
+                // Ctrl+Enter para publicar
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    submitPost();
+                }
+            });
+            
+            // Actualizar estado de botones cuando se selecciona texto
+            editor.addEventListener('mouseup', updateToolbarButtons);
+            editor.addEventListener('keyup', updateToolbarButtons);
+            editor.addEventListener('input', updateToolbarButtons);
+            editor.addEventListener('input', updateCharacterCount);
+            
+            // Botones de formato
+            document.getElementById('boldBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleBold();
+            });
+            
+            document.getElementById('italicBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleItalic();
+            });
+            
+            document.getElementById('underlineBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleUnderline();
+            });
+            
+            document.getElementById('strikeBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleStrike();
+            });
+            
+            // Botones de alineación
+            document.getElementById('alignLeftBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                setAlignment('left');
+            });
+            
+            document.getElementById('alignCenterBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                setAlignment('center');
+            });
+            
+            document.getElementById('alignRightBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                setAlignment('right');
+            });
+            
+            document.getElementById('alignJustifyBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                setAlignment('justify');
+            });
+            
+            // Botones de listas
+            document.getElementById('bulletListBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleList('UL');
+            });
+            
+            document.getElementById('numberListBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleList('OL');
+            });
+            
+            // Selectores de fuente y tamaño
+            document.getElementById('fontSelector').addEventListener('change', function(e) {
+                e.preventDefault();
+                document.execCommand('fontName', false, this.value);
+            });
+            
+            document.getElementById('sizeSelector').addEventListener('change', function(e) {
+                e.preventDefault();
+                document.execCommand('fontSize', false, this.value);
+            });
+            
+            // Botón de color
+            document.getElementById('colorBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                isColorPickerOpen = !isColorPickerOpen;
+                document.getElementById('colorPicker').classList.toggle('show', isColorPickerOpen);
+            });
+            
+            // Selector de color
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentColor = this.getAttribute('data-color');
+                    document.execCommand('foreColor', false, currentColor);
+                    
+                    // Actualizar visual del botón de color
+                    const colorPreview = document.querySelector('.color-preview');
+                    colorPreview.style.background = currentColor;
+                    
+                    // Cerrar selector de color
+                    isColorPickerOpen = false;
+                    document.getElementById('colorPicker').classList.remove('show');
+                });
+            });
+            
+            // Botón de enlace
+            document.getElementById('linkBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                insertLink();
+            });
+            
+            // Botón de limpiar formato
+            document.getElementById('clearBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                clearFormatting();
+            });
+            
+            // Cerrar selector de color al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.color-picker-container')) {
+                    isColorPickerOpen = false;
+                    document.getElementById('colorPicker').classList.remove('show');
+                }
+            });
+            
+            // Inicializar contador de caracteres
+            updateCharacterCount();
+        }
+        
+        // ===== FUNCIONES DE FORMATO =====
+        function toggleBold() {
+            document.execCommand('bold');
+            updateToolbarButtons();
+        }
+        
+        function toggleItalic() {
+            document.execCommand('italic');
+            updateToolbarButtons();
+        }
+        
+        function toggleUnderline() {
+            document.execCommand('underline');
+            updateToolbarButtons();
+        }
+        
+        function toggleStrike() {
+            document.execCommand('strikeThrough');
+            updateToolbarButtons();
+        }
+        
+        function setAlignment(align) {
+            document.execCommand('justify' + align.charAt(0).toUpperCase() + align.slice(1));
+            updateToolbarButtons();
+        }
+        
+        function toggleList(type) {
+            document.execCommand('insert' + (type === 'UL' ? 'Unordered' : 'Ordered') + 'List');
+            updateToolbarButtons();
+        }
+        
+        function insertLink() {
+            const url = prompt('Ingresa la URL del enlace:', 'https://');
+            if (url) {
+                document.execCommand('createLink', false, url);
+            }
+        }
+        
+        function clearFormatting() {
+            document.execCommand('removeFormat');
+            document.execCommand('unlink');
+            updateToolbarButtons();
+        }
+        
+        function updateToolbarButtons() {
+            const editor = document.getElementById('postContent');
+            const selection = window.getSelection();
+            
+            if (!selection.rangeCount) return;
+            
+            try {
+                // Verificar comandos de formato
+                document.getElementById('boldBtn').classList.toggle('active', document.queryCommandState('bold'));
+                document.getElementById('italicBtn').classList.toggle('active', document.queryCommandState('italic'));
+                document.getElementById('underlineBtn').classList.toggle('active', document.queryCommandState('underline'));
+                document.getElementById('strikeBtn').classList.toggle('active', document.queryCommandState('strikeThrough'));
+                
+                // Verificar alineación
+                const alignLeft = document.queryCommandState('justifyLeft');
+                const alignCenter = document.queryCommandState('justifyCenter');
+                const alignRight = document.queryCommandState('justifyRight');
+                const alignJustify = document.queryCommandState('justifyFull');
+                
+                document.getElementById('alignLeftBtn').classList.toggle('active', alignLeft);
+                document.getElementById('alignCenterBtn').classList.toggle('active', alignCenter);
+                document.getElementById('alignRightBtn').classList.toggle('active', alignRight);
+                document.getElementById('alignJustifyBtn').classList.toggle('active', alignJustify);
+                
+                // Verificar listas
+                const inUnorderedList = document.queryCommandState('insertUnorderedList');
+                const inOrderedList = document.queryCommandState('insertOrderedList');
+                
+                document.getElementById('bulletListBtn').classList.toggle('active', inUnorderedList);
+                document.getElementById('numberListBtn').classList.toggle('active', inOrderedList);
+                
+            } catch (e) {
+                console.error('Error al actualizar botones:', e);
+            }
+        }
+        
+        function updateCharacterCount() {
+            const editor = document.getElementById('postContent');
+            const text = editor.textContent || editor.innerText;
+            const charCount = text.length;
+            
+            document.getElementById('charCount').textContent = charCount;
+            
+            if (charCount > 5000) {
+                // Truncar texto si excede el límite
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                
+                if (range.startOffset >= 5000) {
+                    editor.textContent = text.substring(0, 5000);
+                    // Restaurar cursor al final
+                    const newRange = document.createRange();
+                    newRange.selectNodeContents(editor);
+                    newRange.collapse(false);
+                    selection.removeAllRanges();
+                    selection.addRange(newRange);
+                }
+                
+                document.getElementById('charCount').style.color = 'var(--danger)';
+            } else if (charCount > 4500) {
+                document.getElementById('charCount').style.color = 'var(--warning)';
+            } else {
+                document.getElementById('charCount').style.color = 'var(--gray-600)';
+            }
+        }
 
         // ===== CARGAR DATOS DEL USUARIO =====
         function loadUserData() {
@@ -1254,53 +1509,41 @@
                     let nombreCompleto = '';
                     let titulo = '';
                     let categoria = userData.categoria || '';
-                    let primerNombre = '';
                     
                     if (categoria === 'profesional') {
                         nombreCompleto = userData.prof_nombre || 'Profesional';
                         titulo = userData.prof_profesion || 'Profesional';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Profesional';
                     } 
                     else if (categoria === 'universitario') {
                         nombreCompleto = userData.uni_nombre || 'Estudiante Universitario';
                         titulo = userData.uni_carrera || 'Estudiante';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
                     }
                     else if (categoria === 'secundaria') {
                         nombreCompleto = userData.sec_nombre || 'Estudiante de Secundaria';
                         titulo = userData.sec_grado || 'Estudiante';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Estudiante';
                     }
                     else if (categoria === 'general') {
                         nombreCompleto = userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Usuario General';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                     }
                     else {
                         nombreCompleto = userData.prof_nombre || userData.uni_nombre || 
                                        userData.sec_nombre || userData.gen_nombre || 'Usuario NeoStudy';
                         titulo = 'Estudiante';
-                        primerNombre = nombreCompleto.split(' ')[0] || 'Usuario';
                     }
                     
                     // Actualizar interfaz
                     document.getElementById('authorName').textContent = nombreCompleto;
                     document.getElementById('authorTitle').textContent = titulo;
-                    document.getElementById('previewAuthor').textContent = nombreCompleto;
-                    document.getElementById('previewTitle').textContent = titulo;
                     
                     const avatar = document.getElementById('authorAvatar');
-                    const previewAvatar = document.getElementById('previewAvatar');
                     const initials = nombreCompleto.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
                     
                     if (profileData.profilePhoto && profileData.profilePhoto.startsWith('data:image')) {
                         avatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
-                        previewAvatar.style.backgroundImage = `url(${profileData.profilePhoto})`;
                         avatar.textContent = '';
-                        previewAvatar.textContent = '';
                     } else {
                         avatar.textContent = initials;
-                        previewAvatar.textContent = initials;
                     }
                 }
             } catch (error) {
@@ -1310,189 +1553,28 @@
 
         // ===== CONFIGURAR EVENT LISTENERS =====
         function setupEventListeners() {
-            // Seleccionar tipo de publicación por defecto
-            selectPostType('normal');
+            const editor = document.getElementById('postContent');
             
-            // Permitir Ctrl+Enter para publicar
-            document.getElementById('postContent').addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.key === 'Enter') {
-                    submitPost();
-                }
+            // Auto-expandir editor
+            editor.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
             });
-            
-            // Cerrar modales con ESC
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeDesignModal();
-                    closeFontModal();
-                }
-            });
-        }
-
-        // ===== SETUP PREVIEW UPDATES =====
-        function setupPreviewUpdates() {
-            const contentTextarea = document.getElementById('postContent');
-            contentTextarea.addEventListener('input', updatePreview);
-        }
-
-        function updatePreview() {
-            const content = document.getElementById('postContent').value;
-            const previewContent = document.getElementById('previewContent');
-            const previewCard = document.getElementById('postPreview');
-            
-            if (content.trim()) {
-                previewContent.textContent = content;
-                previewContent.style.fontFamily = getFontFamily(selectedFont);
-                
-                const designColors = getDesignColors(selectedDesign);
-                previewContent.style.backgroundColor = designColors.bg;
-                previewContent.style.color = designColors.text;
-                previewContent.style.border = designColors.border;
-                previewCard.style.background = designColors.cardBg;
-                
-            } else {
-                previewContent.textContent = 'Tu publicación aparecerá aquí...';
-                previewContent.style.fontFamily = 'inherit';
-                previewContent.style.backgroundColor = '#f8f9fa';
-                previewContent.style.color = '#6c757d';
-                previewContent.style.border = 'none';
-                previewCard.style.background = 'white';
-            }
-            
-            // Actualizar media preview
-            updateMediaPreview();
-            
-            // Actualizar timestamp
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('es-ES', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            document.getElementById('previewTimestamp').textContent = `Hoy a las ${timeString}`;
-        }
-
-        // ===== MODALES DE DISEÑO =====
-        function openDesignModal() {
-            document.getElementById('designModal').style.display = 'flex';
-        }
-
-        function closeDesignModal() {
-            document.getElementById('designModal').style.display = 'none';
-        }
-
-        function openFontModal() {
-            document.getElementById('fontModal').style.display = 'flex';
-        }
-
-        function closeFontModal() {
-            document.getElementById('fontModal').style.display = 'none';
-        }
-
-        // ===== SELECCIÓN DE DISEÑO Y FUENTE =====
-        function selectDesign(design) {
-            selectedDesign = design;
-            
-            // Actualizar botones activos
-            document.querySelectorAll('.design-option').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.closest('.design-option').classList.add('active');
-            
-            // Actualizar preview
-            updatePreview();
-            
-            // Cerrar modal después de seleccionar
-            setTimeout(closeDesignModal, 300);
-        }
-
-        function selectFont(font) {
-            selectedFont = font;
-            
-            // Actualizar botones activos
-            document.querySelectorAll('.font-option').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Actualizar preview
-            updatePreview();
-            
-            // Cerrar modal después de seleccionar
-            setTimeout(closeFontModal, 300);
-        }
-
-        function getFontFamily(font) {
-            switch(font) {
-                case 'poppins': return "'Poppins', sans-serif";
-                case 'roboto': return "'Roboto', sans-serif";
-                case 'montserrat': return "'Montserrat', sans-serif";
-                case 'opensans': return "'Open Sans', sans-serif";
-                case 'monospace': return "'Courier New', monospace";
-                case 'cursive': return "'Brush Script MT', cursive";
-                default: return "'Poppins', sans-serif";
-            }
-        }
-
-        function getDesignColors(design) {
-            switch(design) {
-                case 'gradient':
-                    return {
-                        bg: 'linear-gradient(135deg, #00C4FF10, #007bff10)',
-                        text: '#1e293b',
-                        border: '2px solid rgba(0, 196, 255, 0.2)',
-                        cardBg: '#ffffff'
-                    };
-                case 'light':
-                    return {
-                        bg: '#f8fafc',
-                        text: '#1e293b',
-                        border: '2px solid #e2e8f0',
-                        cardBg: '#ffffff'
-                    };
-                case 'dark':
-                    return {
-                        bg: '#1e293b',
-                        text: '#ffffff',
-                        border: '2px solid #334155',
-                        cardBg: '#0f172a'
-                    };
-                case 'book':
-                    return {
-                        bg: 'linear-gradient(135deg, #667eea10, #764ba210)',
-                        text: '#1e293b',
-                        border: '2px solid rgba(102, 126, 234, 0.2)',
-                        cardBg: '#ffffff'
-                    };
-                case 'paper':
-                    return {
-                        bg: '#f5f5dc',
-                        text: '#3c2f2f',
-                        border: '1px solid #d4b483',
-                        cardBg: '#f0e6d2'
-                    };
-                default: // classic
-                    return {
-                        bg: '#ffffff',
-                        text: '#1e293b',
-                        border: '2px solid #e2e8f0',
-                        cardBg: '#ffffff'
-                    };
-            }
         }
 
         // ===== MANEJO DE MEDIOS =====
         function handleImageUpload(event) {
             const files = Array.from(event.target.files);
-            const preview = document.getElementById('mediaPreview');
+            const maxFiles = 10;
+            
+            if (selectedMedia.length + files.length > maxFiles) {
+                showNotification(`Máximo ${maxFiles} archivos permitidos`, 'warning');
+                return;
+            }
             
             files.forEach((file, index) => {
                 if (file.size > 10 * 1024 * 1024) {
-                    showNotification('La imagen ' + file.name + ' es demasiado grande (máximo 10MB)', 'warning');
-                    return;
-                }
-                
-                if (!file.type.startsWith('image/')) {
-                    showNotification('El archivo ' + file.name + ' no es una imagen válida', 'warning');
+                    showNotification(`${file.name} es muy grande (máximo 10MB)`, 'warning');
                     return;
                 }
                 
@@ -1504,12 +1586,11 @@
                         file: file,
                         url: e.target.result,
                         name: file.name,
-                        size: formatFileSize(file.size),
-                        preview: e.target.result
+                        size: formatFileSize(file.size)
                     };
                     
                     selectedMedia.push(media);
-                    showMediaPreview();
+                    updateMediaPreview();
                     
                     if (index === files.length - 1) {
                         showNotification(`${files.length} imagen(es) cargada(s)`, 'success');
@@ -1527,36 +1608,26 @@
             if (!file) return;
             
             if (file.size > 50 * 1024 * 1024) {
-                showNotification('El video es demasiado grande (máximo 50MB)', 'warning');
+                showNotification('El video es muy grande (máximo 50MB)', 'warning');
                 event.target.value = '';
                 return;
             }
             
-            if (!file.type.startsWith('video/')) {
-                showNotification('El archivo no es un video válido', 'warning');
-                event.target.value = '';
-                return;
-            }
-            
-            // CORRECCIÓN: Para videos, NO usar FileReader porque puede causar errores con archivos grandes
-            // En su lugar, guardamos información del archivo pero NO el contenido completo
             const media = {
                 id: Date.now(),
                 type: 'video',
                 file: file,
-                url: URL.createObjectURL(file), // Usar object URL para preview
+                url: URL.createObjectURL(file),
                 name: file.name,
-                size: formatFileSize(file.size),
-                preview: 'video' // Indicador especial para video
+                size: formatFileSize(file.size)
             };
             
-            // Limitar a 1 video por publicación
+            // Limitar a 1 video
             selectedMedia = selectedMedia.filter(m => m.type !== 'video');
             selectedMedia.push(media);
             
-            showMediaPreview();
-            showNotification('Video cargado correctamente', 'success');
-            
+            updateMediaPreview();
+            showNotification('Video cargado', 'success');
             event.target.value = '';
         }
 
@@ -1568,12 +1639,12 @@
                 const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
                 
                 if (!allowedTypes.includes(fileExtension)) {
-                    showNotification('Tipo de archivo no permitido: ' + file.name, 'warning');
+                    showNotification(`${file.name} no es un documento válido`, 'warning');
                     return;
                 }
                 
                 if (file.size > 25 * 1024 * 1024) {
-                    showNotification('El documento ' + file.name + ' es demasiado grande (máximo 25MB)', 'warning');
+                    showNotification(`${file.name} es muy grande (máximo 25MB)`, 'warning');
                     return;
                 }
                 
@@ -1590,7 +1661,7 @@
                     };
                     
                     selectedMedia.push(media);
-                    showMediaPreview();
+                    updateMediaPreview();
                     
                     if (index === files.length - 1) {
                         showNotification(`${files.length} documento(s) cargado(s)`, 'success');
@@ -1617,132 +1688,69 @@
             }
         }
 
-        function showMediaPreview() {
+        function updateMediaPreview() {
+            const previewSection = document.getElementById('mediaPreviewSection');
             const preview = document.getElementById('mediaPreview');
             
             if (selectedMedia.length === 0) {
-                preview.innerHTML = '<p style="color: var(--secondary); text-align: center; padding: 1rem;">No hay archivos seleccionados</p>';
+                previewSection.style.display = 'none';
                 return;
             }
             
-            let previewHTML = '<div class="preview-grid">';
-            
-            selectedMedia.forEach((media, index) => {
-                if (media.type === 'image') {
-                    previewHTML += `
-                        <div class="preview-item">
-                            <img src="${media.preview}" class="preview-image" alt="${media.name}">
-                            <button class="remove-media-btn" onclick="removeMedia(${index})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                }
-                else if (media.type === 'video') {
-                    previewHTML += `
-                        <div class="preview-item">
-                            <div style="width: 100%; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 8px;">
-                                <i class="fas fa-play-circle" style="font-size: 2.5rem;"></i>
-                                <div style="margin-top: 0.5rem; font-size: 0.9rem; text-align: center;">
-                                    ${media.name}<br>
-                                    <small>${media.size}</small>
-                                </div>
-                            </div>
-                            <button class="remove-media-btn" onclick="removeMedia(${index})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                }
-                else if (media.type === 'document') {
-                    previewHTML += `
-                        <div class="preview-item">
-                            <div class="preview-doc">
-                                <i class="${media.icon}"></i>
-                                <div style="overflow: hidden;">
-                                    <div style="font-weight: 500; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                        ${media.name}
-                                    </div>
-                                    <div style="color: var(--secondary); font-size: 0.8rem;">
-                                        ${media.size}
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="remove-media-btn" onclick="removeMedia(${index})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                }
-            });
-            
-            previewHTML += '</div>';
-            preview.innerHTML = previewHTML;
-            
-            // Actualizar preview en la vista previa
-            updateMediaPreview();
-        }
-
-        function updateMediaPreview() {
-            const previewMedia = document.getElementById('previewMedia');
-            
-            if (selectedMedia.length === 0) {
-                previewMedia.innerHTML = '';
-                return;
-            }
-            
+            previewSection.style.display = 'block';
             let previewHTML = '';
             
             selectedMedia.forEach((media, index) => {
                 if (media.type === 'image') {
                     previewHTML += `
-                        <div style="margin-bottom: 0.5rem; border-radius: 8px; overflow: hidden;">
-                            <img src="${media.preview}" style="width: 100%; max-height: 200px; object-fit: cover;" alt="Imagen">
+                        <div class="media-item">
+                            <img src="${media.url}" class="media-image" alt="${media.name}">
+                            <button type="button" class="remove-media-btn" onclick="removeMedia(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     `;
                 }
                 else if (media.type === 'video') {
                     previewHTML += `
-                        <div style="margin-bottom: 0.5rem; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; padding: 2rem; text-align: center; color: white;">
-                            <i class="fas fa-play-circle" style="font-size: 3rem;"></i>
-                            <div style="margin-top: 1rem;">
-                                <strong>Video cargado</strong><br>
-                                <small>${media.name}</small>
-                            </div>
+                        <div class="media-item">
+                            <video class="media-video" muted>
+                                <source src="${media.url}" type="${media.file.type}">
+                            </video>
+                            <button type="button" class="remove-media-btn" onclick="removeMedia(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     `;
                 }
                 else if (media.type === 'document') {
                     previewHTML += `
-                        <div style="margin-bottom: 0.5rem; background: var(--light); padding: 0.8rem; border-radius: 8px; display: flex; align-items: center; gap: 0.8rem;">
-                            <i class="${media.icon}" style="font-size: 1.5rem; color: var(--danger);"></i>
-                            <div style="overflow: hidden;">
-                                <div style="font-weight: 500; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    ${media.name}
-                                </div>
-                                <div style="color: var(--secondary); font-size: 0.8rem;">
-                                    ${media.size}
+                        <div class="media-item">
+                            <div class="media-doc">
+                                <i class="${media.icon}" style="font-size: 1.5rem; color: var(--danger); margin-bottom: 0.5rem;"></i>
+                                <div style="font-size: 0.7rem; text-align: center; word-break: break-all;">
+                                    ${media.name.substring(0, 10)}...
                                 </div>
                             </div>
+                            <button type="button" class="remove-media-btn" onclick="removeMedia(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     `;
                 }
             });
             
-            previewMedia.innerHTML = previewHTML;
+            preview.innerHTML = previewHTML;
         }
 
         function removeMedia(index) {
             if (index >= 0 && index < selectedMedia.length) {
-                // Liberar URL del video si existe
-                if (selectedMedia[index].type === 'video' && selectedMedia[index].url) {
-                    if (selectedMedia[index].url.startsWith('blob:')) {
-                        URL.revokeObjectURL(selectedMedia[index].url);
-                    }
+                if (selectedMedia[index].type === 'video' && selectedMedia[index].url.startsWith('blob:')) {
+                    URL.revokeObjectURL(selectedMedia[index].url);
                 }
                 
                 selectedMedia.splice(index, 1);
-                showMediaPreview();
+                updateMediaPreview();
                 showNotification('Archivo eliminado', 'info');
             }
         }
@@ -1752,7 +1760,7 @@
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
         }
 
         // ===== VERIFICAR ACCESO DE ADMINISTRADOR =====
@@ -1764,6 +1772,7 @@
             
             if (isAdmin) {
                 isAdminMode = true;
+                document.getElementById('adminSection').style.display = 'block';
             }
         }
 
@@ -1780,11 +1789,11 @@
         function selectPostType(type) {
             selectedPostType = type;
             
-            document.querySelectorAll('.type-option').forEach(btn => {
+            document.querySelectorAll('.admin-option').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            const selectedBtn = document.querySelector(`.type-option[data-type="${type}"]`);
+            const selectedBtn = document.querySelector(`.admin-option[data-type="${type}"]`);
             if (selectedBtn) {
                 selectedBtn.classList.add('active');
             }
@@ -1805,18 +1814,14 @@
             }
         }
 
-        // ===== ENVIAR PUBLICACIÓN (CORREGIDO PARA VIDEOS) =====
+        // ===== ENVIAR PUBLICACIÓN =====
         function submitPost() {
-            const content = document.getElementById('postContent').value.trim();
+            const editor = document.getElementById('postContent');
+            const content = editor.innerHTML.trim();
             
-            if (!content) {
-                showNotification('Por favor escribe el contenido de tu publicación', 'warning');
-                document.getElementById('postContent').focus();
-                return;
-            }
-            
-            if (content.length > 5000) {
-                showNotification('La publicación es demasiado larga (máximo 5000 caracteres)', 'warning');
+            if (!content || content === '<br>' || content === '<div><br></div>') {
+                showNotification('Escribe algo para compartir', 'warning');
+                editor.focus();
                 return;
             }
             
@@ -1850,15 +1855,12 @@
             
             const authorInitials = author.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
             
-            // CORRECCIÓN: Para videos, no guardar el archivo completo en localStorage
-            // Solo guardar información sobre el video
             const processedMedia = selectedMedia.map(media => {
                 if (media.type === 'video') {
                     return {
                         type: 'video',
                         name: media.name,
                         size: media.size,
-                        icon: 'fas fa-video',
                         preview: 'video'
                     };
                 } else {
@@ -1866,9 +1868,7 @@
                         type: media.type,
                         name: media.name,
                         size: media.size,
-                        url: media.url,
-                        icon: media.icon || null,
-                        preview: media.preview || null
+                        url: media.url
                     };
                 }
             });
@@ -1879,26 +1879,23 @@
                 authorInitials: authorInitials,
                 authorCategory: userCategory,
                 content: content,
+                textContent: editor.textContent,
                 media: processedMedia,
-                design: selectedDesign,
-                font: selectedFont,
                 type: selectedPostType,
                 likes: 0,
-                comments: [], // Inicializar array de comentarios vacío
+                comments: [],
                 shares: 0,
                 timestamp: new Date().toISOString(),
                 userId: currentUserId,
                 userAvatar: profileData.profilePhoto || null,
-                isAdminPost: isAdminMode && selectedPostType !== 'normal'
+                isAdminPost: isAdminMode && selectedPostType !== 'normal',
+                hasFormatting: content !== editor.textContent
             };
             
             savePostToStorage(newPost);
             document.getElementById('confirmationModal').style.display = 'flex';
             
-            // Guardar también en el historial de medios del usuario
-            saveUserMediaHistory(newPost);
-            
-            // Liberar URLs de video si existen
+            // Liberar URLs de video
             selectedMedia.forEach(media => {
                 if (media.type === 'video' && media.url && media.url.startsWith('blob:')) {
                     URL.revokeObjectURL(media.url);
@@ -1909,66 +1906,31 @@
         function savePostToStorage(post) {
             try {
                 let posts = JSON.parse(localStorage.getItem('neoStudyPosts')) || [];
-                
-                // Agregar la nueva publicación al principio del array
                 posts.unshift(post);
                 
-                // Limitar a 1000 publicaciones para no sobrecargar localStorage
                 if (posts.length > 1000) {
                     posts = posts.slice(0, 1000);
                 }
                 
                 localStorage.setItem('neoStudyPosts', JSON.stringify(posts));
                 
-                // Guardar en un archivo separado para publicaciones institucionales
                 if (post.isAdminPost) {
                     let institutionalPosts = JSON.parse(localStorage.getItem('neoStudyInstitutionalPosts')) || [];
                     institutionalPosts.unshift(post);
                     localStorage.setItem('neoStudyInstitutionalPosts', JSON.stringify(institutionalPosts));
                 }
                 
-                console.log('✅ Publicación guardada exitosamente:', post.id);
-                
             } catch (error) {
-                console.error('❌ Error guardando publicación:', error);
-                showNotification('Error al guardar la publicación', 'danger');
-            }
-        }
-
-        function saveUserMediaHistory(post) {
-            try {
-                // Guardar referencia a los medios en el historial del usuario
-                const userId = currentUserId;
-                if (!userId) return;
-                
-                let userMediaHistory = JSON.parse(localStorage.getItem(`userMedia_${userId}`)) || [];
-                
-                post.media.forEach(media => {
-                    userMediaHistory.push({
-                        postId: post.id,
-                        mediaId: media.id,
-                        type: media.type,
-                        name: media.name,
-                        timestamp: post.timestamp
-                    });
-                });
-                
-                // Limitar historial a 500 elementos
-                if (userMediaHistory.length > 500) {
-                    userMediaHistory = userMediaHistory.slice(-500);
-                }
-                
-                localStorage.setItem(`userMedia_${userId}`, JSON.stringify(userMediaHistory));
-                
-            } catch (error) {
-                console.error('Error guardando historial de medios:', error);
+                console.error('Error guardando publicación:', error);
+                showNotification('Error al guardar', 'danger');
             }
         }
 
         // ===== NAVEGACIÓN =====
         function goBack() {
-            if (document.getElementById('postContent').value.trim() || selectedMedia.length > 0) {
-                if (confirm('¿Estás seguro? Los cambios no guardados se perderán.')) {
+            const editor = document.getElementById('postContent');
+            if ((editor.innerHTML.trim() && editor.innerHTML.trim() !== '<br>' && editor.innerHTML.trim() !== '<div><br></div>') || selectedMedia.length > 0) {
+                if (confirm('¿Salir sin guardar?')) {
                     window.history.back();
                 }
             } else {
@@ -1977,14 +1939,6 @@
         }
 
         function goToFeed() {
-            // Guardar estado de la sesión actual
-            const sessionData = {
-                lastPostTime: new Date().toISOString(),
-                hasNewPosts: true
-            };
-            localStorage.setItem('neoStudySession', JSON.stringify(sessionData));
-            
-            // Redirigir al feed
             window.location.href = 'modulo2_iniciodecesión.html';
         }
 
@@ -1994,49 +1948,36 @@
         }
 
         function resetForm() {
-            // Limpiar formulario
-            document.getElementById('postContent').value = '';
+            const editor = document.getElementById('postContent');
+            editor.innerHTML = '';
             selectedMedia = [];
             selectedPostType = 'normal';
-            selectedFont = 'poppins';
-            selectedDesign = 'classic';
+            currentColor = '#000000';
             
-            // Resetear botones de diseño
-            document.querySelectorAll('.design-option').forEach(btn => {
+            document.querySelectorAll('.admin-option').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector('.design-option[data-design="classic"]').classList.add('active');
+            document.querySelector('.admin-option[data-type="normal"]').classList.add('active');
             
-            document.querySelectorAll('.font-option').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector('.font-option[onclick="selectFont(\'poppins\')"]').classList.add('active');
+            document.getElementById('mediaPreviewSection').style.display = 'none';
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('charCount').style.color = 'var(--gray-600)';
             
-            document.querySelectorAll('.type-option').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector('.type-option[data-type="normal"]').classList.add('active');
+            // Resetear selector de color
+            const colorPreview = document.querySelector('.color-preview');
+            colorPreview.style.background = '#000000';
             
-            // Limpiar previews
-            document.getElementById('mediaPreview').innerHTML = '<p style="color: var(--secondary); text-align: center; padding: 1rem;">No hay archivos seleccionados</p>';
-            document.getElementById('previewMedia').innerHTML = '';
+            // Resetear altura del editor
+            editor.style.height = 'auto';
             
-            // Actualizar preview
-            updatePreview();
+            // Resetear botones de toolbar
+            updateToolbarButtons();
             
-            // Enfocar en el textarea
-            document.getElementById('postContent').focus();
-            
-            showNotification('Formulario reiniciado. ¡Crea una nueva publicación!', 'info');
+            editor.focus();
         }
 
         // ===== NOTIFICACIONES =====
         function showNotification(message, type = 'info') {
-            const existingNotification = document.querySelector('.notification');
-            if (existingNotification) {
-                existingNotification.remove();
-            }
-
             const notification = document.createElement('div');
             notification.className = 'notification';
             notification.style.background = 
@@ -2049,7 +1990,7 @@
             
             setTimeout(() => {
                 notification.style.opacity = '0';
-                notification.style.transform = 'translateY(-20px)';
+                notification.style.transform = 'translateY(-10px)';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
